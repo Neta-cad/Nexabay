@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Nexabay — Africa's Everything Platform</title>
+  <link rel="stylesheet" href="css/main.css"/>
+  <link rel="stylesheet" href="css/home.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="nav-inner">
+      <a href="index.html" class="logo">
+        <span class="logo-nexa">Nexa</span><span class="logo-bay">bay</span>
+      </a>
+      <div class="search-bar">
+        <select class="search-cat" id="search-cat">
+          <option>All</option>
+          <option>Shop</option>
+          <option>Services</option>
+          <option>Rentals</option>
+          <option>Learn</option>
+          <option>Jobs</option>
+          <option>Food</option>
+        </select>
+        <input type="text" id="search-input" placeholder="Search anything..."/>
+        <button onclick="doSearch()" class="search-btn">🔍</button>
+      </div>
+      <div class="nav-actions">
+        <a href="pages/auth/login.html" class="nav-link">Login</a>
+        <a href="pages/auth/register.html" class="nav-btn">Sign Up</a>
+        <a href="pages/shop/cart.html" class="cart-icon">
+          🛒 <span class="cart-count" id="cart-count">0</span>
+        </a>
+      </div>
+      <button class="hamburger" onclick="toggleMobileMenu()">☰</button>
+    </div>
+    <div class="mobile-menu" id="mobile-menu">
+      <a href="pages/auth/login.html">Login</a>
+      <a href="pages/auth/register.html">Sign Up</a>
+      <a href="pages/shop/browse.html">Shop</a>
+      <a href="pages/services/browse.html">Services</a>
+      <a href="pages/rentals/browse.html">Rentals</a>
+      <a href="pages/learn/browse.html">Learn</a>
+      <a href="pages/jobs/browse.html">Jobs</a>
+    </div>
+  </nav>
+
+  <!-- CATEGORY BAR -->
+  <div class="cat-bar">
+    <div class="cat-inner">
+      <a href="pages/shop/browse.html" class="cat-item">🛍️ Shop</a>
+      <a href="pages/services/browse.html" class="cat-item">🔧 Services</a>
+      <a href="pages/rentals/browse.html" class="cat-item">🏠 Rentals</a>
+      <a href="pages/learn/browse.html" class="cat-item">🎓 Learn</a>
+      <a href="pages/jobs/browse.html" class="cat-item">💼 Jobs</a>
+      <a href="pages/food/browse.html" class="cat-item">🍔 Food</a>
+      <a href="pages/health/browse.html" class="cat-item">🏥 Health</a>
+      <a href="pages/events/browse.html" class="cat-item">🎉 Events</a>
+      <a href="pages/travel/browse.html" class="cat-item">✈️ Travel</a>
+      <a href="pages/pay/index.html" class="cat-item">🏦 NexaPay</a>
+    </div>
+  </div>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-inner">
+      <div class="hero-text">
+        <div class="hero-badge">🌍 Africa's #1 Everything Platform</div>
+        <h1>Buy. Sell. Rent.<br/>Learn. Earn.</h1>
+        <p>Shop products, hire services, rent property, learn skills and find jobs — all in one place.</p>
+        <div class="hero-btns">
+          <a href="pages/shop/browse.html" class="btn-primary">Start Shopping</a>
+          <a href="pages/auth/register.html" class="btn-outline">Become a Seller</a>
+        </div>
+        <div class="hero-stats">
+          <div class="hstat"><span>50K+</span>Products</div>
+          <div class="hstat"><span>10K+</span>Sellers</div>
+          <div class="hstat"><span>200K+</span>Users</div>
+          <div class="hstat"><span>36</span>States</div>
+        </div>
+      </div>
+      <div class="hero-image">
+        <div class="float-card fc1">📦 Order Delivered!</div>
+        <div class="float-card fc2">⭐ 4.9 Rating</div>
+        <div class="float-card fc3">🔒 Secure Payment</div>
+        <div class="hero-phone">
+          <div class="phone-screen">
+            <div class="ps-logo">Nexabay</div>
+            <div class="ps-item">📱 iPhone 15 — ₦850,000</div>
+            <div class="ps-item">🏠 2BR Flat — ₦150,000/mo</div>
+            <div class="ps-item">🎓 Web Design — ₦8,000</div>
+            <div class="ps-item">💼 UI Designer — Lagos</div>
+            <div class="ps-btn">Browse All →</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FLASH SALE -->
+  <section class="flash-sale">
+    <div class="flash-inner">
+      <div class="flash-left">
+        <span class="flash-badge">⚡ FLASH SALE</span>
+        <span class="flash-text">Up to 70% off — Ends in:</span>
+        <div class="countdown">
+          <div class="cd-box"><span id="cd-h">08</span>hrs</div>
+          <div class="cd-box"><span id="cd-m">00</span>min</div>
+          <div class="cd-box"><span id="cd-s">00</span>sec</div>
+        </div>
+      </div>
+      <a href="pages/shop/browse.html" class="flash-btn">Shop Sale →</a>
+    </div>
+  </section>
+
+  <!-- SECTIONS -->
+  <section class="sections-area">
+    <div class="container">
+      <h2 class="section-title">Everything You Need, One Platform</h2>
+      <div class="sections-grid">
+        <a href="pages/shop/browse.html" class="sec-card" style="--c:#1a73e8">
+          <div class="sec-icon">🛍️</div>
+          <div class="sec-name">NexaShop</div>
+          <div class="sec-desc">Buy & sell products</div>
+          <div class="sec-count">50,000+ items</div>
+        </a>
+        <a href="pages/services/browse.html" class="sec-card" style="--c:#ff6b00">
+          <div class="sec-icon">🔧</div>
+          <div class="sec-name">NexaServices</div>
+          <div class="sec-desc">Hire professionals</div>
+          <div class="sec-count">5,000+ providers</div>
+        </a>
+        <a href="pages/rentals/browse.html" class="sec-card" style="--c:#00c851">
+          <div class="sec-icon">🏠</div>
+          <div class="sec-name">NexaRent</div>
+          <div class="sec-desc">Rent property & items</div>
+          <div class="sec-count">8,000+ listings</div>
+        </a>
+        <a href="pages/learn/browse.html" class="sec-card" style="--c:#9c27b0">
+          <div class="sec-icon">🎓</div>
+          <div class="sec-name">NexaLearn</div>
+          <div class="sec-desc">Courses & tutors</div>
+          <div class="sec-count">2,000+ courses</div>
+        </a>
+        <a href="pages/jobs/browse.html" class="sec-card" style="--c:#e91e63">
+          <div class="sec-icon">💼</div>
+          <div class="sec-name">NexaJobs</div>
+          <div class="sec-desc">Find work or hire</div>
+          <div class="sec-count">12,000+ jobs</div>
+        </a>
+        <a href="pages/food/browse.html" class="sec-card" style="--c:#ff5722">
+          <div class="sec-icon">🍔</div>
+          <div class="sec-name">NexaFood</div>
+          <div class="sec-desc">Order food & groceries</div>
+          <div class="sec-count">1,000+ restaurants</div>
+        </a>
+        <a href="pages/health/browse.html" class="sec-card" style="--c:#009688">
+          <div class="sec-icon">🏥</div>
+          <div class="sec-name">NexaHealth</div>
+          <div class="sec-desc">Book doctors & labs</div>
+          <div class="sec-count">3,000+ providers</div>
+        </a>
+        <a href="pages/events/browse.html" class="sec-card" style="--c:#ffc107">
+          <div class="sec-icon">🎉</div>
+          <div class="sec-name">NexaEvents</div>
+          <div class="sec-desc">Tickets & entertainment</div>
+          <div class="sec-count">500+ events</div>
+        </a>
+        <a href="pages/travel/browse.html" class="sec-card" style="--c:#2196f3">
+          <div class="sec-icon">✈️</div>
+          <div class="sec-name">NexaTravel</div>
+          <div class="sec-desc">Hotels & flights</div>
+          <div class="sec-count">10,000+ options</div>
+        </a>
+        <a href="pages/pay/index.html" class="sec-card" style="--c:#4caf50">
+          <div class="sec-icon">🏦</div>
+          <div class="sec-name">NexaPay</div>
+          <div class="sec-desc">Send money & pay bills</div>
+          <div class="sec-count">Instant transfers</div>
+        </a>
+        <a href="#" class="sec-card" style="--c:#607d8b">
+          <div class="sec-icon">🚗</div>
+          <div class="sec-name">NexaRide</div>
+          <div class="sec-desc">Book rides & delivery</div>
+          <div class="sec-count">Available 24/7</div>
+        </a>
+        <a href="#" class="sec-card" style="--c:#795548">
+          <div class="sec-icon">🤝</div>
+          <div class="sec-name">NexaCommunity</div>
+          <div class="sec-desc">Network & forums</div>
+          <div class="sec-count">50,000+ members</div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURED PRODUCTS -->
+  <section class="featured-section">
+    <div class="container">
+      <div class="sec-header">
+        <h2 class="section-title">🔥 Trending Products</h2>
+        <a href="pages/shop/browse.html" class="see-all">See All →</a>
+      </div>
+      <div class="products-grid" id="featured-products"></div>
+    </div>
+  </section>
+
+  <!-- WHY NEXABAY -->
+  <section class="why-section">
+    <div class="container">
+      <h2 class="section-title">Why Choose Nexabay?</h2>
+      <div class="why-grid">
+        <div class="why-card">
+          <div class="why-icon">🔒</div>
+          <h3>Secure Escrow Payment</h3>
+          <p>Your money is held safely until you confirm delivery. Never lose money to fraud again.</p>
+        </div>
+        <div class="why-card">
+          <div class="why-icon">✅</div>
+          <h3>Verified Sellers</h3>
+          <p>Every seller goes through ID verification. Shop with confidence from trusted vendors.</p>
+        </div>
+        <div class="why-card">
+          <div class="why-icon">💬</div>
+          <h3>Live Chat</h3>
+          <p>Chat directly with sellers before you buy. No middlemen, no stress.</p>
+        </div>
+        <div class="why-card">
+          <div class="why-icon">🚀</div>
+          <h3>Fast Delivery</h3>
+          <p>Same day delivery in major cities. Track your order live every step.</p>
+        </div>
+        <div class="why-card">
+          <div class="why-icon">💰</div>
+          <h3>Best Prices</h3>
+          <p>Compare prices from multiple sellers. Negotiate directly and get the best deal.</p>
+        </div>
+        <div class="why-card">
+          <div class="why-icon">📱</div>
+          <h3>Everything In One</h3>
+          <p>Shop, rent, learn, find jobs, order food — without leaving Nexabay.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SELLER CTA -->
+  <section class="seller-cta">
+    <div class="container">
+      <div class="seller-cta-inner">
+        <div class="scta-text">
+          <h2>Start Selling on Nexabay Today</h2>
+          <p>Join 10,000+ sellers making money daily. Set up your shop in 5 minutes — completely free.</p>
+          <ul class="scta-list">
+            <li>✅ Free shop setup</li>
+            <li>✅ Reach millions of buyers</li>
+            <li>✅ Get paid directly to your bank</li>
+            <li>✅ Sell products, services or courses</li>
+          </ul>
+          <a href="pages/auth/register.html" class="btn-primary">Open Your Shop Free →</a>
+        </div>
+        <div class="scta-stats">
+          <div class="scta-stat"><span>₦2.5M</span>Avg seller monthly earnings</div>
+          <div class="scta-stat"><span>10K+</span>Active sellers</div>
+          <div class="scta-stat"><span>5 min</span>To set up your shop</div>
+          <div class="scta-stat"><span>Free</span>To get started</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS -->
+  <section class="testimonials">
+    <div class="container">
+      <h2 class="section-title">What People Are Saying</h2>
+      <div class="testi-grid">
+        <div class="testi-card">
+          <div class="testi-stars">⭐⭐⭐⭐⭐</div>
+          <p>"I sold my first product within 24 hours of joining Nexabay. The platform is amazing!"</p>
+          <div class="testi-author">
+            <div class="testi-avatar">AO</div>
+            <div><b>Adewale Okon</b><br/><small>Seller, Lagos</small></div>
+          </div>
+        </div>
+        <div class="testi-card">
+          <div class="testi-stars">⭐⭐⭐⭐⭐</div>
+          <p>"Found a plumber, ordered food and paid my NEPA bill all on one app. Life changing!"</p>
+          <div class="testi-author">
+            <div class="testi-avatar">FK</div>
+            <div><b>Fatima Kabir</b><br/><small>Buyer, Abuja</small></div>
+          </div>
+        </div>
+        <div class="testi-card">
+          <div class="testi-stars">⭐⭐⭐⭐⭐</div>
+          <p>"I teach coding on NexaLearn and now earn more than my 9-5 job. Best decision ever."</p>
+          <div class="testi-author">
+            <div class="testi-avatar">CE</div>
+            <div><b>Chidi Eze</b><br/><small>Tutor, Port Harcourt</small></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- APP DOWNLOAD -->
+  <section class="app-section">
+    <div class="container">
+      <div class="app-text">
+        <h2>Get the Nexabay App</h2>
+        <p>Shop, sell and manage everything from your phone.</p>
+        <div class="app-btns">
+          <a href="#" class="app-btn">
+            <span class="app-btn-icon">▶</span>
+            <div><small>Get it on</small><br/><b>Google Play</b></div>
+          </a>
+          <a href="#" class="app-btn">
+            <span class="app-btn-icon">🍎</span>
+            <div><small>Download on</small><br/><b>App Store</b></div>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="logo"><span class="logo-nexa">Nexa</span><span class="logo-bay">bay</span></div>
+          <p>Africa's Everything Platform. Buy, sell, rent, learn and earn — all in one place.</p>
+          <div class="social-links">
+            <a href="#">📘 Facebook</a>
+            <a href="#">🐦 Twitter</a>
+            <a href="#">📸 Instagram</a>
+            <a href="#">▶ YouTube</a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h4>Marketplace</h4>
+          <a href="pages/shop/browse.html">Shop</a>
+          <a href="pages/services/browse.html">Services</a>
+          <a href="pages/rentals/browse.html">Rentals</a>
+          <a href="pages/learn/browse.html">Learn</a>
+          <a href="pages/jobs/browse.html">Jobs</a>
+        </div>
+        <div class="footer-col">
+          <h4>More</h4>
+          <a href="pages/food/browse.html">Food</a>
+          <a href="pages/health/browse.html">Health</a>
+          <a href="pages/events/browse.html">Events</a>
+          <a href="pages/travel/browse.html">Travel</a>
+          <a href="pages/pay/index.html">NexaPay</a>
+        </div>
+        <div class="footer-col">
+          <h4>Support</h4>
+          <a href="#">Help Center</a>
+          <a href="#">Contact Us</a>
+          <a href="#">Buyer Protection</a>
+          <a href="#">Report a Problem</a>
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <a href="#">About Nexabay</a>
+          <a href="#">Careers</a>
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms of Service</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2025 Nexabay. All rights reserved. Made with ❤️ in Africa.</p>
+        <div class="payment-icons">
+          <span>💳 Paystack</span>
+          <span>🏦 Bank Transfer</span>
+          <span>📱 USSD</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/core/main.js"></script>
+
+</body>
+</html>
