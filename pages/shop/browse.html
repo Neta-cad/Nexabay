@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Shop — Nexabay</title>
+  <link rel="stylesheet" href="../../css/main.css"/>
+  <link rel="stylesheet" href="../../css/shop.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="nav-inner">
+      <a href="../../index.html" class="logo">
+        <span class="logo-nexa">Nexa</span><span class="logo-bay">bay</span>
+      </a>
+      <div class="search-bar">
+        <select class="search-cat" id="search-cat">
+          <option>All</option>
+          <option>Electronics</option>
+          <option>Fashion</option>
+          <option>Home</option>
+          <option>Beauty</option>
+          <option>Food</option>
+          <option>Sports</option>
+        </select>
+        <input type="text" id="search-input" placeholder="Search products..."/>
+        <button onclick="doSearch()" class="search-btn">🔍</button>
+      </div>
+      <div class="nav-actions">
+        <a href="../auth/login.html" class="nav-link">Login</a>
+        <a href="../auth/register.html" class="nav-btn">Sign Up</a>
+        <a href="cart.html" class="cart-icon">
+          🛒 <span class="cart-count" id="cart-count">0</span>
+        </a>
+      </div>
+      <button class="hamburger" onclick="toggleMobileMenu()">☰</button>
+    </div>
+    <div class="mobile-menu" id="mobile-menu">
+      <a href="../auth/login.html">Login</a>
+      <a href="../auth/register.html">Sign Up</a>
+      <a href="../../index.html">Home</a>
+      <a href="cart.html">Cart</a>
+    </div>
+  </nav>
+
+  <!-- BREADCRUMB -->
+  <div class="breadcrumb">
+    <div class="container">
+      <a href="../../index.html">Home</a>
+      <span>›</span>
+      <span id="bread-cat">Shop</span>
+    </div>
+  </div>
+
+  <!-- SHOP LAYOUT -->
+  <div class="shop-layout container">
+
+    <!-- SIDEBAR FILTERS -->
+    <aside class="shop-sidebar" id="shop-sidebar">
+      <div class="sidebar-header">
+        <h3>Filters</h3>
+        <button onclick="clearFilters()" class="clear-btn">Clear All</button>
+      </div>
+
+      <!-- CATEGORIES -->
+      <div class="filter-group">
+        <h4>Category</h4>
+        <div class="filter-options">
+          <label class="filter-opt">
+            <input type="radio" name="cat" value="all" checked onchange="applyFilters()"/>
+            All Categories
+          </label>
+          <label class="filter-opt">
+            <input type="radio" name="cat" value="Electronics" onchange="applyFilters()"/>
+            📱 Electronics
+          </label>
+          <label class="filter-opt">
+            <input type="radio" name="cat" value="Fashion" onchange="applyFilters()"/>
+            👗 Fashion
+          </label>
+          <label class="filter-opt">
+            <input type="radio" name="cat" value="Home" onchange="applyFilters()"/>
+            🏠 Home & Living
+          </label>
+          <label class="filter-opt">
+            <input type="radio" name="cat" value="Beauty" onchange="applyFilters()"/>
+            💄 Beauty
+          </label>
+          <label class="filter-opt">
+            <input type="radio" name="cat" value="Sports" onchange="applyFilters()"/>
+            ⚽ Sports
+          </label>
+          <label class="filter-opt">
+            <input type="radio" name="cat" value="Food" onchange="applyFilters()"/>
+            🍔 Food & Drinks
+          </label>
+        </div>
+      </div>
+
+      <!-- PRICE RANGE -->
+      <div class="filter-group">
+        <h4>Price Range</h4>
+        <div class="price-inputs">
+          <input type="number" id="min-price" placeholder="Min ₦" onchange="applyFilters()"/>
+          <span>—</span>
+          <input type="number" id="max-price" placeholder="Max ₦" onchange="applyFilters()"/>
+        </div>
+      </div>
+
+      <!-- RATING -->
+      <div class="filter-group">
+        <h4>Minimum Rating</h4>
+        <div class="filter-options">
+          <label class="filter-opt">
+            <input type="radio" name="rating" value="0" checked onchange="applyFilters()"/>
+            All ratings
+          </label>
+          <label class="filter-opt">
+            <input type="radio" name="rating" value="4.5" onchange="applyFilters()"/>
+            ⭐⭐⭐⭐⭐ 4.5+
+          </label>
+          <label class="filter-opt">
+            <input type="radio" name="rating" value="4" onchange="applyFilters()"/>
+            ⭐⭐⭐⭐ 4.0+
+          </label>
+          <label class="filter-opt">
+            <input type="radio" name="rating" value="3" onchange="applyFilters()"/>
+            ⭐⭐⭐ 3.0+
+          </label>
+        </div>
+      </div>
+
+      <!-- LOCATION -->
+      <div class="filter-group">
+        <h4>Location</h4>
+        <select id="filter-location" onchange="applyFilters()">
+          <option value="">All States</option>
+          <option>Lagos</option>
+          <option>Abuja</option>
+          <option>Port Harcourt</option>
+          <option>Kano</option>
+          <option>Ibadan</option>
+          <option>Enugu</option>
+          <option>Benin City</option>
+        </select>
+      </div>
+
+      <!-- CONDITION -->
+      <div class="filter-group">
+        <h4>Condition</h4>
+        <div class="filter-options">
+          <label class="filter-opt">
+            <input type="radio" name="condition" value="all" checked onchange="applyFilters()"/>
+            All
+          </label>
+          <label class="filter-opt">
+            <input type="radio" name="condition" value="new" onchange="applyFilters()"/>
+            New
+          </label>
+          <label class="filter-opt">
+            <input type="radio" name="condition" value="used" onchange="applyFilters()"/>
+            Used
+          </label>
+        </div>
+      </div>
+
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="shop-main">
+
+      <!-- TOP BAR -->
+      <div class="shop-topbar">
+        <div class="shop-topbar-left">
+          <button class="filter-toggle" onclick="toggleSidebar()">⚙️ Filters</button>
+          <span class="results-count" id="results-count">Showing all products</span>
+        </div>
+        <div class="shop-topbar-right">
+          <select id="sort-by" onchange="applyFilters()">
+            <option value="default">Sort: Featured</option>
+            <option value="price-low">Price: Low to High</option>
+            <option value="price-high">Price: High to Low</option>
+            <option value="rating">Highest Rated</option>
+            <option value="newest">Newest First</option>
+            <option value="discount">Biggest Discount</option>
+          </select>
+          <div class="view-toggle">
+            <button id="grid-view-btn" class="view-btn active" onclick="setView('grid')">⊞</button>
+            <button id="list-view-btn" class="view-btn" onclick="setView('list')">☰</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ACTIVE FILTERS -->
+      <div class="active-filters" id="active-filters"></div>
+
+      <!-- PRODUCTS GRID -->
+      <div class="products-grid" id="products-container"></div>
+
+      <!-- EMPTY STATE -->
+      <div class="empty-state" id="empty-state" style="display:none;">
+        <div class="empty-icon">🔍</div>
+        <h3>No products found</h3>
+        <p>Try adjusting your filters or search term</p>
+        <button onclick="clearFilters()" class="btn-primary">Clear Filters</button>
+      </div>
+
+      <!-- LOAD MORE -->
+      <div class="load-more-wrap" id="load-more-wrap" style="display:none;">
+        <button onclick="loadMore()" class="load-more-btn">Load More Products</button>
+      </div>
+
+    </main>
+  </div>
+
+  <script src="../../js/core/main.js"></script>
+  <script>
+
+    // All products data
+    var ALL_PRODUCTS = [
+      { id:1,  name:'iPhone 15 Pro Max 256GB', price:850000, oldPrice:950000, rating:4.8, reviews:234, location:'Lagos',         emoji:'📱', category:'Electronics', condition:'new',  seller:'TechHub Lagos',    sold:1240 },
+      { id:2,  name:'Samsung Galaxy S24 Ultra', price:780000, oldPrice:900000, rating:4.7, reviews:189, location:'Abuja',         emoji:'📱', category:'Electronics', condition:'new',  seller:'GadgetPro NG',     sold:890  },
+      { id:3,  name:'Nike Air Force 1 Sneakers', price:45000, oldPrice:60000,  rating:4.7, reviews:312, location:'Lagos',         emoji:'👟', category:'Fashion',     condition:'new',  seller:'SneakerWorld',     sold:2100 },
+      { id:4,  name:'Ankara Print Dress',        price:15000, oldPrice:22000,  rating:4.9, reviews:445, location:'Kano',          emoji:'👗', category:'Fashion',     condition:'new',  seller:'AfrikaStyles',     sold:3400 },
+      { id:5,  name:'Samsung 55" Smart TV 4K',   price:320000,oldPrice:400000, rating:4.6, reviews:98,  location:'Port Harcourt', emoji:'📺', category:'Electronics', condition:'new',  seller:'ElectroNG',        sold:560  },
+      { id:6,  name:'Gaming Laptop RTX 4060',    price:650000,oldPrice:750000, rating:4.8, reviews:67,  location:'Lagos',         emoji:'💻', category:'Electronics', condition:'new',  seller:'TechHub Lagos',    sold:340  },
+      { id:7,  name:'Designer Leather Handbag',  price:28000, oldPrice:35000,  rating:4.5, reviews:156, location:'Lagos',         emoji:'👜', category:'Fashion',     condition:'new',  seller:'LuxuryBags NG',    sold:780  },
+      { id:8,  name:'Bluetooth Wireless Speaker',price:18000, oldPrice:25000,  rating:4.6, reviews:145, location:'Enugu',         emoji:'🔊', category:'Electronics', condition:'new',  seller:'SoundZone',        sold:920  },
+      { id:9,  name:'Gold Wrist Watch',          price:35000, oldPrice:45000,  rating:4.7, reviews:89,  location:'Abuja',         emoji:'⌚', category:'Fashion',     condition:'new',  seller:'TimeZone NG',      sold:450  },
+      { id:10, name:'PS5 Console + 2 Controllers',price:450000,oldPrice:520000,rating:4.9, reviews:234, location:'Lagos',         emoji:'🎮', category:'Electronics', condition:'new',  seller:'GameZone NG',      sold:670  },
+      { id:11, name:'Sofa Set 3+1+1',            price:180000,oldPrice:220000, rating:4.5, reviews:67,  location:'Lagos',         emoji:'🛋️', category:'Home',        condition:'new',  seller:'HomeStyle NG',     sold:230  },
+      { id:12, name:'Air Fryer 5L',              price:35000, oldPrice:45000,  rating:4.7, reviews:189, location:'Abuja',         emoji:'🍳', category:'Home',        condition:'new',  seller:'KitchenPlus',      sold:1100 },
+      { id:13, name:'Face Moisturizer SPF 50',   price:8500,  oldPrice:12000,  rating:4.6, reviews:267, location:'Lagos',         emoji:'💄', category:'Beauty',      condition:'new',  seller:'GlowUp Beauty',    sold:2300 },
+      { id:14, name:'Football Boots Size 40-45', price:22000, oldPrice:30000,  rating:4.5, reviews:134, location:'Kano',          emoji:'⚽', category:'Sports',      condition:'new',  seller:'SportZone NG',     sold:890  },
+      { id:15, name:'Organic Honey 1kg',         price:5000,  oldPrice:7000,   rating:4.8, reviews:345, location:'Ibadan',        emoji:'🍯', category:'Food',        condition:'new',  seller:'NatureFoods',      sold:4500 },
+      { id:16, name:'Refurbished iPhone 12',     price:180000,oldPrice:250000, rating:4.3, reviews:78,  location:'Lagos',         emoji:'📱', category:'Electronics', condition:'used', seller:'PhoneDeals NG',    sold:340  },
+    ];
+
+    var currentProducts = [];
+    var displayCount = 12;
+    var currentView = 'grid';
+
+    function init() {
+      var q = getParam('q');
+      var cat = getParam('cat');
+
+      if (q) {
+        document.getElementById('search-input').value = q;
+      }
+      if (cat && cat !== 'All') {
+        var radios = document.querySelectorAll('input[name="cat"]');
+        radios.forEach(function(r) {
+          if (r.value === cat) r.checked = true;
+        });
+        document.getElementById('bread-cat').textContent = cat;
+      }
+
+      applyFilters();
+    }
+
+    function applyFilters() {
+      var searchQ   = (document.getElementById('search-input').value || '').toLowerCase().trim();
+      var catEl     = document.querySelector('input[name="cat"]:checked');
+      var ratingEl  = document.querySelector('input[name="rating"]:checked');
+      var condEl    = document.querySelector('input[name="condition"]:checked');
+      var minPrice  = parseFloat(document.getElementById('min-price').value) || 0;
+      var maxPrice  = parseFloat(document.getElementById('max-price').value) || Infinity;
+      var location  = document.getElementById('filter-location').value;
+      var sortBy    = document.getElementById('sort-by').value;
+
+      var cat     = catEl    ? catEl.value    : 'all';
+      var rating  = ratingEl ? parseFloat(ratingEl.value) : 0;
+      var cond    = condEl   ? condEl.value   : 'all';
+
+      currentProducts = ALL_PRODUCTS.filter(function(p) {
+        if (searchQ && !p.name.toLowerCase().includes(searchQ) && !p.category.toLowerCase().includes(searchQ)) return false;
+        if (cat !== 'all' && p.category !== cat) return false;
+        if (p.rating < rating) return false;
+        if (p.price < minPrice || p.price > maxPrice) return false;
+        if (location && p.location !== location) return false;
+        if (cond !== 'all' && p.condition !== cond) return false;
+        return true;
+      });
+
+      // Sort
+      if (sortBy === 'price-low')  currentProducts.sort(function(a,b){ return a.price - b.price; });
+      if (sortBy === 'price-high') currentProducts.sort(function(a,b){ return b.price - a.price; });
+      if (sortBy === 'rating')     currentProducts.sort(function(a,b){ return b.rating - a.rating; });
+      if (sortBy === 'discount')   currentProducts.sort(function(a,b){ return (b.oldPrice-b.price) - (a.oldPrice-a.price); });
+
+      displayCount = 12;
+      renderProducts();
+      updateResultsCount();
+    }
+
+    function renderProducts() {
+      var container = document.getElementById('products-container');
+      var empty = document.getElementById('empty-state');
+      var loadMore = document.getElementById('load-more-wrap');
+
+      if (currentProducts.length === 0) {
+        container.innerHTML = '';
+        empty.style.display = 'block';
+        loadMore.style.display = 'none';
+        return;
+      }
+
+      empty.style.display = 'none';
+      var toShow = currentProducts.slice(0, displayCount);
+
+      container.className = currentView === 'list' ? 'products-list' : 'products-grid';
+
+      container.innerHTML = toShow.map(function(p) {
+        var discount = Math.round((1 - p.price / p.oldPrice) * 100);
+        if (currentView === 'list') {
+          return '<div class="product-list-item" onclick="viewProduct(' + p.id + ')">' +
+            '<div class="pli-img">' + p.emoji + '</div>' +
+            '<div class="pli-info">' +
+              '<div class="pli-name">' + p.name + '</div>' +
+              '<div class="pli-seller">by ' + p.seller + ' • 📍' + p.location + '</div>' +
+              '<div class="pli-rating">⭐ ' + p.rating + ' (' + p.reviews + ' reviews)</div>' +
+              '<div class="pli-sold">' + p.sold.toLocaleString() + ' sold</div>' +
+            '</div>' +
+            '<div class="pli-right">' +
+              '<div class="product-price">₦' + p.price.toLocaleString() + '</div>' +
+              '<div class="product-old-price">₦' + p.oldPrice.toLocaleString() + '</div>' +
+              '<div class="discount-badge">-' + discount + '%</div>' +
+              '<button class="add-cart-btn" onclick="event.stopPropagation();addToCart({id:' + p.id + ',name:\'' + p.name + '\',price:' + p.price + ',emoji:\'' + p.emoji + '\'})">Add to Cart</button>' +
+            '</div>' +
+          '</div>';
+        }
+        return '<div class="product-card" onclick="viewProduct(' + p.id + ')">' +
+          '<div class="product-img">' + p.emoji +
+            '<div class="discount-badge">-' + discount + '%</div>' +
+          '</div>' +
+          '<div class="product-info">' +
+            '<div class="product-name">' + p.name + '</div>' +
+            '<div>' +
+              '<span class="product-price">₦' + p.price.toLocaleString() + '</span>' +
+              '<span class="product-old-price">₦' + p.oldPrice.toLocaleString() + '</span>' +
+            '</div>' +
+            '<div class="product-rating">⭐ ' + p.rating + ' (' + p.reviews + ')</div>' +
+            '<div class="product-location">📍 ' + p.location + '</div>' +
+            '<button class="add-cart-btn" onclick="event.stopPropagation();addToCart({id:' + p.id + ',name:\'' + p.name + '\',price:' + p.price + ',emoji:\'' + p.emoji + '\'})">🛒 Add to Cart</button>' +
+          '</div>' +
+        '</div>';
+      }).join('');
+
+      loadMore.style.display = currentProducts.length > displayCount ? 'flex' : 'none';
+    }
+
+    function loadMore() {
+      displayCount += 8;
+      renderProducts();
+    }
+
+    function setView(view) {
+      currentView = view;
+      document.getElementById('grid-view-btn').classList.toggle('active', view === 'grid');
+      document.getElementById('list-view-btn').classList.toggle('active', view === 'list');
+      renderProducts();
+    }
+
+    function updateResultsCount() {
+      var el = document.getElementById('results-count');
+      if (el) el.textContent = 'Showing ' + currentProducts.length + ' products';
+    }
+
+    function clearFilters() {
+      document.querySelectorAll('input[name="cat"]')[0].checked = true;
+      document.querySelectorAll('input[name="rating"]')[0].checked = true;
+      document.querySelectorAll('input[name="condition"]')[0].checked = true;
+      document.getElementById('min-price').value = '';
+      document.getElementById('max-price').value = '';
+      document.getElementById('filter-location').value = '';
+      document.getElementById('sort-by').value = 'default';
+      document.getElementById('search-input').value = '';
+      applyFilters();
+    }
+
+    function toggleSidebar() {
+      var sidebar = document.getElementById('shop-sidebar');
+      sidebar.classList.toggle('open');
+    }
+
+    function viewProduct(id) {
+      window.location.href = 'product.html?id=' + id;
+    }
+
+    function doSearch() {
+      applyFilters();
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      init();
+      var input = document.getElementById('search-input');
+      if (input) {
+        input.addEventListener('keypress', function(e) {
+          if (e.key === 'Enter') applyFilters();
+        });
+      }
+      updateCartCount();
+    });
+
+  </script>
+
+</body>
+</html>

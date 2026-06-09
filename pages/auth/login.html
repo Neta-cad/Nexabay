@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login — Nexabay</title>
+  <link rel="stylesheet" href="../../css/main.css"/>
+  <link rel="stylesheet" href="../../css/auth.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+</head>
+<body class="auth-page">
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="nav-inner">
+      <a href="../../index.html" class="logo">
+        <span class="logo-nexa">Nexa</span><span class="logo-bay">bay</span>
+      </a>
+    </div>
+  </nav>
+
+  <!-- LOGIN FORM -->
+  <div class="auth-container">
+    <div class="auth-card">
+
+      <div class="auth-header">
+        <h1>Welcome Back</h1>
+        <p>Login to your Nexabay account</p>
+      </div>
+
+      <div id="auth-error" class="auth-error" style="display:none;"></div>
+      <div id="auth-success" class="auth-success" style="display:none;"></div>
+
+      <div class="auth-form">
+
+        <div class="form-group">
+          <label>Email Address</label>
+          <input
+            type="email"
+            id="login-email"
+            placeholder="Enter your email"
+            autocomplete="email"
+          />
+        </div>
+
+        <div class="form-group">
+          <label>Password</label>
+          <div class="input-wrap">
+            <input
+              type="password"
+              id="login-password"
+              placeholder="Enter your password"
+              autocomplete="current-password"
+            />
+            <button class="toggle-pass" onclick="togglePassword('login-password')">👁</button>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <label class="checkbox-label">
+            <input type="checkbox" id="remember-me"/>
+            Remember me
+          </label>
+          <a href="forgot.html" class="forgot-link">Forgot password?</a>
+        </div>
+
+        <button class="auth-submit" onclick="doLogin()" id="login-btn">
+          Login to Account
+        </button>
+
+        <div class="auth-divider"><span>or continue with</span></div>
+
+        <div class="social-auth">
+          <button class="social-btn google-btn" onclick="googleLogin()">
+            🌐 Google
+          </button>
+          <button class="social-btn phone-btn" onclick="showPhoneLogin()">
+            📱 Phone
+          </button>
+        </div>
+
+      </div>
+
+      <div class="auth-footer">
+        Don't have an account?
+        <a href="register.html">Sign up free →</a>
+      </div>
+
+      <div class="auth-footer" style="margin-top:8px;">
+        <a href="../../index.html">← Back to Nexabay</a>
+      </div>
+
+    </div>
+
+    <!-- SIDE PANEL -->
+    <div class="auth-side">
+      <div class="auth-side-content">
+        <div class="auth-logo">
+          <span class="logo-nexa">Nexa</span><span class="logo-bay">bay</span>
+        </div>
+        <h2>Africa's Everything Platform</h2>
+        <p>Buy, sell, rent, learn and earn — all in one place.</p>
+        <div class="auth-perks">
+          <div class="perk">✅ Shop 50,000+ products</div>
+          <div class="perk">✅ Hire verified professionals</div>
+          <div class="perk">✅ Rent property & items</div>
+          <div class="perk">✅ Learn new skills online</div>
+          <div class="perk">✅ Find jobs & earn money</div>
+          <div class="perk">✅ Secure escrow payments</div>
+        </div>
+        <div class="auth-stats">
+          <div class="astat"><span>200K+</span>Users</div>
+          <div class="astat"><span>10K+</span>Sellers</div>
+          <div class="astat"><span>4.9⭐</span>Rating</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="../../js/core/main.js"></script>
+  <script src="../../js/core/auth.js"></script>
+  <script>
+    function doLogin() {
+      var email = document.getElementById('login-email').value.trim();
+      var password = document.getElementById('login-password').value.trim();
+      var btn = document.getElementById('login-btn');
+
+      hideMessages();
+
+      if (!email) { showError('Please enter your email'); return; }
+      if (!isValidEmail(email)) { showError('Please enter a valid email'); return; }
+      if (!password) { showError('Please enter your password'); return; }
+      if (password.length < 6) { showError('Password must be at least 6 characters'); return; }
+
+      btn.textContent = 'Logging in...';
+      btn.disabled = true;
+
+      // Simulate login — replace with Firebase later
+      setTimeout(function() {
+        var users = JSON.parse(localStorage.getItem('nexa_users') || '[]');
+        var user = users.find(function(u) {
+          return u.email === email && u.password === password;
+        });
+
+        if (user) {
+          localStorage.setItem('nexa_current_user', JSON.stringify(user));
+          showSuccess('✅ Login successful! Redirecting...');
+          setTimeout(function() {
+            window.location.href = '../../index.html';
+          }, 1200);
+        } else {
+          showError('❌ Invalid email or password');
+          btn.textContent = 'Login to Account';
+          btn.disabled = false;
+        }
+      }, 1000);
+    }
+
+    function googleLogin() {
+      showError('Google login coming soon — use email for now');
+    }
+
+    function showPhoneLogin() {
+      showError('Phone login coming soon — use email for now');
+    }
+
+    function togglePassword(id) {
+      var input = document.getElementById(id);
+      input.type = input.type === 'password' ? 'text' : 'password';
+    }
+
+    function isValidEmail(email) {
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    }
+
+    function showError(msg) {
+      var el = document.getElementById('auth-error');
+      el.textContent = msg;
+      el.style.display = 'block';
+    }
+
+    function showSuccess(msg) {
+      var el = document.getElementById('auth-success');
+      el.textContent = msg;
+      el.style.display = 'block';
+    }
+
+    function hideMessages() {
+      document.getElementById('auth-error').style.display = 'none';
+      document.getElementById('auth-success').style.display = 'none';
+    }
+
+    // Allow Enter key to submit
+    document.addEventListener('DOMContentLoaded', function() {
+      document.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') doLogin();
+      });
+    });
+  </script>
+
+</body>
+</html>

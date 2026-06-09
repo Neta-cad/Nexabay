@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sign Up — Nexabay</title>
+  <link rel="stylesheet" href="../../css/main.css"/>
+  <link rel="stylesheet" href="../../css/auth.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+</head>
+<body class="auth-page">
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="nav-inner">
+      <a href="../../index.html" class="logo">
+        <span class="logo-nexa">Nexa</span><span class="logo-bay">bay</span>
+      </a>
+    </div>
+  </nav>
+
+  <!-- REGISTER FORM -->
+  <div class="auth-container">
+    <div class="auth-card">
+
+      <div class="auth-header">
+        <h1>Create Account</h1>
+        <p>Join millions of Africans on Nexabay</p>
+      </div>
+
+      <div id="auth-error" class="auth-error" style="display:none;"></div>
+      <div id="auth-success" class="auth-success" style="display:none;"></div>
+
+      <div class="auth-form">
+
+        <!-- ACCOUNT TYPE -->
+        <div class="account-type">
+          <button class="type-btn active" id="btn-buyer" onclick="setType('buyer')">
+            🛍️ I want to Buy
+          </button>
+          <button class="type-btn" id="btn-seller" onclick="setType('seller')">
+            🏪 I want to Sell
+          </button>
+        </div>
+
+        <div class="form-row-2">
+          <div class="form-group">
+            <label>First Name</label>
+            <input type="text" id="reg-firstname" placeholder="First name"/>
+          </div>
+          <div class="form-group">
+            <label>Last Name</label>
+            <input type="text" id="reg-lastname" placeholder="Last name"/>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Email Address</label>
+          <input type="email" id="reg-email" placeholder="Enter your email"/>
+        </div>
+
+        <div class="form-group">
+          <label>Phone Number</label>
+          <div class="input-wrap">
+            <span class="phone-prefix">🇳🇬 +234</span>
+            <input type="tel" id="reg-phone" placeholder="080xxxxxxxx"/>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>State</label>
+          <select id="reg-state">
+            <option value="">Select your state</option>
+            <option>Abia</option>
+            <option>Adamawa</option>
+            <option>Akwa Ibom</option>
+            <option>Anambra</option>
+            <option>Bauchi</option>
+            <option>Bayelsa</option>
+            <option>Benue</option>
+            <option>Borno</option>
+            <option>Cross River</option>
+            <option>Delta</option>
+            <option>Ebonyi</option>
+            <option>Edo</option>
+            <option>Ekiti</option>
+            <option>Enugu</option>
+            <option>FCT Abuja</option>
+            <option>Gombe</option>
+            <option>Imo</option>
+            <option>Jigawa</option>
+            <option>Kaduna</option>
+            <option>Kano</option>
+            <option>Katsina</option>
+            <option>Kebbi</option>
+            <option>Kogi</option>
+            <option>Kwara</option>
+            <option>Lagos</option>
+            <option>Nasarawa</option>
+            <option>Niger</option>
+            <option>Ogun</option>
+            <option>Ondo</option>
+            <option>Osun</option>
+            <option>Oyo</option>
+            <option>Plateau</option>
+            <option>Rivers</option>
+            <option>Sokoto</option>
+            <option>Taraba</option>
+            <option>Yobe</option>
+            <option>Zamfara</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Password</label>
+          <div class="input-wrap">
+            <input
+              type="password"
+              id="reg-password"
+              placeholder="Create a password"
+            />
+            <button class="toggle-pass" onclick="togglePassword('reg-password')">👁</button>
+          </div>
+          <div class="password-strength" id="pass-strength"></div>
+        </div>
+
+        <div class="form-group">
+          <label>Confirm Password</label>
+          <div class="input-wrap">
+            <input
+              type="password"
+              id="reg-confirm"
+              placeholder="Confirm your password"
+            />
+            <button class="toggle-pass" onclick="togglePassword('reg-confirm')">👁</button>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="checkbox-label">
+            <input type="checkbox" id="reg-terms"/>
+            I agree to Nexabay's
+            <a href="#" style="color:var(--blue)">Terms of Service</a>
+            and
+            <a href="#" style="color:var(--blue)">Privacy Policy</a>
+          </label>
+        </div>
+
+        <button class="auth-submit" onclick="doRegister()" id="reg-btn">
+          Create Free Account
+        </button>
+
+        <div class="auth-divider"><span>or sign up with</span></div>
+
+        <div class="social-auth">
+          <button class="social-btn google-btn" onclick="googleSignup()">
+            🌐 Google
+          </button>
+          <button class="social-btn phone-btn" onclick="phoneSignup()">
+            📱 Phone
+          </button>
+        </div>
+
+      </div>
+
+      <div class="auth-footer">
+        Already have an account?
+        <a href="login.html">Login →</a>
+      </div>
+
+      <div class="auth-footer" style="margin-top:8px;">
+        <a href="../../index.html">← Back to Nexabay</a>
+      </div>
+
+    </div>
+
+    <!-- SIDE PANEL -->
+    <div class="auth-side">
+      <div class="auth-side-content">
+        <div class="auth-logo">
+          <span class="logo-nexa">Nexa</span><span class="logo-bay">bay</span>
+        </div>
+        <h2>Join Africa's Biggest Platform</h2>
+        <p>Start buying, selling and earning today — completely free.</p>
+        <div class="auth-perks">
+          <div class="perk">✅ Free account forever</div>
+          <div class="perk">✅ Sell your first product today</div>
+          <div class="perk">✅ Get paid directly to your bank</div>
+          <div class="perk">✅ Buyer protection on all orders</div>
+          <div class="perk">✅ Access all 12 platform sections</div>
+          <div class="perk">✅ 200,000+ active community</div>
+        </div>
+        <div class="auth-stats">
+          <div class="astat"><span>Free</span>To join</div>
+          <div class="astat"><span>5 min</span>Setup</div>
+          <div class="astat"><span>24/7</span>Support</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="../../js/core/main.js"></script>
+  <script>
+
+    var accountType = 'buyer';
+
+    function setType(type) {
+      accountType = type;
+      document.getElementById('btn-buyer').classList.toggle('active', type === 'buyer');
+      document.getElementById('btn-seller').classList.toggle('active', type === 'seller');
+    }
+
+    function doRegister() {
+      var firstName = document.getElementById('reg-firstname').value.trim();
+      var lastName  = document.getElementById('reg-lastname').value.trim();
+      var email     = document.getElementById('reg-email').value.trim();
+      var phone     = document.getElementById('reg-phone').value.trim();
+      var state     = document.getElementById('reg-state').value;
+      var password  = document.getElementById('reg-password').value;
+      var confirm   = document.getElementById('reg-confirm').value;
+      var terms     = document.getElementById('reg-terms').checked;
+      var btn       = document.getElementById('reg-btn');
+
+      hideMessages();
+
+      if (!firstName) { showError('Enter your first name'); return; }
+      if (!lastName)  { showError('Enter your last name'); return; }
+      if (!email)     { showError('Enter your email'); return; }
+      if (!isValidEmail(email)) { showError('Enter a valid email address'); return; }
+      if (!phone)     { showError('Enter your phone number'); return; }
+      if (!state)     { showError('Select your state'); return; }
+      if (!password)  { showError('Create a password'); return; }
+      if (password.length < 6) { showError('Password must be at least 6 characters'); return; }
+      if (password !== confirm) { showError('Passwords do not match'); return; }
+      if (!terms)     { showError('Please accept the Terms of Service'); return; }
+
+      btn.textContent = 'Creating account...';
+      btn.disabled = true;
+
+      setTimeout(function() {
+        var users = JSON.parse(localStorage.getItem('nexa_users') || '[]');
+        var exists = users.find(function(u) { return u.email === email; });
+
+        if (exists) {
+          showError('❌ An account with this email already exists');
+          btn.textContent = 'Create Free Account';
+          btn.disabled = false;
+          return;
+        }
+
+        var newUser = {
+          id: Date.now(),
+          firstName: firstName,
+          lastName: lastName,
+          fullName: firstName + ' ' + lastName,
+          email: email,
+          phone: phone,
+          state: state,
+          password: password,
+          type: accountType,
+          joinedAt: new Date().toISOString(),
+          coins: 500,
+          verified: false,
+        };
+
+        users.push(newUser);
+        localStorage.setItem('nexa_users', JSON.stringify(users));
+        localStorage.setItem('nexa_current_user', JSON.stringify(newUser));
+
+        showSuccess('🎉 Account created! Welcome to Nexabay!');
+
+        setTimeout(function() {
+          if (accountType === 'seller') {
+            window.location.href = '../dashboard/seller.html';
+          } else {
+            window.location.href = '../../index.html';
+          }
+        }, 1500);
+
+      }, 1000);
+    }
+
+    function googleSignup() {
+      showError('Google signup coming soon — use email for now');
+    }
+
+    function phoneSignup() {
+      showError('Phone signup coming soon — use email for now');
+    }
+
+    function togglePassword(id) {
+      var input = document.getElementById(id);
+      input.type = input.type === 'password' ? 'text' : 'password';
+    }
+
+    function isValidEmail(email) {
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    }
+
+    function showError(msg) {
+      var el = document.getElementById('auth-error');
+      el.textContent = msg;
+      el.style.display = 'block';
+      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    function showSuccess(msg) {
+      var el = document.getElementById('auth-success');
+      el.textContent = msg;
+      el.style.display = 'block';
+    }
+
+    function hideMessages() {
+      document.getElementById('auth-error').style.display = 'none';
+      document.getElementById('auth-success').style.display = 'none';
+    }
+
+    // Password strength checker
+    document.addEventListener('DOMContentLoaded', function() {
+      var passInput = document.getElementById('reg-password');
+      if (passInput) {
+        passInput.addEventListener('input', function() {
+          var val = passInput.value;
+          var strength = document.getElementById('pass-strength');
+          if (!strength) return;
+          if (val.length === 0) {
+            strength.innerHTML = '';
+          } else if (val.length < 6) {
+            strength.innerHTML = '<span style="color:#ff4444">Weak</span>';
+          } else if (val.length < 10) {
+            strength.innerHTML = '<span style="color:#ff9500">Medium</span>';
+          } else {
+            strength.innerHTML = '<span style="color:#00c851">Strong ✓</span>';
+          }
+        });
+      }
+    });
+
+  </script>
+
+</body>
+</html>
