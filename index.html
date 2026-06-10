@@ -10,7 +10,7 @@
 </head>
 <body>
 
-  <!-- NAVBAR -->
+<!-- NAVBAR -->
   <nav class="navbar">
     <div class="nav-inner">
       <a href="index.html" class="logo">
@@ -30,25 +30,64 @@
         <button onclick="doSearch()" class="search-btn">🔍</button>
       </div>
       <div class="nav-actions">
-        <a href="pages/auth/login.html" class="nav-link">Login</a>
-        <a href="pages/auth/register.html" class="nav-btn">Sign Up</a>
-        <a href="pages/shop/cart.html" class="cart-icon">
+        <div id="nav-guest">
+          <a href="pages/auth/login.html" class="nav-link">Login</a>
+          <a href="pages/auth/register.html" class="nav-btn">Sign Up</a>
+        </div>
+        <div id="nav-user" style="display:none;">
+          <div class="nav-user-info">
+            <div class="nav-avatar-circle" id="nav-avatar-circle">U</div>
+            <span id="nav-username"></span>
+            <div class="nav-dropdown">
+              <a href="pages/dashboard/buyer.html">My Account</a>
+              <a href="pages/dashboard/seller.html">Seller Dashboard</a>
+              <a href="#" onclick="logoutUser()">Logout</a>
+            </div>
+          </div>
+        </div>
+        <a href="pages/shop/cart.html" class="cart-icon-desk">
           🛒 <span class="cart-count" id="cart-count">0</span>
         </a>
       </div>
-      <button class="hamburger" onclick="toggleMobileMenu()">☰</button>
+      <button class="hamburger" id="hamburger-btn" onclick="toggleMobileMenu()">☰</button>
     </div>
+
+    <!-- MOBILE MENU OVERLAY -->
+    <div class="mobile-menu-overlay" id="mobile-overlay" onclick="closeMobileMenu()"></div>
     <div class="mobile-menu" id="mobile-menu">
-      <a href="pages/auth/login.html">Login</a>
-      <a href="pages/auth/register.html">Sign Up</a>
-      <a href="pages/shop/browse.html">Shop</a>
-      <a href="pages/services/browse.html">Services</a>
-      <a href="pages/rentals/browse.html">Rentals</a>
-      <a href="pages/learn/browse.html">Learn</a>
-      <a href="pages/jobs/browse.html">Jobs</a>
+      <div class="mobile-menu-header">
+  <div class="logo"><span class="logo-nexa">Nexa</span><span class="logo-bay">bay</span></div>
+  <div id="mobile-header-actions" style="display:none;">
+    <a href="pages/dashboard/buyer.html" class="mh-btn account">Account</a>
+    <a href="#" onclick="logoutUser()" class="mh-btn logout">Logout</a>
+  </div>
+  <button onclick="closeMobileMenu()" class="close-menu-btn">✕</button>
+</div>
+      <div id="mobile-user-section">
+        <a href="pages/auth/login.html" class="mobile-auth-btn login">Login</a>
+        <a href="pages/auth/register.html" class="mobile-auth-btn signup">Sign Up</a>
+      </div>
+      <div class="mobile-menu-links">
+        <a href="pages/shop/browse.html">🛍️ Shop</a>
+        <a href="pages/services/browse.html">🔧 Services</a>
+        <a href="pages/rentals/browse.html">🏠 Rentals</a>
+        <a href="pages/learn/browse.html">🎓 Learn</a>
+        <a href="pages/jobs/browse.html">💼 Jobs</a>
+        <a href="pages/food/browse.html">🍔 Food</a>
+        <a href="pages/health/browse.html">🏥 Health</a>
+        <a href="pages/events/browse.html">🎉 Events</a>
+        <a href="pages/travel/browse.html">✈️ Travel</a>
+        <a href="pages/pay/index.html">🏦 NexaPay</a>
+      </div>
     </div>
   </nav>
 
+  <!-- FLOATING CART (mobile only) -->
+  <a href="pages/shop/cart.html" class="floating-cart" id="floating-cart">
+    🛒
+    <span class="floating-cart-count" id="floating-cart-count">0</span>
+  </a>
+  
   <!-- CATEGORY BAR -->
   <div class="cat-bar">
     <div class="cat-inner">

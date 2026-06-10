@@ -499,20 +499,65 @@
 
 .app-btn b { font-size: 1em; }
 
-/* ── RESPONSIVE ── */
+/* ── RESPONSIVE MOBILE ── */
 @media (max-width: 768px) {
+  /* HERO */
+  .hero { padding: 36px 0; }
+  .hero-inner {
+    flex-direction: column;
+    gap: 28px;
+    padding: 0 16px;
+  }
   .hero-image { display: none; }
   .hero-text h1 { font-size: 2.2em; }
-  .sections-grid { grid-template-columns: repeat(2, 1fr); }
-  .why-grid { grid-template-columns: 1fr; }
-  .testi-grid { grid-template-columns: 1fr; }
-  .seller-cta-inner { flex-direction: column; }
+  .hero-text p { font-size: 0.95em; }
+  .hero-btns { flex-direction: column; gap: 10px; }
+  .hero-btns a { text-align: center; width: 100%; }
+  .hero-stats { gap: 16px; flex-wrap: wrap; }
+  .hstat span { font-size: 1.3em; }
+
+  /* FLASH SALE */
+  .flash-inner { flex-direction: column; align-items: flex-start; gap: 10px; }
+  .flash-left { flex-wrap: wrap; gap: 10px; }
+  .flash-btn { width: 100%; text-align: center; }
+
+  /* SECTIONS */
+  .sections-area { padding: 32px 0; }
+  .sections-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .sec-card { padding: 14px 10px; }
+  .sec-icon { font-size: 1.6em; }
+  .sec-name { font-size: 0.82em; }
+  .sec-desc { font-size: 0.7em; }
+  .sec-count { font-size: 0.68em; }
+
+  /* WHY */
+  .why-section { padding: 32px 0; }
+  .why-grid { grid-template-columns: 1fr; gap: 14px; }
+  .why-card { padding: 18px; }
+
+  /* SELLER CTA */
+  .seller-cta { padding: 40px 0; }
+  .seller-cta-inner { flex-direction: column; gap: 28px; }
+  .scta-text h2 { font-size: 1.5em; }
   .scta-stats { width: 100%; }
+
+  /* TESTIMONIALS */
+  .testimonials { padding: 32px 0; }
+  .testi-grid { grid-template-columns: 1fr; gap: 14px; }
+
+  /* APP SECTION */
+  .app-section { padding: 32px 0; }
+  .app-text h2 { font-size: 1.5em; }
+  .app-btns { flex-direction: column; align-items: center; }
+  .app-btn { width: 100%; max-width: 280px; justify-content: center; }
 }
 
 @media (max-width: 480px) {
   .hero-text h1 { font-size: 1.8em; }
-  .hero-stats { gap: 16px; }
-  .sections-grid { grid-template-columns: repeat(2, 1fr); }
-  .flash-inner { flex-direction: column; align-items: flex-start; }
+  .hero-stats { gap: 12px; }
+  .hstat span { font-size: 1.2em; }
+  .sections-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+  .section-title { font-size: 1.3em; }
+  .flash-text { font-size: 0.82em; }
+  .scta-stats { grid-template-columns: 1fr 1fr; }
 }
