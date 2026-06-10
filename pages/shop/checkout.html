@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Checkout — Nexabay</title>
+  <link rel="stylesheet" href="../../css/main.css"/>
+  <link rel="stylesheet" href="../../css/checkout.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="nav-inner">
+      <a href="../../index.html" class="logo">
+        <span class="logo-nexa">Nexa</span><span class="logo-bay">bay</span>
+      </a>
+      <div class="nav-actions">
+        <a href="cart.html" class="nav-link">← Back to Cart</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- PROGRESS BAR -->
+  <div class="checkout-progress">
+    <div class="container">
+      <div class="progress-steps">
+        <div class="progress-step active">
+          <div class="step-circle">1</div>
+          <span>Delivery</span>
+        </div>
+        <div class="progress-line"></div>
+        <div class="progress-step" id="step2">
+          <div class="step-circle">2</div>
+          <span>Payment</span>
+        </div>
+        <div class="progress-line"></div>
+        <div class="progress-step" id="step3">
+          <div class="step-circle">3</div>
+          <span>Confirm</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CHECKOUT PAGE -->
+  <div class="container checkout-page">
+    <div class="checkout-layout">
+
+      <!-- LEFT — FORMS -->
+      <div class="checkout-left">
+
+        <!-- STEP 1 — DELIVERY -->
+        <div class="checkout-step" id="step-delivery">
+          <div class="step-header">
+            <h2>📦 Delivery Information</h2>
+          </div>
+
+          <div class="checkout-form">
+            <div class="form-row-2">
+              <div class="form-group">
+                <label>First Name</label>
+                <input type="text" id="del-firstname" placeholder="First name"/>
+              </div>
+              <div class="form-group">
+                <label>Last Name</label>
+                <input type="text" id="del-lastname" placeholder="Last name"/>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Phone Number</label>
+              <input type="tel" id="del-phone" placeholder="080xxxxxxxx"/>
+            </div>
+
+            <div class="form-group">
+              <label>Email Address</label>
+              <input type="email" id="del-email" placeholder="your@email.com"/>
+            </div>
+
+            <div class="form-group">
+              <label>Delivery Address</label>
+              <input type="text" id="del-address" placeholder="House number, Street name"/>
+            </div>
+
+            <div class="form-row-2">
+              <div class="form-group">
+                <label>State</label>
+                <select id="del-state">
+                  <option value="">Select state</option>
+                  <option>Lagos</option>
+                  <option>Abuja FCT</option>
+                  <option>Rivers</option>
+                  <option>Kano</option>
+                  <option>Oyo</option>
+                  <option>Enugu</option>
+                  <option>Anambra</option>
+                  <option>Delta</option>
+                  <option>Kaduna</option>
+                  <option>Ogun</option>
+                  <option>Edo</option>
+                  <option>Imo</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>City / LGA</label>
+                <input type="text" id="del-city" placeholder="City or LGA"/>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Delivery Note (Optional)</label>
+              <textarea
+                id="del-note"
+                placeholder="Any special instructions for delivery..."
+                rows="2"
+              ></textarea>
+            </div>
+
+            <!-- DELIVERY OPTIONS -->
+            <div class="delivery-options">
+              <h4>Select Delivery Speed</h4>
+              <label class="delivery-opt active" id="opt-standard">
+                <input type="radio" name="delivery-speed" value="standard" checked onchange="selectDelivery('standard')"/>
+                <div class="dopt-info">
+                  <div class="dopt-name">🚚 Standard Delivery</div>
+                  <div class="dopt-time">3-5 business days</div>
+                </div>
+                <div class="dopt-price">₦2,500</div>
+              </label>
+              <label class="delivery-opt" id="opt-express">
+                <input type="radio" name="delivery-speed" value="express" onchange="selectDelivery('express')"/>
+                <div class="dopt-info">
+                  <div class="dopt-name">⚡ Express Delivery</div>
+                  <div class="dopt-time">1-2 business days</div>
+                </div>
+                <div class="dopt-price">₦5,000</div>
+              </label>
+              <label class="delivery-opt" id="opt-sameday">
+                <input type="radio" name="delivery-speed" value="sameday" onchange="selectDelivery('sameday')"/>
+                <div class="dopt-info">
+                  <div class="dopt-name">🏃 Same Day Delivery</div>
+                  <div class="dopt-time">Lagos only • Order before 12pm</div>
+                </div>
+                <div class="dopt-price">₦8,000</div>
+              </label>
+            </div>
+
+            <button
+              class="btn-next"
+              onclick="goToPayment()"
+            >
+              Continue to Payment →
+            </button>
+
+          </div>
+        </div>
+
+        <!-- STEP 2 — PAYMENT -->
+        <div class="checkout-step" id="step-payment" style="display:none;">
+          <div class="step-header">
+            <h2>💳 Payment Method</h2>
+            <button class="back-step-btn" onclick="goToStep(1)">← Edit Delivery</button>
+          </div>
+
+          <!-- DELIVERY SUMMARY -->
+          <div class="delivery-summary" id="delivery-summary"></div>
+
+          <div class="payment-methods">
+
+            <label class="payment-opt active" id="pay-card">
+              <input type="radio" name="payment" value="card" checked onchange="selectPayment('card')"/>
+              <span class="pay-icon">💳</span>
+              <div class="pay-info">
+                <div class="pay-name">Debit / Credit Card</div>
+                <div class="pay-desc">Visa, Mastercard, Verve</div>
+              </div>
+              <span class="pay-check">✓</span>
+            </label>
+
+            <label class="payment-opt" id="pay-transfer">
+              <input type="radio" name="payment" value="transfer" onchange="selectPayment('transfer')"/>
+              <span class="pay-icon">🏦</span>
+              <div class="pay-info">
+                <div class="pay-name">Bank Transfer</div>
+                <div class="pay-desc">Direct transfer to Nexabay account</div>
+              </div>
+              <span class="pay-check">✓</span>
+            </label>
+
+            <label class="payment-opt" id="pay-ussd">
+              <input type="radio" name="payment" value="ussd" onchange="selectPayment('ussd')"/>
+              <span class="pay-icon">📱</span>
+              <div class="pay-info">
+                <div class="pay-name">USSD</div>
+                <div class="pay-desc">Pay with your bank USSD code</div>
+              </div>
+              <span class="pay-check">✓</span>
+            </label>
+
+            <label class="payment-opt" id="pay-wallet">
+              <input type="radio" name="payment" value="wallet" onchange="selectPayment('wallet')"/>
+              <span class="pay-icon">💰</span>
+              <div class="pay-info">
+                <div class="pay-name">Nexabay Wallet</div>
+                <div class="pay-desc">Pay with your wallet balance</div>
+              </div>
+              <span class="pay-check">✓</span>
+            </label>
+
+          </div>
+
+          <!-- CARD FORM -->
+          <div class="card-form" id="card-form">
+            <div class="form-group">
+              <label>Card Number</label>
+              <input
+                type="text"
+                id="card-number"
+                placeholder="0000 0000 0000 0000"
+                maxlength="19"
+                oninput="formatCardNumber(this)"
+              />
+            </div>
+            <div class="form-row-2">
+              <div class="form-group">
+                <label>Expiry Date</label>
+                <input
+                  type="text"
+                  id="card-expiry"
+                  placeholder="MM / YY"
+                  maxlength="7"
+                  oninput="formatExpiry(this)"
+                />
+              </div>
+              <div class="form-group">
+                <label>CVV</label>
+                <input
+                  type="password"
+                  id="card-cvv"
+                  placeholder="•••"
+                  maxlength="3"
+                />
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Cardholder Name</label>
+              <input
+                type="text"
+                id="card-name"
+                placeholder="Name on card"
+              />
+            </div>
+            <div class="card-secure">
+              🔒 Your card details are encrypted and secure
+            </div>
+          </div>
+
+          <!-- TRANSFER FORM -->
+          <div class="transfer-form" id="transfer-form" style="display:none;">
+            <div class="bank-details">
+              <h4>Transfer to this account:</h4>
+              <div class="bank-detail-row">
+                <span>Bank</span>
+                <b>GTBank</b>
+              </div>
+              <div class="bank-detail-row">
+                <span>Account Name</span>
+                <b>Nexabay Escrow Ltd</b>
+              </div>
+              <div class="bank-detail-row">
+                <span>Account Number</span>
+                <b>0123456789</b>
+              </div>
+              <div class="bank-detail-row">
+                <span>Amount</span>
+                <b id="transfer-amount">₦0</b>
+              </div>
+              <p class="transfer-note">
+                ⚠️ Use your Order ID as payment reference.
+                Your order will be confirmed within 30 minutes.
+              </p>
+            </div>
+          </div>
+
+          <button
+            class="btn-next"
+            onclick="goToConfirm()"
+          >
+            Review Order →
+          </button>
+
+        </div>
+
+        <!-- STEP 3 — CONFIRM -->
+        <div class="checkout-step" id="step-confirm" style="display:none;">
+          <div class="step-header">
+            <h2>✅ Review Your Order</h2>
+            <button class="back-step-btn" onclick="goToStep(2)">← Edit Payment</button>
+          </div>
+
+          <div id="order-review"></div>
+
+          <div class="escrow-notice">
+            <div class="escrow-icon">🔒</div>
+            <div>
+              <b>Protected by Nexabay Escrow</b>
+              <p>Your payment is held safely. It is only released to the seller after you confirm delivery.</p>
+            </div>
+          </div>
+
+          <button
+            class="btn-place-order"
+            onclick="placeOrder()"
+            id="place-order-btn"
+          >
+            Place Order — Pay Now
+          </button>
+
+        </div>
+
+        <!-- STEP 4 — SUCCESS -->
+        <div class="checkout-step" id="step-success" style="display:none;">
+          <div class="order-success">
+            <div class="success-icon">🎉</div>
+            <h2>Order Placed Successfully!</h2>
+            <p>Your order has been confirmed and is being processed.</p>
+            <div class="order-id-box">
+              Order ID: <b id="order-id-display"></b>
+            </div>
+            <div class="success-steps">
+              <div class="ss-step">📦 Order confirmed</div>
+              <div class="ss-step">🏭 Seller preparing</div>
+              <div class="ss-step">🚚 Out for delivery</div>
+              <div class="ss-step">✅ Delivered to you</div>
+            </div>
+            <div class="success-actions">
+              <a href="../../index.html" class="btn-primary">Continue Shopping</a>
+              <a href="../dashboard/buyer.html" class="btn-outline-dark">Track Order</a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- RIGHT — ORDER SUMMARY -->
+      <div class="checkout-right">
+        <div class="checkout-summary-card">
+          <h3>Order Summary</h3>
+          <div id="checkout-items-list"></div>
+          <div class="summary-divider"></div>
+          <div class="summary-row">
+            <span>Subtotal</span>
+            <span id="co-subtotal">₦0</span>
+          </div>
+          <div class="summary-row">
+            <span>Delivery</span>
+            <span id="co-delivery">₦2,500</span>
+          </div>
+          <div class="summary-divider"></div>
+          <div class="summary-total">
+            <span>Total</span>
+            <span id="co-total">₦0</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="../../js/core/main.js"></script>
+  <script>
+
+    var checkoutItems = [];
+    var deliveryFee = 2500;
+    var selectedPayment = 'card';
+    var deliveryInfo = {};
+    var currentStep = 1;
+
+    var DELIVERY_FEES = {
+      standard: 2500,
+      express: 5000,
+      sameday: 8000,
+    };
+
+    function loadCheckout() {
+      var raw = localStorage.getItem('nexa_checkout_items');
+      if (!raw) {
+        window.location.href = 'cart.html';
+        return;
+      }
+      checkoutItems = JSON.parse(raw);
+
+      var user = JSON.parse(localStorage.getItem('nexa_current_user') || 'null');
+      if (user) {
+        if (document.getElementById('del-firstname')) {
+          document.getElementById('del-firstname').value = user.firstName || '';
+          document.getElementById('del-lastname').value = user.lastName || '';
+          document.getElementById('del-phone').value = user.phone || '';
+          document.getElementById('del-email').value = user.email || '';
+        }
+      }
+
+      renderCheckoutItems();
+      updateTotals();
+    }
+
+    function renderCheckoutItems() {
+      var list = document.getElementById('checkout-items-list');
+      if (!list) return;
+      list.innerHTML = checkoutItems.map(function(item) {
+        return '<div class="co-item">' +
+          '<span class="co-item-emoji">' + item.emoji + '</span>' +
+          '<div class="co-item-info">' +
+            '<div class="co-item-name">' + item.name + '</div>' +
+            '<div class="co-item-qty">Qty: ' + (item.qty || 1) + '</div>' +
+          '</div>' +
+          '<div class="co-item-price">₦' + (item.price * (item.qty || 1)).toLocaleString() + '</div>' +
+        '</div>';
+      }).join('');
+    }
+
+    function updateTotals() {
+      var subtotal = checkoutItems.reduce(function(sum, item) {
+        return sum + item.price * (item.qty || 1);
+      }, 0);
+      var total = subtotal + deliveryFee;
+
+      var coSub = document.getElementById('co-subtotal');
+      var coDel = document.getElementById('co-delivery');
+      var coTot = document.getElementById('co-total');
+      var trAmt = document.getElementById('transfer-amount');
+
+      if (coSub) coSub.textContent = '₦' + subtotal.toLocaleString();
+      if (coDel) coDel.textContent = '₦' + deliveryFee.toLocaleString();
+      if (coTot) coTot.textContent = '₦' + total.toLocaleString();
+      if (trAmt) trAmt.textContent = '₦' + total.toLocaleString();
+    }
+
+    function selectDelivery(type) {
+      deliveryFee = DELIVERY_FEES[type] || 2500;
+      var opts = ['standard', 'express', 'sameday'];
+      opts.forEach(function(o) {
+        var el = document.getElementById('opt-' + o);
+        if (el) el.classList.toggle('active', o === type);
+      });
+      updateTotals();
+    }
+
+    function selectPayment(type) {
+      selectedPayment = type;
+      var types = ['card', 'transfer', 'ussd', 'wallet'];
+      types.forEach(function(t) {
+        var el = document.getElementById('pay-' + t);
+        if (el) el.classList.toggle('active', t === type);
+      });
+
+      document.getElementById('card-form').style.display = type === 'card' ? 'block' : 'none';
+      document.getElementById('transfer-form').style.display = type === 'transfer' ? 'block' : 'none';
+    }
+
+    function formatCardNumber(input) {
+      var val = input.value.replace(/\D/g, '').substring(0, 16);
+      input.value = val.replace(/(.{4})/g, '$1 ').trim();
+    }
+
+    function formatExpiry(input) {
+      var val = input.value.replace(/\D/g, '').substring(0, 4);
+      if (val.length >= 2) {
+        input.value = val.substring(0, 2) + ' / ' + val.substring(2);
+      } else {
+        input.value = val;
+      }
+    }
+
+    function goToPayment() {
+      var firstName = document.getElementById('del-firstname').value.trim();
+      var lastName  = document.getElementById('del-lastname').value.trim();
+      var phone     = document.getElementById('del-phone').value.trim();
+      var email     = document.getElementById('del-email').value.trim();
+      var address   = document.getElementById('del-address').value.trim();
+      var state     = document.getElementById('del-state').value;
+      var city      = document.getElementById('del-city').value.trim();
+
+      if (!firstName) { showToast('⚠️ Enter your first name', '#ff9500'); return; }
+      if (!lastName)  { showToast('⚠️ Enter your last name', '#ff9500'); return; }
+      if (!phone)     { showToast('⚠️ Enter your phone number', '#ff9500'); return; }
+      if (!email)     { showToast('⚠️ Enter your email', '#ff9500'); return; }
+      if (!address)   { showToast('⚠️ Enter your delivery address', '#ff9500'); return; }
+      if (!state)     { showToast('⚠️ Select your state', '#ff9500'); return; }
+      if (!city)      { showToast('⚠️ Enter your city', '#ff9500'); return; }
+
+      deliveryInfo = {
+        name: firstName + ' ' + lastName,
+        phone: phone,
+        email: email,
+        address: address + ', ' + city + ', ' + state,
+      };
+
+      var summary = document.getElementById('delivery-summary');
+      if (summary) {
+        summary.innerHTML =
+          '<div class="del-summary-box">' +
+            '<div class="del-summary-row"><span>📦 Deliver to:</span><b>' + deliveryInfo.name + '</b></div>' +
+            '<div class="del-summary-row"><span>📍 Address:</span><b>' + deliveryInfo.address + '</b></div>' +
+            '<div class="del-summary-row"><span>📱 Phone:</span><b>' + deliveryInfo.phone + '</b></div>' +
+          '</div>';
+      }
+
+      goToStep(2);
+    }
+
+    function goToConfirm() {
+      if (selectedPayment === 'card') {
+        var cardNum = document.getElementById('card-number').value.trim();
+        var expiry  = document.getElementById('card-expiry').value.trim();
+        var cvv     = document.getElementById('card-cvv').value.trim();
+        var name    = document.getElementById('card-name').value.trim();
+
+        if (!cardNum || cardNum.replace(/\s/g, '').length < 16) {
+          showToast('⚠️ Enter valid card number', '#ff9500');
+          return;
+        }
+        if (!expiry) { showToast('⚠️ Enter expiry date', '#ff9500'); return; }
+        if (!cvv || cvv.length < 3) { showToast('⚠️ Enter CVV', '#ff9500'); return; }
+        if (!name) { showToast('⚠️ Enter cardholder name', '#ff9500'); return; }
+      }
+
+      var subtotal = checkoutItems.reduce(function(sum, i) {
+        return sum + i.price * (i.qty || 1);
+      }, 0);
+      var total = subtotal + deliveryFee;
+
+      var review = document.getElementById('order-review');
+      if (review) {
+        review.innerHTML =
+          '<div class="order-review-card">' +
+            '<h4>Items</h4>' +
+            checkoutItems.map(function(item) {
+              return '<div class="or-item">' +
+                '<span>' + item.emoji + ' ' + item.name + ' x' + (item.qty || 1) + '</span>' +
+                '<span>₦' + (item.price * (item.qty || 1)).toLocaleString() + '</span>' +
+              '</div>';
+            }).join('') +
+            '<div class="or-divider"></div>' +
+            '<div class="or-item"><span>Subtotal</span><span>₦' + subtotal.toLocaleString() + '</span></div>' +
+            '<div class="or-item"><span>Delivery</span><span>₦' + deliveryFee.toLocaleString() + '</span></div>' +
+            '<div class="or-item total-row"><span>Total</span><span>₦' + total.toLocaleString() + '</span></div>' +
+            '<div class="or-divider"></div>' +
+            '<div class="or-item"><span>Deliver to</span><span>' + (deliveryInfo.name || 'N/A') + '</span></div>' +
+            '<div class="or-item"><span>Address</span><span>' + (deliveryInfo.address || 'N/A') + '</span></div>' +
+            '<div class="or-item"><span>Payment</span><span>' + selectedPayment.toUpperCase() + '</span></div>' +
+          '</div>';
+      }
+
+      goToStep(3);
+    }
+
+    function placeOrder() {
+      var btn = document.getElementById('place-order-btn');
+      btn.textContent = 'Processing...';
+      btn.disabled = true;
+
+      setTimeout(function() {
+        var orderId = 'NXB' + Date.now().toString().slice(-8).toUpperCase();
+
+        var orders = JSON.parse(localStorage.getItem('nexa_orders') || '[]');
+        orders.push({
+          id: orderId,
+          items: checkoutItems,
+          delivery: deliveryInfo,
+          payment: selectedPayment,
+          deliveryFee: deliveryFee,
+          total: checkoutItems.reduce(function(s, i) {
+            return s + i.price * (i.qty || 1);
+          }, 0) + deliveryFee,
+          status: 'confirmed',
+          date: new Date().toISOString(),
+        });
+        localStorage.setItem('nexa_orders', JSON.stringify(orders));
+
+        localStorage.removeItem('nexa_cart');
+        localStorage.removeItem('nexa_checkout_items');
+
+        var display = document.getElementById('order-id-display');
+        if (display) display.textContent = orderId;
+
+        goToStep(4);
+      }, 2000);
+    }
+
+    function goToStep(step) {
+      currentStep = step;
+      var steps = ['delivery', 'payment', 'confirm', 'success'];
+      steps.forEach(function(s, i) {
+        var el = document.getElementById('step-' + s);
+        if (el) el.style.display = (i + 1 === step) ? 'block' : 'none';
+      });
+
+      for (var i = 1; i <= 3; i++) {
+        var el = document.getElementById('step' + i);
+        if (el) {
+          el.classList.toggle('active', i <= step);
+          el.classList.toggle('done', i < step);
+        }
+      }
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      loadCheckout();
+      updateCartCount();
+    });
+
+  </script>
+
+</body>
+</html>

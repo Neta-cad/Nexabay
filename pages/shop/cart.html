@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Cart — Nexabay</title>
+  <link rel="stylesheet" href="../../css/main.css"/>
+  <link rel="stylesheet" href="../../css/cart.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="nav-inner">
+      <a href="../../index.html" class="logo">
+        <span class="logo-nexa">Nexa</span><span class="logo-bay">bay</span>
+      </a>
+      <div class="search-bar">
+        <input type="text" id="search-input" placeholder="Search products..."/>
+        <button onclick="doSearch()" class="search-btn">🔍</button>
+      </div>
+      <div class="nav-actions">
+        <a href="../auth/login.html" class="nav-link">Login</a>
+        <a href="../auth/register.html" class="nav-btn">Sign Up</a>
+        <a href="cart.html" class="cart-icon">
+          🛒 <span class="cart-count" id="cart-count">0</span>
+        </a>
+      </div>
+      <button class="hamburger" onclick="toggleMobileMenu()">☰</button>
+    </div>
+    <div class="mobile-menu" id="mobile-menu">
+      <a href="../../index.html">Home</a>
+      <a href="browse.html">Shop</a>
+      <a href="../auth/login.html">Login</a>
+    </div>
+  </nav>
+
+  <!-- BREADCRUMB -->
+  <div class="breadcrumb">
+    <div class="container">
+      <a href="../../index.html">Home</a>
+      <span>›</span>
+      <a href="browse.html">Shop</a>
+      <span>›</span>
+      <span>Cart</span>
+    </div>
+  </div>
+
+  <!-- CART PAGE -->
+  <div class="container cart-page">
+
+    <h1 class="cart-title">🛒 My Cart <span id="cart-item-count"></span></h1>
+
+    <!-- EMPTY CART -->
+    <div id="empty-cart" style="display:none;">
+      <div class="empty-state">
+        <div class="empty-icon">🛒</div>
+        <h3>Your cart is empty</h3>
+        <p>Add some products to get started</p>
+        <a href="browse.html" class="btn-primary">Start Shopping</a>
+      </div>
+    </div>
+
+    <!-- CART CONTENT -->
+    <div id="cart-content" style="display:none;">
+      <div class="cart-layout">
+
+        <!-- CART ITEMS -->
+        <div class="cart-items">
+
+          <!-- SELECT ALL -->
+          <div class="cart-select-all">
+            <label class="checkbox-label">
+              <input type="checkbox" id="select-all" onchange="toggleSelectAll()"/>
+              Select All
+            </label>
+            <button onclick="removeSelected()" class="remove-selected-btn">
+              🗑️ Remove Selected
+            </button>
+          </div>
+
+          <div id="cart-list"></div>
+
+        </div>
+
+        <!-- ORDER SUMMARY -->
+        <div class="cart-summary">
+          <div class="summary-card">
+            <h3>Order Summary</h3>
+
+            <div class="summary-row">
+              <span>Subtotal (<span id="sum-count">0</span> items)</span>
+              <span id="sum-subtotal">₦0</span>
+            </div>
+
+            <div class="summary-row">
+              <span>Delivery Fee</span>
+              <span id="sum-delivery">₦2,500</span>
+            </div>
+
+            <div class="summary-row discount-row">
+              <span>Discount</span>
+              <span id="sum-discount" class="discount-amount">-₦0</span>
+            </div>
+
+            <div class="promo-input">
+              <input
+                type="text"
+                id="promo-code"
+                placeholder="Promo code"
+              />
+              <button onclick="applyPromo()">Apply</button>
+            </div>
+
+            <div class="summary-divider"></div>
+
+            <div class="summary-total">
+              <span>Total</span>
+              <span id="sum-total">₦0</span>
+            </div>
+
+            <div class="summary-savings" id="sum-savings"></div>
+
+            <button
+              class="checkout-btn"
+              onclick="proceedToCheckout()"
+            >
+              Proceed to Checkout →
+            </button>
+
+            <div class="summary-secure">
+              🔒 Secured by Nexabay Escrow
+            </div>
+
+            <div class="summary-methods">
+              <span>💳</span>
+              <span>🏦</span>
+              <span>📱</span>
+              <span>💰</span>
+            </div>
+
+          </div>
+
+          <!-- CONTINUE SHOPPING -->
+          <a href="browse.html" class="continue-shopping">
+            ← Continue Shopping
+          </a>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="../../js/core/main.js"></script>
+  <script>
+
+    var cartItems = [];
+    var promoApplied = false;
+    var promoDiscount = 0;
+    var DELIVERY_FEE = 2500;
+
+    function loadCart() {
+      var raw = localStorage.getItem('nexa_cart');
+      var rawItems = raw ? JSON.parse(raw) : [];
+
+      // Group same items together
+      var grouped = {};
+      rawItems.forEach(function(item) {
+        var key = item.id;
+        if (grouped[key]) {
+          grouped[key].qty++;
+        } else {
+          grouped[key] = Object.assign({}, item, { qty: 1, selected: true });
+        }
+      });
+
+      cartItems = Object.values(grouped);
+      renderCart();
+    }
+
+    function renderCart() {
+      var empty = document.getElementById('empty-cart');
+      var content = document.getElementById('cart-content');
+      var countEl = document.getElementById('cart-item-count');
+
+      if (cartItems.length === 0) {
+        empty.style.display = 'block';
+        content.style.display = 'none';
+        if (countEl) countEl.textContent = '';
+        return;
+      }
+
+      empty.style.display = 'none';
+      content.style.display = 'block';
+      if (countEl) countEl.textContent = '(' + cartItems.length + ' items)';
+
+      var list = document.getElementById('cart-list');
+      list.innerHTML = cartItems.map(function(item, i) {
+        return '<div class="cart-item" id="cart-item-' + i + '">' +
+          '<div class="ci-left">' +
+            '<input type="checkbox" class="ci-check" ' + (item.selected ? 'checked' : '') + ' onchange="toggleItem(' + i + ')">' +
+            '<div class="ci-img">' + item.emoji + '</div>' +
+            '<div class="ci-info">' +
+              '<div class="ci-name">' + item.name + '</div>' +
+              '<div class="ci-price">₦' + item.price.toLocaleString() + '</div>' +
+              '<div class="ci-total">Total: ₦' + (item.price * item.qty).toLocaleString() + '</div>' +
+            '</div>' +
+          '</div>' +
+          '<div class="ci-right">' +
+            '<div class="ci-qty">' +
+              '<button onclick="changeItemQty(' + i + ', -1)">−</button>' +
+              '<span>' + item.qty + '</span>' +
+              '<button onclick="changeItemQty(' + i + ', 1)">+</button>' +
+            '</div>' +
+            '<button class="ci-remove" onclick="removeItem(' + i + ')">🗑️</button>' +
+          '</div>' +
+        '</div>';
+      }).join('');
+
+      updateSummary();
+    }
+
+    function toggleItem(index) {
+      cartItems[index].selected = !cartItems[index].selected;
+      updateSummary();
+    }
+
+    function toggleSelectAll() {
+      var checked = document.getElementById('select-all').checked;
+      cartItems.forEach(function(item) { item.selected = checked; });
+      renderCart();
+    }
+
+    function changeItemQty(index, delta) {
+      cartItems[index].qty = Math.max(1, Math.min(99, cartItems[index].qty + delta));
+      renderCart();
+      saveCart();
+    }
+
+    function removeItem(index) {
+      cartItems.splice(index, 1);
+      renderCart();
+      saveCart();
+      updateCartCount();
+    }
+
+    function removeSelected() {
+      cartItems = cartItems.filter(function(item) { return !item.selected; });
+      renderCart();
+      saveCart();
+      updateCartCount();
+    }
+
+    function saveCart() {
+      var flat = [];
+      cartItems.forEach(function(item) {
+        for (var i = 0; i < item.qty; i++) {
+          flat.push({ id: item.id, name: item.name, price: item.price, emoji: item.emoji });
+        }
+      });
+      localStorage.setItem('nexa_cart', JSON.stringify(flat));
+    }
+
+    function updateSummary() {
+      var selected = cartItems.filter(function(i) { return i.selected; });
+      var subtotal = selected.reduce(function(sum, i) { return sum + i.price * i.qty; }, 0);
+      var delivery = selected.length > 0 ? DELIVERY_FEE : 0;
+      var discount = promoApplied ? promoDiscount : 0;
+      var total = subtotal + delivery - discount;
+
+      document.getElementById('sum-count').textContent = selected.reduce(function(s, i) { return s + i.qty; }, 0);
+      document.getElementById('sum-subtotal').textContent = '₦' + subtotal.toLocaleString();
+      document.getElementById('sum-delivery').textContent = delivery > 0 ? '₦' + delivery.toLocaleString() : 'FREE';
+      document.getElementById('sum-discount').textContent = '-₦' + discount.toLocaleString();
+      document.getElementById('sum-total').textContent = '₦' + Math.max(0, total).toLocaleString();
+
+      var savings = document.getElementById('sum-savings');
+      if (discount > 0) {
+        savings.textContent = '🎉 You save ₦' + discount.toLocaleString() + ' with promo!';
+        savings.style.display = 'block';
+      } else {
+        savings.style.display = 'none';
+      }
+    }
+
+    function applyPromo() {
+      var code = document.getElementById('promo-code').value.trim().toUpperCase();
+      var PROMOS = {
+        'NEXA10': 0.10,
+        'WELCOME': 0.15,
+        'SAVE20': 0.20,
+      };
+
+      if (!code) {
+        showToast('⚠️ Enter a promo code', '#ff9500');
+        return;
+      }
+
+      if (promoApplied) {
+        showToast('⚠️ Promo already applied', '#ff9500');
+        return;
+      }
+
+      if (PROMOS[code]) {
+        var selected = cartItems.filter(function(i) { return i.selected; });
+        var subtotal = selected.reduce(function(sum, i) { return sum + i.price * i.qty; }, 0);
+        promoDiscount = Math.round(subtotal * PROMOS[code]);
+        promoApplied = true;
+        updateSummary();
+        showToast('✅ Promo applied! ' + (PROMOS[code] * 100) + '% off');
+      } else {
+        showToast('❌ Invalid promo code', '#ff4444');
+      }
+    }
+
+    function proceedToCheckout() {
+      var selected = cartItems.filter(function(i) { return i.selected; });
+      if (selected.length === 0) {
+        showToast('⚠️ Select items to checkout', '#ff9500');
+        return;
+      }
+
+      var user = localStorage.getItem('nexa_current_user');
+      if (!user) {
+        showToast('⚠️ Please login to checkout', '#ff9500');
+        setTimeout(function() {
+          window.location.href = '../auth/login.html';
+        }, 1500);
+        return;
+      }
+
+      localStorage.setItem('nexa_checkout_items', JSON.stringify(selected));
+      window.location.href = 'checkout.html';
+    }
+
+    function doSearch() {
+      var q = document.getElementById('search-input').value.trim();
+      if (!q) return;
+      window.location.href = 'browse.html?q=' + encodeURIComponent(q);
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      loadCart();
+      updateCartCount();
+    });
+
+  </script>
+
+</body>
+</html>

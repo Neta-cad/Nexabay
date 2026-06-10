@@ -1,0 +1,1086 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Seller Dashboard — Nexabay</title>
+  <link rel="stylesheet" href="../../css/main.css"/>
+  <link rel="stylesheet" href="../../css/dashboard.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+</head>
+<body class="dashboard-body">
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="nav-inner">
+      <a href="../../index.html" class="logo">
+        <span class="logo-nexa">Nexa</span><span class="logo-bay">bay</span>
+      </a>
+      <div class="nav-actions">
+        <span class="nav-link" id="nav-seller-name">My Shop</span>
+        <a href="../../index.html" class="nav-link">← Back to Site</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="dashboard-layout">
+
+    <!-- SIDEBAR -->
+    <aside class="dash-sidebar">
+      <div class="dash-profile">
+        <div class="dash-avatar" id="dash-avatar">S</div>
+        <div class="dash-name" id="dash-name">Seller</div>
+        <div class="dash-badge">⭐ Verified Seller</div>
+      </div>
+
+      <nav class="dash-nav">
+        <a href="#" class="dash-nav-item active" onclick="showTab('overview')">
+          📊 Overview
+        </a>
+        <a href="#" class="dash-nav-item" onclick="showTab('products')">
+          📦 My Products
+        </a>
+        <a href="#" class="dash-nav-item" onclick="showTab('add-product')">
+          ➕ Add Product
+        </a>
+        <a href="#" class="dash-nav-item" onclick="showTab('orders')">
+          🛒 Orders
+        </a>
+        <a href="#" class="dash-nav-item" onclick="showTab('earnings')">
+          💰 Earnings
+        </a>
+        <a href="#" class="dash-nav-item" onclick="showTab('analytics')">
+          📈 Analytics
+        </a>
+        <a href="#" class="dash-nav-item" onclick="showTab('settings')">
+          ⚙️ Settings
+        </a>
+        <a href="../auth/login.html" class="dash-nav-item logout">
+          🚪 Logout
+        </a>
+      </nav>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="dash-main">
+
+      <!-- OVERVIEW TAB -->
+      <div class="dash-tab" id="tab-overview">
+        <div class="dash-header">
+          <h1>Welcome back! 👋</h1>
+          <p>Here is your shop performance today</p>
+        </div>
+
+        <!-- STATS -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon">💰</div>
+            <div class="stat-info">
+              <div class="stat-value" id="stat-revenue">₦0</div>
+              <div class="stat-label">Total Revenue</div>
+              <div class="stat-change positive">+12% this month</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">🛒</div>
+            <div class="stat-info">
+              <div class="stat-value" id="stat-orders">0</div>
+              <div class="stat-label">Total Orders</div>
+              <div class="stat-change positive">+8 today</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">📦</div>
+            <div class="stat-info">
+              <div class="stat-value" id="stat-products">0</div>
+              <div class="stat-label">Products Listed</div>
+              <div class="stat-change">Active listings</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">⭐</div>
+            <div class="stat-info">
+              <div class="stat-value">4.8</div>
+              <div class="stat-label">Shop Rating</div>
+              <div class="stat-change positive">234 reviews</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">👁️</div>
+            <div class="stat-info">
+              <div class="stat-value">1,240</div>
+              <div class="stat-label">Profile Views</div>
+              <div class="stat-change positive">+15% this week</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">💸</div>
+            <div class="stat-info">
+              <div class="stat-value" id="stat-balance">₦0</div>
+              <div class="stat-label">Available Balance</div>
+              <div class="stat-change">
+                <button onclick="showTab('earnings')" class="withdraw-quick-btn">Withdraw →</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- RECENT ORDERS -->
+        <div class="dash-section">
+          <div class="sec-header">
+            <h2>Recent Orders</h2>
+            <button onclick="showTab('orders')" class="see-all">See All →</button>
+          </div>
+          <div class="orders-table-wrap">
+            <table class="orders-table">
+              <thead>
+                <tr>
+                  <th>Order ID</th>
+                  <th>Product</th>
+                  <th>Buyer</th>
+                  <th>Amount</th>
+                  <th>Status</th>
+                  <th>Date</th>
+                </tr>
+              </thead>
+              <tbody id="recent-orders-body">
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- QUICK ACTIONS -->
+        <div class="dash-section">
+          <h2>Quick Actions</h2>
+          <div class="quick-actions">
+            <button class="quick-btn" onclick="showTab('add-product')">
+              ➕ Add New Product
+            </button>
+            <button class="quick-btn" onclick="showTab('orders')">
+              📦 View All Orders
+            </button>
+            <button class="quick-btn" onclick="showTab('earnings')">
+              💸 Withdraw Earnings
+            </button>
+            <button class="quick-btn" onclick="showTab('analytics')">
+              📈 View Analytics
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- PRODUCTS TAB -->
+      <div class="dash-tab" id="tab-products" style="display:none;">
+        <div class="dash-header">
+          <h1>My Products</h1>
+          <button class="btn-primary" onclick="showTab('add-product')">
+            ➕ Add Product
+          </button>
+        </div>
+
+        <div class="products-toolbar">
+          <input
+            type="text"
+            id="product-search"
+            placeholder="Search products..."
+            oninput="filterMyProducts()"
+          />
+          <select id="product-filter" onchange="filterMyProducts()">
+            <option value="all">All Products</option>
+            <option value="active">Active</option>
+            <option value="inactive">Inactive</option>
+          </select>
+        </div>
+
+        <div id="my-products-list" class="my-products-list"></div>
+
+      </div>
+
+      <!-- ADD PRODUCT TAB -->
+      <div class="dash-tab" id="tab-add-product" style="display:none;">
+        <div class="dash-header">
+          <h1>Add New Product</h1>
+        </div>
+
+        <div class="add-product-form">
+
+          <div class="form-section">
+            <h3>Basic Information</h3>
+
+            <div class="form-group">
+              <label>Product Name *</label>
+              <input
+                type="text"
+                id="ap-name"
+                placeholder="Enter product name"
+                maxlength="100"
+              />
+            </div>
+
+            <div class="form-group">
+              <label>Category *</label>
+              <select id="ap-category">
+                <option value="">Select category</option>
+                <option>Electronics</option>
+                <option>Fashion</option>
+                <option>Home & Living</option>
+                <option>Beauty</option>
+                <option>Sports</option>
+                <option>Food & Drinks</option>
+                <option>Books</option>
+                <option>Toys & Games</option>
+                <option>Automotive</option>
+                <option>Health</option>
+                <option>Other</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>Description *</label>
+              <textarea
+                id="ap-desc"
+                placeholder="Describe your product in detail..."
+                rows="4"
+              ></textarea>
+            </div>
+
+            <div class="form-row-2">
+              <div class="form-group">
+                <label>Condition *</label>
+                <select id="ap-condition">
+                  <option value="new">New</option>
+                  <option value="used">Used - Like New</option>
+                  <option value="used-good">Used - Good</option>
+                  <option value="used-fair">Used - Fair</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Stock Quantity *</label>
+                <input
+                  type="number"
+                  id="ap-stock"
+                  placeholder="How many available?"
+                  min="1"
+                />
+              </div>
+            </div>
+
+          </div>
+
+          <div class="form-section">
+            <h3>Pricing</h3>
+            <div class="form-row-2">
+              <div class="form-group">
+                <label>Selling Price (₦) *</label>
+                <input
+                  type="number"
+                  id="ap-price"
+                  placeholder="0"
+                  min="0"
+                  oninput="calculateProfit()"
+                />
+              </div>
+              <div class="form-group">
+                <label>Original Price (₦) — for discount display</label>
+                <input
+                  type="number"
+                  id="ap-old-price"
+                  placeholder="0"
+                  min="0"
+                  oninput="calculateProfit()"
+                />
+              </div>
+            </div>
+
+            <div class="profit-calc" id="profit-calc" style="display:none;">
+              <div class="profit-row">
+                <span>Selling Price</span>
+                <span id="pc-price">₦0</span>
+              </div>
+              <div class="profit-row">
+                <span>Nexabay Fee (5%)</span>
+                <span id="pc-fee" class="negative">-₦0</span>
+              </div>
+              <div class="profit-row total">
+                <span>You Receive</span>
+                <span id="pc-receive" class="positive">₦0</span>
+              </div>
+              <div class="profit-row">
+                <span>Discount Shown</span>
+                <span id="pc-discount" class="discount">0%</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <h3>Product Image</h3>
+            <div class="image-upload" id="image-upload" onclick="triggerImageUpload()">
+              <div class="upload-placeholder" id="upload-placeholder">
+                <div class="upload-icon">📷</div>
+                <p>Click to add product image</p>
+                <small>JPG, PNG up to 5MB</small>
+              </div>
+              <div class="upload-preview" id="upload-preview" style="display:none;">
+                <span id="preview-emoji">📦</span>
+              </div>
+            </div>
+            <input type="file" id="image-file" style="display:none;" accept="image/*" onchange="previewImage()"/>
+
+            <div class="emoji-selector">
+              <p>Or pick an emoji icon:</p>
+              <div class="emoji-grid">
+                <span onclick="selectEmoji('📱')">📱</span>
+                <span onclick="selectEmoji('💻')">💻</span>
+                <span onclick="selectEmoji('📺')">📺</span>
+                <span onclick="selectEmoji('👟')">👟</span>
+                <span onclick="selectEmoji('👗')">👗</span>
+                <span onclick="selectEmoji('👜')">👜</span>
+                <span onclick="selectEmoji('🏠')">🏠</span>
+                <span onclick="selectEmoji('🍳')">🍳</span>
+                <span onclick="selectEmoji('💄')">💄</span>
+                <span onclick="selectEmoji('⚽')">⚽</span>
+                <span onclick="selectEmoji('🍔')">🍔</span>
+                <span onclick="selectEmoji('📚')">📚</span>
+                <span onclick="selectEmoji('🎮')">🎮</span>
+                <span onclick="selectEmoji('⌚')">⌚</span>
+                <span onclick="selectEmoji('🔊')">🔊</span>
+                <span onclick="selectEmoji('🧴')">🧴</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <h3>Shipping & Location</h3>
+            <div class="form-row-2">
+              <div class="form-group">
+                <label>Your Location *</label>
+                <select id="ap-location">
+                  <option value="">Select state</option>
+                  <option>Lagos</option>
+                  <option>Abuja FCT</option>
+                  <option>Rivers</option>
+                  <option>Kano</option>
+                  <option>Oyo</option>
+                  <option>Enugu</option>
+                  <option>Anambra</option>
+                  <option>Delta</option>
+                  <option>Edo</option>
+                  <option>Imo</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Ships To</label>
+                <select id="ap-ships-to">
+                  <option value="nationwide">Nationwide</option>
+                  <option value="local">My State Only</option>
+                  <option value="lagos">Lagos Only</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="checkbox-label">
+                <input type="checkbox" id="ap-negotiable"/>
+                Price is negotiable (buyers can make offers)
+              </label>
+            </div>
+          </div>
+
+          <div id="ap-error" class="ap-error" style="display:none;"></div>
+          <div id="ap-success" class="ap-success" style="display:none;"></div>
+
+          <div class="form-actions">
+            <button class="btn-save-draft" onclick="saveDraft()">
+              💾 Save as Draft
+            </button>
+            <button class="btn-publish" onclick="publishProduct()">
+              🚀 Publish Product
+            </button>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ORDERS TAB -->
+      <div class="dash-tab" id="tab-orders" style="display:none;">
+        <div class="dash-header">
+          <h1>Orders</h1>
+        </div>
+
+        <div class="orders-filter">
+          <button class="order-filter-btn active" onclick="filterOrders('all', this)">All</button>
+          <button class="order-filter-btn" onclick="filterOrders('pending', this)">Pending</button>
+          <button class="order-filter-btn" onclick="filterOrders('processing', this)">Processing</button>
+          <button class="order-filter-btn" onclick="filterOrders('shipped', this)">Shipped</button>
+          <button class="order-filter-btn" onclick="filterOrders('delivered', this)">Delivered</button>
+        </div>
+
+        <div class="orders-table-wrap">
+          <table class="orders-table">
+            <thead>
+              <tr>
+                <th>Order ID</th>
+                <th>Product</th>
+                <th>Buyer</th>
+                <th>Amount</th>
+                <th>Status</th>
+                <th>Date</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="all-orders-body"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- EARNINGS TAB -->
+      <div class="dash-tab" id="tab-earnings" style="display:none;">
+        <div class="dash-header">
+          <h1>Earnings & Withdrawals</h1>
+        </div>
+
+        <div class="earnings-cards">
+          <div class="earning-card">
+            <div class="ec-label">Total Earned</div>
+            <div class="ec-value" id="ec-total">₦0</div>
+          </div>
+          <div class="earning-card">
+            <div class="ec-label">Available Balance</div>
+            <div class="ec-value green" id="ec-available">₦0</div>
+          </div>
+          <div class="earning-card">
+            <div class="ec-label">Pending Clearance</div>
+            <div class="ec-value orange" id="ec-pending">₦0</div>
+          </div>
+          <div class="earning-card">
+            <div class="ec-label">Total Withdrawn</div>
+            <div class="ec-value" id="ec-withdrawn">₦0</div>
+          </div>
+        </div>
+
+        <div class="withdraw-section">
+          <h3>Withdraw Funds</h3>
+          <div class="withdraw-form">
+            <div class="form-group">
+              <label>Bank Name</label>
+              <select id="wd-bank">
+                <option>GTBank</option>
+                <option>Access Bank</option>
+                <option>First Bank</option>
+                <option>Zenith Bank</option>
+                <option>UBA</option>
+                <option>Fidelity Bank</option>
+                <option>Sterling Bank</option>
+                <option>Opay</option>
+                <option>Palmpay</option>
+                <option>Kuda Bank</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Account Number</label>
+              <input
+                type="text"
+                id="wd-account"
+                placeholder="10 digit account number"
+                maxlength="10"
+              />
+            </div>
+            <div class="form-group">
+              <label>Account Name</label>
+              <input
+                type="text"
+                id="wd-name"
+                placeholder="Account holder name"
+              />
+            </div>
+            <div class="form-group">
+              <label>Amount to Withdraw (₦)</label>
+              <input
+                type="number"
+                id="wd-amount"
+                placeholder="Minimum ₦1,000"
+                min="1000"
+              />
+            </div>
+            <div id="wd-error" style="color:#cc0000;font-size:0.85em;display:none;"></div>
+            <div id="wd-success" style="color:#006622;font-size:0.85em;display:none;"></div>
+            <button class="btn-withdraw" onclick="processWithdrawal()">
+              💸 Withdraw Now
+            </button>
+          </div>
+        </div>
+
+        <div class="withdrawal-history">
+          <h3>Withdrawal History</h3>
+          <div id="withdrawal-list" class="withdrawal-list">
+            <p style="color:var(--text2);font-size:0.88em;">No withdrawals yet</p>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ANALYTICS TAB -->
+      <div class="dash-tab" id="tab-analytics" style="display:none;">
+        <div class="dash-header">
+          <h1>Analytics</h1>
+        </div>
+
+        <div class="analytics-grid">
+          <div class="analytics-card">
+            <h3>Sales This Week</h3>
+            <div class="mini-chart" id="sales-chart">
+              <div class="chart-bars">
+                <div class="chart-bar" style="height:40%"><span>Mon</span></div>
+                <div class="chart-bar" style="height:65%"><span>Tue</span></div>
+                <div class="chart-bar" style="height:50%"><span>Wed</span></div>
+                <div class="chart-bar" style="height:80%"><span>Thu</span></div>
+                <div class="chart-bar" style="height:60%"><span>Fri</span></div>
+                <div class="chart-bar" style="height:90%"><span>Sat</span></div>
+                <div class="chart-bar active" style="height:70%"><span>Sun</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="analytics-card">
+            <h3>Top Products</h3>
+            <div id="top-products-list" class="top-products-list"></div>
+          </div>
+
+          <div class="analytics-card">
+            <h3>Buyer Locations</h3>
+            <div class="location-stats">
+              <div class="loc-row">
+                <span>Lagos</span>
+                <div class="loc-bar"><div style="width:65%"></div></div>
+                <span>65%</span>
+              </div>
+              <div class="loc-row">
+                <span>Abuja</span>
+                <div class="loc-bar"><div style="width:20%"></div></div>
+                <span>20%</span>
+              </div>
+              <div class="loc-row">
+                <span>PH</span>
+                <div class="loc-bar"><div style="width:10%"></div></div>
+                <span>10%</span>
+              </div>
+              <div class="loc-row">
+                <span>Others</span>
+                <div class="loc-bar"><div style="width:5%"></div></div>
+                <span>5%</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="analytics-card">
+            <h3>Performance Summary</h3>
+            <div class="perf-stats">
+              <div class="perf-row">
+                <span>Conversion Rate</span>
+                <b>3.2%</b>
+              </div>
+              <div class="perf-row">
+                <span>Avg Order Value</span>
+                <b id="avg-order">₦0</b>
+              </div>
+              <div class="perf-row">
+                <span>Return Rate</span>
+                <b>0.8%</b>
+              </div>
+              <div class="perf-row">
+                <span>Response Rate</span>
+                <b>98%</b>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SETTINGS TAB -->
+      <div class="dash-tab" id="tab-settings" style="display:none;">
+        <div class="dash-header">
+          <h1>Shop Settings</h1>
+        </div>
+
+        <div class="settings-sections">
+
+          <div class="settings-card">
+            <h3>Shop Profile</h3>
+            <div class="form-group">
+              <label>Shop Name</label>
+              <input type="text" id="shop-name" placeholder="Your shop name"/>
+            </div>
+            <div class="form-group">
+              <label>Shop Description</label>
+              <textarea id="shop-desc" rows="3" placeholder="Tell buyers about your shop..."></textarea>
+            </div>
+            <div class="form-group">
+              <label>WhatsApp Number</label>
+              <input type="tel" id="shop-whatsapp" placeholder="080xxxxxxxx"/>
+            </div>
+            <button class="btn-save" onclick="saveShopSettings()">Save Changes</button>
+          </div>
+
+          <div class="settings-card">
+            <h3>Notification Settings</h3>
+            <div class="toggle-setting">
+              <div>
+                <b>New Order Alert</b>
+                <p>Get notified when you receive an order</p>
+              </div>
+              <label class="toggle">
+                <input type="checkbox" checked/>
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+            <div class="toggle-setting">
+              <div>
+                <b>Payment Received</b>
+                <p>Alert when payment clears</p>
+              </div>
+              <label class="toggle">
+                <input type="checkbox" checked/>
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+            <div class="toggle-setting">
+              <div>
+                <b>New Review</b>
+                <p>When a buyer leaves a review</p>
+              </div>
+              <label class="toggle">
+                <input type="checkbox" checked/>
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+            <div class="toggle-setting">
+              <div>
+                <b>Promotions</b>
+                <p>Tips and offers from Nexabay</p>
+              </div>
+              <label class="toggle">
+                <input type="checkbox"/>
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <script src="../../js/core/main.js"></script>
+  <script>
+
+    var myProducts = JSON.parse(localStorage.getItem('seller_products') || '[]');
+    var myOrders = JSON.parse(localStorage.getItem('seller_orders') || '[]');
+    var selectedEmoji = '📦';
+    var earnings = JSON.parse(localStorage.getItem('seller_earnings') || '{"total":0,"available":0,"pending":0,"withdrawn":0}');
+
+    // Add sample orders if none
+    if (myOrders.length === 0) {
+      myOrders = [
+        { id:'NXB001', product:'Sample Product', buyer:'John D.', amount:45000, status:'delivered', date:'2025-01-10' },
+        { id:'NXB002', product:'Another Product', buyer:'Fatima K.', amount:28000, status:'shipped', date:'2025-01-11' },
+        { id:'NXB003', product:'New Item', buyer:'Chidi E.', amount:15000, status:'pending', date:'2025-01-12' },
+      ];
+      localStorage.setItem('seller_orders', JSON.stringify(myOrders));
+    }
+
+    function init() {
+      var user = JSON.parse(localStorage.getItem('nexa_current_user') || 'null');
+      if (user) {
+        var nameEl = document.getElementById('dash-name');
+        var avatarEl = document.getElementById('dash-avatar');
+        var navEl = document.getElementById('nav-seller-name');
+        if (nameEl) nameEl.textContent = user.fullName || user.firstName || 'Seller';
+        if (avatarEl) avatarEl.textContent = (user.firstName || 'S')[0].toUpperCase();
+        if (navEl) navEl.textContent = user.firstName + '\'s Shop';
+      }
+
+      updateStats();
+      renderRecentOrders();
+      renderMyProducts();
+      renderAllOrders();
+      updateEarnings();
+      renderTopProducts();
+    }
+
+    function updateStats() {
+      var revenue = myOrders.reduce(function(s, o) { return s + o.amount; }, 0);
+      earnings.total = revenue;
+      earnings.available = Math.round(revenue * 0.9);
+      earnings.pending = Math.round(revenue * 0.1);
+
+      var revEl = document.getElementById('stat-revenue');
+      var ordEl = document.getElementById('stat-orders');
+      var proEl = document.getElementById('stat-products');
+      var balEl = document.getElementById('stat-balance');
+
+      if (revEl) revEl.textContent = '₦' + revenue.toLocaleString();
+      if (ordEl) ordEl.textContent = myOrders.length;
+      if (proEl) proEl.textContent = myProducts.length;
+      if (balEl) balEl.textContent = '₦' + earnings.available.toLocaleString();
+
+      var avgEl = document.getElementById('avg-order');
+      if (avgEl && myOrders.length > 0) {
+        avgEl.textContent = '₦' + Math.round(revenue / myOrders.length).toLocaleString();
+      }
+    }
+
+    function showTab(tab) {
+      var tabs = document.querySelectorAll('.dash-tab');
+      tabs.forEach(function(t) { t.style.display = 'none'; });
+
+      var navItems = document.querySelectorAll('.dash-nav-item');
+      navItems.forEach(function(n) { n.classList.remove('active'); });
+
+      var target = document.getElementById('tab-' + tab);
+      if (target) target.style.display = 'block';
+
+      event.preventDefault();
+      event.currentTarget.classList.add('active');
+    }
+
+    function renderRecentOrders() {
+      var body = document.getElementById('recent-orders-body');
+      if (!body) return;
+      var recent = myOrders.slice(-5).reverse();
+      body.innerHTML = recent.length === 0
+        ? '<tr><td colspan="6" style="text-align:center;color:var(--text2);padding:20px">No orders yet</td></tr>'
+        : recent.map(function(o) {
+            return '<tr>' +
+              '<td><b>' + o.id + '</b></td>' +
+              '<td>' + o.product + '</td>' +
+              '<td>' + o.buyer + '</td>' +
+              '<td>₦' + o.amount.toLocaleString() + '</td>' +
+              '<td><span class="status-badge status-' + o.status + '">' + o.status + '</span></td>' +
+              '<td>' + o.date + '</td>' +
+            '</tr>';
+          }).join('');
+    }
+
+    function renderMyProducts() {
+      var list = document.getElementById('my-products-list');
+      if (!list) return;
+      if (myProducts.length === 0) {
+        list.innerHTML = '<div class="empty-products">' +
+          '<div style="font-size:3em;margin-bottom:12px">📦</div>' +
+          '<h3>No products yet</h3>' +
+          '<p>Add your first product to start selling</p>' +
+          '<button class="btn-primary" onclick="showTab(\'add-product\')">➕ Add Product</button>' +
+          '</div>';
+        return;
+      }
+      list.innerHTML = myProducts.map(function(p, i) {
+        return '<div class="my-product-row">' +
+          '<div class="mp-img">' + (p.emoji || '📦') + '</div>' +
+          '<div class="mp-info">' +
+            '<div class="mp-name">' + p.name + '</div>' +
+            '<div class="mp-cat">' + p.category + ' • ' + p.condition + '</div>' +
+            '<div class="mp-stock">Stock: ' + p.stock + '</div>' +
+          '</div>' +
+          '<div class="mp-price">₦' + parseInt(p.price).toLocaleString() + '</div>' +
+          '<div class="mp-actions">' +
+            '<button onclick="editProduct(' + i + ')">✏️ Edit</button>' +
+            '<button onclick="deleteProduct(' + i + ')" class="btn-delete">🗑️</button>' +
+          '</div>' +
+        '</div>';
+      }).join('');
+    }
+
+    function filterMyProducts() {
+      renderMyProducts();
+    }
+
+    function renderAllOrders() {
+      var body = document.getElementById('all-orders-body');
+      if (!body) return;
+      body.innerHTML = myOrders.length === 0
+        ? '<tr><td colspan="7" style="text-align:center;color:var(--text2);padding:20px">No orders yet</td></tr>'
+        : myOrders.map(function(o) {
+            return '<tr>' +
+              '<td><b>' + o.id + '</b></td>' +
+              '<td>' + o.product + '</td>' +
+              '<td>' + o.buyer + '</td>' +
+              '<td>₦' + o.amount.toLocaleString() + '</td>' +
+              '<td><span class="status-badge status-' + o.status + '">' + o.status + '</span></td>' +
+              '<td>' + o.date + '</td>' +
+              '<td><button class="btn-update-status" onclick="updateOrderStatus(\'' + o.id + '\')">Update</button></td>' +
+            '</tr>';
+          }).join('');
+    }
+
+    function filterOrders(status, btn) {
+      var btns = document.querySelectorAll('.order-filter-btn');
+      btns.forEach(function(b) { b.classList.remove('active'); });
+      btn.classList.add('active');
+
+      var body = document.getElementById('all-orders-body');
+      var filtered = status === 'all' ? myOrders : myOrders.filter(function(o) { return o.status === status; });
+      body.innerHTML = filtered.length === 0
+        ? '<tr><td colspan="7" style="text-align:center;color:var(--text2);padding:20px">No ' + status + ' orders</td></tr>'
+        : filtered.map(function(o) {
+            return '<tr>' +
+              '<td><b>' + o.id + '</b></td>' +
+              '<td>' + o.product + '</td>' +
+              '<td>' + o.buyer + '</td>' +
+              '<td>₦' + o.amount.toLocaleString() + '</td>' +
+              '<td><span class="status-badge status-' + o.status + '">' + o.status + '</span></td>' +
+              '<td>' + o.date + '</td>' +
+              '<td><button class="btn-update-status" onclick="updateOrderStatus(\'' + o.id + '\')">Update</button></td>' +
+            '</tr>';
+          }).join('');
+    }
+
+    function updateOrderStatus(orderId) {
+      var statuses = ['pending', 'processing', 'shipped', 'delivered'];
+      var order = myOrders.find(function(o) { return o.id === orderId; });
+      if (!order) return;
+      var current = statuses.indexOf(order.status);
+      var next = statuses[current + 1];
+      if (!next) { showToast('Order already delivered ✅'); return; }
+      order.status = next;
+      localStorage.setItem('seller_orders', JSON.stringify(myOrders));
+      renderAllOrders();
+      renderRecentOrders();
+      showToast('✅ Order status updated to: ' + next);
+    }
+
+    function updateEarnings() {
+      var total = myOrders.reduce(function(s, o) { return s + o.amount; }, 0);
+      var available = Math.round(total * 0.9);
+      var pending = Math.round(total * 0.1);
+      var withdrawn = parseInt(localStorage.getItem('seller_withdrawn') || '0');
+
+      var ecTotal = document.getElementById('ec-total');
+      var ecAvail = document.getElementById('ec-available');
+      var ecPend  = document.getElementById('ec-pending');
+      var ecWith  = document.getElementById('ec-withdrawn');
+
+      if (ecTotal) ecTotal.textContent = '₦' + total.toLocaleString();
+      if (ecAvail) ecAvail.textContent = '₦' + Math.max(0, available - withdrawn).toLocaleString();
+      if (ecPend)  ecPend.textContent  = '₦' + pending.toLocaleString();
+      if (ecWith)  ecWith.textContent  = '₦' + withdrawn.toLocaleString();
+    }
+
+    function processWithdrawal() {
+      var bank    = document.getElementById('wd-bank').value;
+      var account = document.getElementById('wd-account').value.trim();
+      var name    = document.getElementById('wd-name').value.trim();
+      var amount  = parseInt(document.getElementById('wd-amount').value);
+      var errEl   = document.getElementById('wd-error');
+      var sucEl   = document.getElementById('wd-success');
+
+      errEl.style.display = 'none';
+      sucEl.style.display = 'none';
+
+      if (!account || account.length !== 10) { errEl.textContent = 'Enter valid 10-digit account number'; errEl.style.display = 'block'; return; }
+      if (!name)   { errEl.textContent = 'Enter account name'; errEl.style.display = 'block'; return; }
+      if (!amount || amount < 1000) { errEl.textContent = 'Minimum withdrawal is ₦1,000'; errEl.style.display = 'block'; return; }
+
+      var withdrawn = parseInt(localStorage.getItem('seller_withdrawn') || '0');
+      localStorage.setItem('seller_withdrawn', withdrawn + amount);
+
+      var history = JSON.parse(localStorage.getItem('seller_withdrawal_history') || '[]');
+      history.push({ bank: bank, account: account, name: name, amount: amount, date: new Date().toLocaleDateString(), status: 'processing' });
+      localStorage.setItem('seller_withdrawal_history', JSON.stringify(history));
+
+      sucEl.textContent = '✅ Withdrawal of ₦' + amount.toLocaleString() + ' to ' + bank + ' is being processed. 1-2 business days.';
+      sucEl.style.display = 'block';
+
+      document.getElementById('wd-amount').value = '';
+      updateEarnings();
+      renderWithdrawalHistory();
+    }
+
+    function renderWithdrawalHistory() {
+      var list = document.getElementById('withdrawal-list');
+      if (!list) return;
+      var history = JSON.parse(localStorage.getItem('seller_withdrawal_history') || '[]');
+      if (history.length === 0) {
+        list.innerHTML = '<p style="color:var(--text2);font-size:0.88em;">No withdrawals yet</p>';
+        return;
+      }
+      list.innerHTML = history.reverse().map(function(h) {
+        return '<div class="wd-history-row">' +
+          '<div>' +
+            '<b>₦' + h.amount.toLocaleString() + '</b>' +
+            '<span> → ' + h.bank + ' ' + h.account + '</span>' +
+          '</div>' +
+          '<div>' +
+            '<span class="status-badge status-processing">' + h.status + '</span>' +
+            '<small style="color:var(--text2);margin-left:8px">' + h.date + '</small>' +
+          '</div>' +
+        '</div>';
+      }).join('');
+    }
+
+    function calculateProfit() {
+      var price = parseFloat(document.getElementById('ap-price').value) || 0;
+      var oldPrice = parseFloat(document.getElementById('ap-old-price').value) || 0;
+      var calc = document.getElementById('profit-calc');
+
+      if (price > 0) {
+        calc.style.display = 'block';
+        var fee = price * 0.05;
+        var receive = price - fee;
+        var discount = oldPrice > price ? Math.round((1 - price / oldPrice) * 100) : 0;
+
+        document.getElementById('pc-price').textContent = '₦' + price.toLocaleString();
+        document.getElementById('pc-fee').textContent = '-₦' + fee.toLocaleString();
+        document.getElementById('pc-receive').textContent = '₦' + receive.toLocaleString();
+        document.getElementById('pc-discount').textContent = discount + '% OFF shown to buyers';
+      } else {
+        calc.style.display = 'none';
+      }
+    }
+
+    function selectEmoji(emoji) {
+      selectedEmoji = emoji;
+      var preview = document.getElementById('preview-emoji');
+      var placeholder = document.getElementById('upload-placeholder');
+      var previewEl = document.getElementById('upload-preview');
+
+      if (preview) preview.textContent = emoji;
+      if (placeholder) placeholder.style.display = 'none';
+      if (previewEl) previewEl.style.display = 'flex';
+
+      document.querySelectorAll('.emoji-grid span').forEach(function(s) {
+        s.classList.remove('selected');
+      });
+      event.target.classList.add('selected');
+    }
+
+    function triggerImageUpload() {
+      document.getElementById('image-file').click();
+    }
+
+    function previewImage() {
+      var file = document.getElementById('image-file').files[0];
+      if (!file) return;
+      selectedEmoji = '🖼️';
+      var preview = document.getElementById('preview-emoji');
+      if (preview) preview.textContent = '🖼️';
+      document.getElementById('upload-placeholder').style.display = 'none';
+      document.getElementById('upload-preview').style.display = 'flex';
+    }
+
+    function publishProduct() {
+      var name     = document.getElementById('ap-name').value.trim();
+      var category = document.getElementById('ap-category').value;
+      var desc     = document.getElementById('ap-desc').value.trim();
+      var price    = document.getElementById('ap-price').value;
+      var oldPrice = document.getElementById('ap-old-price').value;
+      var stock    = document.getElementById('ap-stock').value;
+      var location = document.getElementById('ap-location').value;
+      var condition= document.getElementById('ap-condition').value;
+      var errEl    = document.getElementById('ap-error');
+      var sucEl    = document.getElementById('ap-success');
+
+      errEl.style.display = 'none';
+      sucEl.style.display = 'none';
+
+      if (!name)     { errEl.textContent = 'Enter product name'; errEl.style.display = 'block'; return; }
+      if (!category) { errEl.textContent = 'Select a category'; errEl.style.display = 'block'; return; }
+      if (!desc)     { errEl.textContent = 'Enter product description'; errEl.style.display = 'block'; return; }
+      if (!price)    { errEl.textContent = 'Enter selling price'; errEl.style.display = 'block'; return; }
+      if (!stock)    { errEl.textContent = 'Enter stock quantity'; errEl.style.display = 'block'; return; }
+      if (!location) { errEl.textContent = 'Select your location'; errEl.style.display = 'block'; return; }
+
+      var product = {
+        id: Date.now(),
+        name: name,
+        category: category,
+        desc: desc,
+        price: parseFloat(price),
+        oldPrice: parseFloat(oldPrice) || parseFloat(price),
+        stock: parseInt(stock),
+        location: location,
+        condition: condition,
+        emoji: selectedEmoji,
+        status: 'active',
+        createdAt: new Date().toISOString(),
+        rating: 0,
+        reviews: 0,
+        sold: 0,
+      };
+
+      myProducts.push(product);
+      localStorage.setItem('seller_products', JSON.stringify(myProducts));
+
+      sucEl.textContent = '🎉 Product published successfully!';
+      sucEl.style.display = 'block';
+
+      // Reset form
+      document.getElementById('ap-name').value = '';
+      document.getElementById('ap-category').value = '';
+      document.getElementById('ap-desc').value = '';
+      document.getElementById('ap-price').value = '';
+      document.getElementById('ap-old-price').value = '';
+      document.getElementById('ap-stock').value = '';
+      document.getElementById('ap-location').value = '';
+      document.getElementById('profit-calc').style.display = 'none';
+      document.getElementById('upload-placeholder').style.display = 'flex';
+      document.getElementById('upload-preview').style.display = 'none';
+      selectedEmoji = '📦';
+
+      updateStats();
+
+      setTimeout(function() {
+        sucEl.style.display = 'none';
+        showTab({ preventDefault: function(){}, currentTarget: document.querySelector('.dash-nav-item') }, 'products');
+      }, 2000);
+    }
+
+    function saveDraft() {
+      showToast('💾 Draft saved!');
+    }
+
+    function editProduct(index) {
+      showToast('✏️ Edit feature coming soon!');
+    }
+
+    function deleteProduct(index) {
+      if (confirm('Delete this product?')) {
+        myProducts.splice(index, 1);
+        localStorage.setItem('seller_products', JSON.stringify(myProducts));
+        renderMyProducts();
+        updateStats();
+        showToast('🗑️ Product deleted');
+      }
+    }
+
+    function renderTopProducts() {
+      var list = document.getElementById('top-products-list');
+      if (!list) return;
+      if (myProducts.length === 0) {
+        list.innerHTML = '<p style="color:var(--text2);font-size:0.85em;">No products yet</p>';
+        return;
+      }
+      list.innerHTML = myProducts.slice(0, 5).map(function(p, i) {
+        return '<div class="top-product-row">' +
+          '<span class="tp-rank">' + (i+1) + '</span>' +
+          '<span class="tp-emoji">' + (p.emoji || '📦') + '</span>' +
+          '<span class="tp-name">' + p.name + '</span>' +
+          '<span class="tp-sales">₦' + p.price.toLocaleString() + '</span>' +
+        '</div>';
+      }).join('');
+    }
+
+    function saveShopSettings() {
+      showToast('✅ Settings saved!');
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      init();
+      renderWithdrawalHistory();
+    });
+
+  </script>
+
+</body>
+</html>
