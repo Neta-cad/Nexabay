@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Services — Nexabay</title>
+  <link rel="stylesheet" href="../../css/main.css"/>
+  <link rel="stylesheet" href="../../css/services.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="nav-inner">
+      <a href="../../index.html" class="logo">
+        <span class="logo-nexa">Nexa</span><span class="logo-bay">bay</span>
+      </a>
+      <div class="search-bar">
+        <input type="text" id="search-input" placeholder="Search services..."/>
+        <button onclick="doServiceSearch()" class="search-btn">🔍</button>
+      </div>
+      <div class="nav-actions">
+        <a href="../auth/login.html" class="nav-link">Login</a>
+        <a href="../auth/register.html" class="nav-btn">Sign Up</a>
+        <a href="../shop/cart.html" class="cart-icon-desk">
+          🛒 <span class="cart-count" id="cart-count">0</span>
+        </a>
+      </div>
+      <button class="hamburger" id="hamburger-btn" onclick="toggleMobileMenu()">☰</button>
+    </div>
+    <div class="mobile-menu-overlay" id="mobile-overlay" onclick="closeMobileMenu()"></div>
+    <div class="mobile-menu" id="mobile-menu">
+      <div class="mobile-menu-header">
+        <div class="logo"><span class="logo-nexa">Nexa</span><span class="logo-bay">bay</span></div>
+        <div id="mobile-header-actions" style="display:none;">
+          <a href="../dashboard/buyer.html" class="mh-btn account">Account</a>
+          <a href="#" onclick="logoutUser()" class="mh-btn logout">Logout</a>
+        </div>
+        <button onclick="closeMobileMenu()" class="close-menu-btn">✕</button>
+      </div>
+      <div id="mobile-user-section"></div>
+      <div class="mobile-menu-links">
+        <a href="../../index.html">🏠 Home</a>
+        <a href="../shop/browse.html">🛍️ Shop</a>
+        <a href="browse.html">🔧 Services</a>
+        <a href="../rentals/browse.html">🏠 Rentals</a>
+        <a href="../learn/browse.html">🎓 Learn</a>
+        <a href="../jobs/browse.html">💼 Jobs</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- FLOATING CART -->
+  <a href="../shop/cart.html" class="floating-cart" id="floating-cart">
+    🛒 <span class="floating-cart-count" id="floating-cart-count">0</span>
+  </a>
+
+  <!-- HERO -->
+  <div class="services-hero">
+    <div class="container">
+      <h1>Find Trusted Professionals</h1>
+      <p>Hire verified experts for any job — home repairs, design, tutoring and more</p>
+      <div class="services-search">
+        <input type="text" id="hero-search" placeholder="What service do you need?"/>
+        <select id="hero-location">
+          <option value="">All States</option>
+          <option>Lagos</option>
+          <option>Abuja</option>
+          <option>Port Harcourt</option>
+          <option>Kano</option>
+          <option>Ibadan</option>
+          <option>Enugu</option>
+        </select>
+        <button onclick="doServiceSearch()">Search</button>
+      </div>
+      <div class="services-hero-stats">
+        <span>✅ 5,000+ Verified Providers</span>
+        <span>⭐ 4.8 Average Rating</span>
+        <span>🔒 Secure Payments</span>
+        <span>💬 Live Chat</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- CATEGORIES -->
+  <div class="container">
+    <h2 class="section-title" style="margin-top:40px;">Browse by Category</h2>
+    <div class="service-cats">
+      <div class="scat active" onclick="filterServices('all', this)">All Services</div>
+      <div class="scat" onclick="filterServices('Home Repairs', this)">🔨 Home Repairs</div>
+      <div class="scat" onclick="filterServices('Cleaning', this)">🧹 Cleaning</div>
+      <div class="scat" onclick="filterServices('Beauty', this)">💄 Beauty</div>
+      <div class="scat" onclick="filterServices('Tech', this)">💻 Tech Support</div>
+      <div class="scat" onclick="filterServices('Design', this)">🎨 Design</div>
+      <div class="scat" onclick="filterServices('Tutoring', this)">📚 Tutoring</div>
+      <div class="scat" onclick="filterServices('Photography', this)">📷 Photography</div>
+      <div class="scat" onclick="filterServices('Catering', this)">🍳 Catering</div>
+      <div class="scat" onclick="filterServices('Legal', this)">⚖️ Legal</div>
+      <div class="scat" onclick="filterServices('Transport', this)">🚗 Transport</div>
+    </div>
+  </div>
+
+  <!-- SORT + RESULTS -->
+  <div class="container">
+    <div class="services-topbar">
+      <span id="services-count">Showing all services</span>
+      <select id="services-sort" onchange="sortServices()">
+        <option value="default">Sort: Featured</option>
+        <option value="price-low">Price: Low to High</option>
+        <option value="price-high">Price: High to Low</option>
+        <option value="rating">Highest Rated</option>
+        <option value="reviews">Most Reviews</option>
+      </select>
+    </div>
+
+    <!-- SERVICES GRID -->
+    <div class="services-grid" id="services-grid"></div>
+
+    <!-- EMPTY -->
+    <div id="services-empty" style="display:none;">
+      <div class="empty-state">
+        <div class="empty-icon">🔍</div>
+        <h3>No services found</h3>
+        <p>Try a different search or category</p>
+        <button onclick="filterServices('all', null)" class="btn-primary">Show All</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- HOW IT WORKS -->
+  <div class="how-it-works">
+    <div class="container">
+      <h2 class="section-title" style="text-align:center">How It Works</h2>
+      <div class="hiw-steps">
+        <div class="hiw-step">
+          <div class="hiw-num">1</div>
+          <div class="hiw-icon">🔍</div>
+          <h3>Search</h3>
+          <p>Find the service you need from thousands of providers</p>
+        </div>
+        <div class="hiw-arrow">→</div>
+        <div class="hiw-step">
+          <div class="hiw-num">2</div>
+          <div class="hiw-icon">💬</div>
+          <h3>Chat</h3>
+          <p>Discuss your needs and get a custom quote</p>
+        </div>
+        <div class="hiw-arrow">→</div>
+        <div class="hiw-step">
+          <div class="hiw-num">3</div>
+          <div class="hiw-icon">🔒</div>
+          <h3>Pay Safe</h3>
+          <p>Pay securely — money held until job is done</p>
+        </div>
+        <div class="hiw-arrow">→</div>
+        <div class="hiw-step">
+          <div class="hiw-num">4</div>
+          <div class="hiw-icon">⭐</div>
+          <h3>Review</h3>
+          <p>Rate your experience and help others</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-bottom:60px;"></div>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-bottom">
+        <p>© 2025 Nexabay. All rights reserved.</p>
+        <a href="../../index.html" style="color:var(--orange)">← Back to Home</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../../js/core/main.js"></script>
+  <script>
+
+    var ALL_SERVICES = [
+      { id:1,  name:'Professional Plumber',        category:'Home Repairs', provider:'Kunle Repairs',    rating:4.9, reviews:234, price:15000,  priceType:'per job',  location:'Lagos',  emoji:'🔧', verified:true,  desc:'Expert plumbing repairs, pipe fixing, bathroom installation.' },
+      { id:2,  name:'House Cleaning Service',       category:'Cleaning',     provider:'CleanPro NG',      rating:4.8, reviews:189, price:8000,   priceType:'per day',  location:'Lagos',  emoji:'🧹', verified:true,  desc:'Deep cleaning, regular cleaning for homes and offices.' },
+      { id:3,  name:'Hair Stylist & Makeup',        category:'Beauty',       provider:'Glamour Studio',   rating:4.9, reviews:312, price:12000,  priceType:'per session', location:'Abuja', emoji:'💄', verified:true,  desc:'Professional hair styling, braiding, makeup for events.' },
+      { id:4,  name:'Laptop & Phone Repair',        category:'Tech',         provider:'TechFix NG',       rating:4.7, reviews:156, price:5000,   priceType:'from',     location:'Lagos',  emoji:'💻', verified:true,  desc:'Expert repair for all laptop and phone brands. Fast service.' },
+      { id:5,  name:'Graphic Designer',             category:'Design',       provider:'Creative Hub',     rating:4.8, reviews:98,  price:20000,  priceType:'per project', location:'Remote', emoji:'🎨', verified:true,  desc:'Logo design, flyers, social media graphics, branding.' },
+      { id:6,  name:'Home Maths Tutor',             category:'Tutoring',     provider:'EduPro NG',        rating:4.9, reviews:267, price:10000,  priceType:'per month', location:'Lagos',  emoji:'📚', verified:true,  desc:'Expert maths tutor for JS1-SS3 and university students.' },
+      { id:7,  name:'Wedding Photographer',         category:'Photography',  provider:'Shuttercraft NG',  rating:4.9, reviews:145, price:150000, priceType:'per event', location:'Lagos',  emoji:'📷', verified:true,  desc:'Professional wedding and event photography & videography.' },
+      { id:8,  name:'Event Catering Service',       category:'Catering',     provider:'DeluxeCatering',   rating:4.8, reviews:89,  price:50000,  priceType:'from',     location:'Abuja',  emoji:'🍳', verified:true,  desc:'Full catering for weddings, parties and corporate events.' },
+      { id:9,  name:'Electrician Service',          category:'Home Repairs', provider:'PowerFix NG',      rating:4.7, reviews:178, price:10000,  priceType:'per job',  location:'Lagos',  emoji:'⚡', verified:false, desc:'Electrical repairs, wiring, installation and maintenance.' },
+      { id:10, name:'AC Installation & Repair',     category:'Home Repairs', provider:'CoolTech NG',      rating:4.8, reviews:134, price:25000,  priceType:'from',     location:'PH',     emoji:'❄️', verified:true,  desc:'Air conditioner installation, servicing and gas refilling.' },
+      { id:11, name:'Web Developer',                category:'Tech',         provider:'CodeMaster NG',    rating:4.9, reviews:67,  price:80000,  priceType:'from',     location:'Remote', emoji:'🌐', verified:true,  desc:'Custom websites, e-commerce, web apps. Fast delivery.' },
+      { id:12, name:'Legal Consultation',           category:'Legal',        provider:'LawBridge NG',     rating:4.8, reviews:45,  price:15000,  priceType:'per hour', location:'Lagos',  emoji:'⚖️', verified:true,  desc:'Legal advice for business, contracts, property and family.' },
+      { id:13, name:'Moving & Relocation',          category:'Transport',    provider:'MoveEase NG',      rating:4.7, reviews:112, price:30000,  priceType:'from',     location:'Lagos',  emoji:'🚛', verified:true,  desc:'Safe and reliable home and office moving services.' },
+      { id:14, name:'Carpentry & Furniture Repair', category:'Home Repairs', provider:'WoodCraft NG',     rating:4.6, reviews:89,  price:12000,  priceType:'from',     location:'Ibadan', emoji:'🪑', verified:false, desc:'Custom furniture making, repairs and wood finishing.' },
+      { id:15, name:'Office Cleaning',              category:'Cleaning',     provider:'CleanPro NG',      rating:4.8, reviews:56,  price:15000,  priceType:'per day',  location:'Lagos',  emoji:'🏢', verified:true,  desc:'Professional office cleaning, sanitization services.' },
+      { id:16, name:'Private English Tutor',        category:'Tutoring',     provider:'LearnFast NG',     rating:4.8, reviews:134, price:8000,   priceType:'per month', location:'Remote', emoji:'📖', verified:true,  desc:'English language tutoring for all ages and levels.' },
+    ];
+
+    var currentServices = ALL_SERVICES.slice();
+
+    function renderServices() {
+      var grid = document.getElementById('services-grid');
+      var empty = document.getElementById('services-empty');
+      var count = document.getElementById('services-count');
+
+      if (currentServices.length === 0) {
+        grid.innerHTML = '';
+        empty.style.display = 'block';
+        return;
+      }
+
+      empty.style.display = 'none';
+      if (count) count.textContent = 'Showing ' + currentServices.length + ' services';
+
+      grid.innerHTML = currentServices.map(function(s) {
+        return '<div class="service-card" onclick="viewService(' + s.id + ')">' +
+          '<div class="sc-top">' +
+            '<div class="sc-emoji">' + s.emoji + '</div>' +
+            '<div class="sc-badges">' +
+              (s.verified ? '<span class="sc-verified">✅ Verified</span>' : '') +
+              '<span class="sc-location">📍 ' + s.location + '</span>' +
+            '</div>' +
+          '</div>' +
+          '<h3 class="sc-name">' + s.name + '</h3>' +
+          '<div class="sc-provider">by ' + s.provider + '</div>' +
+          '<div class="sc-desc">' + s.desc + '</div>' +
+          '<div class="sc-rating">⭐ ' + s.rating + ' (' + s.reviews + ' reviews)</div>' +
+          '<div class="sc-bottom">' +
+            '<div class="sc-price">' +
+              '<span class="sc-price-label">' + s.priceType + '</span>' +
+              '<span class="sc-price-amount">₦' + s.price.toLocaleString() + '</span>' +
+            '</div>' +
+            '<button class="sc-hire-btn" onclick="event.stopPropagation();hireService(' + s.id + ')">Hire Now</button>' +
+          '</div>' +
+        '</div>';
+      }).join('');
+    }
+
+    function filterServices(cat, el) {
+      var cats = document.querySelectorAll('.scat');
+      cats.forEach(function(c) { c.classList.remove('active'); });
+      if (el) el.classList.add('active');
+
+      var search = document.getElementById('search-input').value.toLowerCase().trim();
+      currentServices = ALL_SERVICES.filter(function(s) {
+        var matchCat = cat === 'all' || s.category === cat;
+        var matchSearch = !search || s.name.toLowerCase().includes(search) || s.category.toLowerCase().includes(search);
+        return matchCat && matchSearch;
+      });
+
+      sortServices();
+    }
+
+    function sortServices() {
+      var sort = document.getElementById('services-sort').value;
+      if (sort === 'price-low')  currentServices.sort(function(a,b) { return a.price - b.price; });
+      if (sort === 'price-high') currentServices.sort(function(a,b) { return b.price - a.price; });
+      if (sort === 'rating')     currentServices.sort(function(a,b) { return b.rating - a.rating; });
+      if (sort === 'reviews')    currentServices.sort(function(a,b) { return b.reviews - a.reviews; });
+      renderServices();
+    }
+
+    function doServiceSearch() {
+      filterServices('all', document.querySelector('.scat.active') || document.querySelector('.scat'));
+    }
+
+    function viewService(id) {
+      showToast('📋 Service detail page coming soon!');
+    }
+
+    function hireService(id) {
+      var user = localStorage.getItem('nexa_current_user');
+      if (!user) {
+        showToast('⚠️ Please login to hire', '#ff9500');
+        setTimeout(function() { window.location.href = '../auth/login.html'; }, 1500);
+        return;
+      }
+      showToast('✅ Request sent! Provider will contact you soon.');
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      updateCartCount();
+      checkAuthState();
+      renderServices();
+
+      var input = document.getElementById('search-input');
+      if (input) {
+        input.addEventListener('keypress', function(e) {
+          if (e.key === 'Enter') doServiceSearch();
+        });
+      }
+    });
+
+  </script>
+
+</body>
+</html>

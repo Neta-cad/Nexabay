@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>My Account — Nexabay</title>
+  <link rel="stylesheet" href="../../css/main.css"/>
+  <link rel="stylesheet" href="../../css/dashboard.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+</head>
+<body class="dashboard-body">
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="nav-inner">
+      <a href="../../index.html" class="logo">
+        <span class="logo-nexa">Nexa</span><span class="logo-bay">bay</span>
+      </a>
+      <div class="nav-actions">
+        <span class="nav-link" id="nav-buyer-name">My Account</span>
+        <a href="../../index.html" class="nav-link">← Back to Site</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="dashboard-layout">
+
+    <!-- SIDEBAR -->
+    <aside class="dash-sidebar">
+      <div class="dash-profile">
+        <div class="dash-avatar" id="dash-avatar">U</div>
+        <div class="dash-name" id="dash-name">User</div>
+        <div class="dash-badge">✅ Verified Buyer</div>
+      </div>
+      <nav class="dash-nav">
+        <a href="#" class="dash-nav-item active" onclick="showTab('overview', this)">
+          🏠 Overview
+        </a>
+        <a href="#" class="dash-nav-item" onclick="showTab('orders', this)">
+          📦 My Orders
+        </a>
+        <a href="#" class="dash-nav-item" onclick="showTab('wishlist', this)">
+          ❤️ Wishlist
+        </a>
+        <a href="#" class="dash-nav-item" onclick="showTab('wallet', this)">
+          💰 Wallet
+        </a>
+        <a href="#" class="dash-nav-item" onclick="showTab('profile', this)">
+          👤 Profile
+        </a>
+        <a href="#" class="dash-nav-item" onclick="showTab('addresses', this)">
+          📍 Addresses
+        </a>
+        <a href="seller.html" class="dash-nav-item">
+          🏪 Seller Dashboard
+        </a>
+        <a href="#" class="dash-nav-item logout" onclick="logoutUser()">
+          🚪 Logout
+        </a>
+      </nav>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="dash-main">
+
+      <!-- OVERVIEW TAB -->
+      <div class="dash-tab" id="tab-overview">
+        <div class="dash-header">
+          <div>
+            <h1 id="welcome-name">Welcome back!</h1>
+            <p>Here is your account summary</p>
+          </div>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon">📦</div>
+            <div class="stat-info">
+              <div class="stat-value" id="stat-orders">0</div>
+              <div class="stat-label">Total Orders</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">⏳</div>
+            <div class="stat-info">
+              <div class="stat-value" id="stat-pending">0</div>
+              <div class="stat-label">Pending Orders</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">✅</div>
+            <div class="stat-info">
+              <div class="stat-value" id="stat-delivered">0</div>
+              <div class="stat-label">Delivered</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">❤️</div>
+            <div class="stat-info">
+              <div class="stat-value" id="stat-wishlist">0</div>
+              <div class="stat-label">Wishlist Items</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">💰</div>
+            <div class="stat-info">
+              <div class="stat-value" id="stat-wallet">₦0</div>
+              <div class="stat-label">Wallet Balance</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">🎁</div>
+            <div class="stat-info">
+              <div class="stat-value" id="stat-points">0</div>
+              <div class="stat-label">Reward Points</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- RECENT ORDERS -->
+        <div class="dash-section">
+          <div class="sec-header">
+            <h2>Recent Orders</h2>
+            <button onclick="showTab('orders', null)" class="see-all">See All →</button>
+          </div>
+          <div id="recent-orders"></div>
+        </div>
+
+        <!-- QUICK ACTIONS -->
+        <div class="dash-section">
+          <h2>Quick Actions</h2>
+          <div class="quick-actions">
+            <button class="quick-btn" onclick="window.location.href='../shop/browse.html'">
+              🛍️ Continue Shopping
+            </button>
+            <button class="quick-btn" onclick="showTab('orders', null)">
+              📦 Track Orders
+            </button>
+            <button class="quick-btn" onclick="showTab('wishlist', null)">
+              ❤️ My Wishlist
+            </button>
+            <button class="quick-btn" onclick="showTab('wallet', null)">
+              💰 My Wallet
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ORDERS TAB -->
+      <div class="dash-tab" id="tab-orders" style="display:none;">
+        <div class="dash-header">
+          <h1>My Orders</h1>
+        </div>
+
+        <div class="orders-filter">
+          <button class="order-filter-btn active" onclick="filterOrders('all', this)">All</button>
+          <button class="order-filter-btn" onclick="filterOrders('confirmed', this)">Confirmed</button>
+          <button class="order-filter-btn" onclick="filterOrders('shipped', this)">Shipped</button>
+          <button class="order-filter-btn" onclick="filterOrders('delivered', this)">Delivered</button>
+        </div>
+
+        <div id="orders-list"></div>
+
+      </div>
+
+      <!-- WISHLIST TAB -->
+      <div class="dash-tab" id="tab-wishlist" style="display:none;">
+        <div class="dash-header">
+          <h1>My Wishlist</h1>
+        </div>
+        <div id="wishlist-grid" class="products-grid"></div>
+        <div id="wishlist-empty" style="display:none;">
+          <div class="empty-state">
+            <div class="empty-icon">❤️</div>
+            <h3>Your wishlist is empty</h3>
+            <p>Save items you love for later</p>
+            <a href="../shop/browse.html" class="btn-primary">Browse Products</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- WALLET TAB -->
+      <div class="dash-tab" id="tab-wallet" style="display:none;">
+        <div class="dash-header">
+          <h1>My Wallet</h1>
+        </div>
+
+        <div class="wallet-cards">
+          <div class="wallet-balance-card">
+            <div class="wbc-label">Available Balance</div>
+            <div class="wbc-amount" id="wallet-balance">₦0.00</div>
+            <div class="wbc-actions">
+              <button onclick="showFundWallet()" class="wbc-btn primary">+ Fund Wallet</button>
+              <button onclick="showWithdrawWallet()" class="wbc-btn outline">Withdraw</button>
+            </div>
+          </div>
+          <div class="wallet-info-cards">
+            <div class="wi-card">
+              <span>Total Funded</span>
+              <b id="wallet-funded">₦0</b>
+            </div>
+            <div class="wi-card">
+              <span>Total Spent</span>
+              <b id="wallet-spent">₦0</b>
+            </div>
+            <div class="wi-card">
+              <span>Reward Points</span>
+              <b id="wallet-points">0 pts</b>
+            </div>
+            <div class="wi-card">
+              <span>Cashback Earned</span>
+              <b id="wallet-cashback">₦0</b>
+            </div>
+          </div>
+        </div>
+
+        <div class="dash-section" id="fund-wallet-form" style="display:none;">
+          <h3>Fund Wallet</h3>
+          <div class="wallet-form">
+            <div class="form-group">
+              <label>Amount (₦)</label>
+              <input type="number" id="fund-amount" placeholder="Enter amount" min="500"/>
+            </div>
+            <div class="payment-methods-small">
+              <label class="pm-opt active">
+                <input type="radio" name="fund-method" value="card" checked/>
+                💳 Card
+              </label>
+              <label class="pm-opt">
+                <input type="radio" name="fund-method" value="transfer"/>
+                🏦 Transfer
+              </label>
+              <label class="pm-opt">
+                <input type="radio" name="fund-method" value="ussd"/>
+                📱 USSD
+              </label>
+            </div>
+            <div style="display:flex;gap:10px;">
+              <button onclick="processFunding()" class="btn-primary" style="flex:1">Fund Now</button>
+              <button onclick="document.getElementById('fund-wallet-form').style.display='none'" class="btn-save-draft">Cancel</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="dash-section">
+          <h3>Transaction History</h3>
+          <div id="wallet-transactions">
+            <p style="color:var(--text2);font-size:0.88em;">No transactions yet</p>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- PROFILE TAB -->
+      <div class="dash-tab" id="tab-profile" style="display:none;">
+        <div class="dash-header">
+          <h1>My Profile</h1>
+        </div>
+
+        <div class="settings-card">
+          <h3>Personal Information</h3>
+          <div class="profile-avatar-section">
+            <div class="profile-avatar" id="profile-avatar">U</div>
+            <button class="change-photo-btn">📷 Change Photo</button>
+          </div>
+
+          <div class="form-row-2">
+            <div class="form-group">
+              <label>First Name</label>
+              <input type="text" id="prof-firstname"/>
+            </div>
+            <div class="form-group">
+              <label>Last Name</label>
+              <input type="text" id="prof-lastname"/>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Email Address</label>
+            <input type="email" id="prof-email"/>
+          </div>
+          <div class="form-group">
+            <label>Phone Number</label>
+            <input type="tel" id="prof-phone"/>
+          </div>
+          <div class="form-group">
+            <label>State</label>
+            <input type="text" id="prof-state"/>
+          </div>
+          <div id="prof-success" style="display:none;color:var(--green);font-size:0.85em;margin-top:8px;"></div>
+          <button onclick="saveProfile()" class="btn-save" style="margin-top:12px">
+            Save Changes
+          </button>
+        </div>
+
+        <div class="settings-card" style="margin-top:16px;">
+          <h3>Change Password</h3>
+          <div class="form-group">
+            <label>Current Password</label>
+            <input type="password" id="curr-pass" placeholder="Current password"/>
+          </div>
+          <div class="form-group">
+            <label>New Password</label>
+            <input type="password" id="new-pass" placeholder="New password"/>
+          </div>
+          <div class="form-group">
+            <label>Confirm New Password</label>
+            <input type="password" id="conf-pass" placeholder="Confirm new password"/>
+          </div>
+          <div id="pass-msg" style="display:none;font-size:0.85em;margin-top:8px;"></div>
+          <button onclick="changePassword()" class="btn-save" style="margin-top:12px">
+            Update Password
+          </button>
+        </div>
+
+      </div>
+
+      <!-- ADDRESSES TAB -->
+      <div class="dash-tab" id="tab-addresses" style="display:none;">
+        <div class="dash-header">
+          <h1>My Addresses</h1>
+          <button class="btn-primary" onclick="showAddAddressForm()">
+            + Add Address
+          </button>
+        </div>
+
+        <div id="addresses-list"></div>
+
+        <div id="add-address-form" style="display:none;">
+          <div class="settings-card">
+            <h3>Add New Address</h3>
+            <div class="form-group">
+              <label>Full Name</label>
+              <input type="text" id="addr-name" placeholder="Recipient name"/>
+            </div>
+            <div class="form-group">
+              <label>Phone Number</label>
+              <input type="tel" id="addr-phone" placeholder="Phone number"/>
+            </div>
+            <div class="form-group">
+              <label>Street Address</label>
+              <input type="text" id="addr-street" placeholder="House number and street"/>
+            </div>
+            <div class="form-row-2">
+              <div class="form-group">
+                <label>State</label>
+                <select id="addr-state">
+                  <option value="">Select state</option>
+                  <option>Lagos</option>
+                  <option>Abuja FCT</option>
+                  <option>Rivers</option>
+                  <option>Kano</option>
+                  <option>Oyo</option>
+                  <option>Enugu</option>
+                  <option>Anambra</option>
+                  <option>Delta</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>City</label>
+                <input type="text" id="addr-city" placeholder="City"/>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="checkbox-label">
+                <input type="checkbox" id="addr-default"/>
+                Set as default address
+              </label>
+            </div>
+            <div style="display:flex;gap:10px;margin-top:8px;">
+              <button onclick="saveAddress()" class="btn-primary" style="flex:1">Save Address</button>
+              <button onclick="document.getElementById('add-address-form').style.display='none'" class="btn-save-draft">Cancel</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </main>
+  </div>
+
+  <script src="../../js/core/main.js"></script>
+  <script>
+
+    var currentUser = null;
+    var userOrders = [];
+    var userWishlist = [];
+    var walletBalance = 0;
+
+    function init() {
+      currentUser = JSON.parse(localStorage.getItem('nexa_current_user') || 'null');
+      if (!currentUser) {
+        window.location.href = '../auth/login.html';
+        return;
+      }
+
+      // Update UI with user info
+      var nameEl   = document.getElementById('dash-name');
+      var avatarEl = document.getElementById('dash-avatar');
+      var welcomeEl = document.getElementById('welcome-name');
+      var navEl    = document.getElementById('nav-buyer-name');
+      var profAvatar = document.getElementById('profile-avatar');
+
+      if (nameEl)    nameEl.textContent    = currentUser.fullName || currentUser.firstName;
+      if (avatarEl)  avatarEl.textContent  = (currentUser.firstName || 'U')[0].toUpperCase();
+      if (welcomeEl) welcomeEl.textContent = 'Welcome, ' + (currentUser.firstName || 'there') + '! 👋';
+      if (navEl)     navEl.textContent     = currentUser.firstName + '\'s Account';
+      if (profAvatar) profAvatar.textContent = (currentUser.firstName || 'U')[0].toUpperCase();
+
+      // Load profile fields
+      var pf = document.getElementById('prof-firstname');
+      var pl = document.getElementById('prof-lastname');
+      var pe = document.getElementById('prof-email');
+      var pp = document.getElementById('prof-phone');
+      var ps = document.getElementById('prof-state');
+      if (pf) pf.value = currentUser.firstName || '';
+      if (pl) pl.value = currentUser.lastName  || '';
+      if (pe) pe.value = currentUser.email     || '';
+      if (pp) pp.value = currentUser.phone     || '';
+      if (ps) ps.value = currentUser.state     || '';
+
+      // Load data
+      userOrders   = JSON.parse(localStorage.getItem('nexa_orders')   || '[]');
+      userWishlist = JSON.parse(localStorage.getItem('nexa_wishlist') || '[]');
+      walletBalance = parseFloat(localStorage.getItem('nexa_wallet_balance') || '0');
+
+      updateStats();
+      renderRecentOrders();
+      renderOrders('all');
+      renderWishlist();
+      renderWallet();
+      renderAddresses();
+    }
+
+    function updateStats() {
+      var pending   = userOrders.filter(function(o) { return o.status !== 'delivered'; }).length;
+      var delivered = userOrders.filter(function(o) { return o.status === 'delivered'; }).length;
+      var points    = Math.floor(userOrders.reduce(function(s, o) { return s + o.total; }, 0) / 1000);
+
+      var sO = document.getElementById('stat-orders');
+      var sP = document.getElementById('stat-pending');
+      var sD = document.getElementById('stat-delivered');
+      var sW = document.getElementById('stat-wishlist');
+      var sWal = document.getElementById('stat-wallet');
+      var sPts = document.getElementById('stat-points');
+
+      if (sO)   sO.textContent   = userOrders.length;
+      if (sP)   sP.textContent   = pending;
+      if (sD)   sD.textContent   = delivered;
+      if (sW)   sW.textContent   = userWishlist.length;
+      if (sWal) sWal.textContent = '₦' + walletBalance.toLocaleString();
+      if (sPts) sPts.textContent = points;
+    }
+
+    function renderRecentOrders() {
+      var el = document.getElementById('recent-orders');
+      if (!el) return;
+      if (userOrders.length === 0) {
+        el.innerHTML = '<div class="empty-state" style="padding:30px"><div class="empty-icon">📦</div><p>No orders yet</p><a href="../shop/browse.html" class="btn-primary" style="margin-top:12px">Start Shopping</a></div>';
+        return;
+      }
+      el.innerHTML = '<div class="orders-table-wrap"><table class="orders-table"><thead><tr><th>Order ID</th><th>Items</th><th>Total</th><th>Status</th><th>Date</th></tr></thead><tbody>' +
+        userOrders.slice(-5).reverse().map(function(o) {
+          return '<tr>' +
+            '<td><b>' + o.id + '</b></td>' +
+            '<td>' + (o.items ? o.items.length : 1) + ' item(s)</td>' +
+            '<td>₦' + o.total.toLocaleString() + '</td>' +
+            '<td><span class="status-badge status-' + o.status + '">' + o.status + '</span></td>' +
+            '<td>' + new Date(o.date).toLocaleDateString() + '</td>' +
+          '</tr>';
+        }).join('') +
+      '</tbody></table></div>';
+    }
+
+    function renderOrders(filter) {
+      var el = document.getElementById('orders-list');
+      if (!el) return;
+      var filtered = filter === 'all' ? userOrders : userOrders.filter(function(o) { return o.status === filter; });
+      if (filtered.length === 0) {
+        el.innerHTML = '<div class="empty-state" style="padding:40px;background:white;border-radius:12px"><div class="empty-icon">📦</div><h3>No ' + filter + ' orders</h3><a href="../shop/browse.html" class="btn-primary" style="margin-top:12px">Shop Now</a></div>';
+        return;
+      }
+      el.innerHTML = filtered.map(function(o) {
+        return '<div class="order-card">' +
+          '<div class="oc-header">' +
+            '<div>' +
+              '<b style="font-size:0.9em">Order #' + o.id + '</b>' +
+              '<span style="color:var(--text2);font-size:0.78em;margin-left:10px">' + new Date(o.date).toLocaleDateString() + '</span>' +
+            '</div>' +
+            '<span class="status-badge status-' + o.status + '">' + o.status + '</span>' +
+          '</div>' +
+          '<div class="oc-items">' +
+            (o.items ? o.items.map(function(item) {
+              return '<div class="oc-item">' +
+                '<span>' + (item.emoji || '📦') + '</span>' +
+                '<span>' + item.name + '</span>' +
+                '<span>x' + (item.qty || 1) + '</span>' +
+                '<span>₦' + (item.price * (item.qty || 1)).toLocaleString() + '</span>' +
+              '</div>';
+            }).join('') : '') +
+          '</div>' +
+          '<div class="oc-footer">' +
+            '<span style="font-weight:700">Total: ₦' + o.total.toLocaleString() + '</span>' +
+            (o.status !== 'delivered'
+              ? '<button class="btn-track" onclick="trackOrder(\'' + o.id + '\')">📍 Track Order</button>'
+              : '<button class="btn-review">⭐ Leave Review</button>') +
+          '</div>' +
+        '</div>';
+      }).join('');
+    }
+
+    function filterOrders(filter, btn) {
+      var btns = document.querySelectorAll('.order-filter-btn');
+      btns.forEach(function(b) { b.classList.remove('active'); });
+      if (btn) btn.classList.add('active');
+      renderOrders(filter);
+    }
+
+    function trackOrder(id) {
+      showToast('📍 Tracking order ' + id + '... Feature coming soon!');
+    }
+
+    function renderWishlist() {
+      var grid = document.getElementById('wishlist-grid');
+      var empty = document.getElementById('wishlist-empty');
+      if (!grid) return;
+      if (userWishlist.length === 0) {
+        grid.style.display = 'none';
+        if (empty) empty.style.display = 'block';
+        return;
+      }
+      grid.style.display = 'grid';
+      if (empty) empty.style.display = 'none';
+      grid.innerHTML = userWishlist.map(function(p, i) {
+        var discount = p.oldPrice ? Math.round((1 - p.price / p.oldPrice) * 100) : 0;
+        return '<div class="product-card">' +
+          '<div class="product-img">' + (p.emoji || '📦') +
+            (discount > 0 ? '<div class="discount-badge">-' + discount + '%</div>' : '') +
+          '</div>' +
+          '<div class="product-info">' +
+            '<div class="product-name">' + p.name + '</div>' +
+            '<span class="product-price">₦' + p.price.toLocaleString() + '</span>' +
+            (p.oldPrice ? '<span class="product-old-price">₦' + p.oldPrice.toLocaleString() + '</span>' : '') +
+            '<div style="display:flex;gap:6px;margin-top:8px">' +
+              '<button onclick="moveToCart(' + i + ')" style="flex:1;padding:7px;background:var(--blue);color:white;border:none;border-radius:6px;font-size:0.78em;cursor:pointer">Add to Cart</button>' +
+              '<button onclick="removeFromWishlist(' + i + ')" style="padding:7px 10px;background:#fff0f0;color:#cc0000;border:1px solid #ffcccc;border-radius:6px;font-size:0.78em;cursor:pointer">🗑️</button>' +
+            '</div>' +
+          '</div>' +
+        '</div>';
+      }).join('');
+    }
+
+    function moveToCart(index) {
+      var item = userWishlist[index];
+      addToCart({ id: item.id, name: item.name, price: item.price, emoji: item.emoji || '📦' });
+    }
+
+    function removeFromWishlist(index) {
+      userWishlist.splice(index, 1);
+      localStorage.setItem('nexa_wishlist', JSON.stringify(userWishlist));
+      renderWishlist();
+      updateStats();
+      showToast('Removed from wishlist');
+    }
+
+    function renderWallet() {
+      var balEl   = document.getElementById('wallet-balance');
+      var fundEl  = document.getElementById('wallet-funded');
+      var spentEl = document.getElementById('wallet-spent');
+      var ptsEl   = document.getElementById('wallet-points');
+      var cbEl    = document.getElementById('wallet-cashback');
+
+      var funded  = parseFloat(localStorage.getItem('nexa_wallet_funded')  || '0');
+      var spent   = parseFloat(localStorage.getItem('nexa_wallet_spent')   || '0');
+      var points  = Math.floor(spent / 1000);
+      var cashback = Math.floor(spent * 0.01);
+
+      if (balEl)   balEl.textContent   = '₦' + walletBalance.toLocaleString();
+      if (fundEl)  fundEl.textContent  = '₦' + funded.toLocaleString();
+      if (spentEl) spentEl.textContent = '₦' + spent.toLocaleString();
+      if (ptsEl)   ptsEl.textContent   = points + ' pts';
+      if (cbEl)    cbEl.textContent    = '₦' + cashback.toLocaleString();
+
+      renderTransactions();
+    }
+
+    function renderTransactions() {
+      var el = document.getElementById('wallet-transactions');
+      if (!el) return;
+      var txns = JSON.parse(localStorage.getItem('nexa_wallet_txns') || '[]');
+      if (txns.length === 0) {
+        el.innerHTML = '<p style="color:var(--text2);font-size:0.88em;">No transactions yet</p>';
+        return;
+      }
+      el.innerHTML = txns.reverse().slice(0, 10).map(function(t) {
+        return '<div class="txn-row">' +
+          '<div>' +
+            '<b style="font-size:0.88em">' + t.desc + '</b>' +
+            '<div style="color:var(--text2);font-size:0.75em">' + t.date + '</div>' +
+          '</div>' +
+          '<span style="font-weight:700;color:' + (t.type === 'credit' ? 'var(--green)' : '#cc0000') + '">' +
+            (t.type === 'credit' ? '+' : '-') + '₦' + t.amount.toLocaleString() +
+          '</span>' +
+        '</div>';
+      }).join('');
+    }
+
+    function showFundWallet() {
+      var el = document.getElementById('fund-wallet-form');
+      if (el) el.style.display = el.style.display === 'none' ? 'block' : 'none';
+    }
+
+    function showWithdrawWallet() {
+      showToast('💰 Withdrawal feature coming soon!');
+    }
+
+    function processFunding() {
+      var amount = parseFloat(document.getElementById('fund-amount').value);
+      if (!amount || amount < 500) {
+        showToast('⚠️ Minimum funding is ₦500', '#ff9500');
+        return;
+      }
+      walletBalance += amount;
+      var funded = parseFloat(localStorage.getItem('nexa_wallet_funded') || '0') + amount;
+      localStorage.setItem('nexa_wallet_balance', walletBalance);
+      localStorage.setItem('nexa_wallet_funded', funded);
+
+      var txns = JSON.parse(localStorage.getItem('nexa_wallet_txns') || '[]');
+      txns.push({ type: 'credit', desc: 'Wallet funding', amount: amount, date: new Date().toLocaleDateString() });
+      localStorage.setItem('nexa_wallet_txns', JSON.stringify(txns));
+
+      document.getElementById('fund-wallet-form').style.display = 'none';
+      renderWallet();
+      updateStats();
+      showToast('✅ ₦' + amount.toLocaleString() + ' added to wallet!');
+    }
+
+    function saveProfile() {
+      var fn = document.getElementById('prof-firstname').value.trim();
+      var ln = document.getElementById('prof-lastname').value.trim();
+      var em = document.getElementById('prof-email').value.trim();
+      var ph = document.getElementById('prof-phone').value.trim();
+      var st = document.getElementById('prof-state').value.trim();
+
+      if (!fn || !ln) { showToast('⚠️ Enter your name', '#ff9500'); return; }
+
+      currentUser.firstName = fn;
+      currentUser.lastName  = ln;
+      currentUser.fullName  = fn + ' ' + ln;
+      currentUser.email     = em;
+      currentUser.phone     = ph;
+      currentUser.state     = st;
+      localStorage.setItem('nexa_current_user', JSON.stringify(currentUser));
+
+      var msg = document.getElementById('prof-success');
+      if (msg) { msg.textContent = '✅ Profile updated!'; msg.style.display = 'block'; }
+      showToast('✅ Profile saved!');
+    }
+
+    function changePassword() {
+      var curr = document.getElementById('curr-pass').value;
+      var newP = document.getElementById('new-pass').value;
+      var conf = document.getElementById('conf-pass').value;
+      var msg  = document.getElementById('pass-msg');
+
+      if (!curr || !newP || !conf) { showToast('⚠️ Fill all fields', '#ff9500'); return; }
+      if (curr !== currentUser.password) {
+        if (msg) { msg.textContent = '❌ Current password is wrong'; msg.style.color = '#cc0000'; msg.style.display = 'block'; }
+        return;
+      }
+      if (newP !== conf) {
+        if (msg) { msg.textContent = '❌ Passwords do not match'; msg.style.color = '#cc0000'; msg.style.display = 'block'; }
+        return;
+      }
+      if (newP.length < 6) {
+        if (msg) { msg.textContent = '❌ Password must be 6+ characters'; msg.style.color = '#cc0000'; msg.style.display = 'block'; }
+        return;
+      }
+
+      currentUser.password = newP;
+      localStorage.setItem('nexa_current_user', JSON.stringify(currentUser));
+      if (msg) { msg.textContent = '✅ Password updated!'; msg.style.color = 'var(--green)'; msg.style.display = 'block'; }
+
+      document.getElementById('curr-pass').value = '';
+      document.getElementById('new-pass').value  = '';
+      document.getElementById('conf-pass').value = '';
+    }
+
+    function renderAddresses() {
+      var el = document.getElementById('addresses-list');
+      if (!el) return;
+      var addresses = JSON.parse(localStorage.getItem('nexa_addresses') || '[]');
+      if (addresses.length === 0) {
+        el.innerHTML = '<div class="empty-state" style="padding:40px;background:white;border-radius:12px;margin-bottom:16px"><div class="empty-icon">📍</div><h3>No saved addresses</h3><p>Add a delivery address for faster checkout</p></div>';
+        return;
+      }
+      el.innerHTML = addresses.map(function(a, i) {
+        return '<div class="address-card">' +
+          (a.isDefault ? '<span class="default-badge">Default</span>' : '') +
+          '<b>' + a.name + '</b>' +
+          '<p>' + a.street + ', ' + a.city + ', ' + a.state + '</p>' +
+          '<p style="color:var(--text2);font-size:0.82em">' + a.phone + '</p>' +
+          '<div style="display:flex;gap:8px;margin-top:10px">' +
+            '<button onclick="deleteAddress(' + i + ')" style="padding:6px 12px;background:#fff0f0;color:#cc0000;border:1px solid #ffcccc;border-radius:6px;font-size:0.78em;cursor:pointer">🗑️ Remove</button>' +
+          '</div>' +
+        '</div>';
+      }).join('');
+    }
+
+    function showAddAddressForm() {
+      var el = document.getElementById('add-address-form');
+      if (el) el.style.display = 'block';
+    }
+
+    function saveAddress() {
+      var name   = document.getElementById('addr-name').value.trim();
+      var phone  = document.getElementById('addr-phone').value.trim();
+      var street = document.getElementById('addr-street').value.trim();
+      var state  = document.getElementById('addr-state').value;
+      var city   = document.getElementById('addr-city').value.trim();
+      var isDef  = document.getElementById('addr-default').checked;
+
+      if (!name || !phone || !street || !state || !city) {
+        showToast('⚠️ Fill all address fields', '#ff9500');
+        return;
+      }
+
+      var addresses = JSON.parse(localStorage.getItem('nexa_addresses') || '[]');
+      if (isDef) addresses.forEach(function(a) { a.isDefault = false; });
+      addresses.push({ name: name, phone: phone, street: street, state: state, city: city, isDefault: isDef });
+      localStorage.setItem('nexa_addresses', JSON.stringify(addresses));
+
+      document.getElementById('add-address-form').style.display = 'none';
+      renderAddresses();
+      showToast('✅ Address saved!');
+    }
+
+    function deleteAddress(index) {
+      var addresses = JSON.parse(localStorage.getItem('nexa_addresses') || '[]');
+      addresses.splice(index, 1);
+      localStorage.setItem('nexa_addresses', JSON.stringify(addresses));
+      renderAddresses();
+      showToast('Address removed');
+    }
+
+    function showTab(tab, el) {
+      document.querySelectorAll('.dash-tab').forEach(function(t) { t.style.display = 'none'; });
+      document.querySelectorAll('.dash-nav-item').forEach(function(n) { n.classList.remove('active'); });
+      var target = document.getElementById('tab-' + tab);
+      if (target) target.style.display = 'block';
+      if (el) el.classList.add('active');
+      if (tab === 'orders') renderOrders('all');
+    }
+
+    function logoutUser() {
+      localStorage.removeItem('nexa_current_user');
+      window.location.href = '../../index.html';
+    }
+
+    document.addEventListener('DOMContentLoaded', function() { init(); });
+
+  </script>
+
+  <style>
+    .order-card {
+      background: white;
+      border-radius: var(--radius);
+      padding: 16px;
+      box-shadow: var(--shadow);
+      margin-bottom: 12px;
+    }
+    .oc-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .oc-items { margin-bottom: 12px; }
+    .oc-item {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      padding: 6px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.85em;
+    }
+    .oc-item span:nth-child(2) { flex: 1; }
+    .oc-item span:last-child { color: var(--orange); font-weight: 700; }
+    .oc-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .btn-track {
+      padding: 7px 14px;
+      background: var(--blue);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 0.82em;
+      cursor: pointer;
+    }
+    .btn-review {
+      padding: 7px 14px;
+      background: #fff3e0;
+      color: var(--orange);
+      border: 1px solid #ffe0b2;
+      border-radius: 6px;
+      font-size: 0.82em;
+      cursor: pointer;
+    }
+    .wallet-cards {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+    .wallet-balance-card {
+      background: linear-gradient(135deg, #1a73e8, #0d47a1);
+      border-radius: var(--radius);
+      padding: 24px;
+      color: white;
+    }
+    .wbc-label { font-size: 0.82em; opacity: 0.8; margin-bottom: 8px; }
+    .wbc-amount { font-size: 2em; font-weight: 900; margin-bottom: 16px; }
+    .wbc-actions { display: flex; gap: 10px; }
+    .wbc-btn {
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-size: 0.82em;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+    }
+    .wbc-btn.primary { background: var(--orange); color: white; border: none; }
+    .wbc-btn.outline { background: transparent; color: white; border: 2px solid white; }
+    .wallet-info-cards {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .wi-card {
+      background: white;
+      border-radius: 8px;
+      padding: 14px;
+      box-shadow: var(--shadow);
+      text-align: center;
+    }
+    .wi-card span { display: block; font-size: 0.72em; color: var(--text2); margin-bottom: 4px; }
+    .wi-card b { font-size: 1em; color: var(--dark); }
+    .payment-methods-small {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .pm-opt {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.85em;
+    }
+    .pm-opt.active { border-color: var(--blue); background: #e8f0fe; }
+    .txn-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .profile-avatar-section {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+    .profile-avatar {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      background: var(--orange);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8em;
+      font-weight: 700;
+    }
+    .change-photo-btn {
+      padding: 8px 16px;
+      background: var(--gray);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: 0.85em;
+      cursor: pointer;
+    }
+    .address-card {
+      background: white;
+      border-radius: var(--radius);
+      padding: 16px;
+      box-shadow: var(--shadow);
+      margin-bottom: 12px;
+      position: relative;
+    }
+    .default-badge {
+      background: var(--green);
+      color: white;
+      font-size: 0.72em;
+      padding: 2px 8px;
+      border-radius: 20px;
+      margin-bottom: 6px;
+      display: inline-block;
+    }
+    .address-card b { display: block; margin-bottom: 4px; }
+    .address-card p { font-size: 0.85em; color: var(--text); margin-bottom: 2px; }
+    .wallet-form { max-width: 400px; display: flex; flex-direction: column; gap: 14px; }
+    @media (max-width: 600px) {
+      .wallet-cards { grid-template-columns: 1fr; }
+      .wallet-info-cards { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+
+</body>
+</html>
