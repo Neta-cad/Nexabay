@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Rentals — Nexabay</title>
+  <link rel="stylesheet" href="../../css/main.css"/>
+  <link rel="stylesheet" href="../../css/rentals.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="nav-inner">
+      <a href="../../index.html" class="logo">
+        <span class="logo-nexa">Nexa</span><span class="logo-bay">bay</span>
+      </a>
+      <div class="search-bar">
+        <input type="text" id="search-input" placeholder="Search rentals..."/>
+        <button onclick="doRentalSearch()" class="search-btn">🔍</button>
+      </div>
+      <div class="nav-actions">
+        <a href="../auth/login.html" class="nav-link">Login</a>
+        <a href="../auth/register.html" class="nav-btn">Sign Up</a>
+        <a href="../shop/cart.html" class="cart-icon-desk">
+          🛒 <span class="cart-count" id="cart-count">0</span>
+        </a>
+      </div>
+      <button class="hamburger" id="hamburger-btn" onclick="toggleMobileMenu()">☰</button>
+    </div>
+    <div class="mobile-menu-overlay" id="mobile-overlay" onclick="closeMobileMenu()"></div>
+    <div class="mobile-menu" id="mobile-menu">
+      <div class="mobile-menu-header">
+        <div class="logo"><span class="logo-nexa">Nexa</span><span class="logo-bay">bay</span></div>
+        <div id="mobile-header-actions" style="display:none;">
+          <a href="../dashboard/buyer.html" class="mh-btn account">Account</a>
+          <a href="#" onclick="logoutUser()" class="mh-btn logout">Logout</a>
+        </div>
+        <button onclick="closeMobileMenu()" class="close-menu-btn">✕</button>
+      </div>
+      <div id="mobile-user-section"></div>
+      <div class="mobile-menu-links">
+        <a href="../../index.html">🏠 Home</a>
+        <a href="../shop/browse.html">🛍️ Shop</a>
+        <a href="../services/browse.html">🔧 Services</a>
+        <a href="browse.html">🏠 Rentals</a>
+        <a href="../learn/browse.html">🎓 Learn</a>
+        <a href="../jobs/browse.html">💼 Jobs</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- FLOATING CART -->
+  <a href="../shop/cart.html" class="floating-cart" id="floating-cart">
+    🛒 <span class="floating-cart-count" id="floating-cart-count">0</span>
+  </a>
+
+  <!-- HERO -->
+  <div class="rentals-hero">
+    <div class="container">
+      <h1>Find Your Perfect Rental</h1>
+      <p>Apartments, houses, offices, cars and equipment — all in one place</p>
+
+      <div class="rentals-search-box">
+        <div class="rsb-row">
+          <div class="rsb-field">
+            <label>What are you looking for?</label>
+            <select id="rental-type">
+              <option value="all">All Types</option>
+              <option value="Apartment">Apartment</option>
+              <option value="House">House</option>
+              <option value="Office">Office Space</option>
+              <option value="Car">Car</option>
+              <option value="Equipment">Equipment</option>
+              <option value="Event Hall">Event Hall</option>
+            </select>
+          </div>
+          <div class="rsb-field">
+            <label>Location</label>
+            <select id="rental-location">
+              <option value="">All States</option>
+              <option>Lagos</option>
+              <option>Abuja</option>
+              <option>Port Harcourt</option>
+              <option>Kano</option>
+              <option>Ibadan</option>
+              <option>Enugu</option>
+            </select>
+          </div>
+          <div class="rsb-field">
+            <label>Budget (₦/month)</label>
+            <select id="rental-budget">
+              <option value="">Any budget</option>
+              <option value="50000">Under ₦50,000</option>
+              <option value="100000">Under ₦100,000</option>
+              <option value="200000">Under ₦200,000</option>
+              <option value="500000">Under ₦500,000</option>
+            </select>
+          </div>
+          <button onclick="doRentalSearch()" class="rsb-btn">Search</button>
+        </div>
+      </div>
+
+      <div class="rentals-hero-stats">
+        <span>🏠 8,000+ Listings</span>
+        <span>✅ Verified Landlords</span>
+        <span>🔒 Secure Payments</span>
+        <span>📍 36 States</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- RENTAL TYPES -->
+  <div class="container">
+    <h2 class="section-title" style="margin-top:40px">Browse by Type</h2>
+    <div class="rental-type-grid">
+      <div class="rtype-card" onclick="filterRentals('Apartment', this)">
+        <div class="rtype-icon">🏢</div>
+        <div class="rtype-name">Apartments</div>
+        <div class="rtype-count">3,200+</div>
+      </div>
+      <div class="rtype-card" onclick="filterRentals('House', this)">
+        <div class="rtype-icon">🏠</div>
+        <div class="rtype-name">Houses</div>
+        <div class="rtype-count">1,800+</div>
+      </div>
+      <div class="rtype-card" onclick="filterRentals('Office', this)">
+        <div class="rtype-icon">🏗️</div>
+        <div class="rtype-name">Offices</div>
+        <div class="rtype-count">650+</div>
+      </div>
+      <div class="rtype-card" onclick="filterRentals('Car', this)">
+        <div class="rtype-icon">🚗</div>
+        <div class="rtype-name">Cars</div>
+        <div class="rtype-count">420+</div>
+      </div>
+      <div class="rtype-card" onclick="filterRentals('Equipment', this)">
+        <div class="rtype-icon">🔧</div>
+        <div class="rtype-name">Equipment</div>
+        <div class="rtype-count">890+</div>
+      </div>
+      <div class="rtype-card" onclick="filterRentals('Event Hall', this)">
+        <div class="rtype-icon">🎉</div>
+        <div class="rtype-name">Event Halls</div>
+        <div class="rtype-count">340+</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FILTERS + LISTINGS -->
+  <div class="container rentals-layout">
+
+    <!-- SIDEBAR -->
+    <aside class="rentals-sidebar">
+      <div class="sidebar-header">
+        <h3>Filters</h3>
+        <button onclick="clearRentalFilters()" class="clear-btn">Clear</button>
+      </div>
+
+      <div class="filter-group">
+        <h4>Type</h4>
+        <div class="filter-options">
+          <label class="filter-opt"><input type="radio" name="rtype" value="all" checked onchange="applyRentalFilters()"/> All Types</label>
+          <label class="filter-opt"><input type="radio" name="rtype" value="Apartment" onchange="applyRentalFilters()"/> 🏢 Apartment</label>
+          <label class="filter-opt"><input type="radio" name="rtype" value="House" onchange="applyRentalFilters()"/> 🏠 House</label>
+          <label class="filter-opt"><input type="radio" name="rtype" value="Office" onchange="applyRentalFilters()"/> 🏗️ Office</label>
+          <label class="filter-opt"><input type="radio" name="rtype" value="Car" onchange="applyRentalFilters()"/> 🚗 Car</label>
+          <label class="filter-opt"><input type="radio" name="rtype" value="Equipment" onchange="applyRentalFilters()"/> 🔧 Equipment</label>
+          <label class="filter-opt"><input type="radio" name="rtype" value="Event Hall" onchange="applyRentalFilters()"/> 🎉 Event Hall</label>
+        </div>
+      </div>
+
+      <div class="filter-group">
+        <h4>Price Range (₦/month)</h4>
+        <div class="price-inputs">
+          <input type="number" id="rent-min" placeholder="Min" onchange="applyRentalFilters()"/>
+          <span>—</span>
+          <input type="number" id="rent-max" placeholder="Max" onchange="applyRentalFilters()"/>
+        </div>
+      </div>
+
+      <div class="filter-group">
+        <h4>Location</h4>
+        <select id="filter-state" onchange="applyRentalFilters()">
+          <option value="">All States</option>
+          <option>Lagos</option>
+          <option>Abuja</option>
+          <option>Port Harcourt</option>
+          <option>Kano</option>
+          <option>Ibadan</option>
+          <option>Enugu</option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <h4>Bedrooms</h4>
+        <div class="filter-options">
+          <label class="filter-opt"><input type="radio" name="beds" value="0" checked onchange="applyRentalFilters()"/> Any</label>
+          <label class="filter-opt"><input type="radio" name="beds" value="1" onchange="applyRentalFilters()"/> 1 Bedroom</label>
+          <label class="filter-opt"><input type="radio" name="beds" value="2" onchange="applyRentalFilters()"/> 2 Bedrooms</label>
+          <label class="filter-opt"><input type="radio" name="beds" value="3" onchange="applyRentalFilters()"/> 3+ Bedrooms</label>
+        </div>
+      </div>
+
+      <div class="filter-group">
+        <h4>Features</h4>
+        <div class="filter-options">
+          <label class="filter-opt"><input type="checkbox" id="f-furnished" onchange="applyRentalFilters()"/> Furnished</label>
+          <label class="filter-opt"><input type="checkbox" id="f-parking" onchange="applyRentalFilters()"/> Parking</label>
+          <label class="filter-opt"><input type="checkbox" id="f-security" onchange="applyRentalFilters()"/> Security</label>
+          <label class="filter-opt"><input type="checkbox" id="f-pool" onchange="applyRentalFilters()"/> Swimming Pool</label>
+          <label class="filter-opt"><input type="checkbox" id="f-gym" onchange="applyRentalFilters()"/> Gym</label>
+        </div>
+      </div>
+
+    </aside>
+
+    <!-- LISTINGS -->
+    <main class="rentals-main">
+
+      <div class="rentals-topbar">
+        <div class="rentals-topbar-left">
+          <button class="filter-toggle" onclick="toggleRentalSidebar()">⚙️ Filters</button>
+          <span id="rentals-count">Showing all listings</span>
+        </div>
+        <select id="rentals-sort" onchange="applyRentalFilters()">
+          <option value="default">Sort: Featured</option>
+          <option value="price-low">Price: Low to High</option>
+          <option value="price-high">Price: High to Low</option>
+          <option value="newest">Newest First</option>
+        </select>
+      </div>
+
+      <div id="rentals-grid" class="rentals-grid"></div>
+
+      <div id="rentals-empty" style="display:none;">
+        <div class="empty-state">
+          <div class="empty-icon">🏠</div>
+          <h3>No listings found</h3>
+          <p>Try adjusting your filters</p>
+          <button onclick="clearRentalFilters()" class="btn-primary">Clear Filters</button>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <div style="margin-bottom:60px;"></div>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-bottom">
+        <p>© 2025 Nexabay. All rights reserved.</p>
+        <a href="../../index.html" style="color:var(--orange)">← Back to Home</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../../js/core/main.js"></script>
+  <script>
+
+    var ALL_RENTALS = [
+      { id:1,  name:'2 Bedroom Flat',           type:'Apartment', price:120000,  period:'month', beds:2, location:'Lagos',         area:'Lekki',          emoji:'🏢', verified:true,  features:['Furnished','Parking','Security'], desc:'Spacious 2 bedroom flat in Lekki Phase 1. Modern finishes, 24hr security.' },
+      { id:2,  name:'3 Bedroom Duplex',          type:'House',     price:250000,  period:'month', beds:3, location:'Lagos',         area:'Ikeja GRA',      emoji:'🏠', verified:true,  features:['Furnished','Parking','Security','Pool'], desc:'Beautiful 3 bedroom duplex with swimming pool in Ikeja GRA.' },
+      { id:3,  name:'1 Bedroom Apartment',       type:'Apartment', price:65000,   period:'month', beds:1, location:'Abuja',         area:'Wuse 2',         emoji:'🏢', verified:true,  features:['Furnished','Security'],           desc:'Cozy 1 bedroom apartment in prime Wuse 2 location.' },
+      { id:4,  name:'Office Space 100sqm',       type:'Office',    price:180000,  period:'month', beds:0, location:'Lagos',         area:'Victoria Island', emoji:'🏗️', verified:true, features:['Parking','Security'],             desc:'Open plan office space in Victoria Island. Includes reception area.' },
+      { id:5,  name:'Toyota Camry 2020',         type:'Car',       price:35000,   period:'day',   beds:0, location:'Lagos',         area:'Ikeja',          emoji:'🚗', verified:true,  features:['AC','GPS'],                       desc:'Well maintained Toyota Camry 2020. Driver available on request.' },
+      { id:6,  name:'Event Hall 500 capacity',   type:'Event Hall',price:350000,  period:'day',   beds:0, location:'Lagos',         area:'Lekki',          emoji:'🎉', verified:true,  features:['Parking','AC','Catering option'], desc:'Luxurious event hall with modern amenities. Perfect for weddings.' },
+      { id:7,  name:'Self Contained Studio',     type:'Apartment', price:45000,   period:'month', beds:1, location:'Port Harcourt', area:'GRA Phase 2',    emoji:'🏢', verified:false, features:['Security'],                       desc:'Clean self-contained studio apartment. Water and light included.' },
+      { id:8,  name:'5 Bedroom Mansion',         type:'House',     price:800000,  period:'month', beds:5, location:'Lagos',         area:'Banana Island',  emoji:'🏡', verified:true,  features:['Furnished','Parking','Security','Pool','Gym'], desc:'Luxury 5 bedroom mansion on Banana Island. All amenities included.' },
+      { id:9,  name:'Generator 100KVA',          type:'Equipment', price:50000,   period:'week',  beds:0, location:'Lagos',         area:'Isale Eko',      emoji:'⚡', verified:true,  features:['Fuel included'],                  desc:'100KVA generator for events and construction. Fuel included.' },
+      { id:10, name:'Honda Accord 2019',         type:'Car',       price:25000,   period:'day',   beds:0, location:'Abuja',         area:'Garki',          emoji:'🚗', verified:true,  features:['AC','GPS','Driver available'],     desc:'Clean Honda Accord 2019. Available for self drive or with driver.' },
+      { id:11, name:'2 Bedroom Terrace',         type:'House',     price:160000,  period:'month', beds:2, location:'Abuja',         area:'Maitama',        emoji:'🏠', verified:true,  features:['Parking','Security'],             desc:'Lovely 2 bedroom terrace in Maitama. Quiet and serene environment.' },
+      { id:12, name:'Camera Equipment Kit',      type:'Equipment', price:15000,   period:'day',   beds:0, location:'Lagos',         area:'Surulere',       emoji:'📷', verified:true,  features:['Lighting included'],              desc:'Professional camera kit with lighting. Perfect for photo shoots.' },
+      { id:13, name:'Coworking Space',           type:'Office',    price:15000,   period:'month', beds:0, location:'Lagos',         area:'Yaba',           emoji:'💼', verified:true,  features:['WiFi','AC','Coffee'],             desc:'Modern coworking space in Yaba tech hub. Hot desks available.' },
+      { id:14, name:'4 Bedroom Bungalow',        type:'House',     price:180000,  period:'month', beds:4, location:'Kano',          area:'GRA',            emoji:'🏠', verified:false, features:['Parking'],                        desc:'Spacious 4 bedroom bungalow in Kano GRA. Large compound.' },
+      { id:15, name:'Mini Flat',                 type:'Apartment', price:35000,   period:'month', beds:1, location:'Ibadan',        area:'Bodija',         emoji:'🏢', verified:true,  features:['Security'],                       desc:'Affordable mini flat in Bodija. Close to UI and Bodija market.' },
+      { id:16, name:'Tent & Chairs (100 seats)', type:'Equipment', price:30000,   period:'day',   beds:0, location:'Lagos',         area:'Alimosho',       emoji:'⛺', verified:false, features:['Setup included'],                 desc:'Party tent with 100 chairs and tables. Setup and takedown included.' },
+    ];
+
+    var currentRentals = ALL_RENTALS.slice();
+
+    function renderRentals() {
+      var grid = document.getElementById('rentals-grid');
+      var empty = document.getElementById('rentals-empty');
+      var count = document.getElementById('rentals-count');
+
+      if (currentRentals.length === 0) {
+        grid.innerHTML = '';
+        empty.style.display = 'block';
+        return;
+      }
+
+      empty.style.display = 'none';
+      if (count) count.textContent = 'Showing ' + currentRentals.length + ' listings';
+
+      grid.innerHTML = currentRentals.map(function(r) {
+        return '<div class="rental-card" onclick="viewRental(' + r.id + ')">' +
+          '<div class="rc-img">' +
+            r.emoji +
+            (r.verified ? '<span class="rc-verified">✅ Verified</span>' : '') +
+          '</div>' +
+          '<div class="rc-info">' +
+            '<div class="rc-type-row">' +
+              '<span class="rc-type">' + r.type + '</span>' +
+              '<span class="rc-location">📍 ' + r.area + ', ' + r.location + '</span>' +
+            '</div>' +
+            '<h3 class="rc-name">' + r.name + '</h3>' +
+            '<p class="rc-desc">' + r.desc + '</p>' +
+            '<div class="rc-features">' +
+              r.features.slice(0, 3).map(function(f) {
+                return '<span class="rc-feat">✓ ' + f + '</span>';
+              }).join('') +
+            '</div>' +
+            (r.beds > 0 ? '<div class="rc-beds">🛏️ ' + r.beds + ' Bedroom' + (r.beds > 1 ? 's' : '') + '</div>' : '') +
+            '<div class="rc-bottom">' +
+              '<div class="rc-price">' +
+                '<span class="rc-amount">₦' + r.price.toLocaleString() + '</span>' +
+                '<span class="rc-period">/' + r.period + '</span>' +
+              '</div>' +
+              '<button class="rc-btn" onclick="event.stopPropagation();contactLandlord(' + r.id + ')">Contact</button>' +
+            '</div>' +
+          '</div>' +
+        '</div>';
+      }).join('');
+    }
+
+    function applyRentalFilters() {
+      var type   = document.querySelector('input[name="rtype"]:checked').value;
+      var minP   = parseFloat(document.getElementById('rent-min').value) || 0;
+      var maxP   = parseFloat(document.getElementById('rent-max').value) || Infinity;
+      var state  = document.getElementById('filter-state').value;
+      var beds   = parseInt(document.querySelector('input[name="beds"]:checked').value);
+      var sort   = document.getElementById('rentals-sort').value;
+      var search = (document.getElementById('search-input').value || '').toLowerCase().trim();
+
+      currentRentals = ALL_RENTALS.filter(function(r) {
+        if (type !== 'all' && r.type !== type) return false;
+        if (r.price < minP || r.price > maxP) return false;
+        if (state && r.location !== state) return false;
+        if (beds > 0 && beds < 3 && r.beds !== beds) return false;
+        if (beds >= 3 && r.beds < 3) return false;
+        if (search && !r.name.toLowerCase().includes(search) && !r.type.toLowerCase().includes(search)) return false;
+        return true;
+      });
+
+      if (sort === 'price-low')  currentRentals.sort(function(a,b) { return a.price - b.price; });
+      if (sort === 'price-high') currentRentals.sort(function(a,b) { return b.price - a.price; });
+
+      renderRentals();
+    }
+
+    function filterRentals(type, el) {
+      var cards = document.querySelectorAll('.rtype-card');
+      cards.forEach(function(c) { c.classList.remove('active'); });
+      if (el) el.classList.add('active');
+
+      var radio = document.querySelector('input[name="rtype"][value="' + type + '"]');
+      if (radio) radio.checked = true;
+      applyRentalFilters();
+    }
+
+    function clearRentalFilters() {
+      document.querySelector('input[name="rtype"][value="all"]').checked = true;
+      document.querySelector('input[name="beds"][value="0"]').checked = true;
+      document.getElementById('rent-min').value = '';
+      document.getElementById('rent-max').value = '';
+      document.getElementById('filter-state').value = '';
+      document.getElementById('rentals-sort').value = 'default';
+      document.getElementById('search-input').value = '';
+      currentRentals = ALL_RENTALS.slice();
+      renderRentals();
+    }
+
+    function doRentalSearch() {
+      applyRentalFilters();
+    }
+
+    function toggleRentalSidebar() {
+      var sidebar = document.querySelector('.rentals-sidebar');
+      if (sidebar) sidebar.classList.toggle('open');
+    }
+
+    function viewRental(id) {
+      showToast('🏠 Rental detail page coming soon!');
+    }
+
+    function contactLandlord(id) {
+      var user = localStorage.getItem('nexa_current_user');
+      if (!user) {
+        showToast('⚠️ Please login to contact', '#ff9500');
+        setTimeout(function() { window.location.href = '../auth/login.html'; }, 1500);
+        return;
+      }
+      showToast('✅ Message sent! Landlord will contact you soon.');
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      updateCartCount();
+      checkAuthState();
+      renderRentals();
+      var input = document.getElementById('search-input');
+      if (input) {
+        input.addEventListener('keypress', function(e) {
+          if (e.key === 'Enter') doRentalSearch();
+        });
+      }
+    });
+
+  </script>
+
+</body>
+</html>

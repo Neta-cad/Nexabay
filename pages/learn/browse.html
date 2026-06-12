@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>NexaLearn — Nexabay</title>
+  <link rel="stylesheet" href="../../css/main.css"/>
+  <link rel="stylesheet" href="../../css/learn.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="nav-inner">
+      <a href="../../index.html" class="logo">
+        <span class="logo-nexa">Nexa</span><span class="logo-bay">bay</span>
+      </a>
+      <div class="search-bar">
+        <input type="text" id="search-input" placeholder="Search courses..."/>
+        <button onclick="doCourseSearch()" class="search-btn">🔍</button>
+      </div>
+      <div class="nav-actions">
+        <a href="../auth/login.html" class="nav-link">Login</a>
+        <a href="../auth/register.html" class="nav-btn">Sign Up</a>
+        <a href="../shop/cart.html" class="cart-icon-desk">
+          🛒 <span class="cart-count" id="cart-count">0</span>
+        </a>
+      </div>
+      <button class="hamburger" id="hamburger-btn" onclick="toggleMobileMenu()">☰</button>
+    </div>
+    <div class="mobile-menu-overlay" id="mobile-overlay" onclick="closeMobileMenu()"></div>
+    <div class="mobile-menu" id="mobile-menu">
+      <div class="mobile-menu-header">
+        <div class="logo"><span class="logo-nexa">Nexa</span><span class="logo-bay">bay</span></div>
+        <div id="mobile-header-actions" style="display:none;">
+          <a href="../dashboard/buyer.html" class="mh-btn account">Account</a>
+          <a href="#" onclick="logoutUser()" class="mh-btn logout">Logout</a>
+        </div>
+        <button onclick="closeMobileMenu()" class="close-menu-btn">✕</button>
+      </div>
+      <div id="mobile-user-section"></div>
+      <div class="mobile-menu-links">
+        <a href="../../index.html">🏠 Home</a>
+        <a href="../shop/browse.html">🛍️ Shop</a>
+        <a href="../services/browse.html">🔧 Services</a>
+        <a href="../rentals/browse.html">🏠 Rentals</a>
+        <a href="browse.html">🎓 Learn</a>
+        <a href="../jobs/browse.html">💼 Jobs</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- FLOATING CART -->
+  <a href="../shop/cart.html" class="floating-cart" id="floating-cart">
+    🛒 <span class="floating-cart-count" id="floating-cart-count">0</span>
+  </a>
+
+  <!-- HERO -->
+  <div class="learn-hero">
+    <div class="container">
+      <div class="learn-hero-content">
+        <div class="learn-hero-text">
+          <div class="learn-badge">🎓 NexaLearn</div>
+          <h1>Learn New Skills,<br/>Change Your Life</h1>
+          <p>Access 2,000+ courses taught by expert Nigerian instructors. Learn at your own pace.</p>
+          <div class="learn-hero-search">
+            <input type="text" id="hero-search" placeholder="What do you want to learn?"/>
+            <button onclick="doCourseSearch()">Search Courses</button>
+          </div>
+          <div class="learn-hero-tags">
+            <span onclick="filterCourses('Coding', null)">💻 Coding</span>
+            <span onclick="filterCourses('Design', null)">🎨 Design</span>
+            <span onclick="filterCourses('Business', null)">💼 Business</span>
+            <span onclick="filterCourses('Marketing', null)">📣 Marketing</span>
+            <span onclick="filterCourses('Finance', null)">💰 Finance</span>
+          </div>
+        </div>
+        <div class="learn-hero-stats">
+          <div class="lhs-card">
+            <span>2,000+</span>
+            Courses
+          </div>
+          <div class="lhs-card">
+            <span>500+</span>
+            Instructors
+          </div>
+          <div class="lhs-card">
+            <span>50,000+</span>
+            Students
+          </div>
+          <div class="lhs-card">
+            <span>4.8⭐</span>
+            Avg Rating
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CATEGORIES -->
+  <div class="container">
+    <h2 class="section-title" style="margin-top:40px">Browse Categories</h2>
+    <div class="learn-cats">
+      <div class="lcat active" onclick="filterCourses('all', this)">📚 All</div>
+      <div class="lcat" onclick="filterCourses('Coding', this)">💻 Coding</div>
+      <div class="lcat" onclick="filterCourses('Design', this)">🎨 Design</div>
+      <div class="lcat" onclick="filterCourses('Business', this)">💼 Business</div>
+      <div class="lcat" onclick="filterCourses('Marketing', this)">📣 Marketing</div>
+      <div class="lcat" onclick="filterCourses('Finance', this)">💰 Finance</div>
+      <div class="lcat" onclick="filterCourses('Language', this)">🌍 Language</div>
+      <div class="lcat" onclick="filterCourses('Health', this)">🏥 Health</div>
+      <div class="lcat" onclick="filterCourses('Music', this)">🎵 Music</div>
+      <div class="lcat" onclick="filterCourses('Photography', this)">📷 Photography</div>
+    </div>
+  </div>
+
+  <!-- SORT + FILTER -->
+  <div class="container">
+    <div class="learn-topbar">
+      <div class="learn-topbar-left">
+        <span id="courses-count">Showing all courses</span>
+        <div class="learn-filters">
+          <select id="filter-level" onchange="applyFilters()">
+            <option value="">All Levels</option>
+            <option value="Beginner">Beginner</option>
+            <option value="Intermediate">Intermediate</option>
+            <option value="Advanced">Advanced</option>
+          </select>
+          <select id="filter-price-type" onchange="applyFilters()">
+            <option value="">All Prices</option>
+            <option value="free">Free Only</option>
+            <option value="paid">Paid Only</option>
+          </select>
+        </div>
+      </div>
+      <select id="courses-sort" onchange="applyFilters()">
+        <option value="default">Sort: Featured</option>
+        <option value="price-low">Price: Low to High</option>
+        <option value="price-high">Price: High to Low</option>
+        <option value="rating">Highest Rated</option>
+        <option value="students">Most Students</option>
+      </select>
+    </div>
+
+    <!-- COURSES GRID -->
+    <div class="courses-grid" id="courses-grid"></div>
+
+    <div id="courses-empty" style="display:none;">
+      <div class="empty-state">
+        <div class="empty-icon">🎓</div>
+        <h3>No courses found</h3>
+        <p>Try a different search or category</p>
+        <button onclick="filterCourses('all', null)" class="btn-primary">Show All</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- BECOME INSTRUCTOR -->
+  <div class="become-instructor">
+    <div class="container">
+      <div class="bi-inner">
+        <div class="bi-text">
+          <h2>Become an Instructor</h2>
+          <p>Share your knowledge and earn money teaching on NexaLearn.</p>
+          <ul class="bi-list">
+            <li>✅ Keep 80% of every sale</li>
+            <li>✅ Teach at your own pace</li>
+            <li>✅ Reach 50,000+ students</li>
+            <li>✅ Free to get started</li>
+          </ul>
+          <a href="../auth/register.html" class="btn-primary">Start Teaching Today →</a>
+        </div>
+        <div class="bi-stats">
+          <div class="bi-stat"><span>₦500K+</span>Top instructor earnings/month</div>
+          <div class="bi-stat"><span>80%</span>Revenue share to instructors</div>
+          <div class="bi-stat"><span>Free</span>To create and publish courses</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-bottom:60px;"></div>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-bottom">
+        <p>© 2025 Nexabay. All rights reserved.</p>
+        <a href="../../index.html" style="color:var(--orange)">← Back to Home</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../../js/core/main.js"></script>
+  <script>
+
+    var ALL_COURSES = [
+      { id:1,  title:'Complete Web Development Bootcamp',  category:'Coding',       instructor:'Chidi Okafor',    rating:4.9, students:12400, price:15000,  isFree:false, level:'Beginner',     duration:'40 hours', emoji:'💻', lessons:120 },
+      { id:2,  title:'Python for Data Science & AI',       category:'Coding',       instructor:'Emeka Nwosu',     rating:4.8, students:8900,  price:18000,  isFree:false, level:'Intermediate', duration:'35 hours', emoji:'🐍', lessons:95  },
+      { id:3,  title:'Graphic Design Masterclass',         category:'Design',       instructor:'Amina Suleiman',  rating:4.9, students:15600, price:12000,  isFree:false, level:'Beginner',     duration:'28 hours', emoji:'🎨', lessons:84  },
+      { id:4,  title:'Digital Marketing Complete Guide',   category:'Marketing',    instructor:'Kemi Adeyemi',    rating:4.7, students:11200, price:10000,  isFree:false, level:'Beginner',     duration:'22 hours', emoji:'📣', lessons:68  },
+      { id:5,  title:'Financial Freedom in Nigeria',       category:'Finance',      instructor:'Tunde Bakare',    rating:4.8, students:9800,  price:8000,   isFree:false, level:'Beginner',     duration:'15 hours', emoji:'💰', lessons:45  },
+      { id:6,  title:'UI/UX Design with Figma',           category:'Design',       instructor:'Zainab Hassan',   rating:4.9, students:7600,  price:14000,  isFree:false, level:'Intermediate', duration:'30 hours', emoji:'🖌️', lessons:90  },
+      { id:7,  title:'Introduction to Programming',        category:'Coding',       instructor:'Femi Adeleke',    rating:4.6, students:25000, price:0,      isFree:true,  level:'Beginner',     duration:'10 hours', emoji:'👨‍💻', lessons:30  },
+      { id:8,  title:'Social Media Marketing',             category:'Marketing',    instructor:'Ngozi Eze',       rating:4.7, students:13400, price:7000,   isFree:false, level:'Beginner',     duration:'18 hours', emoji:'📱', lessons:55  },
+      { id:9,  title:'Business English Mastery',           category:'Language',     instructor:'Dr. Audu Musa',   rating:4.8, students:6700,  price:6000,   isFree:false, level:'Intermediate', duration:'20 hours', emoji:'🌍', lessons:60  },
+      { id:10, title:'Mobile App Development React Native',category:'Coding',       instructor:'Dayo Ogunleye',   rating:4.8, students:5400,  price:20000,  isFree:false, level:'Advanced',     duration:'45 hours', emoji:'📱', lessons:135 },
+      { id:11, title:'Photography for Beginners',          category:'Photography',  instructor:'Biodun Afolabi',  rating:4.7, students:8900,  price:9000,   isFree:false, level:'Beginner',     duration:'16 hours', emoji:'📷', lessons:48  },
+      { id:12, title:'Entrepreneurship in Nigeria',        category:'Business',     instructor:'Seun Osewa',      rating:4.9, students:18900, price:12000,  isFree:false, level:'Beginner',     duration:'25 hours', emoji:'🚀', lessons:75  },
+      { id:13, title:'Nutrition & Healthy Living',         category:'Health',       instructor:'Dr. Funke Ojo',   rating:4.8, students:7200,  price:5000,   isFree:false, level:'Beginner',     duration:'12 hours', emoji:'🥗', lessons:36  },
+      { id:14, title:'Afrobeats Music Production',         category:'Music',        instructor:'DJ Spinall',      rating:4.9, students:4500,  price:15000,  isFree:false, level:'Intermediate', duration:'32 hours', emoji:'🎵', lessons:96  },
+      { id:15, title:'Excel & Data Analysis',              category:'Finance',      instructor:'Ade Williams',    rating:4.7, students:16700, price:0,      isFree:true,  level:'Beginner',     duration:'14 hours', emoji:'📊', lessons:42  },
+      { id:16, title:'E-commerce Business Setup',          category:'Business',     instructor:'Bisi Olatunde',   rating:4.8, students:9300,  price:10000,  isFree:false, level:'Beginner',     duration:'20 hours', emoji:'🛍️', lessons:60  },
+    ];
+
+    var currentCourses = ALL_COURSES.slice();
+    var currentCategory = 'all';
+
+    function renderCourses() {
+      var grid = document.getElementById('courses-grid');
+      var empty = document.getElementById('courses-empty');
+      var count = document.getElementById('courses-count');
+
+      if (currentCourses.length === 0) {
+        grid.innerHTML = '';
+        empty.style.display = 'block';
+        return;
+      }
+
+      empty.style.display = 'none';
+      if (count) count.textContent = 'Showing ' + currentCourses.length + ' courses';
+
+      grid.innerHTML = currentCourses.map(function(c) {
+        return '<div class="course-card" onclick="viewCourse(' + c.id + ')">' +
+          '<div class="cc-img">' + c.emoji +
+            (c.isFree ? '<span class="cc-free-badge">FREE</span>' : '') +
+            '<span class="cc-level">' + c.level + '</span>' +
+          '</div>' +
+          '<div class="cc-info">' +
+            '<span class="cc-category">' + c.category + '</span>' +
+            '<h3 class="cc-title">' + c.title + '</h3>' +
+            '<div class="cc-instructor">by ' + c.instructor + '</div>' +
+            '<div class="cc-meta">' +
+              '<span>⭐ ' + c.rating + '</span>' +
+              '<span>👥 ' + c.students.toLocaleString() + ' students</span>' +
+              '<span>🕒 ' + c.duration + '</span>' +
+            '</div>' +
+            '<div class="cc-lessons">' + c.lessons + ' lessons</div>' +
+            '<div class="cc-bottom">' +
+              '<div class="cc-price">' +
+                (c.isFree
+                  ? '<span class="cc-price-free">FREE</span>'
+                  : '<span class="cc-price-amount">₦' + c.price.toLocaleString() + '</span>') +
+              '</div>' +
+              '<button class="cc-enroll-btn" onclick="event.stopPropagation();enrollCourse(' + c.id + ')">' +
+                (c.isFree ? 'Enroll Free' : 'Enroll Now') +
+              '</button>' +
+            '</div>' +
+          '</div>' +
+        '</div>';
+      }).join('');
+    }
+
+    function filterCourses(cat, el) {
+      currentCategory = cat;
+      var cats = document.querySelectorAll('.lcat');
+      cats.forEach(function(c) { c.classList.remove('active'); });
+      if (el) el.classList.add('active');
+      applyFilters();
+    }
+
+    function applyFilters() {
+      var level     = document.getElementById('filter-level').value;
+      var priceType = document.getElementById('filter-price-type').value;
+      var sort      = document.getElementById('courses-sort').value;
+      var search    = (document.getElementById('search-input').value || '').toLowerCase().trim();
+
+      currentCourses = ALL_COURSES.filter(function(c) {
+        if (currentCategory !== 'all' && c.category !== currentCategory) return false;
+        if (level && c.level !== level) return false;
+        if (priceType === 'free' && !c.isFree) return false;
+        if (priceType === 'paid' && c.isFree) return false;
+        if (search && !c.title.toLowerCase().includes(search) && !c.instructor.toLowerCase().includes(search)) return false;
+        return true;
+      });
+
+      if (sort === 'price-low')   currentCourses.sort(function(a,b) { return a.price - b.price; });
+      if (sort === 'price-high')  currentCourses.sort(function(a,b) { return b.price - a.price; });
+      if (sort === 'rating')      currentCourses.sort(function(a,b) { return b.rating - a.rating; });
+      if (sort === 'students')    currentCourses.sort(function(a,b) { return b.students - a.students; });
+
+      renderCourses();
+    }
+
+    function doCourseSearch() {
+      applyFilters();
+    }
+
+    function viewCourse(id) {
+      showToast('📚 Course detail page coming soon!');
+    }
+
+    function enrollCourse(id) {
+      var user = localStorage.getItem('nexa_current_user');
+      if (!user) {
+        showToast('⚠️ Please login to enroll', '#ff9500');
+        setTimeout(function() { window.location.href = '../auth/login.html'; }, 1500);
+        return;
+      }
+      var course = ALL_COURSES.find(function(c) { return c.id === id; });
+      if (course) {
+        if (course.isFree) {
+          showToast('🎉 Enrolled successfully! Check your dashboard.');
+        } else {
+          showToast('💳 Redirecting to payment...');
+        }
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      updateCartCount();
+      checkAuthState();
+      renderCourses();
+      var input = document.getElementById('search-input');
+      if (input) {
+        input.addEventListener('keypress', function(e) {
+          if (e.key === 'Enter') doCourseSearch();
+        });
+      }
+    });
+
+  </script>
+
+</body>
+</html>
