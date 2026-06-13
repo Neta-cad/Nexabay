@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>NexaFood — Nexabay</title>
+  <link rel="stylesheet" href="../../css/main.css"/>
+  <link rel="stylesheet" href="../../css/food.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="nav-inner">
+      <a href="../../index.html" class="logo">
+        <span class="logo-nexa">Nexa</span><span class="logo-bay">bay</span>
+      </a>
+      <div class="search-bar">
+        <input type="text" id="search-input" placeholder="Search restaurants or food..."/>
+        <button onclick="doFoodSearch()" class="search-btn">🔍</button>
+      </div>
+      <div class="nav-actions">
+        <a href="../auth/login.html" class="nav-link">Login</a>
+        <a href="../auth/register.html" class="nav-btn">Sign Up</a>
+        <a href="../shop/cart.html" class="cart-icon-desk">
+          🛒 <span class="cart-count" id="cart-count">0</span>
+        </a>
+      </div>
+      <button class="hamburger" id="hamburger-btn" onclick="toggleMobileMenu()">☰</button>
+    </div>
+    <div class="mobile-menu-overlay" id="mobile-overlay" onclick="closeMobileMenu()"></div>
+    <div class="mobile-menu" id="mobile-menu">
+      <div class="mobile-menu-header">
+        <div class="logo"><span class="logo-nexa">Nexa</span><span class="logo-bay">bay</span></div>
+        <div id="mobile-header-actions" style="display:none;">
+          <a href="../dashboard/buyer.html" class="mh-btn account">Account</a>
+          <a href="#" onclick="logoutUser()" class="mh-btn logout">Logout</a>
+        </div>
+        <button onclick="closeMobileMenu()" class="close-menu-btn">✕</button>
+      </div>
+      <div id="mobile-user-section"></div>
+      <div class="mobile-menu-links">
+        <a href="../../index.html">🏠 Home</a>
+        <a href="../shop/browse.html">🛍️ Shop</a>
+        <a href="../services/browse.html">🔧 Services</a>
+        <a href="../rentals/browse.html">🏠 Rentals</a>
+        <a href="../learn/browse.html">🎓 Learn</a>
+        <a href="../jobs/browse.html">💼 Jobs</a>
+        <a href="browse.html">🍔 Food</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- FLOATING CART -->
+  <a href="../shop/cart.html" class="floating-cart" id="floating-cart">
+    🛒 <span class="floating-cart-count" id="floating-cart-count">0</span>
+  </a>
+
+  <!-- HERO -->
+  <div class="food-hero">
+    <div class="container">
+      <h1>🍔 Order Food & Groceries</h1>
+      <p>From your favourite restaurants — delivered fast to your door</p>
+      <div class="food-search">
+        <div class="food-search-inner">
+          <span>📍</span>
+          <select id="food-location">
+            <option>Lagos — Lekki</option>
+            <option>Lagos — Ikeja</option>
+            <option>Lagos — Victoria Island</option>
+            <option>Abuja — Wuse</option>
+            <option>Abuja — Garki</option>
+            <option>Port Harcourt</option>
+          </select>
+          <div class="food-search-divider"></div>
+          <input type="text" id="food-search-input" placeholder="Search restaurants or dishes..."/>
+          <button onclick="doFoodSearch()">Search</button>
+        </div>
+      </div>
+      <div class="food-hero-badges">
+        <span>⚡ 30-45 min delivery</span>
+        <span>🆓 Free delivery on first order</span>
+        <span>🔒 Secure payment</span>
+        <span>⭐ 1,000+ restaurants</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOD CATEGORIES -->
+  <div class="container">
+    <div class="food-cats-scroll">
+      <div class="food-cat active" onclick="filterFood('all', this)">
+        <div class="fc-icon">🍽️</div>
+        <div class="fc-name">All</div>
+      </div>
+      <div class="food-cat" onclick="filterFood('Nigerian', this)">
+        <div class="fc-icon">🍛</div>
+        <div class="fc-name">Nigerian</div>
+      </div>
+      <div class="food-cat" onclick="filterFood('Fast Food', this)">
+        <div class="fc-icon">🍔</div>
+        <div class="fc-name">Fast Food</div>
+      </div>
+      <div class="food-cat" onclick="filterFood('Pizza', this)">
+        <div class="fc-icon">🍕</div>
+        <div class="fc-name">Pizza</div>
+      </div>
+      <div class="food-cat" onclick="filterFood('Chinese', this)">
+        <div class="fc-icon">🥡</div>
+        <div class="fc-name">Chinese</div>
+      </div>
+      <div class="food-cat" onclick="filterFood('Shawarma', this)">
+        <div class="fc-icon">🌯</div>
+        <div class="fc-name">Shawarma</div>
+      </div>
+      <div class="food-cat" onclick="filterFood('Grills', this)">
+        <div class="fc-icon">🍖</div>
+        <div class="fc-name">Grills</div>
+      </div>
+      <div class="food-cat" onclick="filterFood('Seafood', this)">
+        <div class="fc-icon">🦞</div>
+        <div class="fc-name">Seafood</div>
+      </div>
+      <div class="food-cat" onclick="filterFood('Healthy', this)">
+        <div class="fc-icon">🥗</div>
+        <div class="fc-name">Healthy</div>
+      </div>
+      <div class="food-cat" onclick="filterFood('Drinks', this)">
+        <div class="fc-icon">🧃</div>
+        <div class="fc-name">Drinks</div>
+      </div>
+      <div class="food-cat" onclick="filterFood('Groceries', this)">
+        <div class="fc-icon">🛒</div>
+        <div class="fc-name">Groceries</div>
+      </div>
+      <div class="food-cat" onclick="filterFood('Desserts', this)">
+        <div class="fc-icon">🍰</div>
+        <div class="fc-name">Desserts</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SORT BAR -->
+  <div class="container">
+    <div class="food-topbar">
+      <span id="food-count">Showing all restaurants</span>
+      <div class="food-sort-filters">
+        <select id="food-sort" onchange="applyFoodFilters()">
+          <option value="default">Sort: Featured</option>
+          <option value="rating">Highest Rated</option>
+          <option value="delivery-time">Fastest Delivery</option>
+          <option value="price-low">Min Order: Low</option>
+        </select>
+        <label class="food-toggle-filter">
+          <input type="checkbox" id="free-delivery-filter" onchange="applyFoodFilters()"/>
+          Free Delivery
+        </label>
+        <label class="food-toggle-filter">
+          <input type="checkbox" id="open-now-filter" onchange="applyFoodFilters()"/>
+          Open Now
+        </label>
+      </div>
+    </div>
+
+    <!-- RESTAURANTS GRID -->
+    <div class="restaurants-grid" id="restaurants-grid"></div>
+
+    <div id="food-empty" style="display:none;">
+      <div class="empty-state">
+        <div class="empty-icon">🍽️</div>
+        <h3>No restaurants found</h3>
+        <p>Try a different search or category</p>
+        <button onclick="filterFood('all', null)" class="btn-primary">Show All</button>
+      </div>
+    </div>
+
+  </div>
+
+  <div style="margin-bottom:60px;"></div>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-bottom">
+        <p>© 2025 Nexabay. All rights reserved.</p>
+        <a href="../../index.html" style="color:var(--orange)">← Back to Home</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../../js/core/main.js"></script>
+  <script>
+
+    var ALL_RESTAURANTS = [
+      { id:1,  name:'The Place Restaurant',   category:'Nigerian',  rating:4.8, reviews:1240, deliveryTime:35, deliveryFee:500,  minOrder:3000,  emoji:'🍛', isOpen:true,  isFree:false, tags:['Jollof Rice','Egusi Soup','Pounded Yam'] },
+      { id:2,  name:'Chicken Republic',       category:'Fast Food', rating:4.7, reviews:2340, deliveryTime:25, deliveryFee:0,    minOrder:2000,  emoji:'🍗', isOpen:true,  isFree:true,  tags:['Fried Chicken','Burgers','Sides'] },
+      { id:3,  name:'Dominos Pizza',          category:'Pizza',     rating:4.6, reviews:890,  deliveryTime:45, deliveryFee:1000, minOrder:5000,  emoji:'🍕', isOpen:true,  isFree:false, tags:['Pizza','Pasta','Garlic Bread'] },
+      { id:4,  name:'Kilimanjaro',            category:'Nigerian',  rating:4.9, reviews:3450, deliveryTime:40, deliveryFee:700,  minOrder:4000,  emoji:'🍲', isOpen:true,  isFree:false, tags:['Suya','Pepper Soup','Nkwobi'] },
+      { id:5,  name:'Yellow Chilli',          category:'Nigerian',  rating:4.7, reviews:678,  deliveryTime:50, deliveryFee:500,  minOrder:5000,  emoji:'🌶️', isOpen:false, isFree:false, tags:['Continental','Nigerian Fusion'] },
+      { id:6,  name:'Mr Biggs',               category:'Fast Food', rating:4.5, reviews:1560, deliveryTime:30, deliveryFee:0,    minOrder:1500,  emoji:'🍔', isOpen:true,  isFree:true,  tags:['Pies','Burgers','Pastries'] },
+      { id:7,  name:'Dragon Palace',          category:'Chinese',   rating:4.6, reviews:456,  deliveryTime:45, deliveryFee:800,  minOrder:6000,  emoji:'🥡', isOpen:true,  isFree:false, tags:['Fried Rice','Noodles','Dim Sum'] },
+      { id:8,  name:'Shawarma World',         category:'Shawarma',  rating:4.8, reviews:2100, deliveryTime:20, deliveryFee:300,  minOrder:2000,  emoji:'🌯', isOpen:true,  isFree:false, tags:['Shawarma','Fries','Smoothies'] },
+      { id:9,  name:'Buka Spot',              category:'Nigerian',  rating:4.9, reviews:4560, deliveryTime:30, deliveryFee:400,  minOrder:1500,  emoji:'🍱', isOpen:true,  isFree:false, tags:['Amala','Ewedu','Gbegiri'] },
+      { id:10, name:'Tantalizers',            category:'Fast Food', rating:4.4, reviews:1890, deliveryTime:35, deliveryFee:0,    minOrder:2000,  emoji:'🍟', isOpen:true,  isFree:true,  tags:['Chicken','Rice','Snacks'] },
+      { id:11, name:'Ocean Basket',           category:'Seafood',   rating:4.7, reviews:567,  deliveryTime:50, deliveryFee:1000, minOrder:8000,  emoji:'🦞', isOpen:false, isFree:false, tags:['Prawns','Fish','Calamari'] },
+      { id:12, name:'Wrap It Up',             category:'Healthy',   rating:4.8, reviews:890,  deliveryTime:25, deliveryFee:500,  minOrder:3000,  emoji:'🥗', isOpen:true,  isFree:false, tags:['Salads','Wraps','Smoothies'] },
+      { id:13, name:'Suya Spot',              category:'Grills',    rating:4.9, reviews:3200, deliveryTime:30, deliveryFee:300,  minOrder:2000,  emoji:'🍖', isOpen:true,  isFree:false, tags:['Suya','Balangu','Kilishi'] },
+      { id:14, name:'FreshMart Groceries',    category:'Groceries', rating:4.6, reviews:780,  deliveryTime:60, deliveryFee:1000, minOrder:5000,  emoji:'🛒', isOpen:true,  isFree:false, tags:['Fresh Produce','Dairy','Beverages'] },
+      { id:15, name:'Sweet Sensations',       category:'Desserts',  rating:4.7, reviews:1200, deliveryTime:35, deliveryFee:500,  minOrder:2500,  emoji:'🍰', isOpen:true,  isFree:false, tags:['Cakes','Pastries','Ice Cream'] },
+      { id:16, name:'Coldstone Creamery',     category:'Desserts',  rating:4.8, reviews:2300, deliveryTime:30, deliveryFee:0,    minOrder:3000,  emoji:'🍦', isOpen:true,  isFree:true,  tags:['Ice Cream','Smoothies','Waffles'] },
+    ];
+
+    var currentRestaurants = ALL_RESTAURANTS.slice();
+    var currentCategory = 'all';
+
+    function renderRestaurants() {
+      var grid = document.getElementById('restaurants-grid');
+      var empty = document.getElementById('food-empty');
+      var count = document.getElementById('food-count');
+
+      if (currentRestaurants.length === 0) {
+        grid.innerHTML = '';
+        empty.style.display = 'block';
+        return;
+      }
+
+      empty.style.display = 'none';
+      if (count) count.textContent = 'Showing ' + currentRestaurants.length + ' restaurants';
+
+      grid.innerHTML = currentRestaurants.map(function(r) {
+        return '<div class="restaurant-card ' + (!r.isOpen ? 'closed' : '') + '" onclick="viewRestaurant(' + r.id + ')">' +
+          '<div class="rc-cover">' +
+            '<div class="rc-emoji">' + r.emoji + '</div>' +
+            (!r.isOpen ? '<div class="rc-closed-overlay">Closed</div>' : '') +
+            (r.isFree ? '<div class="rc-free-badge">Free Delivery</div>' : '') +
+          '</div>' +
+          '<div class="rc-body">' +
+            '<div class="rc-top-row">' +
+              '<h3 class="rc-name">' + r.name + '</h3>' +
+              '<div class="rc-rating">⭐ ' + r.rating + '</div>' +
+            '</div>' +
+            '<div class="rc-tags">' +
+              r.tags.slice(0, 2).map(function(t) {
+                return '<span>' + t + '</span>';
+              }).join('') +
+            '</div>' +
+            '<div class="rc-info-row">' +
+              '<span>🕒 ' + r.deliveryTime + ' min</span>' +
+              '<span>💰 Min ₦' + r.minOrder.toLocaleString() + '</span>' +
+              '<span>' + (r.isFree ? '🆓 Free delivery' : '🚚 ₦' + r.deliveryFee.toLocaleString()) + '</span>' +
+            '</div>' +
+            '<button class="rc-order-btn" onclick="event.stopPropagation();orderFromRestaurant(' + r.id + ')">' +
+              (r.isOpen ? 'Order Now' : 'Pre-Order') +
+            '</button>' +
+          '</div>' +
+        '</div>';
+      }).join('');
+    }
+
+    function filterFood(cat, el) {
+      currentCategory = cat;
+      var cats = document.querySelectorAll('.food-cat');
+      cats.forEach(function(c) { c.classList.remove('active'); });
+      if (el) el.classList.add('active');
+      applyFoodFilters();
+    }
+
+    function applyFoodFilters() {
+      var sort = document.getElementById('food-sort').value;
+      var freeDelivery = document.getElementById('free-delivery-filter').checked;
+      var openNow = document.getElementById('open-now-filter').checked;
+      var search = (document.getElementById('search-input').value || '').toLowerCase().trim();
+
+      currentRestaurants = ALL_RESTAURANTS.filter(function(r) {
+        if (currentCategory !== 'all' && r.category !== currentCategory) return false;
+        if (freeDelivery && !r.isFree) return false;
+        if (openNow && !r.isOpen) return false;
+        if (search && !r.name.toLowerCase().includes(search) && !r.tags.some(function(t) { return t.toLowerCase().includes(search); })) return false;
+        return true;
+      });
+
+      if (sort === 'rating')        currentRestaurants.sort(function(a,b) { return b.rating - a.rating; });
+      if (sort === 'delivery-time') currentRestaurants.sort(function(a,b) { return a.deliveryTime - b.deliveryTime; });
+      if (sort === 'price-low')     currentRestaurants.sort(function(a,b) { return a.minOrder - b.minOrder; });
+
+      renderRestaurants();
+    }
+
+    function doFoodSearch() {
+      applyFoodFilters();
+    }
+
+    function viewRestaurant(id) {
+      showToast('🍽️ Restaurant menu coming soon!');
+    }
+
+    function orderFromRestaurant(id) {
+      var user = localStorage.getItem('nexa_current_user');
+      if (!user) {
+        showToast('⚠️ Please login to order', '#ff9500');
+        setTimeout(function() { window.location.href = '../auth/login.html'; }, 1500);
+        return;
+      }
+      showToast('🛒 Added to cart! View your cart to checkout.');
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      updateCartCount();
+      checkAuthState();
+      renderRestaurants();
+      var input = document.getElementById('search-input');
+      if (input) {
+        input.addEventListener('keypress', function(e) {
+          if (e.key === 'Enter') doFoodSearch();
+        });
+      }
+    });
+
+  </script>
+
+</body>
+</html>
