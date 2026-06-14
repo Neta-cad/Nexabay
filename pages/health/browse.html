@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>NexaHealth — Nexabay</title>
+  <link rel="stylesheet" href="../../css/main.css"/>
+  <link rel="stylesheet" href="../../css/health.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="nav-inner">
+      <a href="../../index.html" class="logo">
+        <span class="logo-nexa">Nexa</span><span class="logo-bay">bay</span>
+      </a>
+      <div class="search-bar">
+        <input type="text" id="search-input" placeholder="Search doctors, hospitals..."/>
+        <button onclick="doHealthSearch()" class="search-btn">🔍</button>
+      </div>
+      <div class="nav-actions">
+        <a href="../auth/login.html" class="nav-link">Login</a>
+        <a href="../auth/register.html" class="nav-btn">Sign Up</a>
+        <a href="../shop/cart.html" class="cart-icon-desk">
+          🛒 <span class="cart-count" id="cart-count">0</span>
+        </a>
+      </div>
+      <button class="hamburger" id="hamburger-btn" onclick="toggleMobileMenu()">☰</button>
+    </div>
+    <div class="mobile-menu-overlay" id="mobile-overlay" onclick="closeMobileMenu()"></div>
+    <div class="mobile-menu" id="mobile-menu">
+      <div class="mobile-menu-header">
+        <div class="logo"><span class="logo-nexa">Nexa</span><span class="logo-bay">bay</span></div>
+        <div id="mobile-header-actions" style="display:none;">
+          <a href="../dashboard/buyer.html" class="mh-btn account">Account</a>
+          <a href="#" onclick="logoutUser()" class="mh-btn logout">Logout</a>
+        </div>
+        <button onclick="closeMobileMenu()" class="close-menu-btn">✕</button>
+      </div>
+      <div id="mobile-user-section"></div>
+      <div class="mobile-menu-links">
+        <a href="../../index.html">🏠 Home</a>
+        <a href="../shop/browse.html">🛍️ Shop</a>
+        <a href="../services/browse.html">🔧 Services</a>
+        <a href="../rentals/browse.html">🏠 Rentals</a>
+        <a href="../learn/browse.html">🎓 Learn</a>
+        <a href="../jobs/browse.html">💼 Jobs</a>
+        <a href="browse.html">🏥 Health</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- FLOATING CART -->
+  <a href="../shop/cart.html" class="floating-cart" id="floating-cart">
+    🛒 <span class="floating-cart-count" id="floating-cart-count">0</span>
+  </a>
+
+  <!-- HERO -->
+  <div class="health-hero">
+    <div class="container">
+      <div class="health-hero-inner">
+        <div class="health-hero-text">
+          <div class="health-badge">🏥 NexaHealth</div>
+          <h1>Your Health,<br/>Our Priority</h1>
+          <p>Book appointments with verified doctors, order medicines and access health services from your phone.</p>
+          <div class="health-search">
+            <input type="text" id="health-search-input" placeholder="Search doctors, specialties..."/>
+            <select id="health-location">
+              <option value="">All States</option>
+              <option>Lagos</option>
+              <option>Abuja</option>
+              <option>Port Harcourt</option>
+              <option>Kano</option>
+              <option>Online</option>
+            </select>
+            <button onclick="doHealthSearch()">Search</button>
+          </div>
+          <div class="health-hero-features">
+            <span>✅ Verified Doctors</span>
+            <span>📱 Online Consultation</span>
+            <span>🚚 Medicine Delivery</span>
+            <span>🔒 Private & Secure</span>
+          </div>
+        </div>
+        <div class="health-hero-stats">
+          <div class="hhs-card">
+            <span>3,000+</span>
+            Doctors
+          </div>
+          <div class="hhs-card">
+            <span>50+</span>
+            Specialties
+          </div>
+          <div class="hhs-card">
+            <span>15 min</span>
+            Avg Response
+          </div>
+          <div class="hhs-card">
+            <span>4.9⭐</span>
+            Rating
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- QUICK SERVICES -->
+  <div class="container">
+    <h2 class="section-title" style="margin-top:36px">What do you need?</h2>
+    <div class="health-services-grid">
+      <div class="hs-card" onclick="filterDoctors('General', null)">
+        <div class="hs-icon">👨‍⚕️</div>
+        <div class="hs-name">General Doctor</div>
+        <div class="hs-desc">Common illnesses & checkups</div>
+      </div>
+      <div class="hs-card" onclick="filterDoctors('Dentist', null)">
+        <div class="hs-icon">🦷</div>
+        <div class="hs-name">Dentist</div>
+        <div class="hs-desc">Teeth & oral health</div>
+      </div>
+      <div class="hs-card" onclick="filterDoctors('Mental Health', null)">
+        <div class="hs-icon">🧠</div>
+        <div class="hs-name">Mental Health</div>
+        <div class="hs-desc">Therapy & counseling</div>
+      </div>
+      <div class="hs-card" onclick="filterDoctors('Gynecologist', null)">
+        <div class="hs-icon">👶</div>
+        <div class="hs-name">Gynecologist</div>
+        <div class="hs-desc">Women health & pregnancy</div>
+      </div>
+      <div class="hs-card" onclick="filterDoctors('Dermatologist', null)">
+        <div class="hs-icon">🧴</div>
+        <div class="hs-name">Dermatologist</div>
+        <div class="hs-desc">Skin care & treatment</div>
+      </div>
+      <div class="hs-card" onclick="filterDoctors('Optician', null)">
+        <div class="hs-icon">👁️</div>
+        <div class="hs-name">Optician</div>
+        <div class="hs-desc">Eye care & glasses</div>
+      </div>
+      <div class="hs-card" onclick="filterDoctors('Cardiologist', null)">
+        <div class="hs-icon">❤️</div>
+        <div class="hs-name">Cardiologist</div>
+        <div class="hs-desc">Heart & cardiovascular</div>
+      </div>
+      <div class="hs-card" onclick="filterDoctors('Nutritionist', null)">
+        <div class="hs-icon">🥗</div>
+        <div class="hs-name">Nutritionist</div>
+        <div class="hs-desc">Diet & nutrition plans</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONSULTATION TYPE -->
+  <div class="container">
+    <div class="consult-types">
+      <div class="ct-card active" id="ct-all" onclick="setConsultType('all', this)">
+        All Doctors
+      </div>
+      <div class="ct-card" id="ct-online" onclick="setConsultType('online', this)">
+        📱 Online Consultation
+      </div>
+      <div class="ct-card" id="ct-inperson" onclick="setConsultType('inperson', this)">
+        🏥 In-Person Visit
+      </div>
+    </div>
+  </div>
+
+  <!-- SORT BAR -->
+  <div class="container">
+    <div class="health-topbar">
+      <span id="doctors-count">Showing all doctors</span>
+      <select id="doctors-sort" onchange="applyHealthFilters()">
+        <option value="default">Sort: Featured</option>
+        <option value="rating">Highest Rated</option>
+        <option value="price-low">Fee: Low to High</option>
+        <option value="price-high">Fee: High to Low</option>
+        <option value="experience">Most Experienced</option>
+      </select>
+    </div>
+
+    <!-- DOCTORS GRID -->
+    <div class="doctors-grid" id="doctors-grid"></div>
+
+    <div id="health-empty" style="display:none;">
+      <div class="empty-state">
+        <div class="empty-icon">🏥</div>
+        <h3>No doctors found</h3>
+        <p>Try a different search or specialty</p>
+        <button onclick="filterDoctors('all', null)" class="btn-primary">Show All</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- MEDICINE DELIVERY -->
+  <div class="medicine-section">
+    <div class="container">
+      <div class="medicine-inner">
+        <div class="medicine-text">
+          <h2>💊 Medicine & Pharmacy</h2>
+          <p>Order prescription and OTC medicines delivered to your door in 2 hours.</p>
+          <ul class="medicine-list">
+            <li>✅ Upload your prescription</li>
+            <li>✅ Licensed pharmacists verify orders</li>
+            <li>✅ 2-hour delivery in major cities</li>
+            <li>✅ Original medicines guaranteed</li>
+          </ul>
+          <button class="btn-primary" onclick="showToast('💊 Pharmacy feature coming soon!')">
+            Order Medicine →
+          </button>
+        </div>
+        <div class="medicine-emoji">💊🏥🩺🧬💉</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-bottom:60px;"></div>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-bottom">
+        <p>© 2025 Nexabay. All rights reserved.</p>
+        <a href="../../index.html" style="color:var(--orange)">← Back to Home</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../../js/core/main.js"></script>
+  <script>
+
+    var ALL_DOCTORS = [
+      { id:1,  name:'Dr. Adebayo Okafor',   specialty:'General',       type:'both',     rating:4.9, reviews:456, fee:5000,  experience:12, location:'Lagos',  emoji:'👨‍⚕️', available:true,  about:'MBBS, FMCP. 12 years experience in general medicine and primary care.' },
+      { id:2,  name:'Dr. Amina Suleiman',   specialty:'Gynecologist',  type:'inperson', rating:4.8, reviews:234, fee:15000, experience:8,  location:'Abuja',  emoji:'👩‍⚕️', available:true,  about:'MBBS, FWACS. Specialist in obstetrics and gynecology.' },
+      { id:3,  name:'Dr. Chidi Eze',        specialty:'Mental Health', type:'online',   rating:4.9, reviews:567, fee:10000, experience:10, location:'Online', emoji:'🧠',   available:true,  about:'PhD Psychology. CBT therapist specializing in anxiety and depression.' },
+      { id:4,  name:'Dr. Funke Adeleke',    specialty:'Dermatologist', type:'both',     rating:4.7, reviews:189, fee:12000, experience:6,  location:'Lagos',  emoji:'🧴',   available:false, about:'MBBS, Dip Derm. Skin specialist with expertise in acne and eczema.' },
+      { id:5,  name:'Dr. Ibrahim Musa',     specialty:'Cardiologist',  type:'inperson', rating:4.9, reviews:345, fee:20000, experience:15, location:'Kano',   emoji:'❤️',   available:true,  about:'MBBS, FMCP Card. Interventional cardiologist with 15 years experience.' },
+      { id:6,  name:'Dr. Ngozi Obi',        specialty:'Dentist',       type:'inperson', rating:4.8, reviews:278, fee:8000,  experience:7,  location:'Lagos',  emoji:'🦷',   available:true,  about:'BDS, FMCDS. General and cosmetic dentistry specialist.' },
+      { id:7,  name:'Dr. Tunde Williams',   specialty:'Optician',      type:'both',     rating:4.7, reviews:134, fee:7000,  experience:9,  location:'Lagos',  emoji:'👁️',   available:true,  about:'OD, FNCO. Optometrist specializing in refractive errors and eye diseases.' },
+      { id:8,  name:'Dr. Seun Afolabi',     specialty:'Nutritionist',  type:'online',   rating:4.8, reviews:389, fee:6000,  experience:5,  location:'Online', emoji:'🥗',   available:true,  about:'MSc Nutrition. Certified nutritionist and wellness coach.' },
+      { id:9,  name:'Dr. Kemi Ogunleye',    specialty:'General',       type:'online',   rating:4.8, reviews:523, fee:4000,  experience:8,  location:'Online', emoji:'👩‍⚕️', available:true,  about:'MBBS, MPH. Online GP specializing in telemedicine consultations.' },
+      { id:10, name:'Dr. Emeka Nwosu',      specialty:'Cardiologist',  type:'inperson', rating:4.9, reviews:234, fee:25000, experience:20, location:'Lagos',  emoji:'❤️',   available:true,  about:'MBBS, PhD Cardiology. Pioneer in minimally invasive cardiac procedures.' },
+      { id:11, name:'Dr. Bisi Adeyemi',     specialty:'Gynecologist',  type:'both',     rating:4.7, reviews:167, fee:12000, experience:6,  location:'Lagos',  emoji:'👶',   available:false, about:'MBBS, FWACS. Specialist in high-risk pregnancy and infertility.' },
+      { id:12, name:'Dr. Audu Mohammed',    specialty:'Mental Health', type:'both',     rating:4.8, reviews:289, fee:8000,  experience:11, location:'Abuja',  emoji:'🧠',   available:true,  about:'MBChB, MRCPsych. Consultant psychiatrist with expertise in mood disorders.' },
+    ];
+
+    var currentDoctors = ALL_DOCTORS.slice();
+    var currentSpecialty = 'all';
+    var currentConsultType = 'all';
+
+    function renderDoctors() {
+      var grid = document.getElementById('doctors-grid');
+      var empty = document.getElementById('health-empty');
+      var count = document.getElementById('doctors-count');
+
+      if (currentDoctors.length === 0) {
+        grid.innerHTML = '';
+        empty.style.display = 'block';
+        return;
+      }
+
+      empty.style.display = 'none';
+      if (count) count.textContent = 'Showing ' + currentDoctors.length + ' doctors';
+
+      grid.innerHTML = currentDoctors.map(function(d) {
+        return '<div class="doctor-card ' + (!d.available ? 'unavailable' : '') + '">' +
+          '<div class="dc-top">' +
+            '<div class="dc-avatar">' + d.emoji + '</div>' +
+            '<div class="dc-info">' +
+              '<h3 class="dc-name">' + d.name + '</h3>' +
+              '<div class="dc-specialty">' + d.specialty + '</div>' +
+              '<div class="dc-rating">⭐ ' + d.rating + ' (' + d.reviews + ' reviews)</div>' +
+              '<div class="dc-exp">' + d.experience + ' years experience</div>' +
+            '</div>' +
+            '<div class="dc-status ' + (d.available ? 'available' : 'busy') + '">' +
+              (d.available ? '🟢 Available' : '🔴 Busy') +
+            '</div>' +
+          '</div>' +
+          '<p class="dc-about">' + d.about + '</p>' +
+          '<div class="dc-meta">' +
+            '<span class="dc-type">' + (d.type === 'online' ? '📱 Online' : d.type === 'inperson' ? '🏥 In-Person' : '📱🏥 Both') + '</span>' +
+            '<span class="dc-location">📍 ' + d.location + '</span>' +
+          '</div>' +
+          '<div class="dc-bottom">' +
+            '<div class="dc-fee">' +
+              '<span class="dc-fee-label">Consultation fee</span>' +
+              '<span class="dc-fee-amount">₦' + d.fee.toLocaleString() + '</span>' +
+            '</div>' +
+            '<button class="dc-book-btn" onclick="bookDoctor(' + d.id + ')" ' + (!d.available ? 'disabled' : '') + '>' +
+              (d.available ? 'Book Now' : 'Not Available') +
+            '</button>' +
+          '</div>' +
+        '</div>';
+      }).join('');
+    }
+
+    function filterDoctors(specialty, el) {
+      currentSpecialty = specialty;
+      applyHealthFilters();
+    }
+
+    function setConsultType(type, el) {
+      currentConsultType = type;
+      var cards = document.querySelectorAll('.ct-card');
+      cards.forEach(function(c) { c.classList.remove('active'); });
+      if (el) el.classList.add('active');
+      applyHealthFilters();
+    }
+
+    function applyHealthFilters() {
+      var sort   = document.getElementById('doctors-sort').value;
+      var search = (document.getElementById('search-input').value || '').toLowerCase().trim();
+      var loc    = document.getElementById('health-location').value;
+
+      currentDoctors = ALL_DOCTORS.filter(function(d) {
+        if (currentSpecialty !== 'all' && d.specialty !== currentSpecialty) return false;
+        if (currentConsultType === 'online' && d.type === 'inperson') return false;
+        if (currentConsultType === 'inperson' && d.type === 'online') return false;
+        if (loc && d.location !== loc) return false;
+        if (search && !d.name.toLowerCase().includes(search) && !d.specialty.toLowerCase().includes(search)) return false;
+        return true;
+      });
+
+      if (sort === 'rating')      currentDoctors.sort(function(a,b) { return b.rating - a.rating; });
+      if (sort === 'price-low')   currentDoctors.sort(function(a,b) { return a.fee - b.fee; });
+      if (sort === 'price-high')  currentDoctors.sort(function(a,b) { return b.fee - a.fee; });
+      if (sort === 'experience')  currentDoctors.sort(function(a,b) { return b.experience - a.experience; });
+
+      renderDoctors();
+    }
+
+    function doHealthSearch() {
+      applyHealthFilters();
+    }
+
+    function bookDoctor(id) {
+      var user = localStorage.getItem('nexa_current_user');
+      if (!user) {
+        showToast('⚠️ Please login to book', '#ff9500');
+        setTimeout(function() { window.location.href = '../auth/login.html'; }, 1500);
+        return;
+      }
+      showToast('✅ Appointment request sent! Doctor will confirm shortly.');
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      updateCartCount();
+      checkAuthState();
+      renderDoctors();
+      var input = document.getElementById('search-input');
+      if (input) {
+        input.addEventListener('keypress', function(e) {
+          if (e.key === 'Enter') doHealthSearch();
+        });
+      }
+    });
+
+  </script>
+
+</body>
+</html>
