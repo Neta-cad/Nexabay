@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>NexaEvents — Nexabay</title>
+  <link rel="stylesheet" href="../../css/main.css"/>
+  <link rel="stylesheet" href="../../css/events.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="nav-inner">
+      <a href="../../index.html" class="logo">
+        <span class="logo-nexa">Nexa</span><span class="logo-bay">bay</span>
+      </a>
+      <div class="search-bar">
+        <input type="text" id="search-input" placeholder="Search events..."/>
+        <button onclick="doEventSearch()" class="search-btn">🔍</button>
+      </div>
+      <div class="nav-actions">
+        <a href="../auth/login.html" class="nav-link">Login</a>
+        <a href="../auth/register.html" class="nav-btn">Sign Up</a>
+        <a href="../shop/cart.html" class="cart-icon-desk">
+          🛒 <span class="cart-count" id="cart-count">0</span>
+        </a>
+      </div>
+      <button class="hamburger" id="hamburger-btn" onclick="toggleMobileMenu()">☰</button>
+    </div>
+    <div class="mobile-menu-overlay" id="mobile-overlay" onclick="closeMobileMenu()"></div>
+    <div class="mobile-menu" id="mobile-menu">
+      <div class="mobile-menu-header">
+        <div class="logo"><span class="logo-nexa">Nexa</span><span class="logo-bay">bay</span></div>
+        <div id="mobile-header-actions" style="display:none;">
+          <a href="../dashboard/buyer.html" class="mh-btn account">Account</a>
+          <a href="#" onclick="logoutUser()" class="mh-btn logout">Logout</a>
+        </div>
+        <button onclick="closeMobileMenu()" class="close-menu-btn">✕</button>
+      </div>
+      <div id="mobile-user-section"></div>
+      <div class="mobile-menu-links">
+        <a href="../../index.html">🏠 Home</a>
+        <a href="../shop/browse.html">🛍️ Shop</a>
+        <a href="../services/browse.html">🔧 Services</a>
+        <a href="../rentals/browse.html">🏠 Rentals</a>
+        <a href="../learn/browse.html">🎓 Learn</a>
+        <a href="../jobs/browse.html">💼 Jobs</a>
+        <a href="browse.html">🎉 Events</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- FLOATING CART -->
+  <a href="../shop/cart.html" class="floating-cart" id="floating-cart">
+    🛒 <span class="floating-cart-count" id="floating-cart-count">0</span>
+  </a>
+
+  <!-- HERO -->
+  <div class="events-hero">
+    <div class="container">
+      <h1>🎉 Discover Amazing Events</h1>
+      <p>Concerts, conferences, parties, exhibitions and more — all in one place</p>
+      <div class="events-search">
+        <input type="text" id="events-search-input" placeholder="Search events..."/>
+        <select id="events-location-filter">
+          <option value="">All Cities</option>
+          <option>Lagos</option>
+          <option>Abuja</option>
+          <option>Port Harcourt</option>
+          <option>Kano</option>
+          <option>Ibadan</option>
+          <option>Online</option>
+        </select>
+        <button onclick="doEventSearch()">Search</button>
+      </div>
+      <div class="events-hero-stats">
+        <span>🎭 500+ Events</span>
+        <span>🎟️ Easy Ticketing</span>
+        <span>📍 Nationwide</span>
+        <span>🔒 Secure Payment</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- EVENT CATEGORIES -->
+  <div class="container">
+    <div class="events-cats">
+      <div class="ecat active" onclick="filterEvents('all', this)">🎭 All Events</div>
+      <div class="ecat" onclick="filterEvents('Music', this)">🎵 Music</div>
+      <div class="ecat" onclick="filterEvents('Comedy', this)">😂 Comedy</div>
+      <div class="ecat" onclick="filterEvents('Conference', this)">💼 Conference</div>
+      <div class="ecat" onclick="filterEvents('Sports', this)">⚽ Sports</div>
+      <div class="ecat" onclick="filterEvents('Arts', this)">🎨 Arts</div>
+      <div class="ecat" onclick="filterEvents('Food', this)">🍔 Food</div>
+      <div class="ecat" onclick="filterEvents('Online', this)">🌐 Online</div>
+      <div class="ecat" onclick="filterEvents('Free', this)">🆓 Free</div>
+    </div>
+  </div>
+
+  <!-- FEATURED EVENT -->
+  <div class="container">
+    <div class="featured-event" id="featured-event"></div>
+  </div>
+
+  <!-- SORT + EVENTS -->
+  <div class="container">
+    <div class="events-topbar">
+      <span id="events-count">Showing all events</span>
+      <div class="events-topbar-right">
+        <select id="events-sort" onchange="applyEventFilters()">
+          <option value="default">Sort: Upcoming</option>
+          <option value="price-low">Price: Low to High</option>
+          <option value="price-high">Price: High to Low</option>
+          <option value="popular">Most Popular</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="events-grid" id="events-grid"></div>
+
+    <div id="events-empty" style="display:none;">
+      <div class="empty-state">
+        <div class="empty-icon">🎉</div>
+        <h3>No events found</h3>
+        <p>Try a different search or category</p>
+        <button onclick="filterEvents('all', null)" class="btn-primary">Show All</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- HOST EVENT CTA -->
+  <div class="host-event-cta">
+    <div class="container">
+      <div class="hec-inner">
+        <div>
+          <h2>🎪 Host Your Event on Nexabay</h2>
+          <p>Reach thousands of attendees. Sell tickets, manage RSVPs and promote your event.</p>
+          <ul class="hec-list">
+            <li>✅ Free to list your event</li>
+            <li>✅ Online ticket sales</li>
+            <li>✅ Real-time attendance tracking</li>
+            <li>✅ Promotion to 200K+ users</li>
+          </ul>
+          <a href="../auth/register.html" class="btn-primary">List Your Event Free →</a>
+        </div>
+        <div class="hec-stats">
+          <div class="hec-stat"><span>500+</span>Events Listed</div>
+          <div class="hec-stat"><span>50K+</span>Tickets Sold</div>
+          <div class="hec-stat"><span>Free</span>To List</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-bottom:60px;"></div>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-bottom">
+        <p>© 2025 Nexabay. All rights reserved.</p>
+        <a href="../../index.html" style="color:var(--orange)">← Back to Home</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../../js/core/main.js"></script>
+  <script>
+
+    var ALL_EVENTS = [
+      { id:1,  name:'Afrobeats Music Festival',      category:'Music',      date:'Jan 25, 2025', time:'6:00 PM', location:'Lagos',         venue:'Eko Hotel',          price:15000, isFree:false, emoji:'🎵', attendees:5000, tickets:2340, featured:true  },
+      { id:2,  name:'Lagos Comedy Night',            category:'Comedy',     date:'Jan 28, 2025', time:'7:00 PM', location:'Lagos',         venue:'Terra Kulture',      price:8000,  isFree:false, emoji:'😂', attendees:800,  tickets:456,  featured:false },
+      { id:3,  name:'Tech Summit Nigeria 2025',      category:'Conference', date:'Feb 5, 2025',  time:'9:00 AM', location:'Abuja',         venue:'ICC Abuja',          price:25000, isFree:false, emoji:'💻', attendees:2000, tickets:890,  featured:false },
+      { id:4,  name:'AFCON Watch Party',             category:'Sports',     date:'Jan 22, 2025', time:'5:00 PM', location:'Lagos',         venue:'Beer Garden VI',     price:3000,  isFree:false, emoji:'⚽', attendees:500,  tickets:234,  featured:false },
+      { id:5,  name:'Art & Culture Exhibition',      category:'Arts',       date:'Feb 1, 2025',  time:'11:00 AM',location:'Lagos',         venue:'Nike Art Gallery',   price:0,     isFree:true,  emoji:'🎨', attendees:300,  tickets:145,  featured:false },
+      { id:6,  name:'Food Festival Lagos',           category:'Food',       date:'Feb 8, 2025',  time:'12:00 PM',location:'Lagos',         venue:'Tafawa Balewa Sq',   price:5000,  isFree:false, emoji:'🍔', attendees:3000, tickets:1200, featured:false },
+      { id:7,  name:'Digital Marketing Webinar',     category:'Online',     date:'Jan 30, 2025', time:'10:00 AM',location:'Online',        venue:'Zoom',               price:2000,  isFree:false, emoji:'📣', attendees:1000, tickets:678,  featured:false },
+      { id:8,  name:'Startup Pitch Competition',     category:'Conference', date:'Feb 15, 2025', time:'9:00 AM', location:'Lagos',         venue:'Co-Creation Hub',    price:0,     isFree:true,  emoji:'🚀', attendees:400,  tickets:234,  featured:false },
+      { id:9,  name:'Gospel Music Concert',          category:'Music',      date:'Feb 2, 2025',  time:'4:00 PM', location:'Abuja',         venue:'Eagle Square',       price:5000,  isFree:false, emoji:'🎤', attendees:10000,tickets:4500, featured:false },
+      { id:10, name:'Fashion Week Nigeria',          category:'Arts',       date:'Feb 20, 2025', time:'6:00 PM', location:'Lagos',         venue:'Oriental Hotel',     price:20000, isFree:false, emoji:'👗', attendees:1500, tickets:567,  featured:false },
+      { id:11, name:'Business Finance Seminar',      category:'Conference', date:'Jan 31, 2025', time:'9:00 AM', location:'Port Harcourt', venue:'Protea Hotel',       price:10000, isFree:false, emoji:'💰', attendees:300,  tickets:145,  featured:false },
+      { id:12, name:'Free Coding Bootcamp',          category:'Online',     date:'Feb 10, 2025', time:'11:00 AM',location:'Online',        venue:'Google Meet',        price:0,     isFree:true,  emoji:'💻', attendees:500,  tickets:389,  featured:false },
+    ];
+
+    var currentEvents = ALL_EVENTS.slice();
+    var currentCategory = 'all';
+
+    function renderFeaturedEvent() {
+      var featured = ALL_EVENTS.find(function(e) { return e.featured; });
+      if (!featured) return;
+      var el = document.getElementById('featured-event');
+      if (!el) return;
+      el.innerHTML =
+        '<div class="featured-event-inner">' +
+          '<div class="fe-emoji">' + featured.emoji + '</div>' +
+          '<div class="fe-info">' +
+            '<span class="fe-badge">⭐ Featured Event</span>' +
+            '<h2 class="fe-name">' + featured.name + '</h2>' +
+            '<div class="fe-meta">' +
+              '<span>📅 ' + featured.date + ' • ' + featured.time + '</span>' +
+              '<span>📍 ' + featured.venue + ', ' + featured.location + '</span>' +
+              '<span>👥 ' + featured.attendees.toLocaleString() + ' expected</span>' +
+            '</div>' +
+          '</div>' +
+          '<div class="fe-ticket">' +
+            '<div class="fe-price">₦' + featured.price.toLocaleString() + '</div>' +
+            '<div class="fe-price-label">per ticket</div>' +
+            '<button class="fe-btn" onclick="buyTicket(' + featured.id + ')">Get Tickets</button>' +
+            '<div class="fe-sold">' + featured.tickets.toLocaleString() + ' tickets sold</div>' +
+          '</div>' +
+        '</div>';
+    }
+
+    function renderEvents() {
+      var grid = document.getElementById('events-grid');
+      var empty = document.getElementById('events-empty');
+      var count = document.getElementById('events-count');
+
+      if (currentEvents.length === 0) {
+        grid.innerHTML = '';
+        empty.style.display = 'block';
+        return;
+      }
+
+      empty.style.display = 'none';
+      if (count) count.textContent = 'Showing ' + currentEvents.length + ' events';
+
+      grid.innerHTML = currentEvents.map(function(e) {
+        return '<div class="event-card" onclick="viewEvent(' + e.id + ')">' +
+          '<div class="ec-img">' +
+            e.emoji +
+            (e.isFree ? '<span class="ec-free">FREE</span>' : '') +
+            '<span class="ec-category">' + e.category + '</span>' +
+          '</div>' +
+          '<div class="ec-body">' +
+            '<div class="ec-date">📅 ' + e.date + ' • ' + e.time + '</div>' +
+            '<h3 class="ec-name">' + e.name + '</h3>' +
+            '<div class="ec-venue">📍 ' + e.venue + ', ' + e.location + '</div>' +
+            '<div class="ec-meta">' +
+              '<span>👥 ' + e.attendees.toLocaleString() + ' expected</span>' +
+              '<span>🎟️ ' + e.tickets.toLocaleString() + ' sold</span>' +
+            '</div>' +
+            '<div class="ec-bottom">' +
+              '<div class="ec-price">' +
+                (e.isFree ? '<span class="ec-free-price">FREE</span>' : '<span class="ec-price-amount">₦' + e.price.toLocaleString() + '</span>') +
+              '</div>' +
+              '<button class="ec-ticket-btn" onclick="event.stopPropagation();buyTicket(' + e.id + ')">' +
+                'Get Tickets' +
+              '</button>' +
+            '</div>' +
+          '</div>' +
+        '</div>';
+      }).join('');
+    }
+
+    function filterEvents(cat, el) {
+      currentCategory = cat;
+      var cats = document.querySelectorAll('.ecat');
+      cats.forEach(function(c) { c.classList.remove('active'); });
+      if (el) el.classList.add('active');
+      applyEventFilters();
+    }
+
+    function applyEventFilters() {
+      var sort     = document.getElementById('events-sort').value;
+      var location = document.getElementById('events-location-filter').value;
+      var search   = (document.getElementById('search-input').value || '').toLowerCase().trim();
+
+      currentEvents = ALL_EVENTS.filter(function(e) {
+        if (currentCategory === 'Free' && !e.isFree) return false;
+        if (currentCategory === 'Online' && e.location !== 'Online') return false;
+        if (currentCategory !== 'all' && currentCategory !== 'Free' && currentCategory !== 'Online' && e.category !== currentCategory) return false;
+        if (location && e.location !== location) return false;
+        if (search && !e.name.toLowerCase().includes(search) && !e.venue.toLowerCase().includes(search)) return false;
+        return true;
+      });
+
+      if (sort === 'price-low')  currentEvents.sort(function(a,b) { return a.price - b.price; });
+      if (sort === 'price-high') currentEvents.sort(function(a,b) { return b.price - a.price; });
+      if (sort === 'popular')    currentEvents.sort(function(a,b) { return b.tickets - a.tickets; });
+
+      renderEvents();
+    }
+
+    function doEventSearch() {
+      applyEventFilters();
+    }
+
+    function viewEvent(id) {
+      showToast('🎉 Event detail page coming soon!');
+    }
+
+    function buyTicket(id) {
+      var user = localStorage.getItem('nexa_current_user');
+      if (!user) {
+        showToast('⚠️ Please login to buy tickets', '#ff9500');
+        setTimeout(function() { window.location.href = '../auth/login.html'; }, 1500);
+        return;
+      }
+      var ev = ALL_EVENTS.find(function(e) { return e.id === id; });
+      if (ev) {
+        if (ev.isFree) {
+          showToast('🎟️ You are registered for ' + ev.name + '!');
+        } else {
+          showToast('💳 Redirecting to payment for ' + ev.name + '...');
+        }
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      updateCartCount();
+      checkAuthState();
+      renderFeaturedEvent();
+      renderEvents();
+      var input = document.getElementById('search-input');
+      if (input) {
+        input.addEventListener('keypress', function(e) {
+          if (e.key === 'Enter') doEventSearch();
+        });
+      }
+    });
+
+  </script>
+
+</body>
+</html>
