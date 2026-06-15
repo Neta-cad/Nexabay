@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>NexaTravel — Nexabay</title>
+  <link rel="stylesheet" href="../../css/main.css"/>
+  <link rel="stylesheet" href="../../css/travel.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="nav-inner">
+      <a href="../../index.html" class="logo">
+        <span class="logo-nexa">Nexa</span><span class="logo-bay">bay</span>
+      </a>
+      <div class="search-bar">
+        <input type="text" id="search-input" placeholder="Search hotels, flights..."/>
+        <button onclick="doTravelSearch()" class="search-btn">🔍</button>
+      </div>
+      <div class="nav-actions">
+        <a href="../auth/login.html" class="nav-link">Login</a>
+        <a href="../auth/register.html" class="nav-btn">Sign Up</a>
+        <a href="../shop/cart.html" class="cart-icon-desk">
+          🛒 <span class="cart-count" id="cart-count">0</span>
+        </a>
+      </div>
+      <button class="hamburger" id="hamburger-btn" onclick="toggleMobileMenu()">☰</button>
+    </div>
+    <div class="mobile-menu-overlay" id="mobile-overlay" onclick="closeMobileMenu()"></div>
+    <div class="mobile-menu" id="mobile-menu">
+      <div class="mobile-menu-header">
+        <div class="logo"><span class="logo-nexa">Nexa</span><span class="logo-bay">bay</span></div>
+        <div id="mobile-header-actions" style="display:none;">
+          <a href="../dashboard/buyer.html" class="mh-btn account">Account</a>
+          <a href="#" onclick="logoutUser()" class="mh-btn logout">Logout</a>
+        </div>
+        <button onclick="closeMobileMenu()" class="close-menu-btn">✕</button>
+      </div>
+      <div id="mobile-user-section"></div>
+      <div class="mobile-menu-links">
+        <a href="../../index.html">🏠 Home</a>
+        <a href="../shop/browse.html">🛍️ Shop</a>
+        <a href="../services/browse.html">🔧 Services</a>
+        <a href="../rentals/browse.html">🏠 Rentals</a>
+        <a href="../learn/browse.html">🎓 Learn</a>
+        <a href="../jobs/browse.html">💼 Jobs</a>
+        <a href="browse.html">✈️ Travel</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- FLOATING CART -->
+  <a href="../shop/cart.html" class="floating-cart" id="floating-cart">
+    🛒 <span class="floating-cart-count" id="floating-cart-count">0</span>
+  </a>
+
+  <!-- HERO -->
+  <div class="travel-hero">
+    <div class="container">
+      <h1>✈️ Explore Nigeria & Beyond</h1>
+      <p>Hotels, flights, tours and experiences — all in one place</p>
+
+      <!-- SEARCH TABS -->
+      <div class="travel-tabs">
+        <button class="ttab active" onclick="setTravelTab('hotels', this)">🏨 Hotels</button>
+        <button class="ttab" onclick="setTravelTab('flights', this)">✈️ Flights</button>
+        <button class="ttab" onclick="setTravelTab('tours', this)">🗺️ Tours</button>
+        <button class="ttab" onclick="setTravelTab('cars', this)">🚗 Car Hire</button>
+      </div>
+
+      <!-- HOTEL SEARCH -->
+      <div class="travel-search-box" id="search-hotels">
+        <div class="tsb-row">
+          <div class="tsb-field">
+            <label>Destination</label>
+            <input type="text" id="hotel-dest" placeholder="City or hotel name"/>
+          </div>
+          <div class="tsb-field">
+            <label>Check In</label>
+            <input type="date" id="hotel-checkin"/>
+          </div>
+          <div class="tsb-field">
+            <label>Check Out</label>
+            <input type="date" id="hotel-checkout"/>
+          </div>
+          <div class="tsb-field small">
+            <label>Guests</label>
+            <select id="hotel-guests">
+              <option>1 Guest</option>
+              <option>2 Guests</option>
+              <option>3 Guests</option>
+              <option>4+ Guests</option>
+            </select>
+          </div>
+          <button onclick="doTravelSearch()" class="tsb-btn">Search Hotels</button>
+        </div>
+      </div>
+
+      <!-- FLIGHT SEARCH -->
+      <div class="travel-search-box" id="search-flights" style="display:none;">
+        <div class="tsb-row">
+          <div class="tsb-field">
+            <label>From</label>
+            <input type="text" id="flight-from" placeholder="Departure city"/>
+          </div>
+          <div class="tsb-field">
+            <label>To</label>
+            <input type="text" id="flight-to" placeholder="Destination city"/>
+          </div>
+          <div class="tsb-field">
+            <label>Departure</label>
+            <input type="date" id="flight-date"/>
+          </div>
+          <div class="tsb-field small">
+            <label>Passengers</label>
+            <select id="flight-pass">
+              <option>1</option>
+              <option>2</option>
+              <option>3</option>
+              <option>4+</option>
+            </select>
+          </div>
+          <button onclick="doTravelSearch()" class="tsb-btn">Search Flights</button>
+        </div>
+      </div>
+
+      <!-- TOURS SEARCH -->
+      <div class="travel-search-box" id="search-tours" style="display:none;">
+        <div class="tsb-row">
+          <div class="tsb-field">
+            <label>Destination</label>
+            <input type="text" id="tour-dest" placeholder="Where do you want to go?"/>
+          </div>
+          <div class="tsb-field">
+            <label>Duration</label>
+            <select id="tour-duration">
+              <option>Any duration</option>
+              <option>1 day</option>
+              <option>2-3 days</option>
+              <option>4-7 days</option>
+              <option>1+ week</option>
+            </select>
+          </div>
+          <div class="tsb-field">
+            <label>Travel Date</label>
+            <input type="date" id="tour-date"/>
+          </div>
+          <button onclick="doTravelSearch()" class="tsb-btn">Search Tours</button>
+        </div>
+      </div>
+
+      <!-- CAR HIRE SEARCH -->
+      <div class="travel-search-box" id="search-cars" style="display:none;">
+        <div class="tsb-row">
+          <div class="tsb-field">
+            <label>Pick Up Location</label>
+            <input type="text" id="car-location" placeholder="City or address"/>
+          </div>
+          <div class="tsb-field">
+            <label>Pick Up Date</label>
+            <input type="date" id="car-pickup"/>
+          </div>
+          <div class="tsb-field">
+            <label>Return Date</label>
+            <input type="date" id="car-return"/>
+          </div>
+          <div class="tsb-field small">
+            <label>Car Type</label>
+            <select id="car-type">
+              <option>Any Type</option>
+              <option>Sedan</option>
+              <option>SUV</option>
+              <option>Bus</option>
+              <option>Luxury</option>
+            </select>
+          </div>
+          <button onclick="doTravelSearch()" class="tsb-btn">Search Cars</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- POPULAR DESTINATIONS -->
+  <div class="container">
+    <h2 class="section-title" style="margin-top:40px">Popular Destinations</h2>
+    <div class="destinations-grid">
+      <div class="dest-card" onclick="searchDestination('Lagos')">
+        <div class="dest-emoji">🌆</div>
+        <div class="dest-name">Lagos</div>
+        <div class="dest-count">1,240 hotels</div>
+      </div>
+      <div class="dest-card" onclick="searchDestination('Abuja')">
+        <div class="dest-emoji">🏛️</div>
+        <div class="dest-name">Abuja</div>
+        <div class="dest-count">890 hotels</div>
+      </div>
+      <div class="dest-card" onclick="searchDestination('Port Harcourt')">
+        <div class="dest-emoji">⛽</div>
+        <div class="dest-name">Port Harcourt</div>
+        <div class="dest-count">456 hotels</div>
+      </div>
+      <div class="dest-card" onclick="searchDestination('Calabar')">
+        <div class="dest-emoji">🦋</div>
+        <div class="dest-name">Calabar</div>
+        <div class="dest-count">234 hotels</div>
+      </div>
+      <div class="dest-card" onclick="searchDestination('Ibadan')">
+        <div class="dest-emoji">🏺</div>
+        <div class="dest-name">Ibadan</div>
+        <div class="dest-count">312 hotels</div>
+      </div>
+      <div class="dest-card" onclick="searchDestination('Kano')">
+        <div class="dest-emoji">🕌</div>
+        <div class="dest-name">Kano</div>
+        <div class="dest-count">278 hotels</div>
+      </div>
+      <div class="dest-card" onclick="searchDestination('Enugu')">
+        <div class="dest-emoji">⛰️</div>
+        <div class="dest-name">Enugu</div>
+        <div class="dest-count">189 hotels</div>
+      </div>
+      <div class="dest-card" onclick="searchDestination('Dubai')">
+        <div class="dest-emoji">🌴</div>
+        <div class="dest-name">Dubai</div>
+        <div class="dest-count">International</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FILTER + RESULTS -->
+  <div class="container">
+    <div class="travel-topbar">
+      <div class="travel-topbar-left">
+        <span id="travel-count">Showing all hotels</span>
+      </div>
+      <div class="travel-topbar-right">
+        <select id="travel-sort" onchange="applyTravelFilters()">
+          <option value="default">Sort: Featured</option>
+          <option value="price-low">Price: Low to High</option>
+          <option value="price-high">Price: High to Low</option>
+          <option value="rating">Highest Rated</option>
+        </select>
+        <select id="travel-star" onchange="applyTravelFilters()">
+          <option value="0">All Stars</option>
+          <option value="5">⭐⭐⭐⭐⭐ 5 Star</option>
+          <option value="4">⭐⭐⭐⭐ 4 Star</option>
+          <option value="3">⭐⭐⭐ 3 Star</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="hotels-grid" id="hotels-grid"></div>
+
+    <div id="travel-empty" style="display:none;">
+      <div class="empty-state">
+        <div class="empty-icon">✈️</div>
+        <h3>No results found</h3>
+        <p>Try a different search</p>
+        <button onclick="loadHotels()" class="btn-primary">Show All Hotels</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- WHY NEXATRAVEL -->
+  <div class="why-travel">
+    <div class="container">
+      <h2 class="section-title" style="text-align:center">Why Book with NexaTravel?</h2>
+      <div class="wt-grid">
+        <div class="wt-card">
+          <div class="wt-icon">💰</div>
+          <h3>Best Price Guarantee</h3>
+          <p>Find a lower price elsewhere and we match it — guaranteed.</p>
+        </div>
+        <div class="wt-card">
+          <div class="wt-icon">🔒</div>
+          <h3>Secure Booking</h3>
+          <p>Your payment is protected. Cancel free on most bookings.</p>
+        </div>
+        <div class="wt-card">
+          <div class="wt-icon">📱</div>
+          <h3>Easy Management</h3>
+          <p>Manage all bookings from your Nexabay account in one place.</p>
+        </div>
+        <div class="wt-card">
+          <div class="wt-icon">🎧</div>
+          <h3>24/7 Support</h3>
+          <p>Our travel experts are available around the clock to help you.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-bottom:60px;"></div>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-bottom">
+        <p>© 2025 Nexabay. All rights reserved.</p>
+        <a href="../../index.html" style="color:var(--orange)">← Back to Home</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../../js/core/main.js"></script>
+  <script>
+
+    var ALL_HOTELS = [
+      { id:1,  name:'Eko Hotel & Suites',        location:'Lagos',         area:'Victoria Island', stars:5, rating:4.8, reviews:2340, price:85000,  emoji:'🏨', amenities:['Pool','Gym','Spa','Restaurant','WiFi'],    desc:'Iconic 5-star hotel on Victoria Island with stunning lagoon views.' },
+      { id:2,  name:'Transcorp Hilton Abuja',     location:'Abuja',         area:'Maitama',         stars:5, rating:4.9, reviews:1890, price:120000, emoji:'🏩', amenities:['Pool','Gym','Spa','Restaurant','WiFi','Bar'], desc:'Premium 5-star hotel in the heart of Abuja. World class facilities.' },
+      { id:3,  name:'Southern Sun Ikoyi',         location:'Lagos',         area:'Ikoyi',           stars:5, rating:4.7, reviews:1234, price:75000,  emoji:'🌅', amenities:['Pool','Restaurant','WiFi','Bar'],          desc:'Luxurious hotel in upscale Ikoyi. Business and leisure travelers.' },
+      { id:4,  name:'The George Hotel',           location:'Lagos',         area:'Victoria Island', stars:4, rating:4.8, reviews:890,  price:55000,  emoji:'🏛️', amenities:['Restaurant','WiFi','Bar','Gym'],           desc:'Boutique 4-star hotel with personalized service on Victoria Island.' },
+      { id:5,  name:'Protea Hotel PH',            location:'Port Harcourt', area:'GRA',             stars:4, rating:4.6, reviews:678,  price:45000,  emoji:'🏨', amenities:['Pool','Restaurant','WiFi'],                desc:'Modern 4-star hotel in the heart of Port Harcourt GRA.' },
+      { id:6,  name:'Hamdala Hotel',              location:'Kano',          area:'City Centre',     stars:4, rating:4.5, reviews:456,  price:35000,  emoji:'🕌', amenities:['Restaurant','WiFi','Parking'],             desc:'Premier hotel in Kano city centre with excellent local cuisine.' },
+      { id:7,  name:'Kakanfo Inn',                location:'Ibadan',        area:'Ring Road',       stars:3, rating:4.4, reviews:345,  price:25000,  emoji:'🏩', amenities:['Restaurant','WiFi','Pool'],                desc:'Comfortable 3-star hotel with great value in Ibadan.' },
+      { id:8,  name:'Tinapa Resort',              location:'Calabar',       area:'Tinapa',          stars:4, rating:4.7, reviews:567,  price:40000,  emoji:'🌴', amenities:['Pool','Restaurant','WiFi','Spa','Beach'],  desc:'Beautiful resort destination in Calabar with waterpark and beach.' },
+      { id:9,  name:'Wheatbaker Hotel',           location:'Lagos',         area:'Ikoyi',           stars:5, rating:4.9, reviews:567,  price:95000,  emoji:'🌟', amenities:['Pool','Gym','Spa','Restaurant','WiFi'],    desc:'Award winning luxury boutique hotel in Ikoyi Lagos.' },
+      { id:10, name:'Chartwell Hotel',            location:'Abuja',         area:'Wuse 2',          stars:4, rating:4.6, reviews:456,  price:50000,  emoji:'🏨', amenities:['Restaurant','WiFi','Gym','Bar'],           desc:'Business class hotel in Wuse 2 Abuja. Conference facilities available.' },
+      { id:11, name:'Nike Lake Resort',           location:'Enugu',         area:'Nike',            stars:4, rating:4.7, reviews:389,  price:30000,  emoji:'🏞️', amenities:['Pool','Restaurant','WiFi','Lake View'],    desc:'Serene lakeside resort in Enugu with stunning natural scenery.' },
+      { id:12, name:'De Kopper Hotel',            location:'Port Harcourt', area:'Trans Amadi',     stars:3, rating:4.3, reviews:234,  price:20000,  emoji:'🏨', amenities:['Restaurant','WiFi','Parking'],             desc:'Affordable 3-star hotel in Port Harcourt with good amenities.' },
+    ];
+
+    var currentHotels = ALL_HOTELS.slice();
+    var currentTab = 'hotels';
+
+    function setTravelTab(tab, el) {
+      currentTab = tab;
+      var tabs = document.querySelectorAll('.ttab');
+      tabs.forEach(function(t) { t.classList.remove('active'); });
+      if (el) el.classList.add('active');
+
+      var boxes = ['hotels', 'flights', 'tours', 'cars'];
+      boxes.forEach(function(b) {
+        var box = document.getElementById('search-' + b);
+        if (box) box.style.display = b === tab ? 'block' : 'none';
+      });
+    }
+
+    function renderHotels() {
+      var grid = document.getElementById('hotels-grid');
+      var empty = document.getElementById('travel-empty');
+      var count = document.getElementById('travel-count');
+
+      if (currentHotels.length === 0) {
+        grid.innerHTML = '';
+        empty.style.display = 'block';
+        return;
+      }
+
+      empty.style.display = 'none';
+      if (count) count.textContent = 'Showing ' + currentHotels.length + ' hotels';
+
+      grid.innerHTML = currentHotels.map(function(h) {
+        var stars = '';
+        for (var i = 0; i < h.stars; i++) stars += '⭐';
+        return '<div class="hotel-card" onclick="viewHotel(' + h.id + ')">' +
+          '<div class="hc-img">' + h.emoji + '</div>' +
+          '<div class="hc-body">' +
+            '<div class="hc-top">' +
+              '<div>' +
+                '<h3 class="hc-name">' + h.name + '</h3>' +
+                '<div class="hc-location">📍 ' + h.area + ', ' + h.location + '</div>' +
+              '</div>' +
+              '<div class="hc-stars">' + stars + '</div>' +
+            '</div>' +
+            '<p class="hc-desc">' + h.desc + '</p>' +
+            '<div class="hc-amenities">' +
+              h.amenities.slice(0, 4).map(function(a) {
+                return '<span>' + a + '</span>';
+              }).join('') +
+            '</div>' +
+            '<div class="hc-rating">⭐ ' + h.rating + ' (' + h.reviews.toLocaleString() + ' reviews)</div>' +
+            '<div class="hc-bottom">' +
+              '<div class="hc-price">' +
+                '<span class="hc-amount">₦' + h.price.toLocaleString() + '</span>' +
+                '<span class="hc-night">/night</span>' +
+              '</div>' +
+              '<button class="hc-book-btn" onclick="event.stopPropagation();bookHotel(' + h.id + ')">Book Now</button>' +
+            '</div>' +
+          '</div>' +
+        '</div>';
+      }).join('');
+    }
+
+    function applyTravelFilters() {
+      var sort  = document.getElementById('travel-sort').value;
+      var stars = parseInt(document.getElementById('travel-star').value);
+      var search = (document.getElementById('search-input').value || '').toLowerCase().trim();
+
+      currentHotels = ALL_HOTELS.filter(function(h) {
+        if (stars > 0 && h.stars !== stars) return false;
+        if (search && !h.name.toLowerCase().includes(search) && !h.location.toLowerCase().includes(search)) return false;
+        return true;
+      });
+
+      if (sort === 'price-low')  currentHotels.sort(function(a,b) { return a.price - b.price; });
+      if (sort === 'price-high') currentHotels.sort(function(a,b) { return b.price - a.price; });
+      if (sort === 'rating')     currentHotels.sort(function(a,b) { return b.rating - a.rating; });
+
+      renderHotels();
+    }
+
+    function loadHotels() {
+      currentHotels = ALL_HOTELS.slice();
+      renderHotels();
+    }
+
+    function searchDestination(dest) {
+      document.getElementById('hotel-dest').value = dest;
+      currentHotels = ALL_HOTELS.filter(function(h) {
+        return h.location.toLowerCase().includes(dest.toLowerCase());
+      });
+      renderHotels();
+      window.scrollTo({ top: 600, behavior: 'smooth' });
+    }
+
+    function doTravelSearch() {
+      if (currentTab === 'hotels') {
+        var dest = document.getElementById('hotel-dest').value.trim();
+        if (dest) {
+          currentHotels = ALL_HOTELS.filter(function(h) {
+            return h.location.toLowerCase().includes(dest.toLowerCase()) ||
+                   h.name.toLowerCase().includes(dest.toLowerCase());
+          });
+        } else {
+          currentHotels = ALL_HOTELS.slice();
+        }
+        renderHotels();
+        window.scrollTo({ top: 700, behavior: 'smooth' });
+      } else {
+        showToast('✈️ ' + currentTab.charAt(0).toUpperCase() + currentTab.slice(1) + ' search coming soon!');
+      }
+    }
+
+    function viewHotel(id) {
+      showToast('🏨 Hotel detail page coming soon!');
+    }
+
+    function bookHotel(id) {
+      var user = localStorage.getItem('nexa_current_user');
+      if (!user) {
+        showToast('⚠️ Please login to book', '#ff9500');
+        setTimeout(function() { window.location.href = '../auth/login.html'; }, 1500);
+        return;
+      }
+      var hotel = ALL_HOTELS.find(function(h) { return h.id === id; });
+      if (hotel) showToast('✅ Booking request sent for ' + hotel.name + '!');
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      updateCartCount();
+      checkAuthState();
+      renderHotels();
+
+      var today = new Date().toISOString().split('T')[0];
+      var tomorrow = new Date(Date.now() + 86400000).toISOString().split('T')[0];
+      var checkin = document.getElementById('hotel-checkin');
+      var checkout = document.getElementById('hotel-checkout');
+      if (checkin) checkin.value = today;
+      if (checkout) checkout.value = tomorrow;
+
+      var input = document.getElementById('search-input');
+      if (input) {
+        input.addEventListener('keypress', function(e) {
+          if (e.key === 'Enter') doTravelSearch();
+        });
+      }
+    });
+
+  </script>
+
+</body>
+</html>
