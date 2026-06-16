@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>NexaPay — Nexabay</title>
+  <link rel="stylesheet" href="../../css/main.css"/>
+  <link rel="stylesheet" href="../../css/pay.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="nav-inner">
+      <a href="../../index.html" class="logo">
+        <span class="logo-nexa">Nexa</span><span class="logo-bay">bay</span>
+      </a>
+      <div class="nav-actions">
+        <a href="../auth/login.html" class="nav-link">Login</a>
+        <a href="../auth/register.html" class="nav-btn">Sign Up</a>
+        <a href="../shop/cart.html" class="cart-icon-desk">
+          🛒 <span class="cart-count" id="cart-count">0</span>
+        </a>
+      </div>
+      <button class="hamburger" id="hamburger-btn" onclick="toggleMobileMenu()">☰</button>
+    </div>
+    <div class="mobile-menu-overlay" id="mobile-overlay" onclick="closeMobileMenu()"></div>
+    <div class="mobile-menu" id="mobile-menu">
+      <div class="mobile-menu-header">
+        <div class="logo"><span class="logo-nexa">Nexa</span><span class="logo-bay">bay</span></div>
+        <div id="mobile-header-actions" style="display:none;">
+          <a href="../dashboard/buyer.html" class="mh-btn account">Account</a>
+          <a href="#" onclick="logoutUser()" class="mh-btn logout">Logout</a>
+        </div>
+        <button onclick="closeMobileMenu()" class="close-menu-btn">✕</button>
+      </div>
+      <div id="mobile-user-section"></div>
+      <div class="mobile-menu-links">
+        <a href="../../index.html">🏠 Home</a>
+        <a href="../shop/browse.html">🛍️ Shop</a>
+        <a href="../services/browse.html">🔧 Services</a>
+        <a href="../rentals/browse.html">🏠 Rentals</a>
+        <a href="../learn/browse.html">🎓 Learn</a>
+        <a href="../jobs/browse.html">💼 Jobs</a>
+        <a href="index.html">🏦 NexaPay</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- FLOATING CART -->
+  <a href="../shop/cart.html" class="floating-cart" id="floating-cart">
+    🛒 <span class="floating-cart-count" id="floating-cart-count">0</span>
+  </a>
+
+  <!-- HERO -->
+  <div class="pay-hero">
+    <div class="container">
+      <div class="pay-hero-inner">
+        <div class="pay-hero-text">
+          <div class="pay-badge">🏦 NexaPay</div>
+          <h1>Send Money.<br/>Pay Bills.<br/>Save & Earn.</h1>
+          <p>Your all-in-one financial wallet. Send money instantly, pay any bill and earn rewards on every transaction.</p>
+          <div class="pay-hero-btns">
+            <button class="btn-primary" onclick="showPaySection('send')">Send Money</button>
+            <button class="pay-outline-btn" onclick="showPaySection('bills')">Pay Bills</button>
+          </div>
+          <div class="pay-hero-features">
+            <span>⚡ Instant transfers</span>
+            <span>🔒 Bank-level security</span>
+            <span>💳 Virtual card</span>
+            <span>🎁 Cashback rewards</span>
+          </div>
+        </div>
+        <div class="pay-card-mockup">
+          <div class="pay-card">
+            <div class="pay-card-top">
+              <div class="pay-card-logo">NexaPay</div>
+              <div class="pay-card-type">💳 VIRTUAL</div>
+            </div>
+            <div class="pay-card-number">**** **** **** <span id="card-last4">0000</span></div>
+            <div class="pay-card-bottom">
+              <div>
+                <div class="pay-card-label">Card Holder</div>
+                <div class="pay-card-value" id="card-holder">Your Name</div>
+              </div>
+              <div>
+                <div class="pay-card-label">Balance</div>
+                <div class="pay-card-value" id="card-balance">₦0.00</div>
+              </div>
+              <div>
+                <div class="pay-card-label">Expires</div>
+                <div class="pay-card-value">12/28</div>
+              </div>
+            </div>
+          </div>
+          <div class="pay-quick-stats">
+            <div class="pqs-item">
+              <span class="pqs-icon">📤</span>
+              <span class="pqs-label">Sent</span>
+              <span class="pqs-value" id="total-sent">₦0</span>
+            </div>
+            <div class="pqs-item">
+              <span class="pqs-icon">📥</span>
+              <span class="pqs-label">Received</span>
+              <span class="pqs-value" id="total-received">₦0</span>
+            </div>
+            <div class="pqs-item">
+              <span class="pqs-icon">🎁</span>
+              <span class="pqs-label">Cashback</span>
+              <span class="pqs-value" id="total-cashback">₦0</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN CONTENT -->
+  <div class="container pay-layout">
+
+    <!-- LEFT — SERVICES -->
+    <div class="pay-services">
+
+      <!-- QUICK ACTIONS -->
+      <div class="pay-section-card">
+        <h3>Quick Actions</h3>
+        <div class="pay-actions-grid">
+          <button class="pay-action-btn" onclick="showPaySection('send')">
+            <span>📤</span>Send Money
+          </button>
+          <button class="pay-action-btn" onclick="showPaySection('receive')">
+            <span>📥</span>Receive
+          </button>
+          <button class="pay-action-btn" onclick="showPaySection('bills')">
+            <span>💡</span>Pay Bills
+          </button>
+          <button class="pay-action-btn" onclick="showPaySection('airtime')">
+            <span>📱</span>Buy Airtime
+          </button>
+          <button class="pay-action-btn" onclick="showPaySection('data')">
+            <span>🌐</span>Buy Data
+          </button>
+          <button class="pay-action-btn" onclick="showPaySection('transfer')">
+            <span>🏦</span>Bank Transfer
+          </button>
+          <button class="pay-action-btn" onclick="showPaySection('invest')">
+            <span>📈</span>Invest
+          </button>
+          <button class="pay-action-btn" onclick="showPaySection('crypto')">
+            <span>₿</span>Crypto
+          </button>
+        </div>
+      </div>
+
+      <!-- SEND MONEY -->
+      <div class="pay-section-card" id="section-send">
+        <h3>📤 Send Money</h3>
+        <div class="pay-form">
+          <div class="form-group">
+            <label>Recipient Phone or Account</label>
+            <input type="text" id="send-recipient" placeholder="Phone number or account"/>
+          </div>
+          <div class="form-group">
+            <label>Bank (for bank transfer)</label>
+            <select id="send-bank">
+              <option value="">NexaPay to NexaPay (instant)</option>
+              <option>GTBank</option>
+              <option>Access Bank</option>
+              <option>First Bank</option>
+              <option>Zenith Bank</option>
+              <option>UBA</option>
+              <option>Opay</option>
+              <option>Palmpay</option>
+              <option>Kuda Bank</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Amount (₦)</label>
+            <input type="number" id="send-amount" placeholder="0.00" oninput="updateSendFee()"/>
+          </div>
+          <div class="send-fee-info" id="send-fee-info" style="display:none;">
+            <div class="sfi-row"><span>Amount</span><span id="sfi-amount">₦0</span></div>
+            <div class="sfi-row"><span>Transfer fee</span><span id="sfi-fee">₦0</span></div>
+            <div class="sfi-row total"><span>Total</span><span id="sfi-total">₦0</span></div>
+          </div>
+          <div class="form-group">
+            <label>Note (optional)</label>
+            <input type="text" id="send-note" placeholder="What is this for?"/>
+          </div>
+          <div id="send-msg" style="font-size:0.85em;margin-bottom:8px;display:none;"></div>
+          <button class="pay-submit-btn" onclick="processSend()">Send Money →</button>
+        </div>
+      </div>
+
+      <!-- PAY BILLS -->
+      <div class="pay-section-card" id="section-bills" style="display:none;">
+        <h3>💡 Pay Bills</h3>
+        <div class="bills-grid">
+          <button class="bill-btn" onclick="showBillForm('electricity')">
+            <span>💡</span>Electricity
+          </button>
+          <button class="bill-btn" onclick="showBillForm('water')">
+            <span>🚰</span>Water
+          </button>
+          <button class="bill-btn" onclick="showBillForm('tv')">
+            <span>📺</span>Cable TV
+          </button>
+          <button class="bill-btn" onclick="showBillForm('internet')">
+            <span>🌐</span>Internet
+          </button>
+          <button class="bill-btn" onclick="showBillForm('school')">
+            <span>🎓</span>School Fees
+          </button>
+          <button class="bill-btn" onclick="showBillForm('rent')">
+            <span>🏠</span>Rent
+          </button>
+          <button class="bill-btn" onclick="showBillForm('insurance')">
+            <span>🛡️</span>Insurance
+          </button>
+          <button class="bill-btn" onclick="showBillForm('tax')">
+            <span>🏛️</span>Tax
+          </button>
+        </div>
+        <div class="bill-form" id="bill-form" style="display:none;">
+          <h4 id="bill-form-title">Pay Bill</h4>
+          <div class="pay-form">
+            <div class="form-group">
+              <label>Provider</label>
+              <select id="bill-provider"><option>Select provider</option></select>
+            </div>
+            <div class="form-group">
+              <label>Account / Meter Number</label>
+              <input type="text" id="bill-account" placeholder="Enter account number"/>
+            </div>
+            <div class="form-group">
+              <label>Amount (₦)</label>
+              <input type="number" id="bill-amount" placeholder="0.00"/>
+            </div>
+            <div id="bill-msg" style="font-size:0.85em;margin-bottom:8px;display:none;"></div>
+            <button class="pay-submit-btn" onclick="processBill()">Pay Now →</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- BUY AIRTIME -->
+      <div class="pay-section-card" id="section-airtime" style="display:none;">
+        <h3>📱 Buy Airtime</h3>
+        <div class="pay-form">
+          <div class="form-group">
+            <label>Network</label>
+            <div class="network-btns">
+              <button class="network-btn active" onclick="selectNetwork('MTN', this)">MTN</button>
+              <button class="network-btn" onclick="selectNetwork('Airtel', this)">Airtel</button>
+              <button class="network-btn" onclick="selectNetwork('Glo', this)">Glo</button>
+              <button class="network-btn" onclick="selectNetwork('9mobile', this)">9mobile</button>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Phone Number</label>
+            <input type="tel" id="airtime-phone" placeholder="08xxxxxxxxx"/>
+          </div>
+          <div class="form-group">
+            <label>Amount (₦)</label>
+            <div class="quick-amounts">
+              <button onclick="setAirtimeAmount(100)">₦100</button>
+              <button onclick="setAirtimeAmount(200)">₦200</button>
+              <button onclick="setAirtimeAmount(500)">₦500</button>
+              <button onclick="setAirtimeAmount(1000)">₦1,000</button>
+            </div>
+            <input type="number" id="airtime-amount" placeholder="Enter amount"/>
+          </div>
+          <div id="airtime-msg" style="font-size:0.85em;margin-bottom:8px;display:none;"></div>
+          <button class="pay-submit-btn" onclick="processAirtime()">Buy Airtime →</button>
+        </div>
+      </div>
+
+      <!-- BUY DATA -->
+      <div class="pay-section-card" id="section-data" style="display:none;">
+        <h3>🌐 Buy Data</h3>
+        <div class="pay-form">
+          <div class="form-group">
+            <label>Network</label>
+            <div class="network-btns">
+              <button class="network-btn active" onclick="selectDataNetwork('MTN', this)">MTN</button>
+              <button class="network-btn" onclick="selectDataNetwork('Airtel', this)">Airtel</button>
+              <button class="network-btn" onclick="selectDataNetwork('Glo', this)">Glo</button>
+              <button class="network-btn" onclick="selectDataNetwork('9mobile', this)">9mobile</button>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Phone Number</label>
+            <input type="tel" id="data-phone" placeholder="08xxxxxxxxx"/>
+          </div>
+          <div class="form-group">
+            <label>Select Data Plan</label>
+            <div class="data-plans" id="data-plans"></div>
+          </div>
+          <div id="data-msg" style="font-size:0.85em;margin-bottom:8px;display:none;"></div>
+          <button class="pay-submit-btn" onclick="processData()">Buy Data →</button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- RIGHT — WALLET + HISTORY -->
+    <div class="pay-right">
+
+      <!-- WALLET BALANCE -->
+      <div class="pay-wallet-card">
+        <div class="pwc-label">NexaPay Balance</div>
+        <div class="pwc-balance" id="pay-balance">₦0.00</div>
+        <div class="pwc-actions">
+          <button onclick="showFundModal()" class="pwc-btn primary">+ Add Money</button>
+          <button onclick="showWithdrawModal()" class="pwc-btn outline">Withdraw</button>
+        </div>
+      </div>
+
+      <!-- FUND WALLET -->
+      <div class="pay-section-card" id="fund-modal" style="display:none;">
+        <h4>Add Money to NexaPay</h4>
+        <div class="pay-form">
+          <div class="form-group">
+            <label>Amount (₦)</label>
+            <input type="number" id="fund-amount" placeholder="Minimum ₦500"/>
+          </div>
+          <div class="form-group">
+            <label>Payment Method</label>
+            <select id="fund-method">
+              <option>💳 Debit Card</option>
+              <option>🏦 Bank Transfer</option>
+              <option>📱 USSD</option>
+            </select>
+          </div>
+          <button class="pay-submit-btn" onclick="processFund()">Add Money →</button>
+          <button onclick="document.getElementById('fund-modal').style.display='none'" style="width:100%;padding:10px;background:none;border:1px solid var(--border);border-radius:8px;margin-top:8px;cursor:pointer;font-family:'Inter',sans-serif">Cancel</button>
+        </div>
+      </div>
+
+      <!-- TRANSACTIONS -->
+      <div class="pay-section-card">
+        <div class="pay-section-header">
+          <h3>Recent Transactions</h3>
+          <button onclick="clearTransactions()" class="pay-clear-btn">Clear</button>
+        </div>
+        <div id="pay-transactions">
+          <div class="no-transactions">
+            <div style="font-size:2em;margin-bottom:8px">💸</div>
+            <p>No transactions yet</p>
+            <small>Your payment history will appear here</small>
+          </div>
+        </div>
+      </div>
+
+      <!-- SAVINGS -->
+      <div class="pay-section-card">
+        <h3>💰 NexaSave</h3>
+        <div class="savings-info">
+          <div class="si-row">
+            <span>Savings Balance</span>
+            <b id="savings-balance">₦0</b>
+          </div>
+          <div class="si-row">
+            <span>Interest Rate</span>
+            <b style="color:var(--green)">12% p.a.</b>
+          </div>
+          <div class="si-row">
+            <span>Interest Earned</span>
+            <b id="interest-earned" style="color:var(--green)">₦0</b>
+          </div>
+        </div>
+        <button class="pay-submit-btn" onclick="showToast('💰 NexaSave coming soon!')">Start Saving →</button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- PAY FEATURES -->
+  <div class="pay-features-section">
+    <div class="container">
+      <h2 class="section-title" style="text-align:center">Everything You Need in One Wallet</h2>
+      <div class="pay-features-grid">
+        <div class="pf-card">
+          <div class="pf-icon">⚡</div>
+          <h3>Instant Transfers</h3>
+          <p>Send money to any Nigerian bank in seconds. Available 24/7.</p>
+        </div>
+        <div class="pf-card">
+          <div class="pf-icon">💡</div>
+          <h3>Pay Any Bill</h3>
+          <p>Electricity, water, TV, internet, school fees and more.</p>
+        </div>
+        <div class="pf-card">
+          <div class="pf-icon">💳</div>
+          <h3>Virtual Dollar Card</h3>
+          <p>Shop internationally on Amazon, Netflix, Spotify and more.</p>
+        </div>
+        <div class="pf-card">
+          <div class="pf-icon">📈</div>
+          <h3>Earn 12% Interest</h3>
+          <p>Save money and earn up to 12% per annum on your savings.</p>
+        </div>
+        <div class="pf-card">
+          <div class="pf-icon">🔒</div>
+          <h3>Bank-Level Security</h3>
+          <p>256-bit encryption and biometric authentication keeps you safe.</p>
+        </div>
+        <div class="pf-card">
+          <div class="pf-icon">₿</div>
+          <h3>Crypto Exchange</h3>
+          <p>Buy, sell and hold Bitcoin, USDT and other cryptocurrencies.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-bottom:60px;"></div>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-bottom">
+        <p>© 2025 Nexabay. All rights reserved.</p>
+        <a href="../../index.html" style="color:var(--orange)">← Back to Home</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../../js/core/main.js"></script>
+  <script>
+
+    var payBalance = parseFloat(localStorage.getItem('nexapay_balance') || '0');
+    var payTransactions = JSON.parse(localStorage.getItem('nexapay_txns') || '[]');
+    var selectedNetwork = 'MTN';
+    var selectedDataNetwork = 'MTN';
+    var selectedDataPlan = null;
+
+    var DATA_PLANS = {
+      MTN:    [{ size:'1GB', price:300, validity:'1 day' }, { size:'2GB', price:500, validity:'7 days' }, { size:'5GB', price:1000, validity:'30 days' }, { size:'10GB', price:2000, validity:'30 days' }, { size:'20GB', price:3500, validity:'30 days' }],
+      Airtel: [{ size:'1.5GB', price:300, validity:'2 days' }, { size:'3GB', price:500, validity:'7 days' }, { size:'6GB', price:1000, validity:'30 days' }, { size:'12GB', price:2000, validity:'30 days' }],
+      Glo:    [{ size:'2GB', price:300, validity:'3 days' }, { size:'4.8GB', price:500, validity:'7 days' }, { size:'7.5GB', price:1000, validity:'30 days' }, { size:'15GB', price:2000, validity:'30 days' }],
+      '9mobile': [{ size:'1GB', price:300, validity:'1 day' }, { size:'2.5GB', price:500, validity:'7 days' }, { size:'5GB', price:1000, validity:'30 days' }],
+    };
+
+    var BILL_PROVIDERS = {
+      electricity: ['EKEDC','IKEDC','AEDC','KEDCO','PHEDC','EEDC'],
+      water:       ['Lagos Water','Abuja Water','Ogun Water'],
+      tv:          ['DSTV','GOtv','StarTimes','Startimes'],
+      internet:    ['Spectranet','Smile','Swift','MTN Home'],
+      school:      ['Enter school payment code'],
+      rent:        ['Enter landlord account'],
+      insurance:   ['AIICO','Leadway','AXA Mansard','Cornerstone'],
+      tax:         ['LIRS','FIRS','Other State IRS'],
+    };
+
+    function init() {
+      updatePayDisplay();
+      renderTransactions();
+      renderDataPlans();
+
+      var user = JSON.parse(localStorage.getItem('nexa_current_user') || 'null');
+      if (user) {
+        var holderEl = document.getElementById('card-holder');
+        if (holderEl) holderEl.textContent = user.fullName || user.firstName || 'Your Name';
+        var last4El = document.getElementById('card-last4');
+        if (last4El) last4El.textContent = (Math.floor(Math.random() * 9000) + 1000).toString();
+      }
+
+      var totalSent = payTransactions.filter(function(t) { return t.type === 'debit'; }).reduce(function(s, t) { return s + t.amount; }, 0);
+      var totalReceived = payTransactions.filter(function(t) { return t.type === 'credit'; }).reduce(function(s, t) { return s + t.amount; }, 0);
+      var cashback = Math.floor(totalSent * 0.005);
+
+      var sentEl = document.getElementById('total-sent');
+      var recEl  = document.getElementById('total-received');
+      var cbEl   = document.getElementById('total-cashback');
+      if (sentEl) sentEl.textContent = '₦' + totalSent.toLocaleString();
+      if (recEl)  recEl.textContent  = '₦' + totalReceived.toLocaleString();
+      if (cbEl)   cbEl.textContent   = '₦' + cashback.toLocaleString();
+    }
+
+    function updatePayDisplay() {
+      var balEl = document.getElementById('pay-balance');
+      var cardBal = document.getElementById('card-balance');
+      if (balEl) balEl.textContent = '₦' + payBalance.toLocaleString('en-NG', { minimumFractionDigits: 2 });
+      if (cardBal) cardBal.textContent = '₦' + payBalance.toLocaleString('en-NG', { minimumFractionDigits: 2 });
+    }
+
+    function savePayState() {
+      localStorage.setItem('nexapay_balance', payBalance);
+      localStorage.setItem('nexapay_txns', JSON.stringify(payTransactions));
+    }
+
+    function addTransaction(type, desc, amount, icon) {
+      payTransactions.unshift({
+        type: type,
+        desc: desc,
+        amount: amount,
+        icon: icon || (type === 'credit' ? '📥' : '📤'),
+        date: new Date().toLocaleString(),
+      });
+      if (payTransactions.length > 50) payTransactions.pop();
+      savePayState();
+      renderTransactions();
+      updatePayDisplay();
+    }
+
+    function renderTransactions() {
+      var el = document.getElementById('pay-transactions');
+      if (!el) return;
+      if (payTransactions.length === 0) {
+        el.innerHTML = '<div class="no-transactions"><div style="font-size:2em;margin-bottom:8px">💸</div><p>No transactions yet</p><small>Your payment history will appear here</small></div>';
+        return;
+      }
+      el.innerHTML = payTransactions.slice(0, 10).map(function(t) {
+        return '<div class="txn-item">' +
+          '<div class="txn-icon">' + t.icon + '</div>' +
+          '<div class="txn-info">' +
+            '<div class="txn-desc">' + t.desc + '</div>' +
+            '<div class="txn-date">' + t.date + '</div>' +
+          '</div>' +
+          '<div class="txn-amount ' + t.type + '">' +
+            (t.type === 'credit' ? '+' : '-') + '₦' + t.amount.toLocaleString() +
+          '</div>' +
+        '</div>';
+      }).join('');
+    }
+
+    function showPaySection(section) {
+      var sections = ['send', 'receive', 'bills', 'airtime', 'data', 'transfer', 'invest', 'crypto'];
+      sections.forEach(function(s) {
+        var el = document.getElementById('section-' + s);
+        if (el) el.style.display = 'none';
+      });
+      var target = document.getElementById('section-' + section);
+      if (target) {
+        target.style.display = 'block';
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      } else {
+        showToast('💡 ' + section.charAt(0).toUpperCase() + section.slice(1) + ' feature coming soon!');
+      }
+    }
+
+    function updateSendFee() {
+      var amount = parseFloat(document.getElementById('send-amount').value) || 0;
+      var feeInfo = document.getElementById('send-fee-info');
+      if (amount > 0) {
+        var fee = amount <= 5000 ? 10 : amount <= 50000 ? 25 : 50;
+        feeInfo.style.display = 'block';
+        document.getElementById('sfi-amount').textContent = '₦' + amount.toLocaleString();
+        document.getElementById('sfi-fee').textContent = '₦' + fee;
+        document.getElementById('sfi-total').textContent = '₦' + (amount + fee).toLocaleString();
+      } else {
+        feeInfo.style.display = 'none';
+      }
+    }
+
+    function processSend() {
+      var recipient = document.getElementById('send-recipient').value.trim();
+      var amount = parseFloat(document.getElementById('send-amount').value);
+      var note = document.getElementById('send-note').value.trim();
+      var msgEl = document.getElementById('send-msg');
+
+      msgEl.style.display = 'none';
+
+      if (!recipient) { showMsg(msgEl, '❌ Enter recipient', 'error'); return; }
+      if (!amount || amount < 100) { showMsg(msgEl, '❌ Minimum transfer is ₦100', 'error'); return; }
+
+      var fee = amount <= 5000 ? 10 : amount <= 50000 ? 25 : 50;
+      var total = amount + fee;
+
+      if (payBalance < total) { showMsg(msgEl, '❌ Insufficient balance. Add money first.', 'error'); return; }
+
+      payBalance -= total;
+      addTransaction('debit', 'Transfer to ' + recipient + (note ? ' — ' + note : ''), amount, '📤');
+      showMsg(msgEl, '✅ ₦' + amount.toLocaleString() + ' sent to ' + recipient + ' successfully!', 'success');
+      document.getElementById('send-amount').value = '';
+      document.getElementById('send-recipient').value = '';
+      document.getElementById('send-fee-info').style.display = 'none';
+    }
+
+    function showBillForm(type) {
+      var form = document.getElementById('bill-form');
+      var title = document.getElementById('bill-form-title');
+      var providerEl = document.getElementById('bill-provider');
+      var names = { electricity:'💡 Pay Electricity', water:'🚰 Pay Water Bill', tv:'📺 Pay Cable TV', internet:'🌐 Pay Internet', school:'🎓 Pay School Fees', rent:'🏠 Pay Rent', insurance:'🛡️ Pay Insurance', tax:'🏛️ Pay Tax' };
+
+      if (title) title.textContent = names[type] || 'Pay Bill';
+      if (providerEl) {
+        providerEl.innerHTML = (BILL_PROVIDERS[type] || ['Select provider']).map(function(p) {
+          return '<option>' + p + '</option>';
+        }).join('');
+      }
+      if (form) form.style.display = 'block';
+    }
+
+    function processBill() {
+      var account = document.getElementById('bill-account').value.trim();
+      var amount  = parseFloat(document.getElementById('bill-amount').value);
+      var provider = document.getElementById('bill-provider').value;
+      var msgEl   = document.getElementById('bill-msg');
+
+      msgEl.style.display = 'none';
+      if (!account) { showMsg(msgEl, '❌ Enter account number', 'error'); return; }
+      if (!amount || amount < 100) { showMsg(msgEl, '❌ Minimum bill payment is ₦100', 'error'); return; }
+      if (payBalance < amount) { showMsg(msgEl, '❌ Insufficient balance', 'error'); return; }
+
+      payBalance -= amount;
+      addTransaction('debit', 'Bill payment — ' + provider, amount, '💡');
+      showMsg(msgEl, '✅ ₦' + amount.toLocaleString() + ' paid to ' + provider + ' successfully!', 'success');
+      document.getElementById('bill-amount').value = '';
+      document.getElementById('bill-account').value = '';
+    }
+
+    function selectNetwork(network, btn) {
+      selectedNetwork = network;
+      document.querySelectorAll('.network-btn').forEach(function(b) { b.classList.remove('active'); });
+      if (btn) btn.classList.add('active');
+    }
+
+    function setAirtimeAmount(amount) {
+      document.getElementById('airtime-amount').value = amount;
+    }
+
+    function processAirtime() {
+      var phone  = document.getElementById('airtime-phone').value.trim();
+      var amount = parseFloat(document.getElementById('airtime-amount').value);
+      var msgEl  = document.getElementById('airtime-msg');
+
+      msgEl.style.display = 'none';
+      if (!phone) { showMsg(msgEl, '❌ Enter phone number', 'error'); return; }
+      if (!amount || amount < 50) { showMsg(msgEl, '❌ Minimum airtime is ₦50', 'error'); return; }
+      if (payBalance < amount) { showMsg(msgEl, '❌ Insufficient balance', 'error'); return; }
+
+      payBalance -= amount;
+      addTransaction('debit', selectedNetwork + ' Airtime — ' + phone, amount, '📱');
+      showMsg(msgEl, '✅ ₦' + amount.toLocaleString() + ' ' + selectedNetwork + ' airtime sent to ' + phone, 'success');
+      document.getElementById('airtime-amount').value = '';
+    }
+
+    function selectDataNetwork(network, btn) {
+      selectedDataNetwork = network;
+      selectedDataPlan = null;
+      document.querySelectorAll('#section-data .network-btn').forEach(function(b) { b.classList.remove('active'); });
+      if (btn) btn.classList.add('active');
+      renderDataPlans();
+    }
+
+    function renderDataPlans() {
+      var container = document.getElementById('data-plans');
+      if (!container) return;
+      var plans = DATA_PLANS[selectedDataNetwork] || [];
+      container.innerHTML = plans.map(function(p, i) {
+        return '<div class="data-plan ' + (selectedDataPlan === i ? 'selected' : '') + '" onclick="selectDataPlan(' + i + ', this)">' +
+          '<div class="dp-size">' + p.size + '</div>' +
+          '<div class="dp-validity">' + p.validity + '</div>' +
+          '<div class="dp-price">₦' + p.price + '</div>' +
+        '</div>';
+      }).join('');
+    }
+
+    function selectDataPlan(index, el) {
+      selectedDataPlan = index;
+      document.querySelectorAll('.data-plan').forEach(function(d) { d.classList.remove('selected'); });
+      if (el) el.classList.add('selected');
+    }
+
+    function processData() {
+      var phone = document.getElementById('data-phone').value.trim();
+      var msgEl = document.getElementById('data-msg');
+      msgEl.style.display = 'none';
+
+      if (!phone) { showMsg(msgEl, '❌ Enter phone number', 'error'); return; }
+      if (selectedDataPlan === null) { showMsg(msgEl, '❌ Select a data plan', 'error'); return; }
+
+      var plan = DATA_PLANS[selectedDataNetwork][selectedDataPlan];
+      if (payBalance < plan.price) { showMsg(msgEl, '❌ Insufficient balance', 'error'); return; }
+
+      payBalance -= plan.price;
+      addTransaction('debit', selectedDataNetwork + ' Data ' + plan.size + ' — ' + phone, plan.price, '🌐');
+      showMsg(msgEl, '✅ ' + plan.size + ' data sent to ' + phone + ' successfully!', 'success');
+      document.getElementById('data-phone').value = '';
+      selectedDataPlan = null;
+      renderDataPlans();
+    }
+
+    function showFundModal() {
+      var el = document.getElementById('fund-modal');
+      if (el) el.style.display = el.style.display === 'none' ? 'block' : 'none';
+    }
+
+    function showWithdrawModal() {
+      showToast('💸 Withdrawal — Enter your bank details in the dashboard');
+    }
+
+    function processFund() {
+      var amount = parseFloat(document.getElementById('fund-amount').value);
+      if (!amount || amount < 500) { showToast('❌ Minimum funding is ₦500', '#ff4444'); return; }
+      payBalance += amount;
+      addTransaction('credit', 'Wallet funding', amount, '📥');
+      document.getElementById('fund-modal').style.display = 'none';
+      document.getElementById('fund-amount').value = '';
+      showToast('✅ ₦' + amount.toLocaleString() + ' added to NexaPay!');
+    }
+
+    function clearTransactions() {
+      if (confirm('Clear all transaction history?')) {
+        payTransactions = [];
+        savePayState();
+        renderTransactions();
+        showToast('Transaction history cleared');
+      }
+    }
+
+    function showMsg(el, msg, type) {
+      el.textContent = msg;
+      el.style.color = type === 'error' ? '#cc0000' : 'var(--green)';
+      el.style.display = 'block';
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      updateCartCount();
+      checkAuthState();
+      init();
+    });
+
+  </script>
+
+</body>
+</html>
