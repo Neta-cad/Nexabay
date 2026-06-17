@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>NexaRide — Nexabay</title>
+  <link rel="stylesheet" href="../../css/main.css"/>
+  <link rel="stylesheet" href="../../css/ride.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="nav-inner">
+      <a href="../../index.html" class="logo">
+        <span class="logo-nexa">Nexa</span><span class="logo-bay">bay</span>
+      </a>
+      <div class="nav-actions">
+        <a href="../auth/login.html" class="nav-link">Login</a>
+        <a href="../auth/register.html" class="nav-btn">Sign Up</a>
+      </div>
+      <button class="hamburger" id="hamburger-btn" onclick="toggleMobileMenu()">☰</button>
+    </div>
+    <div class="mobile-menu-overlay" id="mobile-overlay" onclick="closeMobileMenu()"></div>
+    <div class="mobile-menu" id="mobile-menu">
+      <div class="mobile-menu-header">
+        <div class="logo"><span class="logo-nexa">Nexa</span><span class="logo-bay">bay</span></div>
+        <div id="mobile-header-actions" style="display:none;">
+          <a href="../dashboard/buyer.html" class="mh-btn account">Account</a>
+          <a href="#" onclick="logoutUser()" class="mh-btn logout">Logout</a>
+        </div>
+        <button onclick="closeMobileMenu()" class="close-menu-btn">✕</button>
+      </div>
+      <div id="mobile-user-section"></div>
+      <div class="mobile-menu-links">
+        <a href="../../index.html">🏠 Home</a>
+        <a href="../shop/browse.html">🛍️ Shop</a>
+        <a href="../services/browse.html">🔧 Services</a>
+        <a href="../jobs/browse.html">💼 Jobs</a>
+        <a href="index.html">🚗 NexaRide</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <div class="ride-hero">
+    <div class="container">
+      <div class="ride-hero-inner">
+        <div class="ride-hero-text">
+          <div class="ride-badge">🚗 NexaRide</div>
+          <h1>Your Ride,<br/>Anytime Anywhere</h1>
+          <p>Book a car, bike, tricycle or delivery — fast, safe and affordable across Nigeria.</p>
+
+          <!-- BOOKING FORM -->
+          <div class="ride-booking-card">
+            <div class="rbc-tabs">
+              <button class="rbc-tab active" onclick="setRideType('ride', this)">🚗 Ride</button>
+              <button class="rbc-tab" onclick="setRideType('delivery', this)">📦 Delivery</button>
+              <button class="rbc-tab" onclick="setRideType('hire', this)">🔑 Car Hire</button>
+              <button class="rbc-tab" onclick="setRideType('intercity', this)">🛣️ Intercity</button>
+            </div>
+
+            <div id="ride-form" class="rbc-form">
+              <div class="rbc-input">
+                <span class="rbc-dot green"></span>
+                <input type="text" id="pickup" placeholder="Pickup location"/>
+              </div>
+              <div class="rbc-swap" onclick="swapLocations()">⇅</div>
+              <div class="rbc-input">
+                <span class="rbc-dot red"></span>
+                <input type="text" id="dropoff" placeholder="Drop-off location"/>
+              </div>
+              <button class="rbc-search-btn" onclick="searchRides()">Find a Ride</button>
+            </div>
+
+          </div>
+
+          <div class="ride-hero-features">
+            <span>⚡ 3 min pickup</span>
+            <span>🔒 Safe & tracked</span>
+            <span>💳 Pay with NexaPay</span>
+            <span>⭐ Rated drivers</span>
+          </div>
+        </div>
+
+        <div class="ride-hero-right">
+          <div class="ride-map-preview">
+            <div class="rmp-inner">
+              <div class="rmp-dot pickup">🟢</div>
+              <div class="rmp-road">|</div>
+              <div class="rmp-car">🚗</div>
+              <div class="rmp-road">|</div>
+              <div class="rmp-dot dropoff">🔴</div>
+            </div>
+            <div class="rmp-eta">
+              <span>ETA</span>
+              <b>3 min</b>
+            </div>
+          </div>
+          <div class="ride-hero-stats">
+            <div class="rhs-item"><span>5,000+</span>Drivers</div>
+            <div class="rhs-item"><span>36</span>States</div>
+            <div class="rhs-item"><span>24/7</span>Available</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIDE TYPES -->
+  <div class="container">
+    <h2 class="section-title" style="margin-top:40px">Choose Your Ride</h2>
+    <div class="ride-types-grid" id="ride-results">
+      <div class="ride-type-card" onclick="bookRide('NexaCar Standard')">
+        <div class="rtc-emoji">🚗</div>
+        <div class="rtc-info">
+          <div class="rtc-name">NexaCar Standard</div>
+          <div class="rtc-desc">Affordable everyday rides</div>
+          <div class="rtc-eta">3 min away</div>
+        </div>
+        <div class="rtc-right">
+          <div class="rtc-price">₦800</div>
+          <button class="rtc-book">Book</button>
+        </div>
+      </div>
+
+      <div class="ride-type-card" onclick="bookRide('NexaCar Premium')">
+        <div class="rtc-emoji">🚙</div>
+        <div class="rtc-info">
+          <div class="rtc-name">NexaCar Premium</div>
+          <div class="rtc-desc">Comfortable SUV rides</div>
+          <div class="rtc-eta">5 min away</div>
+        </div>
+        <div class="rtc-right">
+          <div class="rtc-price">₦1,500</div>
+          <button class="rtc-book">Book</button>
+        </div>
+      </div>
+
+      <div class="ride-type-card" onclick="bookRide('NexaBike')">
+        <div class="rtc-emoji">🏍️</div>
+        <div class="rtc-info">
+          <div class="rtc-name">NexaBike</div>
+          <div class="rtc-desc">Fast bike for short trips</div>
+          <div class="rtc-eta">2 min away</div>
+        </div>
+        <div class="rtc-right">
+          <div class="rtc-price">₦300</div>
+          <button class="rtc-book">Book</button>
+        </div>
+      </div>
+
+      <div class="ride-type-card" onclick="bookRide('NexaKeke')">
+        <div class="rtc-emoji">🛺</div>
+        <div class="rtc-info">
+          <div class="rtc-name">NexaKeke</div>
+          <div class="rtc-desc">Tricycle for local trips</div>
+          <div class="rtc-eta">4 min away</div>
+        </div>
+        <div class="rtc-right">
+          <div class="rtc-price">₦400</div>
+          <button class="rtc-book">Book</button>
+        </div>
+      </div>
+
+      <div class="ride-type-card" onclick="bookRide('NexaBus')">
+        <div class="rtc-emoji">🚌</div>
+        <div class="rtc-info">
+          <div class="rtc-name">NexaBus</div>
+          <div class="rtc-desc">Shared bus rides</div>
+          <div class="rtc-eta">8 min away</div>
+        </div>
+        <div class="rtc-right">
+          <div class="rtc-price">₦200</div>
+          <button class="rtc-book">Book</button>
+        </div>
+      </div>
+
+      <div class="ride-type-card" onclick="bookRide('NexaDelivery')">
+        <div class="rtc-emoji">📦</div>
+        <div class="rtc-info">
+          <div class="rtc-name">NexaDelivery</div>
+          <div class="rtc-desc">Send packages fast</div>
+          <div class="rtc-eta">5 min away</div>
+        </div>
+        <div class="rtc-right">
+          <div class="rtc-price">₦600</div>
+          <button class="rtc-book">Book</button>
+        </div>
+      </div>
+
+      <div class="ride-type-card" onclick="bookRide('NexaLuxury')">
+        <div class="rtc-emoji">🏎️</div>
+        <div class="rtc-info">
+          <div class="rtc-name">NexaLuxury</div>
+          <div class="rtc-desc">Executive luxury vehicles</div>
+          <div class="rtc-eta">10 min away</div>
+        </div>
+        <div class="rtc-right">
+          <div class="rtc-price">₦5,000</div>
+          <button class="rtc-book">Book</button>
+        </div>
+      </div>
+
+      <div class="ride-type-card" onclick="bookRide('NexaMove')">
+        <div class="rtc-emoji">🚛</div>
+        <div class="rtc-info">
+          <div class="rtc-name">NexaMove</div>
+          <div class="rtc-desc">Truck for moving & relocation</div>
+          <div class="rtc-eta">15 min away</div>
+        </div>
+        <div class="rtc-right">
+          <div class="rtc-price">₦8,000</div>
+          <button class="rtc-book">Book</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BOOKING MODAL -->
+  <div class="ride-modal-overlay" id="ride-modal-overlay" onclick="closeRideModal()"></div>
+  <div class="ride-modal" id="ride-modal">
+    <div class="rm-header">
+      <h3 id="rm-title">Book Ride</h3>
+      <button onclick="closeRideModal()" class="rm-close">✕</button>
+    </div>
+    <div class="rm-body">
+      <div class="rm-driver">
+        <div class="rm-driver-avatar">👨</div>
+        <div class="rm-driver-info">
+          <div class="rm-driver-name" id="rm-driver-name">Finding driver...</div>
+          <div class="rm-driver-rating">⭐ 4.8 • 1,234 trips</div>
+          <div class="rm-driver-plate" id="rm-plate">ABC 123 XY</div>
+        </div>
+        <div class="rm-driver-car" id="rm-car-emoji">🚗</div>
+      </div>
+      <div class="rm-details">
+        <div class="rm-detail-row">
+          <span>🟢 Pickup</span>
+          <span id="rm-pickup">Your location</span>
+        </div>
+        <div class="rm-detail-row">
+          <span>🔴 Drop-off</span>
+          <span id="rm-dropoff">Destination</span>
+        </div>
+        <div class="rm-detail-row">
+          <span>⏱️ ETA</span>
+          <span id="rm-eta">3 min</span>
+        </div>
+        <div class="rm-detail-row total">
+          <span>💰 Fare</span>
+          <span id="rm-fare">₦0</span>
+        </div>
+      </div>
+      <div class="rm-payment">
+        <span>Payment:</span>
+        <select id="rm-payment-method">
+          <option>💳 NexaPay Wallet</option>
+          <option>💵 Cash</option>
+          <option>💳 Card</option>
+        </select>
+      </div>
+      <button class="rbc-search-btn" onclick="confirmRide()">Confirm Booking</button>
+    </div>
+  </div>
+
+  <!-- HOW IT WORKS -->
+  <div class="ride-hiw">
+    <div class="container">
+      <h2 class="section-title" style="text-align:center">How NexaRide Works</h2>
+      <div class="ride-hiw-steps">
+        <div class="hiw-step">
+          <div class="hiw-num">1</div>
+          <div class="hiw-icon">📍</div>
+          <h3>Set Location</h3>
+          <p>Enter your pickup and drop-off location</p>
+        </div>
+        <div class="hiw-arrow">→</div>
+        <div class="hiw-step">
+          <div class="hiw-num">2</div>
+          <div class="hiw-icon">🚗</div>
+          <h3>Choose Ride</h3>
+          <p>Select the vehicle type that suits you</p>
+        </div>
+        <div class="hiw-arrow">→</div>
+        <div class="hiw-step">
+          <div class="hiw-num">3</div>
+          <div class="hiw-icon">👨</div>
+          <h3>Get Matched</h3>
+          <p>A nearby driver accepts your request</p>
+        </div>
+        <div class="hiw-arrow">→</div>
+        <div class="hiw-step">
+          <div class="hiw-num">4</div>
+          <div class="hiw-icon">✅</div>
+          <h3>Ride & Pay</h3>
+          <p>Enjoy your ride and pay easily</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BECOME A DRIVER -->
+  <div class="become-driver">
+    <div class="container">
+      <div class="bd-inner">
+        <div class="bd-text">
+          <h2>🚗 Drive with NexaRide</h2>
+          <p>Earn money on your own schedule. Use your car to make up to ₦200,000/month.</p>
+          <ul class="bd-list">
+            <li>✅ Earn up to ₦200,000/month</li>
+            <li>✅ Flexible working hours</li>
+            <li>✅ Weekly payments</li>
+            <li>✅ Insurance coverage</li>
+            <li>✅ Free driver training</li>
+          </ul>
+          <a href="../auth/register.html" class="btn-primary">Become a Driver →</a>
+        </div>
+        <div class="bd-stats">
+          <div class="bd-stat"><span>5,000+</span>Active Drivers</div>
+          <div class="bd-stat"><span>₦200K</span>Top Monthly Earning</div>
+          <div class="bd-stat"><span>Weekly</span>Payment</div>
+          <div class="bd-stat"><span>Free</span>Training</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-bottom:60px;"></div>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-bottom">
+        <p>© 2025 Nexabay. All rights reserved.</p>
+        <a href="../../index.html" style="color:var(--orange)">← Back to Home</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../../js/core/main.js"></script>
+  <script>
+
+    var currentRideType = 'ride';
+    var selectedRide = null;
+
+    var DRIVERS = [
+      { name:'Emeka Okafor',   plate:'LND 234 AB', car:'Toyota Corolla',  emoji:'🚗', rating:4.9 },
+      { name:'Tunde Adeleke',  plate:'ABJ 567 CD', car:'Honda Accord',    emoji:'🚙', rating:4.8 },
+      { name:'Ibrahim Musa',   plate:'KAN 890 EF', car:'Toyota Camry',    emoji:'🚗', rating:4.7 },
+      { name:'Chidi Nwosu',    plate:'PH 123 GH',  car:'Nissan Sentra',   emoji:'🚗', rating:4.9 },
+      { name:'Biodun Afolabi', plate:'IBD 456 IJ', car:'Toyota Avensis',  emoji:'🚙', rating:4.8 },
+    ];
+
+    function setRideType(type, btn) {
+      currentRideType = type;
+      var tabs = document.querySelectorAll('.rbc-tab');
+      tabs.forEach(function(t) { t.classList.remove('active'); });
+      if (btn) btn.classList.add('active');
+
+      var searchBtn = document.querySelector('.rbc-search-btn');
+      var labels = { ride:'Find a Ride', delivery:'Find Delivery', hire:'Find Car', intercity:'Find Bus' };
+      if (searchBtn) searchBtn.textContent = labels[type] || 'Search';
+    }
+
+    function swapLocations() {
+      var pickup  = document.getElementById('pickup');
+      var dropoff = document.getElementById('dropoff');
+      if (!pickup || !dropoff) return;
+      var temp = pickup.value;
+      pickup.value = dropoff.value;
+      dropoff.value = temp;
+    }
+
+    function searchRides() {
+      var pickup  = document.getElementById('pickup').value.trim();
+      var dropoff = document.getElementById('dropoff').value.trim();
+      if (!pickup)  { showToast('⚠️ Enter pickup location', '#ff9500'); return; }
+      if (!dropoff) { showToast('⚠️ Enter drop-off location', '#ff9500'); return; }
+      showToast('🔍 Finding rides near you...');
+      setTimeout(function() {
+        showToast('✅ ' + (Math.floor(Math.random() * 5) + 3) + ' drivers found nearby!');
+        document.getElementById('ride-results').scrollIntoView({ behavior: 'smooth' });
+      }, 1500);
+    }
+
+    function bookRide(rideName) {
+      var user = localStorage.getItem('nexa_current_user');
+      if (!user) {
+        showToast('⚠️ Please login to book a ride', '#ff9500');
+        setTimeout(function() { window.location.href = '../auth/login.html'; }, 1500);
+        return;
+      }
+
+      selectedRide = rideName;
+      var driver = DRIVERS[Math.floor(Math.random() * DRIVERS.length)];
+      var prices = {
+        'NexaCar Standard':800, 'NexaCar Premium':1500, 'NexaBike':300,
+        'NexaKeke':400, 'NexaBus':200, 'NexaDelivery':600,
+        'NexaLuxury':5000, 'NexaMove':8000
+      };
+      var fare = prices[rideName] || 800;
+
+      document.getElementById('rm-title').textContent = rideName;
+      document.getElementById('rm-driver-name').textContent = driver.name;
+      document.getElementById('rm-plate').textContent = driver.plate + ' • ' + driver.car;
+      document.getElementById('rm-car-emoji').textContent = driver.emoji;
+      document.getElementById('rm-pickup').textContent = document.getElementById('pickup').value || 'Your location';
+      document.getElementById('rm-dropoff').textContent = document.getElementById('dropoff').value || 'Destination';
+      document.getElementById('rm-eta').textContent = (Math.floor(Math.random() * 8) + 2) + ' min';
+      document.getElementById('rm-fare').textContent = '₦' + fare.toLocaleString();
+
+      document.getElementById('ride-modal').classList.add('open');
+      document.getElementById('ride-modal-overlay').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeRideModal() {
+      document.getElementById('ride-modal').classList.remove('open');
+      document.getElementById('ride-modal-overlay').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    function confirmRide() {
+      closeRideModal();
+      showToast('🚗 Ride confirmed! Driver is on the way.');
+      setTimeout(function() {
+        showToast('📍 Driver is 2 minutes away!');
+      }, 3000);
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      updateCartCount();
+      checkAuthState();
+    });
+
+  </script>
+
+</body>
+</html>
