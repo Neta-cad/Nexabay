@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>NexaCommunity — Nexabay</title>
+  <link rel="stylesheet" href="../../css/main.css"/>
+  <link rel="stylesheet" href="../../css/community.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="nav-inner">
+      <a href="../../index.html" class="logo">
+        <span class="logo-nexa">Nexa</span><span class="logo-bay">bay</span>
+      </a>
+      <div class="search-bar">
+        <input type="text" id="search-input" placeholder="Search community..."/>
+        <button onclick="doSearch()" class="search-btn">🔍</button>
+      </div>
+      <div class="nav-actions">
+        <a href="../auth/login.html" class="nav-link">Login</a>
+        <a href="../auth/register.html" class="nav-btn">Sign Up</a>
+      </div>
+      <button class="hamburger" id="hamburger-btn" onclick="toggleMobileMenu()">☰</button>
+    </div>
+    <div class="mobile-menu-overlay" id="mobile-overlay" onclick="closeMobileMenu()"></div>
+    <div class="mobile-menu" id="mobile-menu">
+      <div class="mobile-menu-header">
+        <div class="logo"><span class="logo-nexa">Nexa</span><span class="logo-bay">bay</span></div>
+        <div id="mobile-header-actions" style="display:none;">
+          <a href="../dashboard/buyer.html" class="mh-btn account">Account</a>
+          <a href="#" onclick="logoutUser()" class="mh-btn logout">Logout</a>
+        </div>
+        <button onclick="closeMobileMenu()" class="close-menu-btn">✕</button>
+      </div>
+      <div id="mobile-user-section"></div>
+      <div class="mobile-menu-links">
+        <a href="../../index.html">🏠 Home</a>
+        <a href="../shop/browse.html">🛍️ Shop</a>
+        <a href="../jobs/browse.html">💼 Jobs</a>
+        <a href="index.html">🤝 Community</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <div class="community-hero">
+    <div class="container">
+      <h1>🤝 NexaCommunity</h1>
+      <p>Connect with buyers, sellers and entrepreneurs across Nigeria</p>
+      <div class="community-stats">
+        <div class="cs-stat"><span>50K+</span>Members</div>
+        <div class="cs-stat"><span>1,200+</span>Posts Daily</div>
+        <div class="cs-stat"><span>200+</span>Groups</div>
+        <div class="cs-stat"><span>36</span>States</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN LAYOUT -->
+  <div class="container community-layout">
+
+    <!-- LEFT SIDEBAR -->
+    <aside class="community-sidebar">
+
+      <!-- NAVIGATION -->
+      <div class="comm-nav-card">
+        <div class="cn-item active" onclick="showFeed('all', this)">🏠 Home Feed</div>
+        <div class="cn-item" onclick="showFeed('trending', this)">🔥 Trending</div>
+        <div class="cn-item" onclick="showFeed('deals', this)">💰 Deals & Promos</div>
+        <div class="cn-item" onclick="showFeed('business', this)">💼 Business Tips</div>
+        <div class="cn-item" onclick="showFeed('success', this)">⭐ Success Stories</div>
+        <div class="cn-item" onclick="showFeed('questions', this)">❓ Questions</div>
+      </div>
+
+      <!-- MY GROUPS -->
+      <div class="comm-card">
+        <div class="comm-card-header">
+          <h3>Popular Groups</h3>
+          <a href="#" onclick="showToast('Groups page coming soon!')">See all</a>
+        </div>
+        <div class="groups-list">
+          <div class="group-item" onclick="joinGroup(this)">
+            <div class="gi-icon">🛍️</div>
+            <div class="gi-info">
+              <div class="gi-name">Lagos Marketplace</div>
+              <div class="gi-members">12,400 members</div>
+            </div>
+            <button class="gi-join-btn">Join</button>
+          </div>
+          <div class="group-item" onclick="joinGroup(this)">
+            <div class="gi-icon">💼</div>
+            <div class="gi-info">
+              <div class="gi-name">Nigeria Business Hub</div>
+              <div class="gi-members">8,900 members</div>
+            </div>
+            <button class="gi-join-btn">Join</button>
+          </div>
+          <div class="group-item" onclick="joinGroup(this)">
+            <div class="gi-icon">💻</div>
+            <div class="gi-info">
+              <div class="gi-name">Tech Entrepreneurs NG</div>
+              <div class="gi-members">6,700 members</div>
+            </div>
+            <button class="gi-join-btn">Join</button>
+          </div>
+          <div class="group-item" onclick="joinGroup(this)">
+            <div class="gi-icon">🏠</div>
+            <div class="gi-info">
+              <div class="gi-name">Property & Rentals</div>
+              <div class="gi-members">5,200 members</div>
+            </div>
+            <button class="gi-join-btn">Join</button>
+          </div>
+          <div class="group-item" onclick="joinGroup(this)">
+            <div class="gi-icon">🍔</div>
+            <div class="gi-info">
+              <div class="gi-name">Food Business Nigeria</div>
+              <div class="gi-members">4,500 members</div>
+            </div>
+            <button class="gi-join-btn">Join</button>
+          </div>
+        </div>
+      </div>
+
+    </aside>
+
+    <!-- MAIN FEED -->
+    <main class="community-main">
+
+      <!-- CREATE POST -->
+      <div class="create-post-card">
+        <div class="cp-top">
+          <div class="cp-avatar" id="cp-avatar">👤</div>
+          <input
+            type="text"
+            id="post-input"
+            placeholder="Share something with the community..."
+            onclick="expandPostForm()"
+            readonly
+          />
+        </div>
+        <div class="cp-expanded" id="cp-expanded" style="display:none;">
+          <textarea id="post-textarea" placeholder="What's on your mind? Share tips, deals, questions or success stories..." rows="4"></textarea>
+          <div class="cp-options">
+            <div class="cp-tags">
+              <button class="cp-tag active" onclick="selectTag('general', this)">General</button>
+              <button class="cp-tag" onclick="selectTag('deal', this)">💰 Deal</button>
+              <button class="cp-tag" onclick="selectTag('tip', this)">💡 Tip</button>
+              <button class="cp-tag" onclick="selectTag('question', this)">❓ Question</button>
+              <button class="cp-tag" onclick="selectTag('success', this)">⭐ Success</button>
+            </div>
+            <div class="cp-actions">
+              <button onclick="cancelPost()" class="cp-cancel">Cancel</button>
+              <button onclick="submitPost()" class="cp-submit">Post</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FEED -->
+      <div id="community-feed"></div>
+
+    </main>
+
+    <!-- RIGHT SIDEBAR -->
+    <aside class="community-right">
+
+      <!-- TRENDING TOPICS -->
+      <div class="comm-card">
+        <h3>🔥 Trending Topics</h3>
+        <div class="trending-list">
+          <div class="trend-item" onclick="filterByTag('#NexaBusiness')">
+            <div class="ti-tag">#NexaBusiness</div>
+            <div class="ti-count">2,340 posts</div>
+          </div>
+          <div class="trend-item" onclick="filterByTag('#LagosDeals')">
+            <div class="ti-tag">#LagosDeals</div>
+            <div class="ti-count">1,890 posts</div>
+          </div>
+          <div class="trend-item" onclick="filterByTag('#MakeMoneyOnline')">
+            <div class="ti-tag">#MakeMoneyOnline</div>
+            <div class="ti-count">1,560 posts</div>
+          </div>
+          <div class="trend-item" onclick="filterByTag('#NigeriaEntrepreneur')">
+            <div class="ti-tag">#NigeriaEntrepreneur</div>
+            <div class="ti-count">1,230 posts</div>
+          </div>
+          <div class="trend-item" onclick="filterByTag('#NexaSuccess')">
+            <div class="ti-tag">#NexaSuccess</div>
+            <div class="ti-count">980 posts</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SUGGESTED MEMBERS -->
+      <div class="comm-card">
+        <h3>👥 People to Follow</h3>
+        <div class="suggested-list">
+          <div class="suggested-item">
+            <div class="si-avatar">AO</div>
+            <div class="si-info">
+              <div class="si-name">Adewale Okon</div>
+              <div class="si-role">Top Seller • Lagos</div>
+            </div>
+            <button class="si-follow-btn" onclick="followUser(this)">Follow</button>
+          </div>
+          <div class="suggested-item">
+            <div class="si-avatar">FK</div>
+            <div class="si-info">
+              <div class="si-name">Fatima Kabir</div>
+              <div class="si-role">Business Coach • Abuja</div>
+            </div>
+            <button class="si-follow-btn" onclick="followUser(this)">Follow</button>
+          </div>
+          <div class="suggested-item">
+            <div class="si-avatar">CE</div>
+            <div class="si-info">
+              <div class="si-name">Chidi Eze</div>
+              <div class="si-role">Tech Entrepreneur</div>
+            </div>
+            <button class="si-follow-btn" onclick="followUser(this)">Follow</button>
+          </div>
+          <div class="suggested-item">
+            <div class="si-avatar">BT</div>
+            <div class="si-info">
+              <div class="si-name">Bisi Tunde</div>
+              <div class="si-role">Fashion Designer</div>
+            </div>
+            <button class="si-follow-btn" onclick="followUser(this)">Follow</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- RULES -->
+      <div class="comm-card">
+        <h3>📋 Community Rules</h3>
+        <div class="rules-list">
+          <div class="rule-item">✅ Be respectful to everyone</div>
+          <div class="rule-item">✅ No spam or fake deals</div>
+          <div class="rule-item">✅ Share verified information</div>
+          <div class="rule-item">✅ No hate speech</div>
+          <div class="rule-item">✅ Support fellow entrepreneurs</div>
+        </div>
+      </div>
+
+    </aside>
+
+  </div>
+
+  <div style="margin-bottom:60px;"></div>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-bottom">
+        <p>© 2025 Nexabay. All rights reserved.</p>
+        <a href="../../index.html" style="color:var(--orange)">← Back to Home</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../../js/core/main.js"></script>
+  <script>
+
+    var selectedTag = 'general';
+    var currentFilter = 'all';
+
+    var SAMPLE_POSTS = [
+      { id:1,  author:'Adewale Okon',   avatar:'AO', role:'Top Seller',        time:'2 hours ago',   tag:'success',  likes:234, comments:45, shares:12, content:'Just crossed ₦1 million in sales on Nexabay this month! 🎉 Started with just ₦50,000 capital 3 months ago. Hard work and the right platform makes all the difference. DM me if you want tips on how to grow your business here. #NexaSuccess #Entrepreneurship' },
+      { id:2,  author:'Fatima Kabir',   avatar:'FK', role:'Business Coach',     time:'4 hours ago',   tag:'tip',      likes:189, comments:32, shares:8,  content:'💡 Business Tip: Always respond to customers within 1 hour. Studies show that 78% of customers buy from the first seller who responds. Your response time is your competitive advantage! #BusinessTip #CustomerService' },
+      { id:3,  author:'Chidi Tech',     avatar:'CT', role:'Tech Entrepreneur',  time:'6 hours ago',   tag:'deal',     likes:445, comments:89, shares:34, content:'🔥 DEAL ALERT! I am selling 50 units of iPhone 15 Pro Max at ₦780,000 each (normal price ₦850,000). Lagos buyers only. First come first served. Message me directly. Pickup at Victoria Island. #LagosDeals #iPhone' },
+      { id:4,  author:'Ngozi Fashion',  avatar:'NF', role:'Fashion Seller',     time:'8 hours ago',   tag:'success',  likes:312, comments:67, shares:23, content:'Started selling Ankara dresses on Nexabay 2 months ago. Today I just hired my first 2 staff members! 👗 From selling alone in my room to having employees. This platform changed my life. Thank you Nexabay! #Fashion #SmallBusiness' },
+      { id:5,  author:'Emeka Nwosu',    avatar:'EN', role:'New Member',         time:'10 hours ago',  tag:'question', likes:56,  comments:43, shares:2,  content:'❓ QUESTION: I am just starting on Nexabay. What category has the highest demand right now? I have capital of ₦200,000 and want to start selling. Any advice from experienced sellers here? #NewSeller #Advice' },
+      { id:6,  author:'Bisi Adesanya',  avatar:'BA', role:'Food Entrepreneur',  time:'12 hours ago',  tag:'tip',      likes:278, comments:51, shares:19, content:'💡 For all food sellers: Package matters more than the food itself sometimes. I increased my sales by 60% just by upgrading my packaging. Customers eat with their eyes first! Invest in good packaging. #FoodBusiness #Marketing' },
+      { id:7,  author:'Tunde Williams', avatar:'TW', role:'Property Agent',     time:'1 day ago',     tag:'deal',     likes:167, comments:28, shares:7,  content:'🏠 PROPERTY DEAL: 3 bedroom flat in Lekki Phase 1 going for ₦2.5M/year. Fully serviced. 24hr security, gen, pool. Interested parties should reach out quickly. Very serious buyer only please. #Lagos #Property' },
+      { id:8,  author:'Amina Suleiman', avatar:'AS', role:'Course Creator',     time:'1 day ago',     tag:'success',  likes:389, comments:78, shares:31, content:'⭐ Crossed 1,000 students on NexaLearn! My graphic design course has generated ₦4.5M in 6 months. Anyone can become an online tutor if you have skills to share. Start teaching today! #OnlineCourse #PassiveIncome' },
+    ];
+
+    var userPosts = JSON.parse(localStorage.getItem('community_posts') || '[]');
+    var allPosts = userPosts.concat(SAMPLE_POSTS);
+
+    function renderFeed(filter) {
+      var container = document.getElementById('community-feed');
+      var filtered = filter === 'all' ? allPosts : allPosts.filter(function(p) { return p.tag === filter || (filter === 'trending' && p.likes > 200) || (filter === 'deals' && p.tag === 'deal') || (filter === 'business' && p.tag === 'tip') || (filter === 'success' && p.tag === 'success') || (filter === 'questions' && p.tag === 'question'); });
+
+      if (filtered.length === 0) {
+        container.innerHTML = '<div class="empty-state" style="background:white;padding:40px;border-radius:12px;text-align:center"><div class="empty-icon">💬</div><h3>No posts yet</h3><p>Be the first to post!</p></div>';
+        return;
+      }
+
+      container.innerHTML = filtered.map(function(p) {
+        var tagColors = { general:'#1a73e8', deal:'#ff6b00', tip:'#9c27b0', question:'#2196f3', success:'#00c851' };
+        var tagLabels = { general:'General', deal:'💰 Deal', tip:'💡 Tip', question:'❓ Question', success:'⭐ Success' };
+        var tagColor = tagColors[p.tag] || '#1a73e8';
+        var tagLabel = tagLabels[p.tag] || 'General';
+
+        return '<div class="post-card" id="post-' + p.id + '">' +
+          '<div class="post-header">' +
+            '<div class="post-avatar">' + p.avatar + '</div>' +
+            '<div class="post-author-info">' +
+              '<div class="post-author-name">' + p.author + '</div>' +
+              '<div class="post-author-role">' + p.role + ' • ' + p.time + '</div>' +
+            '</div>' +
+            '<span class="post-tag" style="background:' + tagColor + '20;color:' + tagColor + ';border:1px solid ' + tagColor + '40">' + tagLabel + '</span>' +
+          '</div>' +
+          '<div class="post-content">' + p.content + '</div>' +
+          '<div class="post-actions">' +
+            '<button class="pa-btn" onclick="likePost(' + p.id + ', this)">👍 ' + p.likes + '</button>' +
+            '<button class="pa-btn" onclick="commentPost(' + p.id + ')">💬 ' + p.comments + '</button>' +
+            '<button class="pa-btn" onclick="sharePost(' + p.id + ')">🔗 ' + p.shares + '</button>' +
+            '<button class="pa-btn pa-more" onclick="reportPost(' + p.id + ')">⋯</button>' +
+          '</div>' +
+        '</div>';
+      }).join('');
+    }
+
+    function showFeed(filter, el) {
+      currentFilter = filter;
+      var items = document.querySelectorAll('.cn-item');
+      items.forEach(function(i) { i.classList.remove('active'); });
+      if (el) el.classList.add('active');
+      renderFeed(filter);
+    }
+
+    function expandPostForm() {
+      var input = document.getElementById('post-input');
+      var expanded = document.getElementById('cp-expanded');
+      if (input) input.style.display = 'none';
+      if (expanded) expanded.style.display = 'block';
+      var textarea = document.getElementById('post-textarea');
+      if (textarea) textarea.focus();
+    }
+
+    function cancelPost() {
+      var input = document.getElementById('post-input');
+      var expanded = document.getElementById('cp-expanded');
+      if (input) input.style.display = 'block';
+      if (expanded) expanded.style.display = 'none';
+      var textarea = document.getElementById('post-textarea');
+      if (textarea) textarea.value = '';
+    }
+
+    function selectTag(tag, btn) {
+      selectedTag = tag;
+      document.querySelectorAll('.cp-tag').forEach(function(t) { t.classList.remove('active'); });
+      if (btn) btn.classList.add('active');
+    }
+
+    function submitPost() {
+      var user = JSON.parse(localStorage.getItem('nexa_current_user') || 'null');
+      if (!user) {
+        showToast('⚠️ Please login to post', '#ff9500');
+        setTimeout(function() { window.location.href = '../auth/login.html'; }, 1500);
+        return;
+      }
+
+      var content = document.getElementById('post-textarea').value.trim();
+      if (!content) { showToast('⚠️ Write something first', '#ff9500'); return; }
+      if (content.length < 10) { showToast('⚠️ Post is too short', '#ff9500'); return; }
+
+      var newPost = {
+        id: Date.now(),
+        author: user.fullName || user.firstName,
+        avatar: (user.firstName || 'U')[0].toUpperCase(),
+        role: 'Nexabay Member',
+        time: 'Just now',
+        tag: selectedTag,
+        likes: 0,
+        comments: 0,
+        shares: 0,
+        content: content,
+      };
+
+      userPosts.unshift(newPost);
+      localStorage.setItem('community_posts', JSON.stringify(userPosts));
+      allPosts = userPosts.concat(SAMPLE_POSTS);
+
+      cancelPost();
+      renderFeed(currentFilter);
+      showToast('✅ Post shared successfully!');
+    }
+
+    function likePost(id, btn) {
+      var post = allPosts.find(function(p) { return p.id === id; });
+      if (!post) return;
+      post.likes++;
+      if (btn) btn.textContent = '👍 ' + post.likes;
+      btn.style.color = 'var(--blue)';
+    }
+
+    function commentPost(id) {
+      showToast('💬 Comments feature coming soon!');
+    }
+
+    function sharePost(id) {
+      if (navigator.share) {
+        navigator.share({ title: 'NexaCommunity Post', url: window.location.href });
+      } else {
+        showToast('🔗 Link copied!');
+      }
+    }
+
+    function reportPost(id) {
+      showToast('🚩 Post reported. Thank you!');
+    }
+
+    function joinGroup(el) {
+      var btn = el.querySelector('.gi-join-btn');
+      if (!btn) return;
+      if (btn.textContent === 'Join') {
+        btn.textContent = 'Joined';
+        btn.style.background = 'var(--green)';
+        showToast('✅ Joined group!');
+      } else {
+        btn.textContent = 'Join';
+        btn.style.background = '';
+        showToast('Left group');
+      }
+    }
+
+    function followUser(btn) {
+      if (btn.textContent === 'Follow') {
+        btn.textContent = 'Following';
+        btn.style.background = 'var(--green)';
+        btn.style.color = 'white';
+        showToast('✅ Following!');
+      } else {
+        btn.textContent = 'Follow';
+        btn.style.background = '';
+        btn.style.color = '';
+        showToast('Unfollowed');
+      }
+    }
+
+    function filterByTag(tag) {
+      showToast('🔍 Filtering by ' + tag);
+    }
+
+    function doSearch() {
+      var q = document.getElementById('search-input').value.trim();
+      if (!q) return;
+      var filtered = allPosts.filter(function(p) {
+        return p.content.toLowerCase().includes(q.toLowerCase()) || p.author.toLowerCase().includes(q.toLowerCase());
+      });
+      var container = document.getElementById('community-feed');
+      if (filtered.length === 0) {
+        container.innerHTML = '<div class="empty-state" style="background:white;padding:40px;border-radius:12px;text-align:center"><div class="empty-icon">🔍</div><h3>No results for "' + q + '"</h3></div>';
+      } else {
+        allPosts = filtered;
+        renderFeed('all');
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      updateCartCount();
+      checkAuthState();
+      renderFeed('all');
+
+      var user = JSON.parse(localStorage.getItem('nexa_current_user') || 'null');
+      var avatarEl = document.getElementById('cp-avatar');
+      if (user && avatarEl) avatarEl.textContent = (user.firstName || '👤')[0].toUpperCase();
+
+      var input = document.getElementById('search-input');
+      if (input) {
+        input.addEventListener('keypress', function(e) {
+          if (e.key === 'Enter') doSearch();
+        });
+      }
+    });
+
+  </script>
+
+</body>
+</html>
