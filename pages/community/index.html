@@ -350,38 +350,27 @@
     }
 
     function submitPost() {
-      var user = JSON.parse(localStorage.getItem('nexa_current_user') || 'null');
-      if (!user) {
-        showToast('⚠️ Please login to post', '#ff9500');
-        setTimeout(function() { window.location.href = '../auth/login.html'; }, 1500);
-        return;
-      }
+  var user = auth.currentUser;
+  if (!user) {
+    showToast('⚠️ Please login to post', '#ff9500');
+    setTimeout(function() { window.location.href = '../auth/login.html'; }, 1500);
+    return;
+  }
 
-      var content = document.getElementById('post-textarea').value.trim();
-      if (!content) { showToast('⚠️ Write something first', '#ff9500'); return; }
-      if (content.length < 10) { showToast('⚠️ Post is too short', '#ff9500'); return; }
+  var content = document.getElementById('post-textarea').value.trim();
+  if (!content)          { showToast('⚠️ Write something first', '#ff9500'); return; }
+  if (content.length < 10) { showToast('⚠️ Post is too short', '#ff9500'); return; }
 
-      var newPost = {
-        id: Date.now(),
-        author: user.fullName || user.firstName,
-        avatar: (user.firstName || 'U')[0].toUpperCase(),
-        role: 'Nexabay Member',
-        time: 'Just now',
-        tag: selectedTag,
-        likes: 0,
-        comments: 0,
-        shares: 0,
-        content: content,
-      };
-
-      userPosts.unshift(newPost);
-      localStorage.setItem('community_posts', JSON.stringify(userPosts));
-      allPosts = userPosts.concat(SAMPLE_POSTS);
-
+  nexaCreatePost(content, selectedTag)
+    .then(function() {
       cancelPost();
-      renderFeed(currentFilter);
-      showToast('✅ Post shared successfully!');
-    }
+      showToast('✅ Post shared!');
+      loadCommunityPosts();
+    })
+    .catch(function(err) {
+      showToast('❌ ' + err.message, '#ff4444');
+    });
+}
 
     function likePost(id, btn) {
       var post = allPosts.find(function(p) { return p.id === id; });
@@ -455,21 +444,42 @@
     }
 
     document.addEventListener('DOMContentLoaded', function() {
-      updateCartCount();
-      checkAuthState();
-      renderFeed('all');
+  updateCartCount();
+  checkAuthState();
+  loadCommunityPosts();
 
-      var user = JSON.parse(localStorage.getItem('nexa_current_user') || 'null');
-      var avatarEl = document.getElementById('cp-avatar');
-      if (user && avatarEl) avatarEl.textContent = (user.firstName || '👤')[0].toUpperCase();
+  var user = JSON.parse(localStorage.getItem('nexa_current_user') || 'null');
+  var avatarEl = document.getElementById('cp-avatar');
+  if (user && avatarEl) avatarEl.textContent = (user.firstName || '👤')[0].toUpperCase();
 
-      var input = document.getElementById('search-input');
-      if (input) {
-        input.addEventListener('keypress', function(e) {
-          if (e.key === 'Enter') doSearch();
-        });
-      }
+  var input = document.getElementById('search-input');
+  if (input) {
+    input.addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') doSearch();
     });
+  }
+});
+
+function loadCommunityPosts() {
+  nexaGetPosts(30)
+    .then(function(posts) {
+      var merged = posts.concat(SAMPLE_POSTS);
+      allPosts = merged;
+      renderFeed(currentFilter);
+    })
+    .catch(function() {
+      allPosts = SAMPLE_POSTS.slice();
+      renderFeed(currentFilter);
+    });
+}
+    
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+<script src="../../js/firebase/config.js"></script>
+<script src="../../js/firebase/auth.js"></script>
+<script src="../../js/firebase/community.js"></script>
 
   </script>
 
