@@ -672,7 +672,15 @@
     </main>
   </div>
 
-  <script src="../../js/core/main.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="../../js/firebase/config.js"></script>
+<script src="../../js/firebase/auth.js"></script>
+<script src="../../js/firebase/products.js"></script>
+<script src="../../js/firebase/orders.js"></script>
+<script src="../../js/firebase/imgbb.js"></script>
+<script src="../../js/core/main.js"></script>
   <script>
 
     var myProducts = JSON.parse(localStorage.getItem('seller_products') || '[]');
@@ -708,6 +716,12 @@
       updateEarnings();
       renderTopProducts();
     }
+    // Load real products from Firebase
+if (typeof auth !== 'undefined') {
+  auth.onAuthStateChanged(function(user) {
+    if (user) loadSellerProducts();
+  });
+}
 
     function updateStats() {
       var revenue = myOrders.reduce(function(s, o) { return s + o.amount; }, 0);
@@ -741,8 +755,14 @@
       var target = document.getElementById('tab-' + tab);
       if (target) target.style.display = 'block';
 
-      event.preventDefault();
-      event.currentTarget.classList.add('active');
+      var navMap = {
+        'overview': 0, 'products': 1, 'add-product': 2,
+        'orders': 3, 'earnings': 4, 'analytics': 5, 'settings': 6
+      };
+      var index = navMap[tab];
+      if (index !== undefined && navItems[index]) {
+        navItems[index].classList.add('active');
+      }
     }
 
     function renderRecentOrders() {
@@ -1102,14 +1122,6 @@ function renderMyProducts(products) {
       renderWithdrawalHistory();
     });
     
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
-<script src="../../js/firebase/config.js"></script>
-<script src="../../js/firebase/auth.js"></script>
-<script src="../../js/firebase/products.js"></script>
-<script src="../../js/firebase/orders.js"></script>
 
   </script>
 
