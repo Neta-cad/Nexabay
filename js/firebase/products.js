@@ -38,15 +38,18 @@ function nexaGetProducts(category, limit) {
   if (category && category !== 'all') {
     query = query.where('category', '==', category);
   }
-  if (limit) {
-    query = query.limit(limit);
-  }
-  return query.orderBy('createdAt', 'desc').get()
+  return query.get()
     .then(function(snap) {
       var products = [];
       snap.forEach(function(doc) {
         products.push(doc.data());
       });
+      products.sort(function(a, b) {
+        var aTime = a.createdAt ? a.createdAt.toMillis() : 0;
+        var bTime = b.createdAt ? b.createdAt.toMillis() : 0;
+        return bTime - aTime;
+      });
+      if (limit) products = products.slice(0, limit);
       return products;
     });
 }
@@ -54,12 +57,16 @@ function nexaGetProducts(category, limit) {
 function nexaGetSellerProducts(sellerId) {
   return db.collection('products')
     .where('sellerId', '==', sellerId)
-    .orderBy('createdAt', 'desc')
     .get()
     .then(function(snap) {
       var products = [];
       snap.forEach(function(doc) {
         products.push(doc.data());
+      });
+      products.sort(function(a, b) {
+        var aTime = a.createdAt ? a.createdAt.toMillis() : 0;
+        var bTime = b.createdAt ? b.createdAt.toMillis() : 0;
+        return bTime - aTime;
       });
       return products;
     });

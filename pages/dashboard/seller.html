@@ -995,15 +995,22 @@ function renderMyProducts(products) {
       document.getElementById('image-file').click();
     }
 
-    function previewImage() {
-      var file = document.getElementById('image-file').files[0];
-      if (!file) return;
-      selectedEmoji = '🖼️';
-      var preview = document.getElementById('preview-emoji');
-      if (preview) preview.textContent = '🖼️';
-      document.getElementById('upload-placeholder').style.display = 'none';
-      document.getElementById('upload-preview').style.display = 'flex';
-    }
+    var selectedImageFile = null;
+
+function previewImage() {
+  var file = document.getElementById('image-file').files[0];
+  if (!file) return;
+  selectedImageFile = file;
+
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    document.getElementById('upload-placeholder').style.display = 'none';
+    var previewEl = document.getElementById('upload-preview');
+    previewEl.style.display = 'flex';
+    previewEl.innerHTML = '<img src="' + e.target.result + '" style="max-width:100%;max-height:150px;border-radius:8px;"/>';
+  };
+  reader.readAsDataURL(file);
+}
 
     function publishProduct() {
   var name      = document.getElementById('ap-name').value.trim();
@@ -1039,18 +1046,24 @@ function renderMyProducts(products) {
 
   var userData = JSON.parse(localStorage.getItem('nexa_current_user') || '{}');
 
-  nexaAddProduct({
-    name:       name,
-    category:   category,
-    description: desc,
-    price:      price,
-    oldPrice:   oldPrice || price,
-    stock:      stock,
-    location:   location,
-    condition:  condition,
-    emoji:      selectedEmoji || '📦',
-    sellerName: userData.fullName || userData.firstName || 'Seller',
-  }, null)
+  var uploadPromise = selectedImageFile
+    ? uploadImageToImgBB(selectedImageFile)
+    : Promise.resolve('');
+
+  uploadPromise.then(function(imageUrl) {
+    return nexaAddProduct({
+      name:       name,
+      category:   category,
+      description: desc,
+      price:      price,
+      oldPrice:   oldPrice || price,
+      stock:      stock,
+      location:   location,
+      condition:  condition,
+      emoji:      selectedEmoji || '📦',
+      sellerName: userData.fullName || userData.firstName || 'Seller',
+    }, imageUrl);
+  })
   .then(function(productId) {
     sucEl.textContent = '🎉 Product published! ID: ' + productId;
     sucEl.style.display = 'block';
@@ -1070,8 +1083,9 @@ function renderMyProducts(products) {
     loadSellerProducts();
   })
   .catch(function(err) {
-    errEl.textContent = '❌ Error: ' + err.message;
+    errEl.textContent = '❌ Error: ' + (err.message || err.toString());
     errEl.style.display = 'block';
+    alert('PUBLISH ERROR: ' + (err.message || err.toString()) + '\n\nCode: ' + (err.code || 'none'));
     if (publishBtn) { publishBtn.textContent = '🚀 Publish Product'; publishBtn.disabled = false; }
   });
 }
