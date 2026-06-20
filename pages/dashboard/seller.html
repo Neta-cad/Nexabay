@@ -55,7 +55,7 @@
         <a href="#" class="dash-nav-item" onclick="showTab('settings')">
           ⚙️ Settings
         </a>
-        <a href="../auth/login.html" class="dash-nav-item logout">
+        <a href="#" class="dash-nav-item logout" onclick="doSellerLogout()">
           🚪 Logout
         </a>
       </nav>
@@ -672,6 +672,16 @@
     </main>
   </div>
 
+  <!-- PREVIEW MODAL -->
+  <div id="preview-modal-overlay" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);z-index:900;" onclick="closePreviewModal()"></div>
+  <div id="preview-modal" style="display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:white;border-radius:14px;max-width:380px;width:90%;max-height:85vh;overflow-y:auto;z-index:901;padding:20px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+      <h3 style="font-size:1.1em;font-weight:700;">Product Preview</h3>
+      <button onclick="closePreviewModal()" style="background:var(--gray);border:none;width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:0.9em;">✕</button>
+    </div>
+    <div id="preview-modal-body"></div>
+  </div>
+
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
@@ -686,6 +696,7 @@
     var myProducts = JSON.parse(localStorage.getItem('seller_products') || '[]');
     var myOrders = JSON.parse(localStorage.getItem('seller_orders') || '[]');
     var selectedEmoji = '📦';
+    var editingProductId = null;
     var earnings = JSON.parse(localStorage.getItem('seller_earnings') || '{"total":0,"available":0,"pending":0,"withdrawn":0}');
 
     // Add sample orders if none
@@ -822,6 +833,8 @@ function renderMyProducts(products) {
       '</div>' +
       '<div class="mp-price">₦' + parseInt(p.price).toLocaleString() + '</div>' +
       '<div class="mp-actions">' +
+        '<button onclick="previewProduct(\'' + p.id + '\')" style="padding:6px 10px;background:white;border:1px solid var(--border);border-radius:6px;cursor:pointer;margin-right:4px;">👁️</button>' +
+        '<button onclick="editProduct(\'' + p.id + '\')" style="padding:6px 10px;background:white;border:1px solid var(--border);border-radius:6px;cursor:pointer;margin-right:4px;">✏️</button>' +
         '<button onclick="deleteProduct(\'' + p.id + '\')" class="btn-delete">🗑️</button>' +
       '</div>' +
     '</div>';
@@ -1051,7 +1064,7 @@ function previewImage() {
     : Promise.resolve('');
 
   uploadPromise.then(function(imageUrl) {
-    return nexaAddProduct({
+    var productPayload = {
       name:       name,
       category:   category,
       description: desc,
@@ -1062,10 +1075,26 @@ function previewImage() {
       condition:  condition,
       emoji:      selectedEmoji || '📦',
       sellerName: userData.fullName || userData.firstName || 'Seller',
-    }, imageUrl);
+    };
+
+    if (editingProductId) {
+      var updateData = {
+        name: name, category: category, description: desc,
+        price: parseFloat(price), oldPrice: parseFloat(oldPrice || price),
+        stock: parseInt(stock), location: location, condition: condition,
+        emoji: selectedEmoji || '📦',
+      };
+      if (imageUrl) updateData.imageUrl = imageUrl;
+      return db.collection('products').doc(editingProductId).update(updateData)
+        .then(function() { return editingProductId; });
+    } else {
+      return nexaAddProduct(productPayload, imageUrl);
+    }
   })
   .then(function(productId) {
-    sucEl.textContent = '🎉 Product published! ID: ' + productId;
+    sucEl.textContent = editingProductId
+      ? '🎉 Product updated successfully!'
+      : '🎉 Product published! ID: ' + productId;
     sucEl.style.display = 'block';
 
     document.getElementById('ap-name').value = '';
@@ -1076,7 +1105,11 @@ function previewImage() {
     document.getElementById('ap-stock').value = '';
     document.getElementById('ap-location').value = '';
     document.getElementById('profit-calc').style.display = 'none';
+    document.getElementById('upload-placeholder').style.display = 'block';
+    document.getElementById('upload-preview').style.display = 'none';
     selectedEmoji = '📦';
+    selectedImageFile = null;
+    editingProductId = null;
 
     if (publishBtn) { publishBtn.textContent = '🚀 Publish Product'; publishBtn.disabled = false; }
 
@@ -1086,30 +1119,89 @@ function previewImage() {
     errEl.textContent = '❌ Error: ' + (err.message || err.toString());
     errEl.style.display = 'block';
     alert('PUBLISH ERROR: ' + (err.message || err.toString()) + '\n\nCode: ' + (err.code || 'none'));
-    if (publishBtn) { publishBtn.textContent = '🚀 Publish Product'; publishBtn.disabled = false; }
+    if (publishBtn) { publishBtn.textContent = editingProductId ? '💾 Update Product' : '🚀 Publish Product'; publishBtn.disabled = false; }
   });
 }
     function saveDraft() {
       showToast('💾 Draft saved!');
     }
 
-    function editProduct(index) {
-      showToast('✏️ Edit feature coming soon!');
+    function editProduct(productId) {
+      var product = myProducts.find(function(p) { return p.id === productId; });
+      if (!product) { showToast('Product not found'); return; }
+
+      editingProductId = productId;
+
+      document.getElementById('ap-name').value = product.name || '';
+      document.getElementById('ap-category').value = product.category || '';
+      document.getElementById('ap-desc').value = product.description || '';
+      document.getElementById('ap-condition').value = product.condition || 'new';
+      document.getElementById('ap-stock').value = product.stock || '';
+      document.getElementById('ap-price').value = product.price || '';
+      document.getElementById('ap-old-price').value = product.oldPrice || '';
+      document.getElementById('ap-location').value = product.location || '';
+      document.getElementById('ap-ships-to').value = product.shipsTo || 'nationwide';
+      document.getElementById('ap-negotiable').checked = !!product.negotiable;
+
+      selectedEmoji = product.emoji || '📦';
+      document.getElementById('preview-emoji').textContent = selectedEmoji;
+      document.getElementById('upload-placeholder').style.display = 'none';
+      document.getElementById('upload-preview').style.display = 'flex';
+
+      var publishBtn = document.querySelector('.btn-publish');
+      if (publishBtn) publishBtn.textContent = '💾 Update Product';
+
+      calculateProfit();
+      showTab('add-product');
+      showToast('✏️ Editing "' + product.name + '" — make changes and tap Update');
+    }
+    
+    function previewProduct(productId) {
+      var product = myProducts.find(function(p) { return p.id === productId; });
+      if (!product) { showToast('Product not found'); return; }
+
+      var imgHtml = product.imageUrl
+        ? '<img src="' + product.imageUrl + '" style="width:100%;border-radius:10px;margin-bottom:14px;"/>'
+        : '<div style="font-size:4em;text-align:center;background:var(--gray);border-radius:10px;padding:30px 0;margin-bottom:14px;">' + (product.emoji || '📦') + '</div>';
+
+      var body = document.getElementById('preview-modal-body');
+      body.innerHTML =
+        imgHtml +
+        '<h2 style="font-size:1.2em;margin-bottom:6px;">' + product.name + '</h2>' +
+        '<div style="color:var(--orange);font-size:1.4em;font-weight:800;margin-bottom:10px;">₦' + parseInt(product.price).toLocaleString() + '</div>' +
+        '<div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;">' +
+          '<span style="background:var(--gray);padding:4px 10px;border-radius:6px;font-size:0.8em;">' + product.category + '</span>' +
+          '<span style="background:var(--gray);padding:4px 10px;border-radius:6px;font-size:0.8em;">Stock: ' + product.stock + '</span>' +
+          '<span style="background:var(--gray);padding:4px 10px;border-radius:6px;font-size:0.8em;">📍 ' + product.location + '</span>' +
+        '</div>' +
+        '<p style="font-size:0.9em;color:var(--text2);line-height:1.6;">' + (product.description || 'No description') + '</p>';
+
+      document.getElementById('preview-modal-overlay').style.display = 'block';
+      document.getElementById('preview-modal').style.display = 'block';
+    }
+
+    function closePreviewModal() {
+      document.getElementById('preview-modal-overlay').style.display = 'none';
+      document.getElementById('preview-modal').style.display = 'none';
     }
 
     function deleteProduct(productId) {
-  if (confirm('Delete this product?')) {
-    nexaDeleteProduct(productId)
-      .then(function() {
-        showToast('🗑️ Product deleted');
-        loadSellerProducts();
-      })
-      .catch(function(err) {
-        showToast('Error: ' + err.message);
-      });
-  }
-}
-
+      if (confirm('Delete this product?')) {
+        nexaDeleteProduct(productId)
+          .then(function() {
+            showToast('🗑️ Product deleted');
+            myProducts = myProducts.filter(function(p) { return p.id !== productId; });
+            renderMyProducts(myProducts);
+            updateStats();
+            renderTopProducts();
+            setTimeout(function() { loadSellerProducts(); }, 800);
+          })
+          .catch(function(err) {
+            showToast('Error: ' + err.message);
+            alert('DELETE ERROR: ' + err.message);
+          });
+      }
+    }
     function renderTopProducts() {
       var list = document.getElementById('top-products-list');
       if (!list) return;
@@ -1129,6 +1221,18 @@ function previewImage() {
 
     function saveShopSettings() {
       showToast('✅ Settings saved!');
+    }
+
+    function doSellerLogout() {
+      if (typeof nexaLogout === 'function') {
+        nexaLogout().then(function() {
+          localStorage.removeItem('nexa_current_user');
+          window.location.href = '../../index.html';
+        });
+      } else {
+        localStorage.removeItem('nexa_current_user');
+        window.location.href = '../../index.html';
+      }
     }
 
     document.addEventListener('DOMContentLoaded', function() {
