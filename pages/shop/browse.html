@@ -216,11 +216,17 @@
     </main>
   </div>
 
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="../../js/firebase/config.js"></script>
+  <script src="../../js/firebase/auth.js"></script>
+  <script src="../../js/firebase/products.js"></script>
   <script src="../../js/core/main.js"></script>
   <script>
 
-    // All products data
-    var ALL_PRODUCTS = [
+    // Demo fallback products (shown only if no real products exist yet)
+    var DEMO_PRODUCTS = [
       { id:1,  name:'iPhone 15 Pro Max 256GB', price:850000, oldPrice:950000, rating:4.8, reviews:234, location:'Lagos',         emoji:'📱', category:'Electronics', condition:'new',  seller:'TechHub Lagos',    sold:1240 },
       { id:2,  name:'Samsung Galaxy S24 Ultra', price:780000, oldPrice:900000, rating:4.7, reviews:189, location:'Abuja',         emoji:'📱', category:'Electronics', condition:'new',  seller:'GadgetPro NG',     sold:890  },
       { id:3,  name:'Nike Air Force 1 Sneakers', price:45000, oldPrice:60000,  rating:4.7, reviews:312, location:'Lagos',         emoji:'👟', category:'Fashion',     condition:'new',  seller:'SneakerWorld',     sold:2100 },
@@ -239,6 +245,7 @@
       { id:16, name:'Refurbished iPhone 12',     price:180000,oldPrice:250000, rating:4.3, reviews:78,  location:'Lagos',         emoji:'📱', category:'Electronics', condition:'used', seller:'PhoneDeals NG',    sold:340  },
     ];
 
+    var ALL_PRODUCTS = [];
     var currentProducts = [];
     var displayCount = 12;
     var currentView = 'grid';
@@ -258,7 +265,37 @@
         document.getElementById('bread-cat').textContent = cat;
       }
 
-      applyFilters();
+      loadAllProducts();
+    }
+
+    function loadAllProducts() {
+      nexaGetProducts('all')
+        .then(function(realProducts) {
+          var mapped = realProducts.map(function(p) {
+            return {
+              id: p.id,
+              name: p.name,
+              price: p.price,
+              oldPrice: p.oldPrice || p.price,
+              rating: p.rating || 0,
+              reviews: p.reviews || 0,
+              location: p.location,
+              emoji: p.emoji || '📦',
+              imageUrl: p.imageUrl || '',
+              category: p.category,
+              condition: (p.condition || 'new').indexOf('used') === 0 ? 'used' : 'new',
+              seller: p.sellerName || 'Nexabay Seller',
+              sold: p.sold || 0,
+            };
+          });
+          ALL_PRODUCTS = mapped.concat(DEMO_PRODUCTS);
+          applyFilters();
+        })
+        .catch(function(err) {
+          console.log('Error loading products:', err);
+          ALL_PRODUCTS = DEMO_PRODUCTS.slice();
+          applyFilters();
+        });
     }
 
     function applyFilters() {
@@ -316,8 +353,11 @@
       container.innerHTML = toShow.map(function(p) {
         var discount = Math.round((1 - p.price / p.oldPrice) * 100);
         if (currentView === 'list') {
-          return '<div class="product-list-item" onclick="viewProduct(' + p.id + ')">' +
-            '<div class="pli-img">' + p.emoji + '</div>' +
+          var listImgContent = p.imageUrl
+            ? '<img src="' + p.imageUrl + '" style="width:100%;height:100%;object-fit:cover;border-radius:8px;"/>'
+            : p.emoji;
+          return '<div class="product-list-item" onclick="viewProduct(\'' + p.id + '\')">' +
+            '<div class="pli-img">' + listImgContent + '</div>' +
             '<div class="pli-info">' +
               '<div class="pli-name">' + p.name + '</div>' +
               '<div class="pli-seller">by ' + p.seller + ' • 📍' + p.location + '</div>' +
@@ -332,8 +372,11 @@
             '</div>' +
           '</div>';
         }
-        return '<div class="product-card" onclick="viewProduct(' + p.id + ')">' +
-          '<div class="product-img">' + p.emoji +
+        var imgContent = p.imageUrl
+          ? '<img src="' + p.imageUrl + '" style="width:100%;height:100%;object-fit:cover;border-radius:8px;"/>'
+          : p.emoji;
+        return '<div class="product-card" onclick="viewProduct(\'' + p.id + '\')">' +
+          '<div class="product-img">' + imgContent +
             '<div class="discount-badge">-' + discount + '%</div>' +
           '</div>' +
           '<div class="product-info">' +
