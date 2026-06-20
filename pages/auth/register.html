@@ -200,6 +200,11 @@
 
   </div>
 
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="../../js/firebase/config.js"></script>
+  <script src="../../js/firebase/auth.js"></script>
   <script src="../../js/core/main.js"></script>
   <script>
 
@@ -238,47 +243,38 @@
       btn.textContent = 'Creating account...';
       btn.disabled = true;
 
-      setTimeout(function() {
-        var users = JSON.parse(localStorage.getItem('nexa_users') || '[]');
-        var exists = users.find(function(u) { return u.email === email; });
-
-        if (exists) {
-          showError('❌ An account with this email already exists');
+      nexaRegister(firstName, lastName, email, phone, state, password, accountType)
+        .then(function(user) {
+          return nexaGetUserData(user.uid).then(function(userData) {
+            nexaSaveUserToLocal(user, userData || {
+              firstName: firstName,
+              lastName: lastName,
+              fullName: firstName + ' ' + lastName,
+              email: email,
+              phone: phone,
+              state: state,
+              accountType: accountType,
+            });
+          });
+        })
+        .then(function() {
+          showSuccess('🎉 Account created! Welcome to Nexabay!');
+          setTimeout(function() {
+            if (accountType === 'seller') {
+              window.location.href = '../dashboard/seller.html';
+            } else {
+              window.location.href = '../../index.html';
+            }
+          }, 1500);
+        })
+        .catch(function(err) {
+          var msg = err.code === 'auth/email-already-in-use' ? 'An account with this email already exists' :
+                    err.code === 'auth/weak-password' ? 'Password is too weak' :
+                    err.message;
+          showError('❌ ' + msg);
           btn.textContent = 'Create Free Account';
           btn.disabled = false;
-          return;
-        }
-
-        var newUser = {
-          id: Date.now(),
-          firstName: firstName,
-          lastName: lastName,
-          fullName: firstName + ' ' + lastName,
-          email: email,
-          phone: phone,
-          state: state,
-          password: password,
-          type: accountType,
-          joinedAt: new Date().toISOString(),
-          coins: 500,
-          verified: false,
-        };
-
-        users.push(newUser);
-        localStorage.setItem('nexa_users', JSON.stringify(users));
-        localStorage.setItem('nexa_current_user', JSON.stringify(newUser));
-
-        showSuccess('🎉 Account created! Welcome to Nexabay!');
-
-        setTimeout(function() {
-          if (accountType === 'seller') {
-            window.location.href = '../dashboard/seller.html';
-          } else {
-            window.location.href = '../../index.html';
-          }
-        }, 1500);
-
-      }, 1000);
+        });
     }
 
     function googleSignup() {
@@ -337,12 +333,6 @@
       }
     });
     
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
-<script src="../../js/firebase/config.js"></script>
-<script src="../../js/firebase/auth.js"></script>
 
   </script>
 

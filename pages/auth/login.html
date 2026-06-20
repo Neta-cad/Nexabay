@@ -118,8 +118,12 @@
 
   </div>
 
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="../../js/firebase/config.js"></script>
+  <script src="../../js/firebase/auth.js"></script>
   <script src="../../js/core/main.js"></script>
-  <script src="../../js/core/auth.js"></script>
   <script>
     function doLogin() {
       var email = document.getElementById('login-email').value.trim();
@@ -136,25 +140,37 @@
       btn.textContent = 'Logging in...';
       btn.disabled = true;
 
-      // Simulate login — replace with Firebase later
-      setTimeout(function() {
-        var users = JSON.parse(localStorage.getItem('nexa_users') || '[]');
-        var user = users.find(function(u) {
-          return u.email === email && u.password === password;
-        });
-
-        if (user) {
-          localStorage.setItem('nexa_current_user', JSON.stringify(user));
+      nexaLogin(email, password)
+        .then(function(result) {
+          var user = result.user;
+          return nexaGetUserData(user.uid).then(function(userData) {
+            if (userData) {
+              nexaSaveUserToLocal(user, userData);
+            } else {
+              localStorage.setItem('nexa_current_user', JSON.stringify({
+                uid: user.uid,
+                email: user.email,
+                firstName: 'User',
+                fullName: 'User',
+              }));
+            }
+          });
+        })
+        .then(function() {
           showSuccess('✅ Login successful! Redirecting...');
           setTimeout(function() {
             window.location.href = '../../index.html';
           }, 1200);
-        } else {
-          showError('❌ Invalid email or password');
+        })
+        .catch(function(err) {
+          var msg = err.code === 'auth/wrong-password' ? 'Wrong password' :
+                    err.code === 'auth/user-not-found' ? 'No account with this email' :
+                    err.code === 'auth/invalid-credential' ? 'Invalid email or password' :
+                    err.message;
+          showError('❌ ' + msg);
           btn.textContent = 'Login to Account';
           btn.disabled = false;
-        }
-      }, 1000);
+        });
     }
 
     function googleLogin() {
@@ -197,12 +213,6 @@
         if (e.key === 'Enter') doLogin();
       });
     });
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
-<script src="../../js/firebase/config.js"></script>
-<script src="../../js/firebase/auth.js"></script>
     
   </script>
 

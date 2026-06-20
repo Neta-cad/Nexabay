@@ -262,6 +262,12 @@
     </div>
   </footer>
 
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="../../js/firebase/config.js"></script>
+  <script src="../../js/firebase/auth.js"></script>
+  <script src="../../js/firebase/community.js"></script>
   <script src="../../js/core/main.js"></script>
   <script>
 
@@ -434,6 +440,18 @@
       var filtered = allPosts.filter(function(p) {
         return p.content.toLowerCase().includes(q.toLowerCase()) || p.author.toLowerCase().includes(q.toLowerCase());
       });
+      function loadCommunityPosts() {
+      nexaGetPosts(30)
+        .then(function(posts) {
+          allPosts = posts.concat(SAMPLE_POSTS);
+          renderFeed(currentFilter);
+        })
+        .catch(function() {
+          allPosts = SAMPLE_POSTS.slice();
+          renderFeed(currentFilter);
+        });
+    }
+      
       var container = document.getElementById('community-feed');
       if (filtered.length === 0) {
         container.innerHTML = '<div class="empty-state" style="background:white;padding:40px;border-radius:12px;text-align:center"><div class="empty-icon">🔍</div><h3>No results for "' + q + '"</h3></div>';
@@ -444,9 +462,9 @@
     }
 
     document.addEventListener('DOMContentLoaded', function() {
-  updateCartCount();
-  checkAuthState();
-  loadCommunityPosts();
+      updateCartCount();
+      checkAuthState();
+      loadCommunityPosts();
 
   var user = JSON.parse(localStorage.getItem('nexa_current_user') || 'null');
   var avatarEl = document.getElementById('cp-avatar');
@@ -472,14 +490,6 @@ function loadCommunityPosts() {
       renderFeed(currentFilter);
     });
 }
-    
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
-<script src="../../js/firebase/config.js"></script>
-<script src="../../js/firebase/auth.js"></script>
-<script src="../../js/firebase/community.js"></script>
 
   </script>
 
