@@ -259,8 +259,12 @@
         })
         .then(function() {
           showSuccess('🎉 Account created! Welcome to Nexabay!');
+          var redirectPath = localStorage.getItem('nexa_redirect_after_login');
           setTimeout(function() {
-            if (accountType === 'seller') {
+            if (redirectPath) {
+              localStorage.removeItem('nexa_redirect_after_login');
+              window.location.href = '../../' + redirectPath;
+            } else if (accountType === 'seller') {
               window.location.href = '../dashboard/seller.html';
             } else {
               window.location.href = '../../index.html';

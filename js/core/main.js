@@ -218,3 +218,14 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 });
+
+
+function goToProviderDashboard(dashboardPath) {
+  var user = JSON.parse(localStorage.getItem('nexa_current_user') || 'null');
+  if (user) {
+    window.location.href = dashboardPath;
+  } else {
+    localStorage.setItem('nexa_redirect_after_login', dashboardPath);
+    window.location.href = 'pages/auth/register.html';
+  }
+}
