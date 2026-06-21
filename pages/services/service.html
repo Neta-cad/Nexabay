@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Service — Nexabay</title>
+  <link rel="stylesheet" href="../../css/main.css"/>
+  <link rel="stylesheet" href="../../css/services.css"/>
+  <link rel="stylesheet" href="../../css/product.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="nav-inner">
+      <a href="../../index.html" class="logo">
+        <span class="logo-nexa">Nexa</span><span class="logo-bay">bay</span>
+      </a>
+      <div class="nav-actions">
+        <a href="../auth/login.html" class="nav-link">Login</a>
+        <a href="../auth/register.html" class="nav-btn">Sign Up</a>
+      </div>
+      <button class="hamburger" onclick="toggleMobileMenu()">☰</button>
+    </div>
+    <div class="mobile-menu" id="mobile-menu">
+      <a href="../../index.html">Home</a>
+      <a href="browse.html">Services</a>
+      <a href="../auth/login.html">Login</a>
+    </div>
+  </nav>
+
+  <!-- BREADCRUMB -->
+  <div class="breadcrumb">
+    <div class="container">
+      <a href="../../index.html">Home</a>
+      <span>›</span>
+      <a href="browse.html">Services</a>
+      <span>›</span>
+      <span id="bread-name">Service</span>
+    </div>
+  </div>
+
+  <!-- SERVICE DETAIL -->
+  <div class="container product-page" id="service-page">
+    <div class="loading-state">
+      <div class="loading-spinner">⏳</div>
+      <p>Loading service...</p>
+    </div>
+  </div>
+
+  <div style="margin-bottom:48px;"></div>
+
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="../../js/firebase/config.js"></script>
+  <script src="../../js/firebase/auth.js"></script>
+  <script src="../../js/firebase/services.js"></script>
+  <script src="../../js/core/main.js"></script>
+  <script>
+
+    var currentService = null;
+
+    function loadService() {
+      var id = getParam('id');
+      if (!id) { showError(); return; }
+
+      db.collection('services').doc(id).get()
+        .then(function(doc) {
+          if (!doc.exists) { showError(); return; }
+          var data = doc.data();
+          currentService = {
+            id: doc.id,
+            title: data.title,
+            category: data.category,
+            description: data.description,
+            price: data.price,
+            location: data.location,
+            deliveryTime: data.deliveryTime || 'Negotiable',
+            imageUrl: data.imageUrl || '',
+            emoji: data.emoji || '🛠️',
+            providerName: data.providerName || 'Nexabay Provider',
+            providerId: data.providerId,
+            rating: data.rating || 0,
+            reviews: data.reviews || 0,
+          };
+          renderService(currentService);
+          document.title = currentService.title + ' — Nexabay';
+          var bread = document.getElementById('bread-name');
+          if (bread) bread.textContent = currentService.title;
+        })
+        .catch(function(err) {
+          console.log('Error loading service:', err);
+          showError();
+        });
+    }
+
+    function renderService(s) {
+      var page = document.getElementById('service-page');
+      var mainContent = s.imageUrl
+        ? '<img src="' + s.imageUrl + '" style="width:100%;height:100%;object-fit:cover;border-radius:8px;"/>'
+        : s.emoji;
+
+      page.innerHTML =
+        '<div class="product-detail">' +
+
+          '<div class="pd-left">' +
+            '<div class="pd-main-img">' + mainContent + '</div>' +
+            '<div class="pd-badges">' +
+              '<span class="pd-badge verified">✅ Nexabay Provider</span>' +
+              '<span class="pd-badge secure">🔒 Secure Payment</span>' +
+            '</div>' +
+          '</div>' +
+
+          '<div class="pd-right">' +
+
+            '<div class="pd-category">' + s.category + '</div>' +
+            '<h1 class="pd-name">' + s.title + '</h1>' +
+
+            '<div class="pd-rating-row">' +
+              '<span class="pd-stars">⭐ ' + (s.rating || 'New') + '</span>' +
+              '<span class="pd-reviews">(' + s.reviews + ' reviews)</span>' +
+            '</div>' +
+
+            '<div class="pd-price-row">' +
+              '<span class="pd-price">₦' + parseInt(s.price).toLocaleString() + '</span>' +
+            '</div>' +
+
+            '<div class="pd-divider"></div>' +
+
+            '<div class="pd-desc">' +
+              '<h3>About This Service</h3>' +
+              '<p>' + s.description + '</p>' +
+            '</div>' +
+
+            '<div class="pd-divider"></div>' +
+
+            '<div class="pd-seller">' +
+              '<div class="pd-seller-avatar">' + s.providerName[0] + '</div>' +
+              '<div>' +
+                '<div class="pd-seller-name">' + s.providerName + '</div>' +
+                '<div class="pd-seller-loc">📍 ' + s.location + '</div>' +
+              '</div>' +
+              '<a href="#" class="pd-chat-btn">💬 Chat Provider</a>' +
+            '</div>' +
+
+            '<div class="pd-divider"></div>' +
+
+            '<div class="pd-actions">' +
+              '<button class="pd-buy-btn" onclick="hireThisService()">⚡ Hire Now</button>' +
+            '</div>' +
+
+            '<div class="pd-delivery">' +
+              '<div class="pd-delivery-item">⏱️ <b>Delivery:</b> ' + s.deliveryTime + '</div>' +
+              '<div class="pd-delivery-item">🔒 <b>Payment:</b> Secured by Nexabay Escrow</div>' +
+            '</div>' +
+
+          '</div>' +
+        '</div>';
+    }
+
+    function hireThisService() {
+      var user = localStorage.getItem('nexa_current_user');
+      if (!user) {
+        showToast('⚠️ Please login to hire', '#ff9500');
+        setTimeout(function() { window.location.href = '../auth/login.html'; }, 1500);
+        return;
+      }
+      showToast('✅ Request sent! Provider will contact you soon.');
+    }
+
+    function showError() {
+      var page = document.getElementById('service-page');
+      page.innerHTML =
+        '<div class="empty-state">' +
+          '<div class="empty-icon">😕</div>' +
+          '<h3>Service not found</h3>' +
+          '<p>This service may have been removed</p>' +
+          '<a href="browse.html" class="btn-primary">Browse Services</a>' +
+        '</div>';
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      loadService();
+    });
+
+  </script>
+
+</body>
+</html>

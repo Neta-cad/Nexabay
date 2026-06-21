@@ -177,10 +177,16 @@
     </div>
   </footer>
 
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="../../js/firebase/config.js"></script>
+  <script src="../../js/firebase/auth.js"></script>
+  <script src="../../js/firebase/services.js"></script>
   <script src="../../js/core/main.js"></script>
   <script>
 
-    var ALL_SERVICES = [
+    var DEMO_SERVICES = [
       { id:1,  name:'Professional Plumber',        category:'Home Repairs', provider:'Kunle Repairs',    rating:4.9, reviews:234, price:15000,  priceType:'per job',  location:'Lagos',  emoji:'🔧', verified:true,  desc:'Expert plumbing repairs, pipe fixing, bathroom installation.' },
       { id:2,  name:'House Cleaning Service',       category:'Cleaning',     provider:'CleanPro NG',      rating:4.8, reviews:189, price:8000,   priceType:'per day',  location:'Lagos',  emoji:'🧹', verified:true,  desc:'Deep cleaning, regular cleaning for homes and offices.' },
       { id:3,  name:'Hair Stylist & Makeup',        category:'Beauty',       provider:'Glamour Studio',   rating:4.9, reviews:312, price:12000,  priceType:'per session', location:'Abuja', emoji:'💄', verified:true,  desc:'Professional hair styling, braiding, makeup for events.' },
@@ -199,7 +205,40 @@
       { id:16, name:'Private English Tutor',        category:'Tutoring',     provider:'LearnFast NG',     rating:4.8, reviews:134, price:8000,   priceType:'per month', location:'Remote', emoji:'📖', verified:true,  desc:'English language tutoring for all ages and levels.' },
     ];
 
-    var currentServices = ALL_SERVICES.slice();
+    var ALL_SERVICES = [];
+    var currentServices = [];
+
+    function loadAllServices() {
+      nexaGetServices('all')
+        .then(function(realServices) {
+          var mapped = realServices.map(function(s) {
+            return {
+              id: s.id,
+              name: s.title,
+              category: s.category,
+              provider: s.providerName || 'Nexabay Provider',
+              rating: s.rating || 0,
+              reviews: s.reviews || 0,
+              price: s.price,
+              priceType: s.deliveryTime || 'Negotiable',
+              location: s.location,
+              emoji: s.emoji || '🛠️',
+              imageUrl: s.imageUrl || '',
+              verified: false,
+              desc: s.description || '',
+            };
+          });
+          ALL_SERVICES = mapped.concat(DEMO_SERVICES);
+          currentServices = ALL_SERVICES.slice();
+          renderServices();
+        })
+        .catch(function(err) {
+          console.log('Error loading services:', err);
+          ALL_SERVICES = DEMO_SERVICES.slice();
+          currentServices = ALL_SERVICES.slice();
+          renderServices();
+        });
+    }
 
     function renderServices() {
       var grid = document.getElementById('services-grid');
@@ -216,9 +255,12 @@
       if (count) count.textContent = 'Showing ' + currentServices.length + ' services';
 
       grid.innerHTML = currentServices.map(function(s) {
-        return '<div class="service-card" onclick="viewService(' + s.id + ')">' +
+        var emojiContent = s.imageUrl
+          ? '<img src="' + s.imageUrl + '" style="width:100%;height:100%;object-fit:cover;border-radius:8px;"/>'
+          : s.emoji;
+        return '<div class="service-card" onclick="viewService(\'' + s.id + '\')">' +
           '<div class="sc-top">' +
-            '<div class="sc-emoji">' + s.emoji + '</div>' +
+            '<div class="sc-emoji">' + emojiContent + '</div>' +
             '<div class="sc-badges">' +
               (s.verified ? '<span class="sc-verified">✅ Verified</span>' : '') +
               '<span class="sc-location">📍 ' + s.location + '</span>' +
@@ -268,7 +310,7 @@
     }
 
     function viewService(id) {
-      showToast('📋 Service detail page coming soon!');
+      window.location.href = 'service.html?id=' + id;
     }
 
     function hireService(id) {
@@ -284,7 +326,7 @@
     document.addEventListener('DOMContentLoaded', function() {
       updateCartCount();
       checkAuthState();
-      renderServices();
+      loadAllServices();
 
       var input = document.getElementById('search-input');
       if (input) {
