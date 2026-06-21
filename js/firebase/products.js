@@ -61,7 +61,10 @@ function nexaGetSellerProducts(sellerId) {
     .then(function(snap) {
       var products = [];
       snap.forEach(function(doc) {
-        products.push(doc.data());
+        var data = doc.data();
+        if (data.status !== 'deleted') {
+          products.push(data);
+        }
       });
       products.sort(function(a, b) {
         var aTime = a.createdAt ? a.createdAt.toMillis() : 0;

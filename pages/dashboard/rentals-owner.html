@@ -1,0 +1,485 @@
+<!-- BOOKINGS TAB -->
+      <div class="dash-tab" id="tab-bookings" style="display:none;">
+        <div class="dash-header">
+          <h1>Bookings</h1>
+        </div>
+        <div class="orders-table-wrap">
+          <table class="orders-table">
+            <thead>
+              <tr>
+                <th>Booking ID</th>
+                <th>Listing</th>
+                <th>Renter</th>
+                <th>Amount</th>
+                <th>Status</th>
+                <th>Date</th>
+              </tr>
+            </thead>
+            <tbody id="bookings-body">
+              <tr><td colspan="6" style="text-align:center;color:var(--text2);padding:20px">No bookings yet</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- EARNINGS TAB -->
+      <div class="dash-tab" id="tab-earnings" style="display:none;">
+        <div class="dash-header">
+          <h1>Earnings & Withdrawals</h1>
+        </div>
+
+        <div class="earnings-cards">
+          <div class="earning-card">
+            <div class="ec-label">Total Earned</div>
+            <div class="ec-value" id="ec-total">₦0</div>
+          </div>
+          <div class="earning-card">
+            <div class="ec-label">Available Balance</div>
+            <div class="ec-value green" id="ec-available">₦0</div>
+          </div>
+        </div>
+
+        <div class="withdraw-section">
+          <h3>Withdraw Funds</h3>
+          <div class="withdraw-form">
+            <div class="form-group">
+              <label>Bank Name</label>
+              <select id="wd-bank">
+                <option>GTBank</option>
+                <option>Access Bank</option>
+                <option>First Bank</option>
+                <option>Zenith Bank</option>
+                <option>UBA</option>
+                <option>Opay</option>
+                <option>Palmpay</option>
+                <option>Kuda Bank</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Account Number</label>
+              <input type="text" id="wd-account" placeholder="10 digit account number" maxlength="10"/>
+            </div>
+            <div class="form-group">
+              <label>Account Name</label>
+              <input type="text" id="wd-name" placeholder="Account holder name"/>
+            </div>
+            <div class="form-group">
+              <label>Amount to Withdraw (₦)</label>
+              <input type="number" id="wd-amount" placeholder="Minimum ₦1,000" min="1000"/>
+            </div>
+            <div id="wd-error" style="color:#cc0000;font-size:0.85em;display:none;"></div>
+            <div id="wd-success" style="color:#006622;font-size:0.85em;display:none;"></div>
+            <button class="btn-withdraw" onclick="processWithdrawal()">
+              💸 Withdraw Now
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- SETTINGS TAB -->
+      <div class="dash-tab" id="tab-settings" style="display:none;">
+        <div class="dash-header">
+          <h1>Owner Settings</h1>
+        </div>
+
+        <div class="settings-card">
+          <h3>Owner Profile</h3>
+          <div class="form-group">
+            <label>Display Name</label>
+            <input type="text" id="owner-name" placeholder="Your name or business name"/>
+          </div>
+          <div class="form-group">
+            <label>WhatsApp Number</label>
+            <input type="tel" id="owner-whatsapp" placeholder="080xxxxxxxx"/>
+          </div>
+          <button class="btn-save" onclick="saveOwnerSettings()">Save Changes</button>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- PREVIEW MODAL -->
+  <div id="preview-modal-overlay" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);z-index:900;" onclick="closePreviewModal()"></div>
+  <div id="preview-modal" style="display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:white;border-radius:14px;max-width:380px;width:90%;max-height:85vh;overflow-y:auto;z-index:901;padding:20px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+      <h3 style="font-size:1.1em;font-weight:700;">Listing Preview</h3>
+      <button onclick="closePreviewModal()" style="background:var(--gray);border:none;width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:0.9em;">✕</button>
+    </div>
+    <div id="preview-modal-body"></div>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="../../js/firebase/config.js"></script>
+  <script src="../../js/firebase/auth.js"></script>
+  <script src="../../js/firebase/rentals.js"></script>
+  <script src="../../js/firebase/imgbb.js"></script>
+  <script src="../../js/core/main.js"></script>
+  <script>
+
+    var myListings = [];
+    var selectedEmoji = '🏠';
+    var editingListingId = null;
+    var selectedImageFile = null;
+    var currentListingType = 'property';
+
+    function init() {
+      var user = JSON.parse(localStorage.getItem('nexa_current_user') || 'null');
+      if (user) {
+        var nameEl = document.getElementById('dash-name');
+        var avatarEl = document.getElementById('dash-avatar');
+        var navEl = document.getElementById('nav-owner-name');
+        if (nameEl) nameEl.textContent = user.fullName || user.firstName || 'Owner';
+        if (avatarEl) avatarEl.textContent = (user.firstName || 'O')[0].toUpperCase();
+        if (navEl) navEl.textContent = user.firstName + '\'s Rentals';
+      }
+    }
+
+    if (typeof auth !== 'undefined') {
+      auth.onAuthStateChanged(function(user) {
+        if (user) loadMyListings();
+      });
+    }
+
+    function showTab(tab) {
+      var tabs = document.querySelectorAll('.dash-tab');
+      tabs.forEach(function(t) { t.style.display = 'none'; });
+
+      var navItems = document.querySelectorAll('.dash-nav-item');
+      navItems.forEach(function(n) { n.classList.remove('active'); });
+
+      var target = document.getElementById('tab-' + tab);
+      if (target) target.style.display = 'block';
+
+      var navMap = {
+        'overview': 0, 'listings': 1, 'add-listing': 2,
+        'bookings': 3, 'earnings': 4, 'settings': 5
+      };
+      var index = navMap[tab];
+      if (index !== undefined && navItems[index]) {
+        navItems[index].classList.add('active');
+      }
+    }
+
+    function setListingType(type) {
+      currentListingType = type;
+      document.getElementById('btn-property').classList.toggle('active', type === 'property');
+      document.getElementById('btn-item').classList.toggle('active', type === 'item');
+
+      document.getElementById('property-category-group').style.display = type === 'property' ? 'block' : 'none';
+      document.getElementById('item-category-group').style.display = type === 'item' ? 'block' : 'none';
+      document.getElementById('property-fields').style.display = type === 'property' ? 'flex' : 'none';
+      document.getElementById('item-condition-group').style.display = type === 'item' ? 'block' : 'none';
+      document.getElementById('amenities-section').style.display = type === 'property' ? 'block' : 'none';
+    }
+
+    function loadMyListings() {
+      var user = auth.currentUser;
+      if (!user) { renderMyListings([]); return; }
+
+      nexaGetOwnerRentals(user.uid)
+        .then(function(listings) {
+          myListings = listings;
+          renderMyListings(listings);
+          updateStats();
+        })
+        .catch(function(err) {
+          console.log('Error loading listings:', err);
+          renderMyListings([]);
+        });
+    }
+
+    function updateStats() {
+      var el = document.getElementById('stat-listings');
+      if (el) el.textContent = myListings.length;
+    }
+
+    function renderMyListings(listings) {
+      var list = document.getElementById('my-listings-list');
+      if (!list) return;
+      if (!listings || listings.length === 0) {
+        list.innerHTML =
+          '<div class="empty-products">' +
+            '<div style="font-size:3em;margin-bottom:12px">🏠</div>' +
+            '<h3>No listings yet</h3>' +
+            '<p>Add your first rental to start earning</p>' +
+            '<button class="btn-primary" onclick="showTab(\'add-listing\')">➕ Add Listing</button>' +
+          '</div>';
+        return;
+      }
+      list.innerHTML = listings.map(function(r) {
+        var periodLabel = { daily: '/day', weekly: '/week', monthly: '/month', yearly: '/year' }[r.rentalPeriod] || '';
+        return '<div class="my-product-row">' +
+          '<div class="mp-img">' + (r.emoji || '🏠') + '</div>' +
+          '<div class="mp-info">' +
+            '<div class="mp-name">' + r.title + '</div>' +
+            '<div class="mp-cat">' + (r.category || r.listingType) + '</div>' +
+            '<div class="mp-stock">📍 ' + r.location + '</div>' +
+          '</div>' +
+          '<div class="mp-price">₦' + parseInt(r.price).toLocaleString() + periodLabel + '</div>' +
+          '<div class="mp-actions">' +
+            '<button onclick="previewListing(\'' + r.id + '\')" style="padding:6px 10px;background:white;border:1px solid var(--border);border-radius:6px;cursor:pointer;margin-right:4px;">👁️</button>' +
+            '<button onclick="editListing(\'' + r.id + '\')" style="padding:6px 10px;background:white;border:1px solid var(--border);border-radius:6px;cursor:pointer;margin-right:4px;">✏️</button>' +
+            '<button onclick="deleteListing(\'' + r.id + '\')" class="btn-delete">🗑️</button>' +
+          '</div>' +
+        '</div>';
+      }).join('');
+    }
+
+    function selectEmoji(emoji) {
+      selectedEmoji = emoji;
+      var preview = document.getElementById('preview-emoji');
+      var placeholder = document.getElementById('upload-placeholder');
+      var previewEl = document.getElementById('upload-preview');
+
+      if (preview) preview.textContent = emoji;
+      if (placeholder) placeholder.style.display = 'none';
+      if (previewEl) previewEl.style.display = 'flex';
+
+      document.querySelectorAll('.emoji-grid span').forEach(function(s) {
+        s.classList.remove('selected');
+      });
+      event.target.classList.add('selected');
+    }
+
+    function triggerImageUpload() {
+      document.getElementById('image-file').click();
+    }
+
+    function previewImage() {
+      var file = document.getElementById('image-file').files[0];
+      if (!file) return;
+      selectedImageFile = file;
+
+      var reader = new FileReader();
+      reader.onload = function(e) {
+        document.getElementById('upload-placeholder').style.display = 'none';
+        var previewEl = document.getElementById('upload-preview');
+        previewEl.style.display = 'flex';
+        previewEl.innerHTML = '<img src="' + e.target.result + '" style="max-width:100%;max-height:150px;border-radius:8px;"/>';
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function getAmenities() {
+      var checked = document.querySelectorAll('.amenity-cb:checked');
+      var result = [];
+      checked.forEach(function(cb) { result.push(cb.value); });
+      return result;
+    }
+
+    function publishRental() {
+      var title    = document.getElementById('al-title').value.trim();
+      var category = currentListingType === 'property'
+        ? document.getElementById('al-category-property').value
+        : document.getElementById('al-category-item').value;
+      var desc     = document.getElementById('al-desc').value.trim();
+      var price    = document.getElementById('al-price').value;
+      var period   = document.getElementById('al-period').value;
+      var location = document.getElementById('al-location').value;
+      var bedrooms = document.getElementById('al-bedrooms').value;
+      var bathrooms = document.getElementById('al-bathrooms').value;
+      var condition = document.getElementById('al-condition').value;
+      var errEl    = document.getElementById('al-error');
+      var sucEl    = document.getElementById('al-success');
+
+      errEl.style.display = 'none';
+      sucEl.style.display = 'none';
+
+      if (!title)    { errEl.textContent = 'Enter a title';        errEl.style.display = 'block'; return; }
+      if (!category) { errEl.textContent = 'Select a category';    errEl.style.display = 'block'; return; }
+      if (!desc)     { errEl.textContent = 'Enter description';    errEl.style.display = 'block'; return; }
+      if (!price)    { errEl.textContent = 'Enter price';          errEl.style.display = 'block'; return; }
+      if (!location) { errEl.textContent = 'Select your location'; errEl.style.display = 'block'; return; }
+
+      var user = auth.currentUser;
+      if (!user) {
+        errEl.textContent = 'Please login first';
+        errEl.style.display = 'block';
+        return;
+      }
+
+      var publishBtn = document.querySelector('.btn-publish');
+      if (publishBtn) { publishBtn.textContent = 'Publishing...'; publishBtn.disabled = true; }
+
+      var userData = JSON.parse(localStorage.getItem('nexa_current_user') || '{}');
+
+      var uploadPromise = selectedImageFile
+        ? uploadImageToImgBB(selectedImageFile)
+        : Promise.resolve('');
+
+      uploadPromise.then(function(imageUrl) {
+        var payload = {
+          title: title, listingType: currentListingType, category: category,
+          description: desc, price: price, rentalPeriod: period, location: location,
+          bedrooms: currentListingType === 'property' ? bedrooms : null,
+          bathrooms: currentListingType === 'property' ? bathrooms : null,
+          amenities: currentListingType === 'property' ? getAmenities() : [],
+          condition: currentListingType === 'item' ? condition : '',
+          emoji: selectedEmoji || '🏠',
+          ownerName: userData.fullName || userData.firstName || 'Owner',
+        };
+
+        if (editingListingId) {
+          var updateData = {
+            title: title, listingType: currentListingType, category: category,
+            description: desc, price: parseFloat(price), rentalPeriod: period, location: location,
+            bedrooms: currentListingType === 'property' ? (bedrooms || null) : null,
+            bathrooms: currentListingType === 'property' ? (bathrooms || null) : null,
+            amenities: currentListingType === 'property' ? getAmenities() : [],
+            condition: currentListingType === 'item' ? condition : '',
+            emoji: selectedEmoji || '🏠',
+          };
+          if (imageUrl) updateData.imageUrl = imageUrl;
+          return db.collection('rentals').doc(editingListingId).update(updateData)
+            .then(function() { return editingListingId; });
+        } else {
+          return nexaAddRental(payload, imageUrl);
+        }
+      })
+      .then(function(listingId) {
+        sucEl.textContent = editingListingId
+          ? '🎉 Listing updated successfully!'
+          : '🎉 Listing published! ID: ' + listingId;
+        sucEl.style.display = 'block';
+
+        document.getElementById('al-title').value = '';
+        document.getElementById('al-desc').value = '';
+        document.getElementById('al-price').value = '';
+        document.getElementById('al-location').value = '';
+        document.getElementById('al-bedrooms').value = '';
+        document.getElementById('al-bathrooms').value = '';
+        document.getElementById('upload-placeholder').style.display = 'block';
+        document.getElementById('upload-preview').style.display = 'none';
+        document.querySelectorAll('.amenity-cb').forEach(function(cb) { cb.checked = false; });
+        selectedEmoji = '🏠';
+        selectedImageFile = null;
+        editingListingId = null;
+
+        if (publishBtn) { publishBtn.textContent = '🚀 Publish Listing'; publishBtn.disabled = false; }
+
+        loadMyListings();
+      })
+      .catch(function(err) {
+        errEl.textContent = '❌ Error: ' + (err.message || err.toString());
+        errEl.style.display = 'block';
+        if (publishBtn) { publishBtn.textContent = editingListingId ? '💾 Update Listing' : '🚀 Publish Listing'; publishBtn.disabled = false; }
+      });
+    }
+
+    function editListing(listingId) {
+      var listing = myListings.find(function(r) { return r.id === listingId; });
+      if (!listing) { showToast('Listing not found'); return; }
+
+      editingListingId = listingId;
+      setListingType(listing.listingType || 'property');
+
+      document.getElementById('al-title').value = listing.title || '';
+      document.getElementById('al-desc').value = listing.description || '';
+      document.getElementById('al-price').value = listing.price || '';
+      document.getElementById('al-period').value = listing.rentalPeriod || 'monthly';
+      document.getElementById('al-location').value = listing.location || '';
+
+      if (listing.listingType === 'property') {
+        document.getElementById('al-category-property').value = listing.category || '';
+        document.getElementById('al-bedrooms').value = listing.bedrooms || '';
+        document.getElementById('al-bathrooms').value = listing.bathrooms || '';
+        (listing.amenities || []).forEach(function(a) {
+          var cb = document.querySelector('.amenity-cb[value="' + a + '"]');
+          if (cb) cb.checked = true;
+        });
+      } else {
+        document.getElementById('al-category-item').value = listing.category || '';
+        document.getElementById('al-condition').value = listing.condition || 'new';
+      }
+
+      selectedEmoji = listing.emoji || '🏠';
+      document.getElementById('preview-emoji').textContent = selectedEmoji;
+      document.getElementById('upload-placeholder').style.display = 'none';
+      document.getElementById('upload-preview').style.display = 'flex';
+
+      var publishBtn = document.querySelector('.btn-publish');
+      if (publishBtn) publishBtn.textContent = '💾 Update Listing';
+
+      showTab('add-listing');
+      showToast('✏️ Editing "' + listing.title + '" — make changes and tap Update');
+    }
+
+    function previewListing(listingId) {
+      var listing = myListings.find(function(r) { return r.id === listingId; });
+      if (!listing) { showToast('Listing not found'); return; }
+
+      var periodLabel = { daily: '/day', weekly: '/week', monthly: '/month', yearly: '/year' }[listing.rentalPeriod] || '';
+      var imgHtml = listing.imageUrl
+        ? '<img src="' + listing.imageUrl + '" style="width:100%;border-radius:10px;margin-bottom:14px;"/>'
+        : '<div style="font-size:4em;text-align:center;background:var(--gray);border-radius:10px;padding:30px 0;margin-bottom:14px;">' + (listing.emoji || '🏠') + '</div>';
+
+      var extraInfo = '';
+      if (listing.listingType === 'property') {
+        extraInfo = '<span style="background:var(--gray);padding:4px 10px;border-radius:6px;font-size:0.8em;">🛏️ ' + (listing.bedrooms || 0) + ' bed</span>' +
+          '<span style="background:var(--gray);padding:4px 10px;border-radius:6px;font-size:0.8em;">🚿 ' + (listing.bathrooms || 0) + ' bath</span>';
+      }
+
+      var body = document.getElementById('preview-modal-body');
+      body.innerHTML =
+        imgHtml +
+        '<h2 style="font-size:1.2em;margin-bottom:6px;">' + listing.title + '</h2>' +
+        '<div style="color:var(--orange);font-size:1.4em;font-weight:800;margin-bottom:10px;">₦' + parseInt(listing.price).toLocaleString() + periodLabel + '</div>' +
+        '<div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;">' +
+          '<span style="background:var(--gray);padding:4px 10px;border-radius:6px;font-size:0.8em;">' + listing.category + '</span>' +
+          extraInfo +
+          '<span style="background:var(--gray);padding:4px 10px;border-radius:6px;font-size:0.8em;">📍 ' + listing.location + '</span>' +
+        '</div>' +
+        '<p style="font-size:0.9em;color:var(--text2);line-height:1.6;">' + (listing.description || 'No description') + '</p>';
+
+      document.getElementById('preview-modal-overlay').style.display = 'block';
+      document.getElementById('preview-modal').style.display = 'block';
+    }
+
+    function closePreviewModal() {
+      document.getElementById('preview-modal-overlay').style.display = 'none';
+      document.getElementById('preview-modal').style.display = 'none';
+    }
+
+    function deleteListing(listingId) {
+      if (confirm('Delete this listing?')) {
+        nexaDeleteRental(listingId)
+          .then(function() {
+            showToast('🗑️ Listing deleted');
+            myListings = myListings.filter(function(r) { return r.id !== listingId; });
+            renderMyListings(myListings);
+            updateStats();
+            setTimeout(function() { loadMyListings(); }, 800);
+          })
+          .catch(function(err) {
+            showToast('Error: ' + err.message);
+          });
+      }
+    }
+
+    function saveOwnerSettings() {
+      showToast('✅ Settings saved!');
+    }
+
+    function doOwnerLogout() {
+      if (typeof nexaLogout === 'function') {
+        nexaLogout().then(function() {
+          localStorage.removeItem('nexa_current_user');
+          window.location.href = '../../index.html';
+        });
+      } else {
+        localStorage.removeItem('nexa_current_user');
+        window.location.href = '../../index.html';
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      init();
+    });
+
+  </script>
+
+</body>
+</html>

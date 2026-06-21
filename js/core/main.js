@@ -99,10 +99,25 @@ if (user) {
 }
 
 function logoutUser() {
-  localStorage.removeItem('nexa_current_user');
-  checkAuthState();
-  showToast('👋 Logged out successfully');
-  closeMobileMenu();
+  if (typeof nexaLogout === 'function') {
+    nexaLogout().then(function() {
+      localStorage.removeItem('nexa_current_user');
+      checkAuthState();
+      showToast('👋 Logged out successfully');
+      closeMobileMenu();
+      setTimeout(function() { window.location.reload(); }, 800);
+    }).catch(function() {
+      localStorage.removeItem('nexa_current_user');
+      checkAuthState();
+      showToast('👋 Logged out successfully');
+      closeMobileMenu();
+    });
+  } else {
+    localStorage.removeItem('nexa_current_user');
+    checkAuthState();
+    showToast('👋 Logged out successfully');
+    closeMobileMenu();
+  }
 }
 
 // ── SEARCH ────────────────────────────────────
