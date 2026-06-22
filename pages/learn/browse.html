@@ -192,10 +192,16 @@
     </div>
   </footer>
 
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="../../js/firebase/config.js"></script>
+  <script src="../../js/firebase/auth.js"></script>
+  <script src="../../js/firebase/learn.js"></script>
   <script src="../../js/core/main.js"></script>
   <script>
 
-    var ALL_COURSES = [
+    var DEMO_COURSES = [
       { id:1,  title:'Complete Web Development Bootcamp',  category:'Coding',       instructor:'Chidi Okafor',    rating:4.9, students:12400, price:15000,  isFree:false, level:'Beginner',     duration:'40 hours', emoji:'💻', lessons:120 },
       { id:2,  title:'Python for Data Science & AI',       category:'Coding',       instructor:'Emeka Nwosu',     rating:4.8, students:8900,  price:18000,  isFree:false, level:'Intermediate', duration:'35 hours', emoji:'🐍', lessons:95  },
       { id:3,  title:'Graphic Design Masterclass',         category:'Design',       instructor:'Amina Suleiman',  rating:4.9, students:15600, price:12000,  isFree:false, level:'Beginner',     duration:'28 hours', emoji:'🎨', lessons:84  },
@@ -214,8 +220,41 @@
       { id:16, title:'E-commerce Business Setup',          category:'Business',     instructor:'Bisi Olatunde',   rating:4.8, students:9300,  price:10000,  isFree:false, level:'Beginner',     duration:'20 hours', emoji:'🛍️', lessons:60  },
     ];
 
-    var currentCourses = ALL_COURSES.slice();
+    var ALL_COURSES = [];
+    var currentCourses = [];
     var currentCategory = 'all';
+
+    function loadAllCourses() {
+      nexaGetCourses('all')
+        .then(function(realCourses) {
+          var mapped = realCourses.map(function(c) {
+            return {
+              id: c.id,
+              title: c.title,
+              category: c.category,
+              instructor: c.instructorName || 'Nexabay Instructor',
+              rating: c.rating || 0,
+              students: c.students || 0,
+              price: c.price || 0,
+              isFree: c.isFree || false,
+              level: c.level || 'Beginner',
+              duration: (c.lessons ? c.lessons.length : 0) + ' lessons',
+              emoji: c.emoji || '🎓',
+              imageUrl: c.imageUrl || '',
+              lessons: c.lessons ? c.lessons.length : 0,
+            };
+          });
+          ALL_COURSES = mapped.concat(DEMO_COURSES);
+          currentCourses = ALL_COURSES.slice();
+          renderCourses();
+        })
+        .catch(function(err) {
+          console.log('Error loading courses:', err);
+          ALL_COURSES = DEMO_COURSES.slice();
+          currentCourses = ALL_COURSES.slice();
+          renderCourses();
+        });
+    }
 
     function renderCourses() {
       var grid = document.getElementById('courses-grid');
@@ -232,8 +271,11 @@
       if (count) count.textContent = 'Showing ' + currentCourses.length + ' courses';
 
       grid.innerHTML = currentCourses.map(function(c) {
-        return '<div class="course-card" onclick="viewCourse(' + c.id + ')">' +
-          '<div class="cc-img">' + c.emoji +
+        var imgContent = c.imageUrl
+          ? '<img src="' + c.imageUrl + '" style="width:100%;height:100%;object-fit:cover;border-radius:8px;"/>'
+          : c.emoji;
+        return '<div class="course-card" onclick="viewCourse(\'' + c.id + '\')">' +
+          '<div class="cc-img">' + imgContent +
             (c.isFree ? '<span class="cc-free-badge">FREE</span>' : '') +
             '<span class="cc-level">' + c.level + '</span>' +
           '</div>' +
@@ -253,7 +295,7 @@
                   ? '<span class="cc-price-free">FREE</span>'
                   : '<span class="cc-price-amount">₦' + c.price.toLocaleString() + '</span>') +
               '</div>' +
-              '<button class="cc-enroll-btn" onclick="event.stopPropagation();enrollCourse(' + c.id + ')">' +
+              '<button class="cc-enroll-btn" onclick="event.stopPropagation();viewCourse(\'' + c.id + '\')">' +
                 (c.isFree ? 'Enroll Free' : 'Enroll Now') +
               '</button>' +
             '</div>' +
@@ -298,30 +340,13 @@
     }
 
     function viewCourse(id) {
-      showToast('📚 Course detail page coming soon!');
-    }
-
-    function enrollCourse(id) {
-      var user = localStorage.getItem('nexa_current_user');
-      if (!user) {
-        showToast('⚠️ Please login to enroll', '#ff9500');
-        setTimeout(function() { window.location.href = '../auth/login.html'; }, 1500);
-        return;
-      }
-      var course = ALL_COURSES.find(function(c) { return c.id === id; });
-      if (course) {
-        if (course.isFree) {
-          showToast('🎉 Enrolled successfully! Check your dashboard.');
-        } else {
-          showToast('💳 Redirecting to payment...');
-        }
-      }
+      window.location.href = 'course.html?id=' + id;
     }
 
     document.addEventListener('DOMContentLoaded', function() {
       updateCartCount();
       checkAuthState();
-      renderCourses();
+      loadAllCourses();
       var input = document.getElementById('search-input');
       if (input) {
         input.addEventListener('keypress', function(e) {

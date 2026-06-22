@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Jobs Dashboard — Nexabay</title>
+  <link rel="stylesheet" href="../../css/main.css"/>
+  <link rel="stylesheet" href="../../css/dashboard.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+</head>
+<body class="dashboard-body">
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="nav-inner">
+      <a href="../../index.html" class="logo">
+        <span class="logo-nexa">Nexa</span><span class="logo-bay">bay</span>
+      </a>
+      <div class="nav-actions">
+        <span class="nav-link" id="nav-employer-name">My Jobs</span>
+        <a href="../../index.html" class="nav-link">← Back to Site</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="dashboard-layout">
+
+    <!-- SIDEBAR -->
+    <aside class="dash-sidebar">
+      <div class="dash-profile">
+        <div class="dash-avatar" id="dash-avatar">E</div>
+        <div class="dash-name" id="dash-name">Employer</div>
+        <div class="dash-badge">💼 Employer</div>
+      </div>
+
+      <nav class="dash-nav">
+        <a href="#" class="dash-nav-item active" onclick="showTab('overview')">
+          📊 Overview
+        </a>
+        <a href="#" class="dash-nav-item" onclick="showTab('jobs')">
+          💼 My Job Posts
+        </a>
+        <a href="#" class="dash-nav-item" onclick="showTab('add-job')">
+          ➕ Post a Job
+        </a>
+        <a href="#" class="dash-nav-item" onclick="showTab('applicants')">
+          📋 Applicants
+        </a>
+        <a href="#" class="dash-nav-item" onclick="showTab('settings')">
+          ⚙️ Settings
+        </a>
+        <a href="buyer.html" class="dash-nav-item">
+          👤 My Account
+        </a>
+        <a href="#" class="dash-nav-item logout" onclick="doEmployerLogout()">
+          🚪 Logout
+        </a>
+      </nav>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="dash-main">
+
+      <!-- OVERVIEW TAB -->
+      <div class="dash-tab" id="tab-overview">
+        <div class="dash-header">
+          <h1>Welcome back! 👋</h1>
+          <p>Here is your hiring activity today</p>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon">💼</div>
+            <div class="stat-info">
+              <div class="stat-value" id="stat-jobs">0</div>
+              <div class="stat-label">Active Job Posts</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">📋</div>
+            <div class="stat-info">
+              <div class="stat-value" id="stat-applicants">0</div>
+              <div class="stat-label">Total Applicants</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">⏳</div>
+            <div class="stat-info">
+              <div class="stat-value" id="stat-pending">0</div>
+              <div class="stat-label">Pending Review</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="dash-section">
+          <h2>Quick Actions</h2>
+          <div class="quick-actions">
+            <button class="quick-btn" onclick="showTab('add-job')">
+              ➕ Post New Job
+            </button>
+            <button class="quick-btn" onclick="showTab('applicants')">
+              📋 Review Applicants
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- MY JOBS TAB -->
+      <div class="dash-tab" id="tab-jobs" style="display:none;">
+        <div class="dash-header">
+          <h1>My Job Posts</h1>
+          <button class="btn-primary" onclick="showTab('add-job')">
+            ➕ Post a Job
+          </button>
+        </div>
+
+        <div id="my-jobs-list" class="my-products-list"></div>
+      </div>
+      <!-- ADD JOB TAB -->
+      <div class="dash-tab" id="tab-add-job" style="display:none;">
+        <div class="dash-header">
+          <h1>Post a New Job</h1>
+        </div>
+
+        <div class="add-product-form">
+
+          <div class="form-section">
+            <h3>Job Details</h3>
+
+            <div class="form-group">
+              <label>Job Title *</label>
+              <input type="text" id="aj-title" placeholder="e.g. Frontend Developer" maxlength="100"/>
+            </div>
+
+            <div class="form-group">
+              <label>Company Name *</label>
+              <input type="text" id="aj-company" placeholder="Your company name"/>
+            </div>
+
+            <div class="form-group">
+              <label>Category *</label>
+              <select id="aj-category">
+                <option value="">Select category</option>
+                <option>Technology & IT</option>
+                <option>Sales & Marketing</option>
+                <option>Customer Service</option>
+                <option>Finance & Accounting</option>
+                <option>Engineering</option>
+                <option>Healthcare</option>
+                <option>Education</option>
+                <option>Administration</option>
+                <option>Logistics & Driving</option>
+                <option>Creative & Design</option>
+                <option>Other</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>Job Type *</label>
+              <select id="aj-type">
+                <option value="Full-time">Full-time</option>
+                <option value="Part-time">Part-time</option>
+                <option value="Contract">Contract</option>
+                <option value="Internship">Internship</option>
+                <option value="Remote">Remote</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>Job Description *</label>
+              <textarea id="aj-desc" placeholder="Describe the role, responsibilities..." rows="4"></textarea>
+            </div>
+
+            <div class="form-group">
+              <label>Requirements</label>
+              <textarea id="aj-requirements" placeholder="Qualifications, experience needed..." rows="3"></textarea>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <h3>Salary Range (₦/month)</h3>
+            <div class="form-row-2">
+              <div class="form-group">
+                <label>Minimum</label>
+                <input type="number" id="aj-salary-min" placeholder="0" min="0"/>
+              </div>
+              <div class="form-group">
+                <label>Maximum</label>
+                <input type="number" id="aj-salary-max" placeholder="0" min="0"/>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <h3>Location</h3>
+            <div class="form-group">
+              <label>State *</label>
+              <select id="aj-location">
+                <option value="">Select state</option>
+                <option>Lagos</option>
+                <option>Abuja FCT</option>
+                <option>Rivers</option>
+                <option>Kano</option>
+                <option>Oyo</option>
+                <option>Enugu</option>
+                <option>Anambra</option>
+                <option>Delta</option>
+                <option>Edo</option>
+                <option>Imo</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="checkbox-label">
+                <input type="checkbox" id="aj-remote"/>
+                This job can be done remotely
+              </label>
+            </div>
+          </div>
+
+          <div id="aj-error" class="ap-error" style="display:none;"></div>
+          <div id="aj-success" class="ap-success" style="display:none;"></div>
+
+          <div class="form-actions">
+            <button class="btn-publish" onclick="publishJob()">
+              🚀 Post Job
+            </button>
+          </div>
+
+        </div>
+      </div>
+      <!-- APPLICANTS TAB -->
+      <div class="dash-tab" id="tab-applicants" style="display:none;">
+        <div class="dash-header">
+          <h1>Applicants</h1>
+        </div>
+
+        <div class="form-group">
+          <label>Select a job to view applicants</label>
+          <select id="applicant-job-select" onchange="loadApplicantsForJob()">
+            <option value="">Select a job post...</option>
+          </select>
+        </div>
+
+        <div id="applicants-list" style="margin-top:16px;"></div>
+      </div>
+
+      <!-- SETTINGS TAB -->
+      <div class="dash-tab" id="tab-settings" style="display:none;">
+        <div class="dash-header">
+          <h1>Employer Settings</h1>
+        </div>
+
+        <div class="settings-card">
+          <h3>Company Profile</h3>
+          <div class="form-group">
+            <label>Company Name</label>
+            <input type="text" id="employer-company" placeholder="Your company name"/>
+          </div>
+          <div class="form-group">
+            <label>Company Description</label>
+            <textarea id="employer-desc" rows="3" placeholder="Tell candidates about your company..."></textarea>
+          </div>
+          <div class="form-group">
+            <label>Contact Email</label>
+            <input type="email" id="employer-email" placeholder="hr@company.com"/>
+          </div>
+          <button class="btn-save" onclick="saveEmployerSettings()">Save Changes</button>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- APPLICANT DETAIL MODAL -->
+  <div id="preview-modal-overlay" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);z-index:900;" onclick="closePreviewModal()"></div>
+  <div id="preview-modal" style="display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:white;border-radius:14px;max-width:380px;width:90%;max-height:85vh;overflow-y:auto;z-index:901;padding:20px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+      <h3 style="font-size:1.1em;font-weight:700;">Applicant Details</h3>
+      <button onclick="closePreviewModal()" style="background:var(--gray);border:none;width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:0.9em;">✕</button>
+    </div>
+    <div id="preview-modal-body"></div>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="../../js/firebase/config.js"></script>
+  <script src="../../js/firebase/auth.js"></script>
+  <script src="../../js/firebase/jobs.js"></script>
+  <script src="../../js/core/main.js"></script>
+  <script>
+
+    var myJobs = [];
+    var editingJobId = null;
+    var currentApplicants = [];
+
+    function init() {
+      var user = JSON.parse(localStorage.getItem('nexa_current_user') || 'null');
+      if (user) {
+        var nameEl = document.getElementById('dash-name');
+        var avatarEl = document.getElementById('dash-avatar');
+        var navEl = document.getElementById('nav-employer-name');
+        if (nameEl) nameEl.textContent = user.fullName || user.firstName || 'Employer';
+        if (avatarEl) avatarEl.textContent = (user.firstName || 'E')[0].toUpperCase();
+        if (navEl) navEl.textContent = user.firstName + '\'s Jobs';
+      }
+    }
+
+    if (typeof auth !== 'undefined') {
+      auth.onAuthStateChanged(function(user) {
+        if (user) loadMyJobs();
+      });
+    }
+
+    function showTab(tab) {
+      var tabs = document.querySelectorAll('.dash-tab');
+      tabs.forEach(function(t) { t.style.display = 'none'; });
+
+      var navItems = document.querySelectorAll('.dash-nav-item');
+      navItems.forEach(function(n) { n.classList.remove('active'); });
+
+      var target = document.getElementById('tab-' + tab);
+      if (target) target.style.display = 'block';
+
+      var navMap = {
+        'overview': 0, 'jobs': 1, 'add-job': 2,
+        'applicants': 3, 'settings': 4
+      };
+      var index = navMap[tab];
+      if (index !== undefined && navItems[index]) {
+        navItems[index].classList.add('active');
+      }
+    }
+
+    function loadMyJobs() {
+      var user = auth.currentUser;
+      if (!user) { renderMyJobs([]); return; }
+
+      nexaGetEmployerJobs(user.uid)
+        .then(function(jobs) {
+          myJobs = jobs;
+          renderMyJobs(jobs);
+          updateStats();
+          populateApplicantJobSelect();
+        })
+        .catch(function(err) {
+          console.log('Error loading jobs:', err);
+          renderMyJobs([]);
+        });
+    }
+
+    function updateStats() {
+      var jobsEl = document.getElementById('stat-jobs');
+      var applicantsEl = document.getElementById('stat-applicants');
+      if (jobsEl) jobsEl.textContent = myJobs.length;
+      var totalApplicants = myJobs.reduce(function(s, j) { return s + (j.applicantCount || 0); }, 0);
+      if (applicantsEl) applicantsEl.textContent = totalApplicants;
+    }
+
+    function renderMyJobs(jobs) {
+      var list = document.getElementById('my-jobs-list');
+      if (!list) return;
+      if (!jobs || jobs.length === 0) {
+        list.innerHTML =
+          '<div class="empty-products">' +
+            '<div style="font-size:3em;margin-bottom:12px">💼</div>' +
+            '<h3>No job posts yet</h3>' +
+            '<p>Post your first job to start hiring</p>' +
+            '<button class="btn-primary" onclick="showTab(\'add-job\')">➕ Post a Job</button>' +
+          '</div>';
+        return;
+      }
+      list.innerHTML = jobs.map(function(j) {
+        return '<div class="my-product-row">' +
+          '<div class="mp-img">💼</div>' +
+          '<div class="mp-info">' +
+            '<div class="mp-name">' + j.title + '</div>' +
+            '<div class="mp-cat">' + j.jobType + ' • ' + j.category + '</div>' +
+            '<div class="mp-stock">📍 ' + j.location + ' • ' + (j.applicantCount || 0) + ' applicant(s)</div>' +
+          '</div>' +
+          '<div class="mp-actions">' +
+            '<button onclick="deleteJob(\'' + j.id + '\')" class="btn-delete">🗑️</button>' +
+          '</div>' +
+        '</div>';
+      }).join('');
+    }
+
+    function publishJob() {
+      var title    = document.getElementById('aj-title').value.trim();
+      var company  = document.getElementById('aj-company').value.trim();
+      var category = document.getElementById('aj-category').value;
+      var jobType  = document.getElementById('aj-type').value;
+      var desc     = document.getElementById('aj-desc').value.trim();
+      var requirements = document.getElementById('aj-requirements').value.trim();
+      var salaryMin = document.getElementById('aj-salary-min').value;
+      var salaryMax = document.getElementById('aj-salary-max').value;
+      var location = document.getElementById('aj-location').value;
+      var remote   = document.getElementById('aj-remote').checked;
+      var errEl    = document.getElementById('aj-error');
+      var sucEl    = document.getElementById('aj-success');
+
+      errEl.style.display = 'none';
+      sucEl.style.display = 'none';
+
+      if (!title)    { errEl.textContent = 'Enter job title';      errEl.style.display = 'block'; return; }
+      if (!company)  { errEl.textContent = 'Enter company name';   errEl.style.display = 'block'; return; }
+      if (!category) { errEl.textContent = 'Select a category';    errEl.style.display = 'block'; return; }
+      if (!desc)     { errEl.textContent = 'Enter job description'; errEl.style.display = 'block'; return; }
+      if (!location) { errEl.textContent = 'Select location';      errEl.style.display = 'block'; return; }
+
+      var user = auth.currentUser;
+      if (!user) {
+        errEl.textContent = 'Please login first';
+        errEl.style.display = 'block';
+        return;
+      }
+
+      var publishBtn = document.querySelector('.btn-publish');
+      if (publishBtn) { publishBtn.textContent = 'Posting...'; publishBtn.disabled = true; }
+
+      var userData = JSON.parse(localStorage.getItem('nexa_current_user') || '{}');
+
+      nexaAddJob({
+        title: title, companyName: company, category: category, jobType: jobType,
+        description: desc, requirements: requirements,
+        salaryMin: salaryMin, salaryMax: salaryMax,
+        location: location, remote: remote,
+        employerName: userData.fullName || userData.firstName || 'Employer',
+      })
+      .then(function(jobId) {
+        sucEl.textContent = '🎉 Job posted successfully! ID: ' + jobId;
+        sucEl.style.display = 'block';
+
+        document.getElementById('aj-title').value = '';
+        document.getElementById('aj-company').value = '';
+        document.getElementById('aj-category').value = '';
+        document.getElementById('aj-desc').value = '';
+        document.getElementById('aj-requirements').value = '';
+        document.getElementById('aj-salary-min').value = '';
+        document.getElementById('aj-salary-max').value = '';
+        document.getElementById('aj-location').value = '';
+        document.getElementById('aj-remote').checked = false;
+
+        if (publishBtn) { publishBtn.textContent = '🚀 Post Job'; publishBtn.disabled = false; }
+
+        loadMyJobs();
+      })
+      .catch(function(err) {
+        errEl.textContent = '❌ Error: ' + (err.message || err.toString());
+        errEl.style.display = 'block';
+        if (publishBtn) { publishBtn.textContent = '🚀 Post Job'; publishBtn.disabled = false; }
+      });
+    }
+
+    function deleteJob(jobId) {
+      if (confirm('Delete this job post?')) {
+        nexaDeleteJob(jobId)
+          .then(function() {
+            showToast('🗑️ Job post deleted');
+            myJobs = myJobs.filter(function(j) { return j.id !== jobId; });
+            renderMyJobs(myJobs);
+            updateStats();
+            populateApplicantJobSelect();
+            setTimeout(function() { loadMyJobs(); }, 800);
+          })
+          .catch(function(err) {
+            showToast('Error: ' + err.message);
+          });
+      }
+    }
+
+    function populateApplicantJobSelect() {
+      var select = document.getElementById('applicant-job-select');
+      if (!select) return;
+      select.innerHTML = '<option value="">Select a job post...</option>' +
+        myJobs.map(function(j) {
+          return '<option value="' + j.id + '">' + j.title + ' (' + (j.applicantCount || 0) + ' applicants)</option>';
+        }).join('');
+    }
+
+    function loadApplicantsForJob() {
+      var jobId = document.getElementById('applicant-job-select').value;
+      var list = document.getElementById('applicants-list');
+      if (!jobId) { list.innerHTML = ''; return; }
+
+      list.innerHTML = '<p style="color:var(--text2);font-size:0.88em;">Loading applicants...</p>';
+
+      nexaGetJobApplications(jobId)
+        .then(function(apps) {
+          currentApplicants = apps;
+          if (apps.length === 0) {
+            list.innerHTML = '<div class="empty-products"><div style="font-size:3em;margin-bottom:12px">📋</div><h3>No applicants yet</h3></div>';
+            return;
+          }
+          list.innerHTML = apps.map(function(a) {
+            return '<div class="my-product-row">' +
+              '<div class="mp-img">' + a.applicantName[0].toUpperCase() + '</div>' +
+              '<div class="mp-info">' +
+                '<div class="mp-name">' + a.applicantName + '</div>' +
+                '<div class="mp-cat">' + a.applicantEmail + '</div>' +
+                '<div class="mp-stock"><span class="status-badge status-' + a.status + '">' + a.status + '</span></div>' +
+              '</div>' +
+              '<div class="mp-actions">' +
+                '<button onclick="viewApplicant(\'' + a.id + '\')" style="padding:6px 10px;background:white;border:1px solid var(--border);border-radius:6px;cursor:pointer;">👁️ View</button>' +
+              '</div>' +
+            '</div>';
+          }).join('');
+        })
+        .catch(function(err) {
+          list.innerHTML = '<p style="color:#cc0000;">Error loading applicants: ' + err.message + '</p>';
+        });
+    }
+
+    function viewApplicant(appId) {
+      var app = currentApplicants.find(function(a) { return a.id === appId; });
+      if (!app) return;
+
+      var body = document.getElementById('preview-modal-body');
+      body.innerHTML =
+        '<div style="width:60px;height:60px;border-radius:50%;background:var(--orange);color:white;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1.4em;margin-bottom:14px;">' + app.applicantName[0].toUpperCase() + '</div>' +
+        '<h2 style="font-size:1.2em;margin-bottom:6px;">' + app.applicantName + '</h2>' +
+        '<p style="color:var(--text2);font-size:0.9em;margin-bottom:4px;">📧 ' + app.applicantEmail + '</p>' +
+        '<p style="color:var(--text2);font-size:0.9em;margin-bottom:14px;">📱 ' + (app.applicantPhone || 'Not provided') + '</p>' +
+        '<div class="pd-divider"></div>' +
+        '<h3 style="font-size:1em;margin:10px 0 6px;">Cover Letter</h3>' +
+        '<p style="font-size:0.9em;color:var(--text2);line-height:1.6;">' + (app.coverLetter || 'No cover letter provided') + '</p>' +
+        (app.resumeUrl ? '<a href="' + app.resumeUrl + '" target="_blank" style="display:block;margin-top:14px;background:var(--blue);color:white;text-align:center;padding:10px;border-radius:8px;text-decoration:none;">📄 View Resume</a>' : '') +
+        '<div style="display:flex;gap:8px;margin-top:16px;">' +
+          '<button onclick="updateAppStatus(\'' + app.id + '\', \'shortlisted\')" style="flex:1;padding:10px;background:var(--green);color:white;border:none;border-radius:8px;">✅ Shortlist</button>' +
+          '<button onclick="updateAppStatus(\'' + app.id + '\', \'rejected\')" style="flex:1;padding:10px;background:#cc0000;color:white;border:none;border-radius:8px;">❌ Reject</button>' +
+        '</div>';
+
+      document.getElementById('preview-modal-overlay').style.display = 'block';
+      document.getElementById('preview-modal').style.display = 'block';
+    }
+
+    function updateAppStatus(appId, status) {
+      nexaUpdateApplicationStatus(appId, status)
+        .then(function() {
+          showToast('✅ Applicant marked as ' + status);
+          closePreviewModal();
+          loadApplicantsForJob();
+        })
+        .catch(function(err) {
+          showToast('Error: ' + err.message);
+        });
+    }
+
+    function closePreviewModal() {
+      document.getElementById('preview-modal-overlay').style.display = 'none';
+      document.getElementById('preview-modal').style.display = 'none';
+    }
+
+    function saveEmployerSettings() {
+      showToast('✅ Settings saved!');
+    }
+
+    function doEmployerLogout() {
+      if (typeof nexaLogout === 'function') {
+        nexaLogout().then(function() {
+          localStorage.removeItem('nexa_current_user');
+          window.location.href = '../../index.html';
+        });
+      } else {
+        localStorage.removeItem('nexa_current_user');
+        window.location.href = '../../index.html';
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      init();
+    });
+
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Job — Nexabay</title>
+  <link rel="stylesheet" href="../../css/main.css"/>
+  <link rel="stylesheet" href="../../css/jobs.css"/>
+  <link rel="stylesheet" href="../../css/product.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="nav-inner">
+      <a href="../../index.html" class="logo">
+        <span class="logo-nexa">Nexa</span><span class="logo-bay">bay</span>
+      </a>
+      <div class="nav-actions">
+        <a href="../auth/login.html" class="nav-link">Login</a>
+        <a href="../auth/register.html" class="nav-btn">Sign Up</a>
+      </div>
+      <button class="hamburger" onclick="toggleMobileMenu()">☰</button>
+    </div>
+    <div class="mobile-menu" id="mobile-menu">
+      <a href="../../index.html">Home</a>
+      <a href="browse.html">Jobs</a>
+      <a href="../auth/login.html">Login</a>
+    </div>
+  </nav>
+
+  <!-- BREADCRUMB -->
+  <div class="breadcrumb">
+    <div class="container">
+      <a href="../../index.html">Home</a>
+      <span>›</span>
+      <a href="browse.html">Jobs</a>
+      <span>›</span>
+      <span id="bread-name">Job</span>
+    </div>
+  </div>
+
+  <!-- JOB DETAIL -->
+  <div class="container product-page" id="job-page">
+    <div class="loading-state">
+      <div class="loading-spinner">⏳</div>
+      <p>Loading job...</p>
+    </div>
+  </div>
+
+  <!-- APPLY MODAL -->
+  <div id="apply-modal-overlay" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);z-index:900;" onclick="closeApplyModal()"></div>
+  <div id="apply-modal" style="display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:white;border-radius:14px;max-width:420px;width:90%;max-height:88vh;overflow-y:auto;z-index:901;padding:20px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+      <h3 style="font-size:1.1em;font-weight:700;">Apply for this Job</h3>
+      <button onclick="closeApplyModal()" style="background:var(--gray);border:none;width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:0.9em;">✕</button>
+    </div>
+
+    <div class="form-group">
+      <label>Full Name *</label>
+      <input type="text" id="app-name" placeholder="Your full name"/>
+    </div>
+    <div class="form-group">
+      <label>Email *</label>
+      <input type="email" id="app-email" placeholder="Your email"/>
+    </div>
+    <div class="form-group">
+      <label>Phone Number</label>
+      <input type="tel" id="app-phone" placeholder="080xxxxxxxx"/>
+    </div>
+    <div class="form-group">
+      <label>Cover Letter *</label>
+      <textarea id="app-cover" rows="5" placeholder="Tell the employer why you're a great fit..."></textarea>
+    </div>
+    <div class="form-group">
+      <label>Resume (image or PDF screenshot)</label>
+      <div class="image-upload" id="resume-upload" onclick="triggerResumeUpload()" style="padding:16px;text-align:center;border:2px dashed var(--border);border-radius:8px;cursor:pointer;">
+        <div id="resume-placeholder">📄 Tap to upload resume</div>
+        <div id="resume-preview" style="display:none;color:var(--green);">✅ Resume attached</div>
+      </div>
+      <input type="file" id="resume-file" style="display:none;" accept="image/*" onchange="handleResumeUpload()"/>
+    </div>
+
+    <div id="app-error" class="ap-error" style="display:none;"></div>
+    <div id="app-success" class="ap-success" style="display:none;"></div>
+
+    <button class="btn-publish" onclick="submitApplication()" style="width:100%;margin-top:8px;">
+      📨 Submit Application
+    </button>
+  </div>
+
+  <div style="margin-bottom:48px;"></div>
+
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="../../js/firebase/config.js"></script>
+  <script src="../../js/firebase/auth.js"></script>
+  <script src="../../js/firebase/jobs.js"></script>
+  <script src="../../js/firebase/imgbb.js"></script>
+  <script src="../../js/core/main.js"></script>
+  <script>
+
+    var currentJob = null;
+    var resumeFile = null;
+
+    function loadJob() {
+      var id = getParam('id');
+      if (!id) { showError(); return; }
+
+      db.collection('jobs').doc(id).get()
+        .then(function(doc) {
+          if (!doc.exists) { showError(); return; }
+          var data = doc.data();
+          currentJob = {
+            id: doc.id,
+            title: data.title,
+            companyName: data.companyName,
+            category: data.category,
+            jobType: data.jobType,
+            description: data.description,
+            requirements: data.requirements || '',
+            salaryMin: data.salaryMin || 0,
+            salaryMax: data.salaryMax || 0,
+            location: data.location,
+            remote: data.remote || false,
+            employerName: data.employerName || 'Employer',
+          };
+          renderJob(currentJob);
+          document.title = currentJob.title + ' — Nexabay';
+          var bread = document.getElementById('bread-name');
+          if (bread) bread.textContent = currentJob.title;
+        })
+        .catch(function(err) {
+          console.log('Error loading job:', err);
+          showError();
+        });
+    }
+
+    function renderJob(j) {
+      var page = document.getElementById('job-page');
+      var salaryText = j.salaryMin && j.salaryMax
+        ? '₦' + j.salaryMin.toLocaleString() + ' — ₦' + j.salaryMax.toLocaleString() + '/month'
+        : 'Salary negotiable';
+
+      page.innerHTML =
+        '<div class="product-detail">' +
+
+          '<div class="pd-left">' +
+            '<div class="pd-main-img">💼</div>' +
+            '<div class="pd-badges">' +
+              '<span class="pd-badge verified">✅ Nexabay Listing</span>' +
+            '</div>' +
+          '</div>' +
+
+          '<div class="pd-right">' +
+
+            '<div class="pd-category">' + j.category + ' • ' + j.jobType + '</div>' +
+            '<h1 class="pd-name">' + j.title + '</h1>' +
+            '<div style="color:var(--text2);font-weight:600;margin-bottom:10px;">' + j.companyName + '</div>' +
+
+            '<div class="pd-price-row">' +
+              '<span class="pd-price" style="font-size:1.3em;">' + salaryText + '</span>' +
+            '</div>' +
+
+            '<div class="pd-divider"></div>' +
+
+            '<div class="pd-desc">' +
+              '<h3>Job Description</h3>' +
+              '<p>' + j.description + '</p>' +
+            '</div>' +
+
+            (j.requirements ? (
+              '<div class="pd-divider"></div>' +
+              '<div class="pd-desc">' +
+                '<h3>Requirements</h3>' +
+                '<p>' + j.requirements + '</p>' +
+              '</div>'
+            ) : '') +
+
+            '<div class="pd-divider"></div>' +
+
+            '<div class="pd-seller">' +
+              '<div class="pd-seller-avatar">' + j.companyName[0] + '</div>' +
+              '<div>' +
+                '<div class="pd-seller-name">' + j.companyName + '</div>' +
+                '<div class="pd-seller-loc">📍 ' + (j.remote ? 'Remote' : j.location) + '</div>' +
+              '</div>' +
+            '</div>' +
+
+            '<div class="pd-divider"></div>' +
+
+            '<div class="pd-actions">' +
+              '<button class="pd-buy-btn" onclick="openApplyModal()">📨 Apply Now</button>' +
+            '</div>' +
+
+          '</div>' +
+        '</div>';
+    }
+
+    function openApplyModal() {
+      var user = JSON.parse(localStorage.getItem('nexa_current_user') || 'null');
+      if (!user) {
+        showToast('⚠️ Please login to apply', '#ff9500');
+        setTimeout(function() { window.location.href = '../auth/login.html'; }, 1500);
+        return;
+      }
+      document.getElementById('app-name').value = user.fullName || user.firstName || '';
+      document.getElementById('app-email').value = user.email || '';
+      document.getElementById('app-phone').value = user.phone || '';
+      document.getElementById('apply-modal-overlay').style.display = 'block';
+      document.getElementById('apply-modal').style.display = 'block';
+    }
+
+    function closeApplyModal() {
+      document.getElementById('apply-modal-overlay').style.display = 'none';
+      document.getElementById('apply-modal').style.display = 'none';
+    }
+
+    function triggerResumeUpload() {
+      document.getElementById('resume-file').click();
+    }
+
+    function handleResumeUpload() {
+      var file = document.getElementById('resume-file').files[0];
+      if (!file) return;
+      resumeFile = file;
+      document.getElementById('resume-placeholder').style.display = 'none';
+      document.getElementById('resume-preview').style.display = 'block';
+    }
+
+    function submitApplication() {
+      var name  = document.getElementById('app-name').value.trim();
+      var email = document.getElementById('app-email').value.trim();
+      var phone = document.getElementById('app-phone').value.trim();
+      var cover = document.getElementById('app-cover').value.trim();
+      var errEl = document.getElementById('app-error');
+      var sucEl = document.getElementById('app-success');
+
+      errEl.style.display = 'none';
+      sucEl.style.display = 'none';
+
+      if (!name)  { errEl.textContent = 'Enter your full name'; errEl.style.display = 'block'; return; }
+      if (!email) { errEl.textContent = 'Enter your email';     errEl.style.display = 'block'; return; }
+      if (!cover) { errEl.textContent = 'Write a cover letter'; errEl.style.display = 'block'; return; }
+
+      var submitBtn = document.querySelector('.btn-publish');
+      if (submitBtn) { submitBtn.textContent = 'Submitting...'; submitBtn.disabled = true; }
+
+      var uploadPromise = resumeFile
+        ? uploadImageToImgBB(resumeFile)
+        : Promise.resolve('');
+
+      uploadPromise.then(function(resumeUrl) {
+        return nexaApplyToJob(currentJob.id, {
+          applicantName: name,
+          applicantEmail: email,
+          applicantPhone: phone,
+          coverLetter: cover,
+          resumeUrl: resumeUrl,
+        });
+      })
+      .then(function() {
+        sucEl.textContent = '🎉 Application submitted successfully!';
+        sucEl.style.display = 'block';
+        setTimeout(function() {
+          closeApplyModal();
+          showToast('✅ Application sent! Employer will review it soon.');
+        }, 1200);
+        if (submitBtn) { submitBtn.textContent = '📨 Submit Application'; submitBtn.disabled = false; }
+      })
+      .catch(function(err) {
+        errEl.textContent = '❌ Error: ' + (err.message || err.toString());
+        errEl.style.display = 'block';
+        if (submitBtn) { submitBtn.textContent = '📨 Submit Application'; submitBtn.disabled = false; }
+      });
+    }
+
+    function showError() {
+      var page = document.getElementById('job-page');
+      page.innerHTML =
+        '<div class="empty-state">' +
+          '<div class="empty-icon">😕</div>' +
+          '<h3>Job not found</h3>' +
+          '<p>This job listing may have been removed</p>' +
+          '<a href="browse.html" class="btn-primary">Browse Jobs</a>' +
+        '</div>';
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      loadJob();
+    });
+
+  </script>
+
+</body>
+</html>

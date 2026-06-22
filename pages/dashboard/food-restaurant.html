@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Restaurant Dashboard — Nexabay</title>
+  <link rel="stylesheet" href="../../css/main.css"/>
+  <link rel="stylesheet" href="../../css/dashboard.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+</head>
+<body class="dashboard-body">
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="nav-inner">
+      <a href="../../index.html" class="logo">
+        <span class="logo-nexa">Nexa</span><span class="logo-bay">bay</span>
+      </a>
+      <div class="nav-actions">
+        <span class="nav-link" id="nav-restaurant-name">My Restaurant</span>
+        <a href="../../index.html" class="nav-link">← Back to Site</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="dashboard-layout">
+
+    <!-- SIDEBAR -->
+    <aside class="dash-sidebar">
+      <div class="dash-profile">
+        <div class="dash-avatar" id="dash-avatar">R</div>
+        <div class="dash-name" id="dash-name">Restaurant</div>
+        <div class="dash-badge">🍽️ Food Partner</div>
+      </div>
+
+      <nav class="dash-nav">
+        <a href="#" class="dash-nav-item active" onclick="showTab('overview')">
+          📊 Overview
+        </a>
+        <a href="#" class="dash-nav-item" onclick="showTab('menu')">
+          🍽️ My Menu
+        </a>
+        <a href="#" class="dash-nav-item" onclick="showTab('add-item')">
+          ➕ Add Menu Item
+        </a>
+        <a href="#" class="dash-nav-item" onclick="showTab('orders')">
+          📦 Orders
+        </a>
+        <a href="#" class="dash-nav-item" onclick="showTab('earnings')">
+          💰 Earnings
+        </a>
+        <a href="#" class="dash-nav-item" onclick="showTab('settings')">
+          ⚙️ Settings
+        </a>
+        <a href="buyer.html" class="dash-nav-item">
+          👤 My Account
+        </a>
+        <a href="#" class="dash-nav-item logout" onclick="doRestaurantLogout()">
+          🚪 Logout
+        </a>
+      </nav>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="dash-main">
+
+      <!-- OVERVIEW TAB -->
+      <div class="dash-tab" id="tab-overview">
+        <div class="dash-header">
+          <h1>Welcome back! 👋</h1>
+          <p>Here is your restaurant performance today</p>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon">💰</div>
+            <div class="stat-info">
+              <div class="stat-value" id="stat-revenue">₦0</div>
+              <div class="stat-label">Total Revenue</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">📦</div>
+            <div class="stat-info">
+              <div class="stat-value" id="stat-orders">0</div>
+              <div class="stat-label">Total Orders</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">🍽️</div>
+            <div class="stat-info">
+              <div class="stat-value" id="stat-items">0</div>
+              <div class="stat-label">Menu Items</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">⭐</div>
+            <div class="stat-info">
+              <div class="stat-value">0.0</div>
+              <div class="stat-label">Rating</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">💸</div>
+            <div class="stat-info">
+              <div class="stat-value" id="stat-balance">₦0</div>
+              <div class="stat-label">Available Balance</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="dash-section">
+          <h2>Quick Actions</h2>
+          <div class="quick-actions">
+            <button class="quick-btn" onclick="showTab('add-item')">
+              ➕ Add Menu Item
+            </button>
+            <button class="quick-btn" onclick="showTab('orders')">
+              📦 View Orders
+            </button>
+            <button class="quick-btn" onclick="showTab('earnings')">
+              💸 Withdraw
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- MENU TAB -->
+      <div class="dash-tab" id="tab-menu" style="display:none;">
+        <div class="dash-header">
+          <h1>My Menu</h1>
+          <button class="btn-primary" onclick="showTab('add-item')">
+            ➕ Add Item
+          </button>
+        </div>
+
+        <div class="products-toolbar">
+          <select id="menu-cat-filter" onchange="filterMenuItems()">
+            <option value="all">All Categories</option>
+            <option value="Starters">Starters</option>
+            <option value="Mains">Mains</option>
+            <option value="Drinks">Drinks</option>
+            <option value="Desserts">Desserts</option>
+            <option value="Groceries">Groceries</option>
+            <option value="Snacks">Snacks</option>
+          </select>
+        </div>
+
+        <div id="my-menu-list" class="my-products-list"></div>
+      </div>

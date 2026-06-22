@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Course — Nexabay</title>
+  <link rel="stylesheet" href="../../css/main.css"/>
+  <link rel="stylesheet" href="../../css/learn.css"/>
+  <link rel="stylesheet" href="../../css/product.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="nav-inner">
+      <a href="../../index.html" class="logo">
+        <span class="logo-nexa">Nexa</span><span class="logo-bay">bay</span>
+      </a>
+      <div class="nav-actions">
+        <a href="../auth/login.html" class="nav-link">Login</a>
+        <a href="../auth/register.html" class="nav-btn">Sign Up</a>
+      </div>
+      <button class="hamburger" onclick="toggleMobileMenu()">☰</button>
+    </div>
+    <div class="mobile-menu" id="mobile-menu">
+      <a href="../../index.html">Home</a>
+      <a href="browse.html">Learn</a>
+      <a href="../auth/login.html">Login</a>
+    </div>
+  </nav>
+
+  <!-- BREADCRUMB -->
+  <div class="breadcrumb">
+    <div class="container">
+      <a href="../../index.html">Home</a>
+      <span>›</span>
+      <a href="browse.html">Learn</a>
+      <span>›</span>
+      <span id="bread-name">Course</span>
+    </div>
+  </div>
+
+  <!-- COURSE PAGE -->
+  <div class="container product-page" id="course-page">
+    <div class="loading-state">
+      <div class="loading-spinner">⏳</div>
+      <p>Loading course...</p>
+    </div>
+  </div>
+
+  <div style="margin-bottom:48px;"></div>
+
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="../../js/firebase/config.js"></script>
+  <script src="../../js/firebase/auth.js"></script>
+  <script src="../../js/firebase/learn.js"></script>
+  <script src="../../js/core/main.js"></script>
+  <script>
+
+    var currentCourse = null;
+    var isEnrolled = false;
+    var activeLessonIndex = 0;
+
+    function loadCourse() {
+      var id = getParam('id');
+      if (!id) { showError(); return; }
+
+      db.collection('courses').doc(id).get()
+        .then(function(doc) {
+          if (!doc.exists) { showError(); return; }
+          var data = doc.data();
+          currentCourse = {
+            id: doc.id,
+            title: data.title,
+            category: data.category,
+            description: data.description,
+            price: data.price || 0,
+            isFree: data.isFree || false,
+            level: data.level || 'Beginner',
+            imageUrl: data.imageUrl || '',
+            emoji: data.emoji || '🎓',
+            lessons: data.lessons || [],
+            instructorName: data.instructorName || 'Nexabay Instructor',
+            students: data.students || 0,
+            rating: data.rating || 0,
+          };
+          document.title = currentCourse.title + ' — Nexabay';
+          var bread = document.getElementById('bread-name');
+          if (bread) bread.textContent = currentCourse.title;
+
+          var user = JSON.parse(localStorage.getItem('nexa_current_user') || 'null');
+          if (user && typeof nexaCheckEnrollment === 'function') {
+            nexaCheckEnrollment(currentCourse.id, user.uid).then(function(enrolled) {
+              isEnrolled = enrolled;
+              renderCourse(currentCourse);
+            });
+          } else {
+            renderCourse(currentCourse);
+          }
+        })
+        .catch(function(err) {
+          console.log('Error loading course:', err);
+          showError();
+        });
+    }
+
+    function renderCourse(c) {
+      var page = document.getElementById('course-page');
+
+      if (isEnrolled) {
+        renderLearningView(c);
+        return;
+      }
+
+      var mainContent = c.imageUrl
+        ? '<img src="' + c.imageUrl + '" style="width:100%;height:100%;object-fit:cover;border-radius:8px;"/>'
+        : c.emoji;
+
+      var lessonsPreview = c.lessons.map(function(l, i) {
+        return '<div style="padding:10px 0;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;">' +
+          '<span style="color:var(--text2);">🔒</span>' +
+          '<span style="flex:1;">' + (i+1) + '. ' + l.title + '</span>' +
+          '<span style="color:var(--text2);font-size:0.85em;">' + l.duration + '</span>' +
+        '</div>';
+      }).join('');
+
+      page.innerHTML =
+        '<div class="product-detail">' +
+
+          '<div class="pd-left">' +
+            '<div class="pd-main-img">' + mainContent + '</div>' +
+            '<div class="pd-badges">' +
+              '<span class="pd-badge verified">✅ ' + c.lessons.length + ' Lessons</span>' +
+              '<span class="pd-badge secure">' + c.level + '</span>' +
+            '</div>' +
+          '</div>' +
+
+          '<div class="pd-right">' +
+
+            '<div class="pd-category">' + c.category + '</div>' +
+            '<h1 class="pd-name">' + c.title + '</h1>' +
+
+            '<div class="pd-rating-row">' +
+              '<span class="pd-stars">⭐ ' + (c.rating || 'New') + '</span>' +
+              '<span class="pd-reviews">👥 ' + c.students.toLocaleString() + ' students</span>' +
+            '</div>' +
+
+            '<div class="pd-price-row">' +
+              '<span class="pd-price">' + (c.isFree ? 'Free' : '₦' + parseInt(c.price).toLocaleString()) + '</span>' +
+            '</div>' +
+
+            '<div class="pd-divider"></div>' +
+
+            '<div class="pd-desc">' +
+              '<h3>About This Course</h3>' +
+              '<p>' + c.description + '</p>' +
+            '</div>' +
+
+            '<div class="pd-divider"></div>' +
+
+            '<div class="pd-seller">' +
+              '<div class="pd-seller-avatar">' + c.instructorName[0] + '</div>' +
+              '<div>' +
+                '<div class="pd-seller-name">' + c.instructorName + '</div>' +
+                '<div class="pd-seller-loc">Instructor</div>' +
+              '</div>' +
+            '</div>' +
+
+            '<div class="pd-divider"></div>' +
+
+            '<div class="pd-actions">' +
+              '<button class="pd-buy-btn" onclick="enrollNow()">' + (c.isFree ? '🎉 Enroll Free' : '💳 Enroll Now') + '</button>' +
+            '</div>' +
+
+            '<div class="pd-divider"></div>' +
+
+            '<div class="pd-desc">' +
+              '<h3>Course Content</h3>' +
+              lessonsPreview +
+            '</div>' +
+
+          '</div>' +
+        '</div>';
+    }
+
+    function renderLearningView(c) {
+      var page = document.getElementById('course-page');
+      var lesson = c.lessons[activeLessonIndex] || c.lessons[0];
+      var embedUrl = toEmbedUrl(lesson.videoUrl);
+
+      var lessonsListHtml = c.lessons.map(function(l, i) {
+        var active = i === activeLessonIndex;
+        return '<div onclick="playLesson(' + i + ')" style="padding:12px;border-radius:8px;cursor:pointer;margin-bottom:6px;background:' + (active ? 'var(--orange)' : 'var(--gray)') + ';color:' + (active ? 'white' : 'inherit') + ';">' +
+          '<div style="font-weight:600;font-size:0.9em;">' + (i+1) + '. ' + l.title + '</div>' +
+          '<div style="font-size:0.78em;opacity:0.8;">' + l.duration + '</div>' +
+        '</div>';
+      }).join('');
+
+      page.innerHTML =
+        '<div style="margin-bottom:16px;">' +
+          '<h1 style="font-size:1.4em;margin-bottom:4px;">' + c.title + '</h1>' +
+          '<div style="color:var(--text2);font-size:0.9em;">by ' + c.instructorName + '</div>' +
+        '</div>' +
+        '<div class="product-detail">' +
+          '<div class="pd-left">' +
+            '<div style="position:relative;width:100%;padding-top:56.25%;border-radius:8px;overflow:hidden;background:#000;">' +
+              '<iframe src="' + embedUrl + '" style="position:absolute;top:0;left:0;width:100%;height:100%;border:none;" allowfullscreen></iframe>' +
+            '</div>' +
+            '<h3 style="margin-top:14px;font-size:1.1em;">' + lesson.title + '</h3>' +
+          '</div>' +
+          '<div class="pd-right">' +
+            '<h3 style="margin-bottom:10px;">Course Content</h3>' +
+            lessonsListHtml +
+          '</div>' +
+        '</div>';
+    }
+
+    function toEmbedUrl(url) {
+      if (!url) return '';
+      var ytMatch = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]+)/);
+      if (ytMatch) return 'https://www.youtube.com/embed/' + ytMatch[1];
+      var vimeoMatch = url.match(/vimeo\.com\/(\d+)/);
+      if (vimeoMatch) return 'https://player.vimeo.com/video/' + vimeoMatch[1];
+      return url;
+    }
+
+    function playLesson(index) {
+      activeLessonIndex = index;
+      renderLearningView(currentCourse);
+    }
+
+    function enrollNow() {
+      var user = JSON.parse(localStorage.getItem('nexa_current_user') || 'null');
+      if (!user) {
+        showToast('⚠️ Please login to enroll', '#ff9500');
+        setTimeout(function() { window.location.href = '../auth/login.html'; }, 1500);
+        return;
+      }
+
+      if (!currentCourse.isFree) {
+        showToast('💳 Payment integration coming soon — enrolling free for now', '#ff9500');
+      }
+
+      nexaEnrollInCourse(currentCourse.id, currentCourse)
+        .then(function() {
+          isEnrolled = true;
+          showToast('🎉 Enrolled successfully!');
+          renderCourse(currentCourse);
+        })
+        .catch(function(err) {
+          showToast('Error: ' + err.message);
+        });
+    }
+
+    function showError() {
+      var page = document.getElementById('course-page');
+      page.innerHTML =
+        '<div class="empty-state">' +
+          '<div class="empty-icon">😕</div>' +
+          '<h3>Course not found</h3>' +
+          '<p>This course may have been removed</p>' +
+          '<a href="browse.html" class="btn-primary">Browse Courses</a>' +
+        '</div>';
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      loadCourse();
+    });
+
+  </script>
+
+</body>
+</html>

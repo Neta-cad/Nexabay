@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Rental — Nexabay</title>
+  <link rel="stylesheet" href="../../css/main.css"/>
+  <link rel="stylesheet" href="../../css/rentals.css"/>
+  <link rel="stylesheet" href="../../css/product.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="nav-inner">
+      <a href="../../index.html" class="logo">
+        <span class="logo-nexa">Nexa</span><span class="logo-bay">bay</span>
+      </a>
+      <div class="nav-actions">
+        <a href="../auth/login.html" class="nav-link">Login</a>
+        <a href="../auth/register.html" class="nav-btn">Sign Up</a>
+      </div>
+      <button class="hamburger" onclick="toggleMobileMenu()">☰</button>
+    </div>
+    <div class="mobile-menu" id="mobile-menu">
+      <a href="../../index.html">Home</a>
+      <a href="browse.html">Rentals</a>
+      <a href="../auth/login.html">Login</a>
+    </div>
+  </nav>
+
+  <!-- BREADCRUMB -->
+  <div class="breadcrumb">
+    <div class="container">
+      <a href="../../index.html">Home</a>
+      <span>›</span>
+      <a href="browse.html">Rentals</a>
+      <span>›</span>
+      <span id="bread-name">Rental</span>
+    </div>
+  </div>
+
+  <!-- RENTAL DETAIL -->
+  <div class="container product-page" id="rental-page">
+    <div class="loading-state">
+      <div class="loading-spinner">⏳</div>
+      <p>Loading listing...</p>
+    </div>
+  </div>
+
+  <div style="margin-bottom:48px;"></div>
+
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="../../js/firebase/config.js"></script>
+  <script src="../../js/firebase/auth.js"></script>
+  <script src="../../js/firebase/rentals.js"></script>
+  <script src="../../js/core/main.js"></script>
+  <script>
+
+    var currentRental = null;
+
+    function loadRental() {
+      var id = getParam('id');
+      if (!id) { showError(); return; }
+
+      db.collection('rentals').doc(id).get()
+        .then(function(doc) {
+          if (!doc.exists) { showError(); return; }
+          var data = doc.data();
+          currentRental = {
+            id: doc.id,
+            title: data.title,
+            listingType: data.listingType,
+            category: data.category,
+            description: data.description,
+            price: data.price,
+            rentalPeriod: data.rentalPeriod || 'monthly',
+            location: data.location,
+            bedrooms: data.bedrooms,
+            bathrooms: data.bathrooms,
+            amenities: data.amenities || [],
+            condition: data.condition || '',
+            imageUrl: data.imageUrl || '',
+            emoji: data.emoji || '🏠',
+            ownerName: data.ownerName || 'Nexabay Owner',
+          };
+          renderRental(currentRental);
+          document.title = currentRental.title + ' — Nexabay';
+          var bread = document.getElementById('bread-name');
+          if (bread) bread.textContent = currentRental.title;
+        })
+        .catch(function(err) {
+          console.log('Error loading rental:', err);
+          showError();
+        });
+    }
+
+    function renderRental(r) {
+      var page = document.getElementById('rental-page');
+      var periodLabel = { daily: '/day', weekly: '/week', monthly: '/month', yearly: '/year' }[r.rentalPeriod] || '';
+      var mainContent = r.imageUrl
+        ? '<img src="' + r.imageUrl + '" style="width:100%;height:100%;object-fit:cover;border-radius:8px;"/>'
+        : r.emoji;
+
+      var extraDetails = '';
+      if (r.listingType === 'property') {
+        extraDetails =
+          '<div class="pd-delivery-item">🛏️ <b>Bedrooms:</b> ' + (r.bedrooms || 0) + '</div>' +
+          '<div class="pd-delivery-item">🚿 <b>Bathrooms:</b> ' + (r.bathrooms || 0) + '</div>';
+      } else if (r.condition) {
+        extraDetails = '<div class="pd-delivery-item">🔧 <b>Condition:</b> ' + r.condition + '</div>';
+      }
+
+      var amenitiesHtml = '';
+      if (r.amenities && r.amenities.length > 0) {
+        amenitiesHtml =
+          '<div class="pd-divider"></div>' +
+          '<div class="pd-desc">' +
+            '<h3>Amenities</h3>' +
+            '<div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;">' +
+              r.amenities.map(function(a) {
+                return '<span style="background:var(--gray);padding:5px 12px;border-radius:6px;font-size:0.85em;">✓ ' + a + '</span>';
+              }).join('') +
+            '</div>' +
+          '</div>';
+      }
+
+      page.innerHTML =
+        '<div class="product-detail">' +
+
+          '<div class="pd-left">' +
+            '<div class="pd-main-img">' + mainContent + '</div>' +
+            '<div class="pd-badges">' +
+              '<span class="pd-badge verified">✅ Nexabay Listing</span>' +
+              '<span class="pd-badge secure">🔒 Secure Payment</span>' +
+            '</div>' +
+          '</div>' +
+
+          '<div class="pd-right">' +
+
+            '<div class="pd-category">' + r.category + '</div>' +
+            '<h1 class="pd-name">' + r.title + '</h1>' +
+
+            '<div class="pd-price-row">' +
+              '<span class="pd-price">₦' + parseInt(r.price).toLocaleString() + '</span>' +
+              '<span style="color:var(--text2);font-size:0.9em;">' + periodLabel + '</span>' +
+            '</div>' +
+
+            '<div class="pd-divider"></div>' +
+
+            '<div class="pd-desc">' +
+              '<h3>Description</h3>' +
+              '<p>' + r.description + '</p>' +
+            '</div>' +
+
+            amenitiesHtml +
+
+            '<div class="pd-divider"></div>' +
+
+            '<div class="pd-seller">' +
+              '<div class="pd-seller-avatar">' + r.ownerName[0] + '</div>' +
+              '<div>' +
+                '<div class="pd-seller-name">' + r.ownerName + '</div>' +
+                '<div class="pd-seller-loc">📍 ' + r.location + '</div>' +
+              '</div>' +
+              '<a href="#" class="pd-chat-btn">💬 Chat Owner</a>' +
+            '</div>' +
+
+            '<div class="pd-divider"></div>' +
+
+            '<div class="pd-actions">' +
+              '<button class="pd-buy-btn" onclick="contactThisOwner()">⚡ Contact Owner</button>' +
+            '</div>' +
+
+            '<div class="pd-delivery">' +
+              extraDetails +
+              '<div class="pd-delivery-item">🔒 <b>Payment:</b> Secured by Nexabay Escrow</div>' +
+            '</div>' +
+
+          '</div>' +
+        '</div>';
+    }
+
+    function contactThisOwner() {
+      var user = localStorage.getItem('nexa_current_user');
+      if (!user) {
+        showToast('⚠️ Please login to contact', '#ff9500');
+        setTimeout(function() { window.location.href = '../auth/login.html'; }, 1500);
+        return;
+      }
+      showToast('✅ Message sent! Owner will contact you soon.');
+    }
+
+    function showError() {
+      var page = document.getElementById('rental-page');
+      page.innerHTML =
+        '<div class="empty-state">' +
+          '<div class="empty-icon">😕</div>' +
+          '<h3>Listing not found</h3>' +
+          '<p>This listing may have been removed</p>' +
+          '<a href="browse.html" class="btn-primary">Browse Rentals</a>' +
+        '</div>';
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      loadRental();
+    });
+
+  </script>
+
+</body>
+</html>

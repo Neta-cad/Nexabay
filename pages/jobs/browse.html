@@ -234,10 +234,16 @@
     </div>
   </footer>
 
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="../../js/firebase/config.js"></script>
+  <script src="../../js/firebase/auth.js"></script>
+  <script src="../../js/firebase/jobs.js"></script>
   <script src="../../js/core/main.js"></script>
   <script>
 
-    var ALL_JOBS = [
+    var DEMO_JOBS = [
       { id:1,  title:'Senior Software Engineer',      company:'Flutterwave',        category:'Technology',  type:'Full Time', level:'Senior', location:'Lagos',  salary:800000,  salaryMax:1200000, emoji:'💳', posted:'2 days ago',   desc:'We are looking for a senior software engineer to join our fintech team.' },
       { id:2,  title:'UI/UX Designer',                company:'Andela',             category:'Technology',  type:'Full Time', level:'Mid',    location:'Remote', salary:400000,  salaryMax:600000,  emoji:'🖥️', posted:'1 day ago',    desc:'Design beautiful user experiences for our global products.' },
       { id:3,  title:'Digital Marketing Manager',     company:'Konga',              category:'Marketing',   type:'Full Time', level:'Mid',    location:'Lagos',  salary:300000,  salaryMax:450000,  emoji:'🛒', posted:'3 days ago',   desc:'Lead our digital marketing strategy across all channels.' },
@@ -256,7 +262,56 @@
       { id:16, title:'Social Media Manager',           company:'Jumia Nigeria',      category:'Marketing',   type:'Part Time', level:'Entry',  location:'Remote', salary:100000,  salaryMax:180000,  emoji:'📱', posted:'Today',        desc:'Manage our social media presence across all platforms.' },
     ];
 
-    var currentJobs = ALL_JOBS.slice();
+    var ALL_JOBS = [];
+    var currentJobs = [];
+
+    function loadAllJobs() {
+      nexaGetJobs('all')
+        .then(function(realJobs) {
+          var mapped = realJobs.map(function(j) {
+            return {
+              id: j.id,
+              title: j.title,
+              company: j.companyName,
+              category: mapJobCategory(j.category),
+              type: mapJobType(j.jobType),
+              level: 'Mid',
+              location: j.remote ? 'Remote' : j.location,
+              salary: j.salaryMin || 0,
+              salaryMax: j.salaryMax || j.salaryMin || 0,
+              emoji: '💼',
+              posted: 'Recently',
+              desc: j.description || '',
+            };
+          });
+          ALL_JOBS = mapped.concat(DEMO_JOBS);
+          currentJobs = ALL_JOBS.slice();
+          renderJobs();
+        })
+        .catch(function(err) {
+          console.log('Error loading jobs:', err);
+          ALL_JOBS = DEMO_JOBS.slice();
+          currentJobs = ALL_JOBS.slice();
+          renderJobs();
+        });
+    }
+
+    function mapJobType(type) {
+      var map = { 'Full-time': 'Full Time', 'Part-time': 'Part Time', 'Contract': 'Contract', 'Internship': 'Internship', 'Remote': 'Remote' };
+      return map[type] || type;
+    }
+
+    function mapJobCategory(cat) {
+      var map = {
+        'Technology & IT': 'Technology', 'Sales & Marketing': 'Marketing',
+        'Customer Service': 'Sales', 'Finance & Accounting': 'Finance',
+        'Engineering': 'Engineering', 'Healthcare': 'Healthcare',
+        'Education': 'Education', 'Administration': 'Sales',
+        'Logistics & Driving': 'Engineering', 'Creative & Design': 'Marketing',
+        'Other': 'Technology'
+      };
+      return map[cat] || cat;
+    }
 
     function renderJobs() {
       var list = document.getElementById('jobs-list');
@@ -274,7 +329,7 @@
 
       list.innerHTML = currentJobs.map(function(j) {
         var salaryText = '₦' + j.salary.toLocaleString() + ' — ₦' + j.salaryMax.toLocaleString();
-        return '<div class="job-card" onclick="viewJob(' + j.id + ')">' +
+        return '<div class="job-card" onclick="viewJob(\'' + j.id + '\')">' +
           '<div class="jc-left">' +
             '<div class="jc-logo">' + j.emoji + '</div>' +
             '<div class="jc-info">' +
@@ -293,8 +348,8 @@
             '</div>' +
           '</div>' +
           '<div class="jc-right">' +
-            '<button class="jc-apply-btn" onclick="event.stopPropagation();applyJob(' + j.id + ')">Apply Now</button>' +
-            '<button class="jc-save-btn" onclick="event.stopPropagation();saveJob(' + j.id + ')">🔖 Save</button>' +
+            '<button class="jc-apply-btn" onclick="event.stopPropagation();viewJob(\'' + j.id + '\')">Apply Now</button>' +
+            '<button class="jc-save-btn" onclick="event.stopPropagation();saveJob(\'' + j.id + '\')">🔖 Save</button>' +
           '</div>' +
         '</div>';
       }).join('');
@@ -358,17 +413,7 @@
     }
 
     function viewJob(id) {
-      showToast('💼 Job detail page coming soon!');
-    }
-
-    function applyJob(id) {
-      var user = localStorage.getItem('nexa_current_user');
-      if (!user) {
-        showToast('⚠️ Please login to apply', '#ff9500');
-        setTimeout(function() { window.location.href = '../auth/login.html'; }, 1500);
-        return;
-      }
-      showToast('✅ Application submitted successfully!');
+      window.location.href = 'job.html?id=' + id;
     }
 
     function saveJob(id) {
@@ -378,7 +423,7 @@
     document.addEventListener('DOMContentLoaded', function() {
       updateCartCount();
       checkAuthState();
-      renderJobs();
+      loadAllJobs();
       var input = document.getElementById('search-input');
       if (input) {
         input.addEventListener('keypress', function(e) {

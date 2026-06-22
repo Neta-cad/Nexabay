@@ -257,10 +257,16 @@
     </div>
   </footer>
 
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="../../js/firebase/config.js"></script>
+  <script src="../../js/firebase/auth.js"></script>
+  <script src="../../js/firebase/rentals.js"></script>
   <script src="../../js/core/main.js"></script>
   <script>
 
-    var ALL_RENTALS = [
+    var DEMO_RENTALS = [
       { id:1,  name:'2 Bedroom Flat',           type:'Apartment', price:120000,  period:'month', beds:2, location:'Lagos',         area:'Lekki',          emoji:'🏢', verified:true,  features:['Furnished','Parking','Security'], desc:'Spacious 2 bedroom flat in Lekki Phase 1. Modern finishes, 24hr security.' },
       { id:2,  name:'3 Bedroom Duplex',          type:'House',     price:250000,  period:'month', beds:3, location:'Lagos',         area:'Ikeja GRA',      emoji:'🏠', verified:true,  features:['Furnished','Parking','Security','Pool'], desc:'Beautiful 3 bedroom duplex with swimming pool in Ikeja GRA.' },
       { id:3,  name:'1 Bedroom Apartment',       type:'Apartment', price:65000,   period:'month', beds:1, location:'Abuja',         area:'Wuse 2',         emoji:'🏢', verified:true,  features:['Furnished','Security'],           desc:'Cozy 1 bedroom apartment in prime Wuse 2 location.' },
@@ -279,7 +285,41 @@
       { id:16, name:'Tent & Chairs (100 seats)', type:'Equipment', price:30000,   period:'day',   beds:0, location:'Lagos',         area:'Alimosho',       emoji:'⛺', verified:false, features:['Setup included'],                 desc:'Party tent with 100 chairs and tables. Setup and takedown included.' },
     ];
 
-    var currentRentals = ALL_RENTALS.slice();
+    var ALL_RENTALS = [];
+    var currentRentals = [];
+
+    function loadAllRentals() {
+      nexaGetRentals('all')
+        .then(function(realRentals) {
+          var mapped = realRentals.map(function(r) {
+            var periodMap = { daily: 'day', weekly: 'week', monthly: 'month', yearly: 'year' };
+            return {
+              id: r.id,
+              name: r.title,
+              type: r.category,
+              price: r.price,
+              period: periodMap[r.rentalPeriod] || 'month',
+              beds: r.bedrooms || 0,
+              location: r.location,
+              area: r.location,
+              emoji: r.emoji || '🏠',
+              imageUrl: r.imageUrl || '',
+              verified: false,
+              features: r.amenities || [],
+              desc: r.description || '',
+            };
+          });
+          ALL_RENTALS = mapped.concat(DEMO_RENTALS);
+          currentRentals = ALL_RENTALS.slice();
+          renderRentals();
+        })
+        .catch(function(err) {
+          console.log('Error loading rentals:', err);
+          ALL_RENTALS = DEMO_RENTALS.slice();
+          currentRentals = ALL_RENTALS.slice();
+          renderRentals();
+        });
+    }
 
     function renderRentals() {
       var grid = document.getElementById('rentals-grid');
@@ -296,9 +336,12 @@
       if (count) count.textContent = 'Showing ' + currentRentals.length + ' listings';
 
       grid.innerHTML = currentRentals.map(function(r) {
-        return '<div class="rental-card" onclick="viewRental(' + r.id + ')">' +
+        var imgContent = r.imageUrl
+          ? '<img src="' + r.imageUrl + '" style="width:100%;height:100%;object-fit:cover;border-radius:8px;"/>'
+          : r.emoji;
+        return '<div class="rental-card" onclick="viewRental(\'' + r.id + '\')">' +
           '<div class="rc-img">' +
-            r.emoji +
+            imgContent +
             (r.verified ? '<span class="rc-verified">✅ Verified</span>' : '') +
           '</div>' +
           '<div class="rc-info">' +
@@ -319,7 +362,7 @@
                 '<span class="rc-amount">₦' + r.price.toLocaleString() + '</span>' +
                 '<span class="rc-period">/' + r.period + '</span>' +
               '</div>' +
-              '<button class="rc-btn" onclick="event.stopPropagation();contactLandlord(' + r.id + ')">Contact</button>' +
+              '<button class="rc-btn" onclick="event.stopPropagation();contactLandlord(\'' + r.id + '\')">Contact</button>' +
             '</div>' +
           '</div>' +
         '</div>';
@@ -383,7 +426,7 @@
     }
 
     function viewRental(id) {
-      showToast('🏠 Rental detail page coming soon!');
+      window.location.href = 'rental.html?id=' + id;
     }
 
     function contactLandlord(id) {
@@ -399,7 +442,7 @@
     document.addEventListener('DOMContentLoaded', function() {
       updateCartCount();
       checkAuthState();
-      renderRentals();
+      loadAllRentals();
       var input = document.getElementById('search-input');
       if (input) {
         input.addEventListener('keypress', function(e) {

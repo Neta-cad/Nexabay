@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Instructor Dashboard — Nexabay</title>
+  <link rel="stylesheet" href="../../css/main.css"/>
+  <link rel="stylesheet" href="../../css/dashboard.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+</head>
+<body class="dashboard-body">
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="nav-inner">
+      <a href="../../index.html" class="logo">
+        <span class="logo-nexa">Nexa</span><span class="logo-bay">bay</span>
+      </a>
+      <div class="nav-actions">
+        <span class="nav-link" id="nav-instructor-name">My Courses</span>
+        <a href="../../index.html" class="nav-link">← Back to Site</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="dashboard-layout">
+
+    <!-- SIDEBAR -->
+    <aside class="dash-sidebar">
+      <div class="dash-profile">
+        <div class="dash-avatar" id="dash-avatar">I</div>
+        <div class="dash-name" id="dash-name">Instructor</div>
+        <div class="dash-badge">🎓 Instructor</div>
+      </div>
+
+      <nav class="dash-nav">
+        <a href="#" class="dash-nav-item active" onclick="showTab('overview')">
+          📊 Overview
+        </a>
+        <a href="#" class="dash-nav-item" onclick="showTab('courses')">
+          🎓 My Courses
+        </a>
+        <a href="#" class="dash-nav-item" onclick="showTab('add-course')">
+          ➕ Create Course
+        </a>
+        <a href="#" class="dash-nav-item" onclick="showTab('earnings')">
+          💰 Earnings
+        </a>
+        <a href="#" class="dash-nav-item" onclick="showTab('settings')">
+          ⚙️ Settings
+        </a>
+        <a href="buyer.html" class="dash-nav-item">
+          👤 My Account
+        </a>
+        <a href="#" class="dash-nav-item logout" onclick="doInstructorLogout()">
+          🚪 Logout
+        </a>
+      </nav>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="dash-main">
+
+      <!-- OVERVIEW TAB -->
+      <div class="dash-tab" id="tab-overview">
+        <div class="dash-header">
+          <h1>Welcome back! 👋</h1>
+          <p>Here is your teaching performance today</p>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon">💰</div>
+            <div class="stat-info">
+              <div class="stat-value" id="stat-revenue">₦0</div>
+              <div class="stat-label">Total Earned</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">👨‍🎓</div>
+            <div class="stat-info">
+              <div class="stat-value" id="stat-students">0</div>
+              <div class="stat-label">Total Students</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">🎓</div>
+            <div class="stat-info">
+              <div class="stat-value" id="stat-courses">0</div>
+              <div class="stat-label">Courses Created</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">⭐</div>
+            <div class="stat-info">
+              <div class="stat-value">0.0</div>
+              <div class="stat-label">Average Rating</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="dash-section">
+          <h2>Quick Actions</h2>
+          <div class="quick-actions">
+            <button class="quick-btn" onclick="showTab('add-course')">
+              ➕ Create New Course
+            </button>
+            <button class="quick-btn" onclick="showTab('earnings')">
+              💸 Withdraw Earnings
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- MY COURSES TAB -->
+      <div class="dash-tab" id="tab-courses" style="display:none;">
+        <div class="dash-header">
+          <h1>My Courses</h1>
+          <button class="btn-primary" onclick="showTab('add-course')">
+            ➕ Create Course
+          </button>
+        </div>
+
+        <div id="my-courses-list" class="my-products-list"></div>
+      </div>
+      <!-- ADD COURSE TAB -->
+      <div class="dash-tab" id="tab-add-course" style="display:none;">
+        <div class="dash-header">
+          <h1>Create New Course</h1>
+        </div>
+
+        <div class="add-product-form">
+
+          <div class="form-section">
+            <h3>Course Details</h3>
+
+            <div class="form-group">
+              <label>Course Title *</label>
+              <input type="text" id="ac-title" placeholder="e.g. Complete Web Design for Beginners" maxlength="100"/>
+            </div>
+
+            <div class="form-group">
+              <label>Category *</label>
+              <select id="ac-category">
+                <option value="">Select category</option>
+                <option>Web Development</option>
+                <option>Graphic Design</option>
+                <option>Digital Marketing</option>
+                <option>Business & Finance</option>
+                <option>Photography</option>
+                <option>Music</option>
+                <option>Languages</option>
+                <option>Cooking</option>
+                <option>Fashion & Beauty</option>
+                <option>Personal Development</option>
+                <option>Other</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>Description *</label>
+              <textarea id="ac-desc" placeholder="What will students learn in this course?" rows="4"></textarea>
+            </div>
+
+            <div class="form-group">
+              <label>Level</label>
+              <select id="ac-level">
+                <option>Beginner</option>
+                <option>Intermediate</option>
+                <option>Advanced</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <h3>Pricing</h3>
+            <div class="account-type">
+              <button class="type-btn active" id="btn-paid" onclick="setPriceType(false)">
+                💰 Paid Course
+              </button>
+              <button class="type-btn" id="btn-free" onclick="setPriceType(true)">
+                🎁 Free Course
+              </button>
+            </div>
+            <div class="form-group" id="price-input-group" style="margin-top:12px;">
+              <label>Price (₦) *</label>
+              <input type="number" id="ac-price" placeholder="0" min="0"/>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <h3>Course Thumbnail</h3>
+            <div class="image-upload" id="image-upload" onclick="triggerImageUpload()">
+              <div class="upload-placeholder" id="upload-placeholder">
+                <div class="upload-icon">📷</div>
+                <p>Click to add a course thumbnail</p>
+                <small>JPG, PNG up to 5MB</small>
+              </div>
+              <div class="upload-preview" id="upload-preview" style="display:none;">
+                <span id="preview-emoji">🎓</span>
+              </div>
+            </div>
+            <input type="file" id="image-file" style="display:none;" accept="image/*" onchange="previewImage()"/>
+
+            <div class="emoji-selector">
+              <p>Or pick an emoji icon:</p>
+              <div class="emoji-grid">
+                <span onclick="selectEmoji('🎓')">🎓</span>
+                <span onclick="selectEmoji('💻')">💻</span>
+                <span onclick="selectEmoji('🎨')">🎨</span>
+                <span onclick="selectEmoji('📣')">📣</span>
+                <span onclick="selectEmoji('💰')">💰</span>
+                <span onclick="selectEmoji('📷')">📷</span>
+                <span onclick="selectEmoji('🎵')">🎵</span>
+                <span onclick="selectEmoji('🗣️')">🗣️</span>
+                <span onclick="selectEmoji('🍳')">🍳</span>
+                <span onclick="selectEmoji('💄')">💄</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <h3>Course Lessons</h3>
+            <p style="color:var(--text2);font-size:0.85em;margin-bottom:12px;">Add a YouTube, Vimeo, or other video link for each lesson</p>
+
+            <div id="lessons-container"></div>
+
+            <button type="button" onclick="addLessonField()" style="width:100%;padding:12px;background:var(--gray);border:2px dashed var(--border);border-radius:8px;cursor:pointer;margin-top:8px;font-weight:600;">
+              ➕ Add Lesson
+            </button>
+          </div>
+
+          <div id="ac-error" class="ap-error" style="display:none;"></div>
+          <div id="ac-success" class="ap-success" style="display:none;"></div>
+
+          <div class="form-actions">
+            <button class="btn-publish" onclick="publishCourse()">
+              🚀 Publish Course
+            </button>
+          </div>
+
+        </div>
+      </div>
+      <!-- EARNINGS TAB -->
+      <div class="dash-tab" id="tab-earnings" style="display:none;">
+        <div class="dash-header">
+          <h1>Earnings & Withdrawals</h1>
+        </div>
+
+        <div class="earnings-cards">
+          <div class="earning-card">
+            <div class="ec-label">Total Earned</div>
+            <div class="ec-value" id="ec-total">₦0</div>
+          </div>
+          <div class="earning-card">
+            <div class="ec-label">Available Balance</div>
+            <div class="ec-value green" id="ec-available">₦0</div>
+          </div>
+        </div>
+
+        <div class="withdraw-section">
+          <h3>Withdraw Funds</h3>
+          <div class="withdraw-form">
+            <div class="form-group">
+              <label>Bank Name</label>
+              <select id="wd-bank">
+                <option>GTBank</option>
+                <option>Access Bank</option>
+                <option>First Bank</option>
+                <option>Zenith Bank</option>
+                <option>UBA</option>
+                <option>Opay</option>
+                <option>Palmpay</option>
+                <option>Kuda Bank</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Account Number</label>
+              <input type="text" id="wd-account" placeholder="10 digit account number" maxlength="10"/>
+            </div>
+            <div class="form-group">
+              <label>Account Name</label>
+              <input type="text" id="wd-name" placeholder="Account holder name"/>
+            </div>
+            <div class="form-group">
+              <label>Amount to Withdraw (₦)</label>
+              <input type="number" id="wd-amount" placeholder="Minimum ₦1,000" min="1000"/>
+            </div>
+            <div id="wd-error" style="color:#cc0000;font-size:0.85em;display:none;"></div>
+            <div id="wd-success" style="color:#006622;font-size:0.85em;display:none;"></div>
+            <button class="btn-withdraw" onclick="processWithdrawal()">
+              💸 Withdraw Now
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- SETTINGS TAB -->
+      <div class="dash-tab" id="tab-settings" style="display:none;">
+        <div class="dash-header">
+          <h1>Instructor Settings</h1>
+        </div>
+
+        <div class="settings-card">
+          <h3>Instructor Profile</h3>
+          <div class="form-group">
+            <label>Display Name</label>
+            <input type="text" id="instructor-name" placeholder="Your name as shown to students"/>
+          </div>
+          <div class="form-group">
+            <label>Bio</label>
+            <textarea id="instructor-bio" rows="3" placeholder="Tell students about your expertise..."></textarea>
+          </div>
+          <button class="btn-save" onclick="saveInstructorSettings()">Save Changes</button>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- PREVIEW MODAL -->
+  <div id="preview-modal-overlay" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);z-index:900;" onclick="closePreviewModal()"></div>
+  <div id="preview-modal" style="display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:white;border-radius:14px;max-width:380px;width:90%;max-height:85vh;overflow-y:auto;z-index:901;padding:20px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+      <h3 style="font-size:1.1em;font-weight:700;">Course Preview</h3>
+      <button onclick="closePreviewModal()" style="background:var(--gray);border:none;width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:0.9em;">✕</button>
+    </div>
+    <div id="preview-modal-body"></div>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="../../js/firebase/config.js"></script>
+  <script src="../../js/firebase/auth.js"></script>
+  <script src="../../js/firebase/learn.js"></script>
+  <script src="../../js/firebase/imgbb.js"></script>
+  <script src="../../js/core/main.js"></script>
+  <script>
+
+    var myCourses = [];
+    var selectedEmoji = '🎓';
+    var editingCourseId = null;
+    var selectedImageFile = null;
+    var isFreeCourse = false;
+    var lessonCount = 0;
+
+    function init() {
+      var user = JSON.parse(localStorage.getItem('nexa_current_user') || 'null');
+      if (user) {
+        var nameEl = document.getElementById('dash-name');
+        var avatarEl = document.getElementById('dash-avatar');
+        var navEl = document.getElementById('nav-instructor-name');
+        if (nameEl) nameEl.textContent = user.fullName || user.firstName || 'Instructor';
+        if (avatarEl) avatarEl.textContent = (user.firstName || 'I')[0].toUpperCase();
+        if (navEl) navEl.textContent = user.firstName + '\'s Courses';
+      }
+      addLessonField();
+    }
+
+    if (typeof auth !== 'undefined') {
+      auth.onAuthStateChanged(function(user) {
+        if (user) loadMyCourses();
+      });
+    }
+
+    function showTab(tab) {
+      var tabs = document.querySelectorAll('.dash-tab');
+      tabs.forEach(function(t) { t.style.display = 'none'; });
+
+      var navItems = document.querySelectorAll('.dash-nav-item');
+      navItems.forEach(function(n) { n.classList.remove('active'); });
+
+      var target = document.getElementById('tab-' + tab);
+      if (target) target.style.display = 'block';
+
+      var navMap = {
+        'overview': 0, 'courses': 1, 'add-course': 2,
+        'earnings': 3, 'settings': 4
+      };
+      var index = navMap[tab];
+      if (index !== undefined && navItems[index]) {
+        navItems[index].classList.add('active');
+      }
+    }
+
+    function setPriceType(free) {
+      isFreeCourse = free;
+      document.getElementById('btn-paid').classList.toggle('active', !free);
+      document.getElementById('btn-free').classList.toggle('active', free);
+      document.getElementById('price-input-group').style.display = free ? 'none' : 'block';
+    }
+
+    function addLessonField() {
+      lessonCount++;
+      var container = document.getElementById('lessons-container');
+      var div = document.createElement('div');
+      div.className = 'lesson-field';
+      div.id = 'lesson-' + lessonCount;
+      div.style.cssText = 'border:1px solid var(--border);border-radius:8px;padding:12px;margin-bottom:10px;';
+      div.innerHTML =
+        '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">' +
+          '<b style="font-size:0.9em;">Lesson ' + lessonCount + '</b>' +
+          '<button type="button" onclick="removeLessonField(' + lessonCount + ')" style="background:none;border:none;color:#cc0000;cursor:pointer;">✕ Remove</button>' +
+        '</div>' +
+        '<input type="text" class="lesson-title" placeholder="Lesson title" style="width:100%;margin-bottom:8px;padding:10px;border:1px solid var(--border);border-radius:6px;"/>' +
+        '<input type="text" class="lesson-video" placeholder="Video URL (YouTube, Vimeo, etc.)" style="width:100%;margin-bottom:8px;padding:10px;border:1px solid var(--border);border-radius:6px;"/>' +
+        '<input type="text" class="lesson-duration" placeholder="Duration (e.g. 12 min)" style="width:100%;padding:10px;border:1px solid var(--border);border-radius:6px;"/>';
+      container.appendChild(div);
+    }
+
+    function removeLessonField(id) {
+      var el = document.getElementById('lesson-' + id);
+      if (el) el.remove();
+    }
+
+    function collectLessons() {
+      var fields = document.querySelectorAll('.lesson-field');
+      var lessons = [];
+      fields.forEach(function(field) {
+        var title = field.querySelector('.lesson-title').value.trim();
+        var video = field.querySelector('.lesson-video').value.trim();
+        var duration = field.querySelector('.lesson-duration').value.trim();
+        if (title && video) {
+          lessons.push({ title: title, videoUrl: video, duration: duration || 'N/A' });
+        }
+      });
+      return lessons;
+    }
+
+    function loadMyCourses() {
+      var user = auth.currentUser;
+      if (!user) { renderMyCourses([]); return; }
+
+      nexaGetInstructorCourses(user.uid)
+        .then(function(courses) {
+          myCourses = courses;
+          renderMyCourses(courses);
+          updateStats();
+        })
+        .catch(function(err) {
+          console.log('Error loading courses:', err);
+          renderMyCourses([]);
+        });
+    }
+
+    function updateStats() {
+      var coursesEl = document.getElementById('stat-courses');
+      var studentsEl = document.getElementById('stat-students');
+      if (coursesEl) coursesEl.textContent = myCourses.length;
+      var totalStudents = myCourses.reduce(function(s, c) { return s + (c.students || 0); }, 0);
+      if (studentsEl) studentsEl.textContent = totalStudents;
+    }
+
+    function renderMyCourses(courses) {
+      var list = document.getElementById('my-courses-list');
+      if (!list) return;
+      if (!courses || courses.length === 0) {
+        list.innerHTML =
+          '<div class="empty-products">' +
+            '<div style="font-size:3em;margin-bottom:12px">🎓</div>' +
+            '<h3>No courses yet</h3>' +
+            '<p>Create your first course to start teaching</p>' +
+            '<button class="btn-primary" onclick="showTab(\'add-course\')">➕ Create Course</button>' +
+          '</div>';
+        return;
+      }
+      list.innerHTML = courses.map(function(c) {
+        var priceLabel = c.isFree ? 'Free' : '₦' + parseInt(c.price).toLocaleString();
+        return '<div class="my-product-row">' +
+          '<div class="mp-img">' + (c.emoji || '🎓') + '</div>' +
+          '<div class="mp-info">' +
+            '<div class="mp-name">' + c.title + '</div>' +
+            '<div class="mp-cat">' + c.category + ' • ' + (c.lessons ? c.lessons.length : 0) + ' lessons</div>' +
+            '<div class="mp-stock">👨‍🎓 ' + (c.students || 0) + ' students</div>' +
+          '</div>' +
+          '<div class="mp-price">' + priceLabel + '</div>' +
+          '<div class="mp-actions">' +
+            '<button onclick="previewCourse(\'' + c.id + '\')" style="padding:6px 10px;background:white;border:1px solid var(--border);border-radius:6px;cursor:pointer;margin-right:4px;">👁️</button>' +
+            '<button onclick="deleteCourse(\'' + c.id + '\')" class="btn-delete">🗑️</button>' +
+          '</div>' +
+        '</div>';
+      }).join('');
+    }
+
+    function selectEmoji(emoji) {
+      selectedEmoji = emoji;
+      var preview = document.getElementById('preview-emoji');
+      var placeholder = document.getElementById('upload-placeholder');
+      var previewEl = document.getElementById('upload-preview');
+
+      if (preview) preview.textContent = emoji;
+      if (placeholder) placeholder.style.display = 'none';
+      if (previewEl) previewEl.style.display = 'flex';
+
+      document.querySelectorAll('.emoji-grid span').forEach(function(s) {
+        s.classList.remove('selected');
+      });
+      event.target.classList.add('selected');
+    }
+
+    function triggerImageUpload() {
+      document.getElementById('image-file').click();
+    }
+
+    function previewImage() {
+      var file = document.getElementById('image-file').files[0];
+      if (!file) return;
+      selectedImageFile = file;
+
+      var reader = new FileReader();
+      reader.onload = function(e) {
+        document.getElementById('upload-placeholder').style.display = 'none';
+        var previewEl = document.getElementById('upload-preview');
+        previewEl.style.display = 'flex';
+        previewEl.innerHTML = '<img src="' + e.target.result + '" style="max-width:100%;max-height:150px;border-radius:8px;"/>';
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function publishCourse() {
+      var title    = document.getElementById('ac-title').value.trim();
+      var category = document.getElementById('ac-category').value;
+      var desc     = document.getElementById('ac-desc').value.trim();
+      var level    = document.getElementById('ac-level').value;
+      var price    = document.getElementById('ac-price').value;
+      var errEl    = document.getElementById('ac-error');
+      var sucEl    = document.getElementById('ac-success');
+
+      errEl.style.display = 'none';
+      sucEl.style.display = 'none';
+
+      var lessons = collectLessons();
+
+      if (!title)    { errEl.textContent = 'Enter course title';     errEl.style.display = 'block'; return; }
+      if (!category) { errEl.textContent = 'Select a category';      errEl.style.display = 'block'; return; }
+      if (!desc)     { errEl.textContent = 'Enter description';      errEl.style.display = 'block'; return; }
+      if (!isFreeCourse && !price) { errEl.textContent = 'Enter price or mark as free'; errEl.style.display = 'block'; return; }
+      if (lessons.length === 0) { errEl.textContent = 'Add at least one lesson with title and video link'; errEl.style.display = 'block'; return; }
+
+      var user = auth.currentUser;
+      if (!user) {
+        errEl.textContent = 'Please login first';
+        errEl.style.display = 'block';
+        return;
+      }
+
+      var publishBtn = document.querySelector('.btn-publish');
+      if (publishBtn) { publishBtn.textContent = 'Publishing...'; publishBtn.disabled = true; }
+
+      var userData = JSON.parse(localStorage.getItem('nexa_current_user') || '{}');
+
+      var uploadPromise = selectedImageFile
+        ? uploadImageToImgBB(selectedImageFile)
+        : Promise.resolve('');
+
+      uploadPromise.then(function(imageUrl) {
+        return nexaAddCourse({
+          title: title, category: category, description: desc, level: level,
+          price: isFreeCourse ? 0 : price, isFree: isFreeCourse,
+          emoji: selectedEmoji || '🎓', imageUrl: imageUrl,
+          lessons: lessons,
+          instructorName: userData.fullName || userData.firstName || 'Instructor',
+        });
+      })
+      .then(function(courseId) {
+        sucEl.textContent = '🎉 Course published! ID: ' + courseId;
+        sucEl.style.display = 'block';
+
+        document.getElementById('ac-title').value = '';
+        document.getElementById('ac-category').value = '';
+        document.getElementById('ac-desc').value = '';
+        document.getElementById('ac-price').value = '';
+        document.getElementById('upload-placeholder').style.display = 'block';
+        document.getElementById('upload-preview').style.display = 'none';
+        document.getElementById('lessons-container').innerHTML = '';
+        lessonCount = 0;
+        addLessonField();
+        selectedEmoji = '🎓';
+        selectedImageFile = null;
+        setPriceType(false);
+
+        if (publishBtn) { publishBtn.textContent = '🚀 Publish Course'; publishBtn.disabled = false; }
+
+        loadMyCourses();
+      })
+      .catch(function(err) {
+        errEl.textContent = '❌ Error: ' + (err.message || err.toString());
+        errEl.style.display = 'block';
+        if (publishBtn) { publishBtn.textContent = '🚀 Publish Course'; publishBtn.disabled = false; }
+      });
+    }
+
+    function previewCourse(courseId) {
+      var course = myCourses.find(function(c) { return c.id === courseId; });
+      if (!course) { showToast('Course not found'); return; }
+
+      var imgHtml = course.imageUrl
+        ? '<img src="' + course.imageUrl + '" style="width:100%;border-radius:10px;margin-bottom:14px;"/>'
+        : '<div style="font-size:4em;text-align:center;background:var(--gray);border-radius:10px;padding:30px 0;margin-bottom:14px;">' + (course.emoji || '🎓') + '</div>';
+
+      var lessonsHtml = (course.lessons || []).map(function(l, i) {
+        return '<div style="padding:8px 0;border-bottom:1px solid var(--border);font-size:0.85em;">' + (i+1) + '. ' + l.title + ' (' + l.duration + ')</div>';
+      }).join('');
+
+      var body = document.getElementById('preview-modal-body');
+      body.innerHTML =
+        imgHtml +
+        '<h2 style="font-size:1.2em;margin-bottom:6px;">' + course.title + '</h2>' +
+        '<div style="color:var(--orange);font-size:1.4em;font-weight:800;margin-bottom:10px;">' + (course.isFree ? 'Free' : '₦' + parseInt(course.price).toLocaleString()) + '</div>' +
+        '<p style="font-size:0.9em;color:var(--text2);line-height:1.6;margin-bottom:14px;">' + (course.description || '') + '</p>' +
+        '<h3 style="font-size:1em;margin-bottom:6px;">Lessons (' + (course.lessons ? course.lessons.length : 0) + ')</h3>' +
+        lessonsHtml;
+
+      document.getElementById('preview-modal-overlay').style.display = 'block';
+      document.getElementById('preview-modal').style.display = 'block';
+    }
+
+    function closePreviewModal() {
+      document.getElementById('preview-modal-overlay').style.display = 'none';
+      document.getElementById('preview-modal').style.display = 'none';
+    }
+
+    function deleteCourse(courseId) {
+      if (confirm('Delete this course?')) {
+        nexaDeleteCourse(courseId)
+          .then(function() {
+            showToast('🗑️ Course deleted');
+            myCourses = myCourses.filter(function(c) { return c.id !== courseId; });
+            renderMyCourses(myCourses);
+            updateStats();
+            setTimeout(function() { loadMyCourses(); }, 800);
+          })
+          .catch(function(err) {
+            showToast('Error: ' + err.message);
+          });
+      }
+    }
+
+    function saveInstructorSettings() {
+      showToast('✅ Settings saved!');
+    }
+
+    function doInstructorLogout() {
+      if (typeof nexaLogout === 'function') {
+        nexaLogout().then(function() {
+          localStorage.removeItem('nexa_current_user');
+          window.location.href = '../../index.html';
+        });
+      } else {
+        localStorage.removeItem('nexa_current_user');
+        window.location.href = '../../index.html';
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      init();
+    });
+
+  </script>
+
+</body>
+</html>
