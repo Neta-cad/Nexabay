@@ -188,10 +188,16 @@
     </div>
   </footer>
 
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="../../js/firebase/config.js"></script>
+  <script src="../../js/firebase/auth.js"></script>
+  <script src="../../js/firebase/food.js"></script>
   <script src="../../js/core/main.js"></script>
   <script>
 
-    var ALL_RESTAURANTS = [
+    var DEMO_RESTAURANTS = [
       { id:1,  name:'The Place Restaurant',   category:'Nigerian',  rating:4.8, reviews:1240, deliveryTime:35, deliveryFee:500,  minOrder:3000,  emoji:'🍛', isOpen:true,  isFree:false, tags:['Jollof Rice','Egusi Soup','Pounded Yam'] },
       { id:2,  name:'Chicken Republic',       category:'Fast Food', rating:4.7, reviews:2340, deliveryTime:25, deliveryFee:0,    minOrder:2000,  emoji:'🍗', isOpen:true,  isFree:true,  tags:['Fried Chicken','Burgers','Sides'] },
       { id:3,  name:'Dominos Pizza',          category:'Pizza',     rating:4.6, reviews:890,  deliveryTime:45, deliveryFee:1000, minOrder:5000,  emoji:'🍕', isOpen:true,  isFree:false, tags:['Pizza','Pasta','Garlic Bread'] },
@@ -210,8 +216,51 @@
       { id:16, name:'Coldstone Creamery',     category:'Desserts',  rating:4.8, reviews:2300, deliveryTime:30, deliveryFee:0,    minOrder:3000,  emoji:'🍦', isOpen:true,  isFree:true,  tags:['Ice Cream','Smoothies','Waffles'] },
     ];
 
-    var currentRestaurants = ALL_RESTAURANTS.slice();
+    var ALL_RESTAURANTS = [];
+    var currentRestaurants = [];
     var currentCategory = 'all';
+
+    function loadAllRestaurants() {
+      nexaGetFoodItems('all')
+        .then(function(realItems) {
+          var grouped = {};
+          realItems.forEach(function(item) {
+            var rid = item.restaurantId;
+            if (!grouped[rid]) {
+              grouped[rid] = {
+                id: rid,
+                name: item.restaurantName || 'Nexabay Restaurant',
+                category: item.category || 'Restaurant',
+                rating: 0,
+                reviews: 0,
+                deliveryTime: 30,
+                deliveryFee: 500,
+                minOrder: 1000,
+                emoji: item.emoji || '🍽️',
+                imageUrl: item.imageUrl || '',
+                isOpen: item.available !== false,
+                isFree: false,
+                tags: [],
+                isReal: true,
+              };
+            }
+            if (item.name && grouped[rid].tags.length < 3) {
+              grouped[rid].tags.push(item.name);
+            }
+          });
+
+          var realRestaurants = Object.values(grouped);
+          ALL_RESTAURANTS = realRestaurants.concat(DEMO_RESTAURANTS);
+          currentRestaurants = ALL_RESTAURANTS.slice();
+          renderRestaurants();
+        })
+        .catch(function(err) {
+          console.log('Error loading food:', err);
+          ALL_RESTAURANTS = DEMO_RESTAURANTS.slice();
+          currentRestaurants = ALL_RESTAURANTS.slice();
+          renderRestaurants();
+        });
+    }
 
     function renderRestaurants() {
       var grid = document.getElementById('restaurants-grid');
@@ -228,9 +277,12 @@
       if (count) count.textContent = 'Showing ' + currentRestaurants.length + ' restaurants';
 
       grid.innerHTML = currentRestaurants.map(function(r) {
-        return '<div class="restaurant-card ' + (!r.isOpen ? 'closed' : '') + '" onclick="viewRestaurant(' + r.id + ')">' +
+        var imgContent = r.imageUrl
+          ? '<img src="' + r.imageUrl + '" style="width:100%;height:100%;object-fit:cover;"/>'
+          : r.emoji;
+        return '<div class="restaurant-card ' + (!r.isOpen ? 'closed' : '') + '" onclick="viewRestaurant(\'' + r.id + '\')">' +
           '<div class="rc-cover">' +
-            '<div class="rc-emoji">' + r.emoji + '</div>' +
+            '<div class="rc-emoji">' + imgContent + '</div>' +
             (!r.isOpen ? '<div class="rc-closed-overlay">Closed</div>' : '') +
             (r.isFree ? '<div class="rc-free-badge">Free Delivery</div>' : '') +
           '</div>' +
@@ -249,7 +301,7 @@
               '<span>💰 Min ₦' + r.minOrder.toLocaleString() + '</span>' +
               '<span>' + (r.isFree ? '🆓 Free delivery' : '🚚 ₦' + r.deliveryFee.toLocaleString()) + '</span>' +
             '</div>' +
-            '<button class="rc-order-btn" onclick="event.stopPropagation();orderFromRestaurant(' + r.id + ')">' +
+            '<button class="rc-order-btn" onclick="event.stopPropagation();orderFromRestaurant(\'' + r.id + '\')">' +
               (r.isOpen ? 'Order Now' : 'Pre-Order') +
             '</button>' +
           '</div>' +
@@ -291,23 +343,17 @@
     }
 
     function viewRestaurant(id) {
-      showToast('🍽️ Restaurant menu coming soon!');
+      window.location.href = 'restaurant.html?id=' + id;
     }
 
     function orderFromRestaurant(id) {
-      var user = localStorage.getItem('nexa_current_user');
-      if (!user) {
-        showToast('⚠️ Please login to order', '#ff9500');
-        setTimeout(function() { window.location.href = '../auth/login.html'; }, 1500);
-        return;
-      }
-      showToast('🛒 Added to cart! View your cart to checkout.');
+      window.location.href = 'restaurant.html?id=' + id;
     }
 
     document.addEventListener('DOMContentLoaded', function() {
       updateCartCount();
       checkAuthState();
-      renderRestaurants();
+      loadAllRestaurants();
       var input = document.getElementById('search-input');
       if (input) {
         input.addEventListener('keypress', function(e) {

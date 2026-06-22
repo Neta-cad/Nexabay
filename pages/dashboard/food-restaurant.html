@@ -148,3 +148,726 @@
 
         <div id="my-menu-list" class="my-products-list"></div>
       </div>
+      <!-- ADD MENU ITEM TAB -->
+      <div class="dash-tab" id="tab-add-item" style="display:none;">
+        <div class="dash-header">
+          <h1>Add Menu Item</h1>
+        </div>
+
+        <div class="add-product-form">
+
+          <div class="form-section">
+            <h3>Item Details</h3>
+
+            <div class="form-group">
+              <label>Item Name *</label>
+              <input type="text" id="mi-name" placeholder="e.g. Jollof Rice & Chicken" maxlength="100"/>
+            </div>
+
+            <div class="form-group">
+              <label>Restaurant/Store Category *</label>
+              <select id="mi-category">
+                <option value="">Select type</option>
+                <option>Restaurant</option>
+                <option>Fast Food</option>
+                <option>Cloud Kitchen</option>
+                <option>Grocery Store</option>
+                <option>Bakery</option>
+                <option>Drinks & Bar</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>Menu Category *</label>
+              <select id="mi-menu-category">
+                <option value="">Select menu section</option>
+                <option>Starters</option>
+                <option>Mains</option>
+                <option>Drinks</option>
+                <option>Desserts</option>
+                <option>Groceries</option>
+                <option>Snacks</option>
+                <option>Combos</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>Description *</label>
+              <textarea id="mi-desc" placeholder="Describe the item, ingredients..." rows="3"></textarea>
+            </div>
+
+            <div class="form-row-2">
+              <div class="form-group">
+                <label>Price (₦) *</label>
+                <input type="number" id="mi-price" placeholder="0" min="0"/>
+              </div>
+              <div class="form-group">
+                <label>Prep Time</label>
+                <select id="mi-prep">
+                  <option value="5-10 mins">5-10 mins</option>
+                  <option value="10-20 mins">10-20 mins</option>
+                  <option value="20-30 mins" selected>20-30 mins</option>
+                  <option value="30-45 mins">30-45 mins</option>
+                  <option value="45-60 mins">45-60 mins</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <h3>Customization Options</h3>
+            <p style="color:var(--text2);font-size:0.85em;margin-bottom:12px;">
+              Add options buyers can choose from (e.g. size, spice level, extras)
+            </p>
+
+            <div id="customizations-container"></div>
+
+            <button type="button" onclick="addCustomizationField()"
+              style="width:100%;padding:12px;background:var(--gray);border:2px dashed var(--border);border-radius:8px;cursor:pointer;margin-top:8px;font-weight:600;">
+              ➕ Add Customization Option
+            </button>
+          </div>
+
+          <div class="form-section">
+            <h3>Item Image</h3>
+            <div class="image-upload" id="image-upload" onclick="triggerImageUpload()">
+              <div class="upload-placeholder" id="upload-placeholder">
+                <div class="upload-icon">📷</div>
+                <p>Click to add a food photo</p>
+                <small>JPG, PNG up to 5MB</small>
+              </div>
+              <div class="upload-preview" id="upload-preview" style="display:none;">
+                <span id="preview-emoji">🍽️</span>
+              </div>
+            </div>
+            <input type="file" id="image-file" style="display:none;" accept="image/*" onchange="previewImage()"/>
+
+            <div class="emoji-selector">
+              <p>Or pick an emoji:</p>
+              <div class="emoji-grid">
+                <span onclick="selectEmoji('🍛')">🍛</span>
+                <span onclick="selectEmoji('🍲')">🍲</span>
+                <span onclick="selectEmoji('🍗')">🍗</span>
+                <span onclick="selectEmoji('🍔')">🍔</span>
+                <span onclick="selectEmoji('🍕')">🍕</span>
+                <span onclick="selectEmoji('🍜')">🍜</span>
+                <span onclick="selectEmoji('🥗')">🥗</span>
+                <span onclick="selectEmoji('🍰')">🍰</span>
+                <span onclick="selectEmoji('🥤')">🥤</span>
+                <span onclick="selectEmoji('🍺')">🍺</span>
+                <span onclick="selectEmoji('🛒')">🛒</span>
+                <span onclick="selectEmoji('🥖')">🥖</span>
+              </div>
+            </div>
+          </div>
+
+          <div id="mi-error" class="ap-error" style="display:none;"></div>
+          <div id="mi-success" class="ap-success" style="display:none;"></div>
+
+          <div class="form-actions">
+            <button class="btn-publish" onclick="publishMenuItem()">
+              🚀 Add to Menu
+            </button>
+          </div>
+
+        </div>
+      </div>
+      <!-- ORDERS TAB -->
+      <div class="dash-tab" id="tab-orders" style="display:none;">
+        <div class="dash-header">
+          <h1>Orders</h1>
+        </div>
+
+        <div class="orders-filter">
+          <button class="order-filter-btn active" onclick="filterOrders('all', this)">All</button>
+          <button class="order-filter-btn" onclick="filterOrders('pending', this)">Pending</button>
+          <button class="order-filter-btn" onclick="filterOrders('preparing', this)">Preparing</button>
+          <button class="order-filter-btn" onclick="filterOrders('ready', this)">Ready</button>
+          <button class="order-filter-btn" onclick="filterOrders('delivered', this)">Delivered</button>
+        </div>
+
+        <div class="orders-table-wrap">
+          <table class="orders-table">
+            <thead>
+              <tr>
+                <th>Order ID</th>
+                <th>Customer</th>
+                <th>Items</th>
+                <th>Total</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="food-orders-body">
+              <tr><td colspan="6" style="text-align:center;color:var(--text2);padding:20px">No orders yet</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- EARNINGS TAB -->
+      <div class="dash-tab" id="tab-earnings" style="display:none;">
+        <div class="dash-header">
+          <h1>Earnings & Withdrawals</h1>
+        </div>
+
+        <div class="earnings-cards">
+          <div class="earning-card">
+            <div class="ec-label">Total Revenue</div>
+            <div class="ec-value" id="ec-total">₦0</div>
+          </div>
+          <div class="earning-card">
+            <div class="ec-label">Available Balance</div>
+            <div class="ec-value green" id="ec-available">₦0</div>
+          </div>
+          <div class="earning-card">
+            <div class="ec-label">Nexabay Fee (10%)</div>
+            <div class="ec-value orange" id="ec-fee">₦0</div>
+          </div>
+        </div>
+
+        <div class="withdraw-section">
+          <h3>Withdraw Funds</h3>
+          <div class="withdraw-form">
+            <div class="form-group">
+              <label>Bank Name</label>
+              <select id="wd-bank">
+                <option>GTBank</option>
+                <option>Access Bank</option>
+                <option>First Bank</option>
+                <option>Zenith Bank</option>
+                <option>UBA</option>
+                <option>Opay</option>
+                <option>Palmpay</option>
+                <option>Kuda Bank</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Account Number</label>
+              <input type="text" id="wd-account" placeholder="10 digit account number" maxlength="10"/>
+            </div>
+            <div class="form-group">
+              <label>Account Name</label>
+              <input type="text" id="wd-name" placeholder="Account holder name"/>
+            </div>
+            <div class="form-group">
+              <label>Amount to Withdraw (₦)</label>
+              <input type="number" id="wd-amount" placeholder="Minimum ₦1,000" min="1000"/>
+            </div>
+            <div id="wd-error" style="color:#cc0000;font-size:0.85em;display:none;"></div>
+            <div id="wd-success" style="color:#006622;font-size:0.85em;display:none;"></div>
+            <button class="btn-withdraw" onclick="processWithdrawal()">
+              💸 Withdraw Now
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- SETTINGS TAB -->
+      <div class="dash-tab" id="tab-settings" style="display:none;">
+        <div class="dash-header">
+          <h1>Restaurant Settings</h1>
+        </div>
+
+        <div class="settings-card">
+          <h3>Restaurant Profile</h3>
+          <div class="form-group">
+            <label>Restaurant/Store Name</label>
+            <input type="text" id="rest-name" placeholder="Your restaurant name"/>
+          </div>
+          <div class="form-group">
+            <label>Description</label>
+            <textarea id="rest-desc" rows="3" placeholder="Tell customers about your food..."></textarea>
+          </div>
+          <div class="form-group">
+            <label>Location</label>
+            <select id="rest-location">
+              <option value="">Select state</option>
+              <option>Lagos</option>
+              <option>Abuja FCT</option>
+              <option>Rivers</option>
+              <option>Kano</option>
+              <option>Oyo</option>
+              <option>Enugu</option>
+              <option>Anambra</option>
+              <option>Delta</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>WhatsApp Number</label>
+            <input type="tel" id="rest-whatsapp" placeholder="080xxxxxxxx"/>
+          </div>
+          <div class="form-group">
+            <label class="checkbox-label">
+              <input type="checkbox" id="rest-open"/>
+              Restaurant is currently open for orders
+            </label>
+          </div>
+          <button class="btn-save" onclick="saveRestaurantSettings()">Save Changes</button>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- PREVIEW MODAL -->
+  <div id="preview-modal-overlay" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);z-index:900;" onclick="closePreviewModal()"></div>
+  <div id="preview-modal" style="display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:white;border-radius:14px;max-width:380px;width:90%;max-height:85vh;overflow-y:auto;z-index:901;padding:20px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+      <h3 style="font-size:1.1em;font-weight:700;">Menu Item Preview</h3>
+      <button onclick="closePreviewModal()" style="background:var(--gray);border:none;width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:0.9em;">✕</button>
+    </div>
+    <div id="preview-modal-body"></div>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="../../js/firebase/config.js"></script>
+  <script src="../../js/firebase/auth.js"></script>
+  <script src="../../js/firebase/food.js"></script>
+  <script src="../../js/firebase/imgbb.js"></script>
+  <script src="../../js/core/main.js"></script>
+  <script>
+
+    var myMenuItems = [];
+    var myFoodOrders = [];
+    var selectedEmoji = '🍽️';
+    var selectedImageFile = null;
+    var customizationCount = 0;
+
+    function init() {
+      var user = JSON.parse(localStorage.getItem('nexa_current_user') || 'null');
+      if (user) {
+        var nameEl   = document.getElementById('dash-name');
+        var avatarEl = document.getElementById('dash-avatar');
+        var navEl    = document.getElementById('nav-restaurant-name');
+        if (nameEl)   nameEl.textContent   = user.fullName || user.firstName || 'Restaurant';
+        if (avatarEl) avatarEl.textContent = (user.firstName || 'R')[0].toUpperCase();
+        if (navEl)    navEl.textContent    = user.firstName + '\'s Restaurant';
+      }
+    }
+
+    if (typeof auth !== 'undefined') {
+      auth.onAuthStateChanged(function(user) {
+        if (user) {
+          loadMyMenuItems();
+          loadMyOrders();
+        }
+      });
+    }
+
+    function showTab(tab) {
+      var tabs = document.querySelectorAll('.dash-tab');
+      tabs.forEach(function(t) { t.style.display = 'none'; });
+
+      var navItems = document.querySelectorAll('.dash-nav-item');
+      navItems.forEach(function(n) { n.classList.remove('active'); });
+
+      var target = document.getElementById('tab-' + tab);
+      if (target) target.style.display = 'block';
+
+      var navMap = {
+        'overview': 0, 'menu': 1, 'add-item': 2,
+        'orders': 3, 'earnings': 4, 'settings': 5
+      };
+      var index = navMap[tab];
+      if (index !== undefined && navItems[index]) {
+        navItems[index].classList.add('active');
+      }
+    }
+
+    function loadMyMenuItems() {
+      var user = auth.currentUser;
+      if (!user) { renderMyMenu([]); return; }
+
+      nexaGetRestaurantItems(user.uid)
+        .then(function(items) {
+          myMenuItems = items;
+          renderMyMenu(items);
+          updateStats();
+        })
+        .catch(function(err) {
+          console.log('Error loading menu:', err);
+          renderMyMenu([]);
+        });
+    }
+
+    function loadMyOrders() {
+      var user = auth.currentUser;
+      if (!user) return;
+
+      nexaGetRestaurantOrders(user.uid)
+        .then(function(orders) {
+          myFoodOrders = orders;
+          renderOrders('all');
+          updateStats();
+        })
+        .catch(function(err) {
+          console.log('Error loading orders:', err);
+        });
+    }
+
+    function updateStats() {
+      var itemsEl   = document.getElementById('stat-items');
+      var ordersEl  = document.getElementById('stat-orders');
+      var revenueEl = document.getElementById('stat-revenue');
+      var balanceEl = document.getElementById('stat-balance');
+
+      if (itemsEl)   itemsEl.textContent   = myMenuItems.length;
+      if (ordersEl)  ordersEl.textContent  = myFoodOrders.length;
+
+      var revenue = myFoodOrders.reduce(function(s, o) { return s + (o.total || 0); }, 0);
+      var balance = Math.round(revenue * 0.9);
+
+      if (revenueEl) revenueEl.textContent = '₦' + revenue.toLocaleString();
+      if (balanceEl) balanceEl.textContent = '₦' + balance.toLocaleString();
+
+      var ecTotal = document.getElementById('ec-total');
+      var ecAvail = document.getElementById('ec-available');
+      var ecFee   = document.getElementById('ec-fee');
+      if (ecTotal) ecTotal.textContent = '₦' + revenue.toLocaleString();
+      if (ecAvail) ecAvail.textContent = '₦' + balance.toLocaleString();
+      if (ecFee)   ecFee.textContent   = '₦' + Math.round(revenue * 0.1).toLocaleString();
+    }
+
+    function filterMenuItems() {
+      var cat = document.getElementById('menu-cat-filter').value;
+      var filtered = cat === 'all'
+        ? myMenuItems
+        : myMenuItems.filter(function(i) { return i.menuCategory === cat; });
+      renderMyMenu(filtered);
+    }
+
+    function renderMyMenu(items) {
+      var list = document.getElementById('my-menu-list');
+      if (!list) return;
+      if (!items || items.length === 0) {
+        list.innerHTML =
+          '<div class="empty-products">' +
+            '<div style="font-size:3em;margin-bottom:12px">🍽️</div>' +
+            '<h3>No menu items yet</h3>' +
+            '<p>Add your first item to start receiving orders</p>' +
+            '<button class="btn-primary" onclick="showTab(\'add-item\')">➕ Add Item</button>' +
+          '</div>';
+        return;
+      }
+      list.innerHTML = items.map(function(item) {
+        return '<div class="my-product-row">' +
+          '<div class="mp-img">' + (item.emoji || '🍽️') + '</div>' +
+          '<div class="mp-info">' +
+            '<div class="mp-name">' + item.name + '</div>' +
+            '<div class="mp-cat">' + item.menuCategory + ' • ' + item.prepTime + '</div>' +
+            '<div class="mp-stock" style="color:' + (item.available ? 'var(--green)' : '#cc0000') + ';">' +
+              (item.available ? '✅ Available' : '❌ Unavailable') +
+            '</div>' +
+          '</div>' +
+          '<div class="mp-price">₦' + parseInt(item.price).toLocaleString() + '</div>' +
+          '<div class="mp-actions">' +
+            '<button onclick="toggleAvailability(\'' + item.id + '\', ' + !item.available + ')" style="padding:6px 10px;background:white;border:1px solid var(--border);border-radius:6px;cursor:pointer;margin-right:4px;font-size:0.8em;">' +
+              (item.available ? '❌ Mark Unavailable' : '✅ Mark Available') +
+            '</button>' +
+            '<button onclick="previewItem(\'' + item.id + '\')" style="padding:6px 10px;background:white;border:1px solid var(--border);border-radius:6px;cursor:pointer;margin-right:4px;">👁️</button>' +
+            '<button onclick="deleteMenuItem(\'' + item.id + '\')" class="btn-delete">🗑️</button>' +
+          '</div>' +
+        '</div>';
+      }).join('');
+    }
+
+    function addCustomizationField() {
+      customizationCount++;
+      var container = document.getElementById('customizations-container');
+      var div = document.createElement('div');
+      div.id = 'custom-' + customizationCount;
+      div.style.cssText = 'border:1px solid var(--border);border-radius:8px;padding:12px;margin-bottom:10px;';
+      div.innerHTML =
+        '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">' +
+          '<b style="font-size:0.9em;">Option ' + customizationCount + '</b>' +
+          '<button type="button" onclick="removeCustomization(' + customizationCount + ')" style="background:none;border:none;color:#cc0000;cursor:pointer;">✕ Remove</button>' +
+        '</div>' +
+        '<input type="text" class="custom-name" placeholder="Option name (e.g. Size, Spice Level)" style="width:100%;margin-bottom:8px;padding:10px;border:1px solid var(--border);border-radius:6px;"/>' +
+        '<input type="text" class="custom-values" placeholder="Values separated by commas (e.g. Small, Medium, Large)" style="width:100%;padding:10px;border:1px solid var(--border);border-radius:6px;"/>';
+      container.appendChild(div);
+    }
+
+    function removeCustomization(id) {
+      var el = document.getElementById('custom-' + id);
+      if (el) el.remove();
+    }
+
+    function collectCustomizations() {
+      var fields = document.querySelectorAll('#customizations-container > div');
+      var result = [];
+      fields.forEach(function(field) {
+        var name   = field.querySelector('.custom-name').value.trim();
+        var values = field.querySelector('.custom-values').value.trim();
+        if (name && values) {
+          result.push({
+            name: name,
+            values: values.split(',').map(function(v) { return v.trim(); }).filter(Boolean)
+          });
+        }
+      });
+      return result;
+    }
+
+    function triggerImageUpload() {
+      document.getElementById('image-file').click();
+    }
+
+    function previewImage() {
+      var file = document.getElementById('image-file').files[0];
+      if (!file) return;
+      selectedImageFile = file;
+
+      var reader = new FileReader();
+      reader.onload = function(e) {
+        document.getElementById('upload-placeholder').style.display = 'none';
+        var previewEl = document.getElementById('upload-preview');
+        previewEl.style.display = 'flex';
+        previewEl.innerHTML = '<img src="' + e.target.result + '" style="max-width:100%;max-height:150px;border-radius:8px;"/>';
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function selectEmoji(emoji) {
+      selectedEmoji = emoji;
+      document.getElementById('preview-emoji').textContent = emoji;
+      document.getElementById('upload-placeholder').style.display = 'none';
+      document.getElementById('upload-preview').style.display = 'flex';
+      document.querySelectorAll('.emoji-grid span').forEach(function(s) { s.classList.remove('selected'); });
+      event.target.classList.add('selected');
+    }
+
+    function publishMenuItem() {
+      var name         = document.getElementById('mi-name').value.trim();
+      var category     = document.getElementById('mi-category').value;
+      var menuCategory = document.getElementById('mi-menu-category').value;
+      var desc         = document.getElementById('mi-desc').value.trim();
+      var price        = document.getElementById('mi-price').value;
+      var prepTime     = document.getElementById('mi-prep').value;
+      var errEl        = document.getElementById('mi-error');
+      var sucEl        = document.getElementById('mi-success');
+
+      errEl.style.display = 'none';
+      sucEl.style.display = 'none';
+
+      if (!name)         { errEl.textContent = 'Enter item name';        errEl.style.display = 'block'; return; }
+      if (!category)     { errEl.textContent = 'Select restaurant type'; errEl.style.display = 'block'; return; }
+      if (!menuCategory) { errEl.textContent = 'Select menu category';   errEl.style.display = 'block'; return; }
+      if (!desc)         { errEl.textContent = 'Enter description';      errEl.style.display = 'block'; return; }
+      if (!price)        { errEl.textContent = 'Enter price';            errEl.style.display = 'block'; return; }
+
+      var user = auth.currentUser;
+      if (!user) { errEl.textContent = 'Please login first'; errEl.style.display = 'block'; return; }
+
+      var publishBtn = document.querySelector('.btn-publish');
+      if (publishBtn) { publishBtn.textContent = 'Adding...'; publishBtn.disabled = true; }
+
+      var userData = JSON.parse(localStorage.getItem('nexa_current_user') || '{}');
+      var customizations = collectCustomizations();
+
+      var uploadPromise = selectedImageFile
+        ? uploadImageToImgBB(selectedImageFile)
+        : Promise.resolve('');
+
+      uploadPromise.then(function(imageUrl) {
+        return nexaAddMenuItem({
+          name: name, category: category, menuCategory: menuCategory,
+          description: desc, price: price, prepTime: prepTime,
+          emoji: selectedEmoji || '🍽️', customizations: customizations,
+          restaurantName: userData.fullName || userData.firstName || 'Restaurant',
+        }, imageUrl);
+      })
+      .then(function(itemId) {
+        sucEl.textContent = '🎉 Item added to menu!';
+        sucEl.style.display = 'block';
+
+        document.getElementById('mi-name').value = '';
+        document.getElementById('mi-category').value = '';
+        document.getElementById('mi-menu-category').value = '';
+        document.getElementById('mi-desc').value = '';
+        document.getElementById('mi-price').value = '';
+        document.getElementById('customizations-container').innerHTML = '';
+        document.getElementById('upload-placeholder').style.display = 'block';
+        document.getElementById('upload-preview').style.display = 'none';
+        customizationCount = 0;
+        selectedEmoji = '🍽️';
+        selectedImageFile = null;
+
+        if (publishBtn) { publishBtn.textContent = '🚀 Add to Menu'; publishBtn.disabled = false; }
+        loadMyMenuItems();
+      })
+      .catch(function(err) {
+        errEl.textContent = '❌ Error: ' + (err.message || err.toString());
+        errEl.style.display = 'block';
+        if (publishBtn) { publishBtn.textContent = '🚀 Add to Menu'; publishBtn.disabled = false; }
+      });
+    }
+
+    function toggleAvailability(itemId, available) {
+      nexaToggleItemAvailability(itemId, available)
+        .then(function() {
+          showToast(available ? '✅ Item marked available' : '❌ Item marked unavailable');
+          loadMyMenuItems();
+        })
+        .catch(function(err) {
+          showToast('Error: ' + err.message);
+        });
+    }
+
+    function previewItem(itemId) {
+      var item = myMenuItems.find(function(i) { return i.id === itemId; });
+      if (!item) return;
+
+      var imgHtml = item.imageUrl
+        ? '<img src="' + item.imageUrl + '" style="width:100%;border-radius:10px;margin-bottom:14px;"/>'
+        : '<div style="font-size:4em;text-align:center;background:var(--gray);border-radius:10px;padding:30px 0;margin-bottom:14px;">' + (item.emoji || '🍽️') + '</div>';
+
+      var customHtml = (item.customizations || []).map(function(c) {
+        return '<div style="margin-bottom:8px;">' +
+          '<b style="font-size:0.85em;">' + c.name + ':</b> ' +
+          '<span style="font-size:0.85em;color:var(--text2);">' + c.values.join(', ') + '</span>' +
+        '</div>';
+      }).join('');
+
+      var body = document.getElementById('preview-modal-body');
+      body.innerHTML =
+        imgHtml +
+        '<h2 style="font-size:1.2em;margin-bottom:6px;">' + item.name + '</h2>' +
+        '<div style="color:var(--orange);font-size:1.4em;font-weight:800;margin-bottom:10px;">₦' + parseInt(item.price).toLocaleString() + '</div>' +
+        '<div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;">' +
+          '<span style="background:var(--gray);padding:4px 10px;border-radius:6px;font-size:0.8em;">' + item.menuCategory + '</span>' +
+          '<span style="background:var(--gray);padding:4px 10px;border-radius:6px;font-size:0.8em;">⏱️ ' + item.prepTime + '</span>' +
+        '</div>' +
+        '<p style="font-size:0.9em;color:var(--text2);line-height:1.6;margin-bottom:14px;">' + (item.description || '') + '</p>' +
+        (customHtml ? '<h3 style="font-size:0.95em;margin-bottom:8px;">Customization Options</h3>' + customHtml : '');
+
+      document.getElementById('preview-modal-overlay').style.display = 'block';
+      document.getElementById('preview-modal').style.display = 'block';
+    }
+
+    function closePreviewModal() {
+      document.getElementById('preview-modal-overlay').style.display = 'none';
+      document.getElementById('preview-modal').style.display = 'none';
+    }
+
+    function deleteMenuItem(itemId) {
+      if (confirm('Remove this item from your menu?')) {
+        nexaDeleteMenuItem(itemId)
+          .then(function() {
+            showToast('🗑️ Item removed');
+            myMenuItems = myMenuItems.filter(function(i) { return i.id !== itemId; });
+            renderMyMenu(myMenuItems);
+            updateStats();
+            setTimeout(function() { loadMyMenuItems(); }, 800);
+          })
+          .catch(function(err) { showToast('Error: ' + err.message); });
+      }
+    }
+
+    function renderOrders(filter) {
+      var body = document.getElementById('food-orders-body');
+      if (!body) return;
+      var filtered = filter === 'all'
+        ? myFoodOrders
+        : myFoodOrders.filter(function(o) { return o.status === filter; });
+
+      if (filtered.length === 0) {
+        body.innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--text2);padding:20px">No ' + (filter === 'all' ? '' : filter) + ' orders yet</td></tr>';
+        return;
+      }
+
+      body.innerHTML = filtered.map(function(o) {
+        var itemNames = (o.items || []).map(function(i) { return i.name; }).join(', ');
+        return '<tr>' +
+          '<td><b>' + o.id.slice(-6) + '</b></td>' +
+          '<td>' + (o.customerName || 'Customer') + '</td>' +
+          '<td style="font-size:0.8em;">' + itemNames + '</td>' +
+          '<td>₦' + (o.total || 0).toLocaleString() + '</td>' +
+          '<td><span class="status-badge status-' + o.status + '">' + o.status + '</span></td>' +
+          '<td><button class="btn-update-status" onclick="updateFoodOrder(\'' + o.id + '\', \'' + o.status + '\')">Update</button></td>' +
+        '</tr>';
+      }).join('');
+    }
+
+    function filterOrders(status, btn) {
+      var btns = document.querySelectorAll('.order-filter-btn');
+      btns.forEach(function(b) { b.classList.remove('active'); });
+      btn.classList.add('active');
+      renderOrders(status);
+    }
+
+    function updateFoodOrder(orderId, currentStatus) {
+      var statuses = ['pending', 'preparing', 'ready', 'delivered'];
+      var next = statuses[statuses.indexOf(currentStatus) + 1];
+      if (!next) { showToast('Order already delivered ✅'); return; }
+
+      nexaUpdateFoodOrderStatus(orderId, next)
+        .then(function() {
+          showToast('✅ Order updated to: ' + next);
+          loadMyOrders();
+        })
+        .catch(function(err) { showToast('Error: ' + err.message); });
+    }
+
+    function processWithdrawal() {
+      var account = document.getElementById('wd-account').value.trim();
+      var name    = document.getElementById('wd-name').value.trim();
+      var amount  = parseInt(document.getElementById('wd-amount').value);
+      var errEl   = document.getElementById('wd-error');
+      var sucEl   = document.getElementById('wd-success');
+
+      errEl.style.display = 'none';
+      sucEl.style.display = 'none';
+
+      if (!account || account.length !== 10) { errEl.textContent = 'Enter valid 10-digit account number'; errEl.style.display = 'block'; return; }
+      if (!name)   { errEl.textContent = 'Enter account name';    errEl.style.display = 'block'; return; }
+      if (!amount || amount < 1000) { errEl.textContent = 'Minimum withdrawal is ₦1,000'; errEl.style.display = 'block'; return; }
+
+      var user = auth.currentUser;
+      if (!user) return;
+
+      db.collection('withdrawalRequests').add({
+        userId:    user.uid,
+        userType:  'restaurant',
+        bank:      document.getElementById('wd-bank').value,
+        account:   account,
+        name:      name,
+        amount:    amount,
+        status:    'pending',
+        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+      }).then(function() {
+        sucEl.textContent = '✅ Withdrawal request submitted! We will process within 1-2 business days.';
+        sucEl.style.display = 'block';
+        document.getElementById('wd-amount').value = '';
+      }).catch(function(err) {
+        errEl.textContent = 'Error: ' + err.message;
+        errEl.style.display = 'block';
+      });
+    }
+
+    function saveRestaurantSettings() {
+      showToast('✅ Settings saved!');
+    }
+
+    function doRestaurantLogout() {
+      if (typeof nexaLogout === 'function') {
+        nexaLogout().then(function() {
+          localStorage.removeItem('nexa_current_user');
+          window.location.href = '../../index.html';
+        });
+      } else {
+        localStorage.removeItem('nexa_current_user');
+        window.location.href = '../../index.html';
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      init();
+    });
+
+  </script>
+
+</body>
+</html>

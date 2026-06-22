@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Restaurant — Nexabay</title>
+  <link rel="stylesheet" href="../../css/main.css"/>
+  <link rel="stylesheet" href="../../css/food.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="nav-inner">
+      <a href="../../index.html" class="logo">
+        <span class="logo-nexa">Nexa</span><span class="logo-bay">bay</span>
+      </a>
+      <div class="nav-actions">
+        <a href="browse.html" class="nav-link">← All Restaurants</a>
+        <a href="../shop/cart.html" class="cart-icon-desk">
+          🛒 <span class="cart-count" id="cart-count">0</span>
+        </a>
+      </div>
+      <button class="hamburger" onclick="toggleMobileMenu()">☰</button>
+    </div>
+    <div class="mobile-menu" id="mobile-menu">
+      <a href="../../index.html">Home</a>
+      <a href="browse.html">Food</a>
+      <a href="../auth/login.html">Login</a>
+    </div>
+  </nav>
+
+  <!-- RESTAURANT HEADER -->
+  <div id="restaurant-header" style="background:var(--dark);color:white;padding:30px 0;">
+    <div class="container">
+      <div style="display:flex;align-items:center;gap:16px;">
+        <div id="rest-emoji" style="font-size:3em;">🍽️</div>
+        <div>
+          <h1 id="rest-name" style="font-size:1.6em;margin-bottom:4px;">Loading...</h1>
+          <div id="rest-meta" style="color:#aaa;font-size:0.85em;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MENU CATEGORIES -->
+  <div style="background:white;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:50;">
+    <div class="container">
+      <div id="menu-cats" style="display:flex;gap:8px;overflow-x:auto;padding:12px 0;"></div>
+    </div>
+  </div>
+
+  <!-- MENU ITEMS -->
+  <div class="container" style="margin-top:20px;">
+    <div id="menu-loading" style="text-align:center;padding:40px;color:var(--text2);">
+      <div style="font-size:2em;margin-bottom:10px;">⏳</div>
+      <p>Loading menu...</p>
+    </div>
+    <div id="menu-content" style="display:none;"></div>
+  </div>
+
+  <!-- CART DRAWER -->
+  <div id="cart-drawer" style="display:none;position:fixed;bottom:0;left:0;right:0;background:white;border-top:2px solid var(--orange);padding:16px;z-index:200;box-shadow:0 -4px 20px rgba(0,0,0,0.1);">
+    <div style="display:flex;justify-content:space-between;align-items:center;">
+      <div>
+        <div style="font-weight:700;" id="drawer-count">0 items</div>
+        <div style="color:var(--orange);font-weight:800;font-size:1.1em;" id="drawer-total">₦0</div>
+      </div>
+      <button onclick="goToCart()" style="background:var(--orange);color:white;border:none;padding:12px 24px;border-radius:8px;font-weight:700;cursor:pointer;">
+        🛒 View Cart →
+      </button>
+    </div>
+  </div>
+
+  <div style="margin-bottom:100px;"></div>
+
+  <!-- CUSTOMIZATION MODAL -->
+  <div id="custom-overlay" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);z-index:900;" onclick="closeCustomModal()"></div>
+  <div id="custom-modal" style="display:none;position:fixed;bottom:0;left:0;right:0;background:white;border-radius:20px 20px 0 0;max-height:80vh;overflow-y:auto;z-index:901;padding:20px;">
+    <div id="custom-modal-body"></div>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="../../js/firebase/config.js"></script>
+  <script src="../../js/firebase/auth.js"></script>
+  <script src="../../js/firebase/food.js"></script>
+  <script src="../../js/core/main.js"></script>
+  <script>
+
+    var restaurantId = null;
+    var allMenuItems = [];
+    var foodCart = JSON.parse(localStorage.getItem('nexa_food_cart') || '[]');
+    var currentItem = null;
+    var selectedCustomizations = {};
+
+    function loadRestaurant() {
+      restaurantId = getParam('id');
+      if (!restaurantId) { showMenuError(); return; }
+
+      db.collection('foodItems')
+        .where('restaurantId', '==', restaurantId)
+        .where('status', '==', 'active')
+        .get()
+        .then(function(snap) {
+          allMenuItems = [];
+          snap.forEach(function(doc) {
+            allMenuItems.push(doc.data());
+          });
+
+          if (allMenuItems.length === 0) {
+            showMenuError();
+            return;
+          }
+
+          var first = allMenuItems[0];
+          document.getElementById('rest-name').textContent = first.restaurantName || 'Restaurant';
+          document.getElementById('rest-emoji').textContent = first.emoji || '🍽️';
+          document.getElementById('rest-meta').textContent =
+            first.category + ' • ' + allMenuItems.length + ' items available';
+          document.title = (first.restaurantName || 'Restaurant') + ' — Nexabay';
+
+          renderMenuCategories();
+          renderMenuItems('all');
+
+          document.getElementById('menu-loading').style.display = 'none';
+          document.getElementById('menu-content').style.display = 'block';
+        })
+        .catch(function(err) {
+          console.log('Error:', err);
+          showMenuError();
+        });
+    }
+
+    function renderMenuCategories() {
+      var cats = ['all'];
+      allMenuItems.forEach(function(item) {
+        if (item.menuCategory && !cats.includes(item.menuCategory)) {
+          cats.push(item.menuCategory);
+        }
+      });
+
+      var container = document.getElementById('menu-cats');
+      container.innerHTML = cats.map(function(cat) {
+        return '<button onclick="renderMenuItems(\'' + cat + '\', this)" ' +
+          'style="padding:8px 16px;border-radius:20px;border:1px solid var(--border);background:' +
+          (cat === 'all' ? 'var(--orange);color:white' : 'white') +
+          ';cursor:pointer;white-space:nowrap;font-weight:600;">' +
+          (cat === 'all' ? '🍽️ All' : cat) +
+        '</button>';
+      }).join('');
+    }
+
+    function renderMenuItems(cat, btn) {
+      if (btn) {
+        document.querySelectorAll('#menu-cats button').forEach(function(b) {
+          b.style.background = 'white';
+          b.style.color = 'inherit';
+        });
+        btn.style.background = 'var(--orange)';
+        btn.style.color = 'white';
+      }
+
+      var filtered = cat === 'all'
+        ? allMenuItems
+        : allMenuItems.filter(function(i) { return i.menuCategory === cat; });
+
+      var content = document.getElementById('menu-content');
+      content.innerHTML = filtered.map(function(item) {
+        var imgContent = item.imageUrl
+          ? '<img src="' + item.imageUrl + '" style="width:80px;height:80px;object-fit:cover;border-radius:8px;"/>'
+          : '<div style="width:80px;height:80px;background:var(--gray);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:2em;">' + (item.emoji || '🍽️') + '</div>';
+
+        return '<div style="display:flex;gap:12px;padding:16px 0;border-bottom:1px solid var(--border);">' +
+          imgContent +
+          '<div style="flex:1;">' +
+            '<div style="font-weight:700;margin-bottom:4px;">' + item.name + '</div>' +
+            '<div style="font-size:0.8em;color:var(--text2);margin-bottom:8px;line-height:1.4;">' + (item.description || '') + '</div>' +
+            '<div style="display:flex;justify-content:space-between;align-items:center;">' +
+              '<div style="font-weight:800;color:var(--orange);">₦' + parseInt(item.price).toLocaleString() + '</div>' +
+              (item.available
+                ? '<button onclick="openCustomModal(\'' + item.id + '\')" style="background:var(--orange);color:white;border:none;padding:8px 16px;border-radius:8px;font-weight:700;cursor:pointer;">+ Add</button>'
+                : '<span style="color:#cc0000;font-size:0.85em;">Unavailable</span>') +
+            '</div>' +
+          '</div>' +
+        '</div>';
+      }).join('');
+    }
+
+    function openCustomModal(itemId) {
+      currentItem = allMenuItems.find(function(i) { return i.id === itemId; });
+      if (!currentItem) return;
+
+      selectedCustomizations = {};
+      var body = document.getElementById('custom-modal-body');
+      var customHtml = '';
+
+      if (currentItem.customizations && currentItem.customizations.length > 0) {
+        customHtml = currentItem.customizations.map(function(c, ci) {
+          return '<div style="margin-bottom:16px;">' +
+            '<h4 style="margin-bottom:8px;">' + c.name + '</h4>' +
+            '<div style="display:flex;flex-wrap:wrap;gap:8px;">' +
+              c.values.map(function(v) {
+                return '<button onclick="selectCustomization(' + ci + ', \'' + v + '\', this)" ' +
+                  'style="padding:8px 14px;border:1px solid var(--border);border-radius:8px;background:white;cursor:pointer;">' +
+                  v + '</button>';
+              }).join('') +
+            '</div>' +
+          '</div>';
+        }).join('');
+      }
+
+      body.innerHTML =
+        '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">' +
+          '<h3>' + currentItem.name + '</h3>' +
+          '<button onclick="closeCustomModal()" style="background:var(--gray);border:none;width:30px;height:30px;border-radius:50%;cursor:pointer;">✕</button>' +
+        '</div>' +
+        '<div style="color:var(--orange);font-weight:800;font-size:1.2em;margin-bottom:14px;">₦' + parseInt(currentItem.price).toLocaleString() + '</div>' +
+        (customHtml || '') +
+        '<div style="margin-top:10px;">' +
+          '<label style="display:block;font-weight:600;margin-bottom:6px;">Special Instructions (optional)</label>' +
+          '<textarea id="special-note" rows="2" placeholder="e.g. No onions, extra spicy..." style="width:100%;padding:10px;border:1px solid var(--border);border-radius:8px;"></textarea>' +
+        '</div>' +
+        '<button onclick="addToFoodCart()" style="width:100%;margin-top:16px;padding:14px;background:var(--orange);color:white;border:none;border-radius:8px;font-weight:700;font-size:1em;cursor:pointer;">Add to Cart</button>';
+
+      document.getElementById('custom-overlay').style.display = 'block';
+      document.getElementById('custom-modal').style.display = 'block';
+    }
+
+    function selectCustomization(index, value, btn) {
+      selectedCustomizations[index] = value;
+      var allBtns = btn.parentElement.querySelectorAll('button');
+      allBtns.forEach(function(b) {
+        b.style.background = 'white';
+        b.style.color = 'inherit';
+        b.style.borderColor = 'var(--border)';
+      });
+      btn.style.background = 'var(--orange)';
+      btn.style.color = 'white';
+      btn.style.borderColor = 'var(--orange)';
+    }
+
+    function closeCustomModal() {
+      document.getElementById('custom-overlay').style.display = 'none';
+      document.getElementById('custom-modal').style.display = 'none';
+    }
+
+    function addToFoodCart() {
+      if (!currentItem) return;
+      var note = document.getElementById('special-note').value.trim();
+
+      foodCart.push({
+        id:              currentItem.id,
+        name:            currentItem.name,
+        price:           currentItem.price,
+        emoji:           currentItem.emoji,
+        imageUrl:        currentItem.imageUrl || '',
+        restaurantId:    currentItem.restaurantId,
+        restaurantName:  currentItem.restaurantName,
+        customizations:  selectedCustomizations,
+        note:            note,
+        qty:             1,
+      });
+
+      localStorage.setItem('nexa_food_cart', JSON.stringify(foodCart));
+      closeCustomModal();
+      updateCartDrawer();
+      showToast('✅ ' + currentItem.name + ' added to cart!');
+    }
+
+    function updateCartDrawer() {
+      var drawer = document.getElementById('cart-drawer');
+      if (foodCart.length === 0) {
+        drawer.style.display = 'none';
+        return;
+      }
+      drawer.style.display = 'block';
+      var total = foodCart.reduce(function(s, i) { return s + i.price * (i.qty || 1); }, 0);
+      var count = foodCart.reduce(function(s, i) { return s + (i.qty || 1); }, 0);
+      document.getElementById('drawer-count').textContent = count + ' item' + (count !== 1 ? 's' : '');
+      document.getElementById('drawer-total').textContent = '₦' + total.toLocaleString();
+    }
+
+    function goToCart() {
+      window.location.href = '../shop/cart.html';
+    }
+
+    function showMenuError() {
+      document.getElementById('menu-loading').innerHTML =
+        '<div class="empty-state">' +
+          '<div class="empty-icon">😕</div>' +
+          '<h3>Restaurant not found</h3>' +
+          '<p>This restaurant may not be available</p>' +
+          '<a href="browse.html" class="btn-primary">Browse Restaurants</a>' +
+        '</div>';
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      updateCartCount();
+      loadRestaurant();
+      updateCartDrawer();
+    });
+
+  </script>
+
+</body>
+</html>
