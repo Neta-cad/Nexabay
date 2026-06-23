@@ -871,40 +871,40 @@ function debugOrders() {
     });
 }
 
-  db.collection('orders').get()
-    .then(function(snap) {
-      var sellerOrders = [];
-      snap.forEach(function(doc) {
-        var order = doc.data();
-        var sellerItems = (order.items || []).filter(function(item) {
-          return item.sellerId === user.uid;
-        });
-        if (sellerItems.length > 0) {
-          sellerOrders.push({
-            id:      order.id,
-            product: sellerItems.map(function(i) { return i.name; }).join(', '),
-            buyer:   order.buyerName || 'Customer',
-            amount:  sellerItems.reduce(function(s, i) {
-              return s + (i.price || 0) * (i.qty || 1);
-            }, 0),
-            status:  order.status || 'confirmed',
-            date:    order.date ? new Date(order.date).toLocaleDateString() : 'Today',
-          });
-        }
-      });
+  function loadSellerOrders() {
+      var user = auth.currentUser;
+      if (!user) return;
 
-      myOrders = sellerOrders;
-      renderAllOrders();
-      renderRecentOrders();
-      updateStats();
-      showToast(sellerOrders.length > 0
-        ? '📦 ' + sellerOrders.length + ' order(s) found'
-        : 'No orders yet');
-    })
-    .catch(function(err) {
-      console.log('Error loading orders:', err);
-    });
-}
+      db.collection('orders').get()
+        .then(function(snap) {
+          var sellerOrders = [];
+          snap.forEach(function(doc) {
+            var order = doc.data();
+            var sellerItems = (order.items || []).filter(function(item) {
+              return item.sellerId === user.uid;
+            });
+            if (sellerItems.length > 0) {
+              sellerOrders.push({
+                id:      order.id,
+                product: sellerItems.map(function(i) { return i.name; }).join(', '),
+                buyer:   order.buyerName || 'Customer',
+                amount:  sellerItems.reduce(function(s, i) {
+                  return s + (i.price || 0) * (i.qty || 1);
+                }, 0),
+                status:  order.status || 'confirmed',
+                date:    order.date ? new Date(order.date).toLocaleDateString() : 'Today',
+              });
+            }
+          });
+          myOrders = sellerOrders;
+          renderAllOrders();
+          renderRecentOrders();
+          updateStats();
+        })
+        .catch(function(err) {
+          console.log('Error loading orders:', err);
+        });
+    }
 
     function renderAllOrders() {
       var body = document.getElementById('all-orders-body');
