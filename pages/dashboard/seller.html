@@ -168,6 +168,9 @@
             <button class="quick-btn" onclick="debugOrders()">
   🔍 Debug Orders
 </button>
+<button class="quick-btn" onclick="fixExistingOrders()">
+  🔧 Fix Existing Orders
+</button>
           </div>
         </div>
 
@@ -868,6 +871,42 @@ function debugOrders() {
         })) + '\n\n';
       });
       alert(msg);
+    });
+}
+function fixExistingOrders() {
+  var user = auth.currentUser;
+  if (!user) { alert('Not logged in'); return; }
+  
+  if (!confirm('This will update all Samsung galaxy A06 orders with your sellerId. Continue?')) return;
+
+  db.collection('orders').get()
+    .then(function(snap) {
+      var batch = db.batch();
+      var count = 0;
+      snap.forEach(function(doc) {
+        var order = doc.data();
+        var items = order.items || [];
+        var needsUpdate = false;
+        var updatedItems = items.map(function(item) {
+          if (!item.sellerId || item.sellerId === '') {
+            needsUpdate = true;
+            return Object.assign({}, item, { sellerId: user.uid });
+          }
+          return item;
+        });
+        if (needsUpdate) {
+          batch.update(doc.ref, { items: updatedItems, buyerName: order.buyerName || 'Customer' });
+          count++;
+        }
+      });
+      return batch.commit().then(function() { return count; });
+    })
+    .then(function(count) {
+      alert('✅ Fixed ' + count + ' orders! Now tap Debug Orders to verify.');
+      loadSellerOrders();
+    })
+    .catch(function(err) {
+      alert('Error: ' + err.message);
     });
 }
 

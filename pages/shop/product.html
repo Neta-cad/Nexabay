@@ -138,6 +138,7 @@
             seller: data.sellerName || 'Nexabay Seller',
             sold: data.sold || 0,
             desc: data.description || 'No description provided.',
+            sellerId: data.sellerId || '',
           };
           ALL_PRODUCTS = DEMO_PRODUCTS.concat([currentProduct]);
           finishLoadingProduct(currentProduct);
