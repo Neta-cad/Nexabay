@@ -399,7 +399,12 @@
     </main>
   </div>
 
-  <script src="../../js/core/main.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="../../js/firebase/config.js"></script>
+<script src="../../js/firebase/auth.js"></script>
+<script src="../../js/core/main.js"></script>
   <script>
 
     var currentUser = null;
@@ -441,6 +446,27 @@
 
       // Load data
       userOrders   = JSON.parse(localStorage.getItem('nexa_orders')   || '[]');
+      // Also load from Firestore
+if (typeof db !== 'undefined' && currentUser) {
+  db.collection('orders')
+    .where('buyerId', '==', currentUser.uid)
+    .get()
+    .then(function(snap) {
+      var firestoreOrders = [];
+      snap.forEach(function(doc) {
+        firestoreOrders.push(doc.data());
+      });
+      if (firestoreOrders.length > 0) {
+        userOrders = firestoreOrders;
+        updateStats();
+        renderRecentOrders();
+        renderOrders('all');
+      }
+    })
+    .catch(function(err) {
+      console.log('Error loading buyer orders:', err);
+    });
+}
       userWishlist = JSON.parse(localStorage.getItem('nexa_wishlist') || '[]');
       walletBalance = parseFloat(localStorage.getItem('nexa_wallet_balance') || '0');
 

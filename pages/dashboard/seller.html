@@ -852,11 +852,6 @@ function loadSellerOrders() {
   var user = auth.currentUser;
   if (!user) return;
 
-  db.collection('orders')
-    .where('items', 'array-contains-any', [])
-    .get()
-    .catch(function() {})
-
   db.collection('orders').get()
     .then(function(snap) {
       var sellerOrders = [];
@@ -870,20 +865,22 @@ function loadSellerOrders() {
             id:      order.id,
             product: sellerItems.map(function(i) { return i.name; }).join(', '),
             buyer:   order.buyerName || 'Customer',
-            amount:  sellerItems.reduce(function(s, i) { return s + i.price * (i.qty || 1); }, 0),
+            amount:  sellerItems.reduce(function(s, i) {
+              return s + (i.price || 0) * (i.qty || 1);
+            }, 0),
             status:  order.status || 'confirmed',
             date:    order.date ? new Date(order.date).toLocaleDateString() : 'Today',
-            fullOrder: order,
           });
         }
       });
 
-      if (sellerOrders.length > 0) {
-        myOrders = sellerOrders;
-        renderAllOrders();
-        renderRecentOrders();
-        updateStats();
-      }
+      myOrders = sellerOrders;
+      renderAllOrders();
+      renderRecentOrders();
+      updateStats();
+      showToast(sellerOrders.length > 0
+        ? '📦 ' + sellerOrders.length + ' order(s) found'
+        : 'No orders yet');
     })
     .catch(function(err) {
       console.log('Error loading orders:', err);
