@@ -165,10 +165,16 @@
     </div>
   </footer>
 
+ <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="../../js/firebase/config.js"></script>
+  <script src="../../js/firebase/auth.js"></script>
+  <script src="../../js/firebase/events.js"></script>
   <script src="../../js/core/main.js"></script>
   <script>
 
-    var ALL_EVENTS = [
+    var DEMO_EVENTS = [
       { id:1,  name:'Afrobeats Music Festival',      category:'Music',      date:'Jan 25, 2025', time:'6:00 PM', location:'Lagos',         venue:'Eko Hotel',          price:15000, isFree:false, emoji:'🎵', attendees:5000, tickets:2340, featured:true  },
       { id:2,  name:'Lagos Comedy Night',            category:'Comedy',     date:'Jan 28, 2025', time:'7:00 PM', location:'Lagos',         venue:'Terra Kulture',      price:8000,  isFree:false, emoji:'😂', attendees:800,  tickets:456,  featured:false },
       { id:3,  name:'Tech Summit Nigeria 2025',      category:'Conference', date:'Feb 5, 2025',  time:'9:00 AM', location:'Abuja',         venue:'ICC Abuja',          price:25000, isFree:false, emoji:'💻', attendees:2000, tickets:890,  featured:false },
@@ -183,8 +189,65 @@
       { id:12, name:'Free Coding Bootcamp',          category:'Online',     date:'Feb 10, 2025', time:'11:00 AM',location:'Online',        venue:'Google Meet',        price:0,     isFree:true,  emoji:'💻', attendees:500,  tickets:389,  featured:false },
     ];
 
-    var currentEvents = ALL_EVENTS.slice();
+    var ALL_EVENTS = [];
+    var currentEvents = [];
     var currentCategory = 'all';
+
+    function loadAllEvents() {
+      nexaGetEvents('all')
+        .then(function(realEvents) {
+          var mapped = realEvents.map(function(e) {
+            var lowestPrice = e.ticketTiers && e.ticketTiers.length > 0
+              ? Math.min.apply(null, e.ticketTiers.map(function(t) { return t.price; }))
+              : 0;
+            return {
+              id:        e.id,
+              name:      e.title,
+              category:  mapEventCategory(e.category),
+              date:      e.date,
+              time:      e.time,
+              location:  e.eventType === 'virtual' ? 'Online' : e.location,
+              venue:     e.venue || e.onlineLink || 'Online',
+              price:     lowestPrice,
+              isFree:    lowestPrice === 0,
+              emoji:     e.emoji || '🎉',
+              imageUrl:  e.imageUrl || '',
+              attendees: e.totalTickets || 0,
+              tickets:   e.soldTickets || 0,
+              featured:  false,
+              ticketTiers: e.ticketTiers || [],
+            };
+          });
+          ALL_EVENTS = mapped.concat(DEMO_EVENTS);
+          currentEvents = ALL_EVENTS.slice();
+          renderFeaturedEvent();
+          renderEvents();
+        })
+        .catch(function(err) {
+          console.log('Error loading events:', err);
+          ALL_EVENTS = DEMO_EVENTS.slice();
+          currentEvents = ALL_EVENTS.slice();
+          renderFeaturedEvent();
+          renderEvents();
+        });
+    }
+
+    function mapEventCategory(cat) {
+      var map = {
+        'Music & Concert': 'Music',
+        'Conference & Business': 'Conference',
+        'Comedy Show': 'Comedy',
+        'Sports & Fitness': 'Sports',
+        'Food & Drink': 'Food',
+        'Art & Culture': 'Arts',
+        'Fashion': 'Arts',
+        'Tech & Innovation': 'Conference',
+        'Religious': 'Music',
+        'Education & Workshop': 'Conference',
+        'Other': 'Conference',
+      };
+      return map[cat] || cat;
+    }
 
     function renderFeaturedEvent() {
       var featured = ALL_EVENTS.find(function(e) { return e.featured; });
@@ -206,7 +269,7 @@
           '<div class="fe-ticket">' +
             '<div class="fe-price">₦' + featured.price.toLocaleString() + '</div>' +
             '<div class="fe-price-label">per ticket</div>' +
-            '<button class="fe-btn" onclick="buyTicket(' + featured.id + ')">Get Tickets</button>' +
+            '<button class="fe-btn" onclick="viewEvent(\'' + featured.id + '\')">Get Tickets</button>' +
             '<div class="fe-sold">' + featured.tickets.toLocaleString() + ' tickets sold</div>' +
           '</div>' +
         '</div>';
@@ -227,9 +290,12 @@
       if (count) count.textContent = 'Showing ' + currentEvents.length + ' events';
 
       grid.innerHTML = currentEvents.map(function(e) {
-        return '<div class="event-card" onclick="viewEvent(' + e.id + ')">' +
+        var imgContent = e.imageUrl
+          ? '<img src="' + e.imageUrl + '" style="width:100%;height:100%;object-fit:cover;border-radius:8px 8px 0 0;"/>'
+          : e.emoji;
+        return '<div class="event-card" onclick="viewEvent(\'' + e.id + '\')">' +
           '<div class="ec-img">' +
-            e.emoji +
+            imgContent +
             (e.isFree ? '<span class="ec-free">FREE</span>' : '') +
             '<span class="ec-category">' + e.category + '</span>' +
           '</div>' +
@@ -245,7 +311,7 @@
               '<div class="ec-price">' +
                 (e.isFree ? '<span class="ec-free-price">FREE</span>' : '<span class="ec-price-amount">₦' + e.price.toLocaleString() + '</span>') +
               '</div>' +
-              '<button class="ec-ticket-btn" onclick="event.stopPropagation();buyTicket(' + e.id + ')">' +
+              '<button class="ec-ticket-btn" onclick="event.stopPropagation();viewEvent(\'' + e.id + '\')">' +
                 'Get Tickets' +
               '</button>' +
             '</div>' +
@@ -288,31 +354,13 @@
     }
 
     function viewEvent(id) {
-      showToast('🎉 Event detail page coming soon!');
-    }
-
-    function buyTicket(id) {
-      var user = localStorage.getItem('nexa_current_user');
-      if (!user) {
-        showToast('⚠️ Please login to buy tickets', '#ff9500');
-        setTimeout(function() { window.location.href = '../auth/login.html'; }, 1500);
-        return;
-      }
-      var ev = ALL_EVENTS.find(function(e) { return e.id === id; });
-      if (ev) {
-        if (ev.isFree) {
-          showToast('🎟️ You are registered for ' + ev.name + '!');
-        } else {
-          showToast('💳 Redirecting to payment for ' + ev.name + '...');
-        }
-      }
+      window.location.href = 'event.html?id=' + id;
     }
 
     document.addEventListener('DOMContentLoaded', function() {
       updateCartCount();
       checkAuthState();
-      renderFeaturedEvent();
-      renderEvents();
+      loadAllEvents();
       var input = document.getElementById('search-input');
       if (input) {
         input.addEventListener('keypress', function(e) {

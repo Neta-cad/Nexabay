@@ -343,10 +343,12 @@
       if (!currentProduct) return;
       for (var i = 0; i < selectedQty; i++) {
         addToCart({
-          id: currentProduct.id,
-          name: currentProduct.name,
-          price: currentProduct.price,
-          emoji: currentProduct.emoji,
+          id:       currentProduct.id,
+          name:     currentProduct.name,
+          price:    currentProduct.price,
+          emoji:    currentProduct.emoji,
+          imageUrl: currentProduct.imageUrl || '',
+          sellerId: currentProduct.sellerId || '',
         });
       }
     }

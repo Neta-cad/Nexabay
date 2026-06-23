@@ -730,7 +730,10 @@
     // Load real products from Firebase
 if (typeof auth !== 'undefined') {
   auth.onAuthStateChanged(function(user) {
-    if (user) loadSellerProducts();
+    if (user) {
+      loadSellerProducts();
+      loadSellerOrders();
+    }
   });
 }
 
@@ -844,6 +847,48 @@ function renderMyProducts(products) {
     function filterMyProducts() {
       renderMyProducts();
     }
+
+function loadSellerOrders() {
+  var user = auth.currentUser;
+  if (!user) return;
+
+  db.collection('orders')
+    .where('items', 'array-contains-any', [])
+    .get()
+    .catch(function() {})
+
+  db.collection('orders').get()
+    .then(function(snap) {
+      var sellerOrders = [];
+      snap.forEach(function(doc) {
+        var order = doc.data();
+        var sellerItems = (order.items || []).filter(function(item) {
+          return item.sellerId === user.uid;
+        });
+        if (sellerItems.length > 0) {
+          sellerOrders.push({
+            id:      order.id,
+            product: sellerItems.map(function(i) { return i.name; }).join(', '),
+            buyer:   order.buyerName || 'Customer',
+            amount:  sellerItems.reduce(function(s, i) { return s + i.price * (i.qty || 1); }, 0),
+            status:  order.status || 'confirmed',
+            date:    order.date ? new Date(order.date).toLocaleDateString() : 'Today',
+            fullOrder: order,
+          });
+        }
+      });
+
+      if (sellerOrders.length > 0) {
+        myOrders = sellerOrders;
+        renderAllOrders();
+        renderRecentOrders();
+        updateStats();
+      }
+    })
+    .catch(function(err) {
+      console.log('Error loading orders:', err);
+    });
+}
 
     function renderAllOrders() {
       var body = document.getElementById('all-orders-body');
