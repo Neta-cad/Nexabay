@@ -763,24 +763,24 @@ if (typeof auth !== 'undefined') {
     }
 
     function showTab(tab) {
-      var tabs = document.querySelectorAll('.dash-tab');
-      tabs.forEach(function(t) { t.style.display = 'none'; });
+  var tabs = document.querySelectorAll('.dash-tab');
+  tabs.forEach(function(t) { t.style.display = 'none'; });
 
-      var navItems = document.querySelectorAll('.dash-nav-item');
-      navItems.forEach(function(n) { n.classList.remove('active'); });
+  var navItems = document.querySelectorAll('.dash-nav-item');
+  navItems.forEach(function(n) { n.classList.remove('active'); });
 
-      var target = document.getElementById('tab-' + tab);
-      if (target) target.style.display = 'block';
+  var target = document.getElementById('tab-' + tab);
+  if (target) target.style.display = 'block';
 
-      var navMap = {
-        'overview': 0, 'products': 1, 'add-product': 2,
-        'orders': 3, 'earnings': 4, 'analytics': 5, 'settings': 6
-      };
-      var index = navMap[tab];
-      if (index !== undefined && navItems[index]) {
-        navItems[index].classList.add('active');
-      }
-    }
+  var navMap = {
+    'overview': 0, 'products': 1, 'add-product': 2,
+    'orders': 3, 'earnings': 4, 'analytics': 5, 'settings': 6
+  };
+  var index = navMap[tab];
+  if (index !== undefined && navItems[index]) {
+    navItems[index].classList.add('active');
+  }
+}
 
     function renderRecentOrders() {
       var body = document.getElementById('recent-orders-body');
