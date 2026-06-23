@@ -165,12 +165,6 @@
             <button class="quick-btn" onclick="showTab('analytics')">
               📈 View Analytics
             </button>
-            <button class="quick-btn" onclick="debugOrders()">
-  🔍 Debug Orders
-</button>
-<button class="quick-btn" onclick="fixExistingOrders()">
-  🔧 Fix Existing Orders
-</button>
           </div>
         </div>
 
@@ -992,11 +986,17 @@ function fixExistingOrders() {
       var current = statuses.indexOf(order.status);
       var next = statuses[current + 1];
       if (!next) { showToast('Order already delivered ✅'); return; }
-      order.status = next;
-      localStorage.setItem('seller_orders', JSON.stringify(myOrders));
-      renderAllOrders();
-      renderRecentOrders();
-      showToast('✅ Order status updated to: ' + next);
+
+      db.collection('orders').doc(orderId).update({ status: next })
+        .then(function() {
+          order.status = next;
+          renderAllOrders();
+          renderRecentOrders();
+          showToast('✅ Order updated to: ' + next);
+        })
+        .catch(function(err) {
+          showToast('Error: ' + err.message);
+        });
     }
 
     function updateEarnings() {
