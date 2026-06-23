@@ -165,6 +165,9 @@
             <button class="quick-btn" onclick="showTab('analytics')">
               📈 View Analytics
             </button>
+            <button class="quick-btn" onclick="debugOrders()">
+  🔍 Debug Orders
+</button>
           </div>
         </div>
 
@@ -848,9 +851,25 @@ function renderMyProducts(products) {
       renderMyProducts();
     }
 
-function loadSellerOrders() {
+function debugOrders() {
   var user = auth.currentUser;
-  if (!user) return;
+  if (!user) { alert('Not logged in'); return; }
+  alert('Your seller UID is: ' + user.uid);
+
+  db.collection('orders').get()
+    .then(function(snap) {
+      var msg = 'Total orders in Firestore: ' + snap.size + '\n\n';
+      snap.forEach(function(doc) {
+        var order = doc.data();
+        msg += 'Order: ' + order.id + '\n';
+        msg += 'Buyer: ' + (order.buyerName || 'unknown') + '\n';
+        msg += 'Items: ' + JSON.stringify((order.items || []).map(function(i) {
+          return { name: i.name, sellerId: i.sellerId || 'NO SELLER ID' };
+        })) + '\n\n';
+      });
+      alert(msg);
+    });
+}
 
   db.collection('orders').get()
     .then(function(snap) {
