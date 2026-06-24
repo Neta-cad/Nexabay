@@ -306,10 +306,16 @@
     </div>
   </footer>
 
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="../../js/firebase/config.js"></script>
+  <script src="../../js/firebase/auth.js"></script>
+  <script src="../../js/firebase/travel.js"></script>
   <script src="../../js/core/main.js"></script>
   <script>
 
-    var ALL_HOTELS = [
+    var DEMO_HOTELS = [
       { id:1,  name:'Eko Hotel & Suites',        location:'Lagos',         area:'Victoria Island', stars:5, rating:4.8, reviews:2340, price:85000,  emoji:'🏨', amenities:['Pool','Gym','Spa','Restaurant','WiFi'],    desc:'Iconic 5-star hotel on Victoria Island with stunning lagoon views.' },
       { id:2,  name:'Transcorp Hilton Abuja',     location:'Abuja',         area:'Maitama',         stars:5, rating:4.9, reviews:1890, price:120000, emoji:'🏩', amenities:['Pool','Gym','Spa','Restaurant','WiFi','Bar'], desc:'Premium 5-star hotel in the heart of Abuja. World class facilities.' },
       { id:3,  name:'Southern Sun Ikoyi',         location:'Lagos',         area:'Ikoyi',           stars:5, rating:4.7, reviews:1234, price:75000,  emoji:'🌅', amenities:['Pool','Restaurant','WiFi','Bar'],          desc:'Luxurious hotel in upscale Ikoyi. Business and leisure travelers.' },
@@ -324,8 +330,43 @@
       { id:12, name:'De Kopper Hotel',            location:'Port Harcourt', area:'Trans Amadi',     stars:3, rating:4.3, reviews:234,  price:20000,  emoji:'🏨', amenities:['Restaurant','WiFi','Parking'],             desc:'Affordable 3-star hotel in Port Harcourt with good amenities.' },
     ];
 
-    var currentHotels = ALL_HOTELS.slice();
+    var ALL_HOTELS = [];
+    var currentHotels = [];
     var currentTab = 'hotels';
+
+    function loadAllListings() {
+      nexaGetTravelListings('all')
+        .then(function(realListings) {
+          var mapped = realListings.map(function(l) {
+            return {
+              id:        l.id,
+              name:      l.title,
+              location:  l.location,
+              area:      l.location,
+              stars:     l.category && l.category.includes('5') ? 5 :
+                         l.category && l.category.includes('4') ? 4 : 3,
+              rating:    l.rating || 0,
+              reviews:   l.reviews || 0,
+              price:     l.price,
+              emoji:     l.emoji || '🏨',
+              imageUrl:  l.imageUrl || '',
+              amenities: l.amenities || [],
+              desc:      l.description || '',
+              listingType: l.listingType || 'hotel',
+              priceUnit: l.priceUnit || 'per night',
+            };
+          });
+          ALL_HOTELS = mapped.concat(DEMO_HOTELS);
+          currentHotels = ALL_HOTELS.slice();
+          renderHotels();
+        })
+        .catch(function(err) {
+          console.log('Error loading travel:', err);
+          ALL_HOTELS = DEMO_HOTELS.slice();
+          currentHotels = ALL_HOTELS.slice();
+          renderHotels();
+        });
+    }
 
     function setTravelTab(tab, el) {
       currentTab = tab;
@@ -357,8 +398,11 @@
       grid.innerHTML = currentHotels.map(function(h) {
         var stars = '';
         for (var i = 0; i < h.stars; i++) stars += '⭐';
-        return '<div class="hotel-card" onclick="viewHotel(' + h.id + ')">' +
-          '<div class="hc-img">' + h.emoji + '</div>' +
+        var imgContent = h.imageUrl
+          ? '<img src="' + h.imageUrl + '" style="width:100%;height:100%;object-fit:cover;border-radius:8px 8px 0 0;"/>'
+          : h.emoji;
+        return '<div class="hotel-card" onclick="viewHotel(\'' + h.id + '\')">' +
+          '<div class="hc-img">' + imgContent + '</div>' +
           '<div class="hc-body">' +
             '<div class="hc-top">' +
               '<div>' +
@@ -379,7 +423,7 @@
                 '<span class="hc-amount">₦' + h.price.toLocaleString() + '</span>' +
                 '<span class="hc-night">/night</span>' +
               '</div>' +
-              '<button class="hc-book-btn" onclick="event.stopPropagation();bookHotel(' + h.id + ')">Book Now</button>' +
+              '<button class="hc-book-btn" onclick="event.stopPropagation();viewHotel(\'' + h.id + '\')">Book Now</button>' +
             '</div>' +
           '</div>' +
         '</div>';
@@ -437,24 +481,13 @@
     }
 
     function viewHotel(id) {
-      showToast('🏨 Hotel detail page coming soon!');
-    }
-
-    function bookHotel(id) {
-      var user = localStorage.getItem('nexa_current_user');
-      if (!user) {
-        showToast('⚠️ Please login to book', '#ff9500');
-        setTimeout(function() { window.location.href = '../auth/login.html'; }, 1500);
-        return;
-      }
-      var hotel = ALL_HOTELS.find(function(h) { return h.id === id; });
-      if (hotel) showToast('✅ Booking request sent for ' + hotel.name + '!');
+      window.location.href = 'listing.html?id=' + id;
     }
 
     document.addEventListener('DOMContentLoaded', function() {
       updateCartCount();
       checkAuthState();
-      renderHotels();
+      loadAllListings();
 
       var today = new Date().toISOString().split('T')[0];
       var tomorrow = new Date(Date.now() + 86400000).toISOString().split('T')[0];
