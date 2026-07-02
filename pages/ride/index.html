@@ -338,19 +338,49 @@
     </div>
   </footer>
 
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="../../js/firebase/config.js"></script>
+  <script src="../../js/firebase/auth.js"></script>
+  <script src="../../js/firebase/ride.js"></script>
   <script src="../../js/core/main.js"></script>
   <script>
 
-    var currentRideType = 'ride';
-    var selectedRide = null;
-
-    var DRIVERS = [
+    var DEMO_DRIVERS = [
       { name:'Emeka Okafor',   plate:'LND 234 AB', car:'Toyota Corolla',  emoji:'🚗', rating:4.9 },
       { name:'Tunde Adeleke',  plate:'ABJ 567 CD', car:'Honda Accord',    emoji:'🚙', rating:4.8 },
       { name:'Ibrahim Musa',   plate:'KAN 890 EF', car:'Toyota Camry',    emoji:'🚗', rating:4.7 },
       { name:'Chidi Nwosu',    plate:'PH 123 GH',  car:'Nissan Sentra',   emoji:'🚗', rating:4.9 },
       { name:'Biodun Afolabi', plate:'IBD 456 IJ', car:'Toyota Avensis',  emoji:'🚙', rating:4.8 },
-    ];
+   ];
+
+    var ALL_DRIVERS = [];
+
+    function loadAllDrivers() {
+      nexaGetDrivers('all')
+        .then(function(realDrivers) {
+          var mapped = realDrivers.map(function(d) {
+            return {
+              id:         d.id,
+              name:       d.driverName,
+              plate:      d.plateNumber || '',
+              car:        d.vehicleName || d.vehicleType || 'Vehicle',
+              emoji:      d.emoji || '🚗',
+              imageUrl:   d.imageUrl || '',
+              rating:     d.rating || 0,
+              available:  d.isAvailable !== false,
+              basePrice:  d.basePrice || 0,
+              pricePerKm: d.pricePerKm || 0,
+            };
+          });
+          ALL_DRIVERS = mapped.concat(DEMO_DRIVERS);
+        })
+        .catch(function(err) {
+          console.log('Error loading drivers:', err);
+          ALL_DRIVERS = DEMO_DRIVERS.slice();
+        });
+    }
 
     function setRideType(type, btn) {
       currentRideType = type;
@@ -391,6 +421,12 @@
         setTimeout(function() { window.location.href = '../auth/login.html'; }, 1500);
         return;
       }
+      var pickup  = document.getElementById('pickup').value.trim();
+      var dropoff = document.getElementById('dropoff').value.trim();
+      if (!pickup)  { showToast('⚠️ Enter pickup location', '#ff9500'); return; }
+      if (!dropoff) { showToast('⚠️ Enter destination', '#ff9500'); return; }
+      window.location.href = 'driver.html?type=' + encodeURIComponent(rideName) + '&pickup=' + encodeURIComponent(pickup) + '&dropoff=' + encodeURIComponent(dropoff);
+    }
 
       selectedRide = rideName;
       var driver = DRIVERS[Math.floor(Math.random() * DRIVERS.length)];
@@ -432,6 +468,7 @@
     document.addEventListener('DOMContentLoaded', function() {
       updateCartCount();
       checkAuthState();
+      loadAllDrivers();
     });
 
   </script>
