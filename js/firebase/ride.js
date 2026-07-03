@@ -26,7 +26,7 @@ function nexaAddDriverListing(driverData, imageUrl) {
     experience:      driverData.experience || '',
     imageUrl:        imageUrl || '',
     emoji:           driverData.emoji || '🚗',
-    status:          'active',
+    status: 'pending',
     isAvailable:     true,
     rating:          0,
     reviews:         0,

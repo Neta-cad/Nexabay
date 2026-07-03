@@ -20,7 +20,7 @@ function nexaAddCourse(courseData) {
     imageUrl:      courseData.imageUrl || '',
     emoji:         courseData.emoji || '🎓',
     lessons:       courseData.lessons || [],
-    status:        'active',
+    status: 'pending',
     rating:        0,
     reviews:       0,
     students:      0,

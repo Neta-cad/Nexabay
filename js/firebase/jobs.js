@@ -21,7 +21,7 @@ function nexaAddJob(jobData) {
     salaryMax:    parseFloat(jobData.salaryMax) || 0,
     location:     jobData.location,
     remote:       jobData.remote || false,
-    status:       'active',
+    status: 'pending',
     applicantCount: 0,
     createdAt:    firebase.firestore.FieldValue.serverTimestamp(),
   }).then(function() {

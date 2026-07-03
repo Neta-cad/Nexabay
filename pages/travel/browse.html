@@ -315,20 +315,7 @@
   <script src="../../js/core/main.js"></script>
   <script>
 
-    var DEMO_HOTELS = [
-      { id:1,  name:'Eko Hotel & Suites',        location:'Lagos',         area:'Victoria Island', stars:5, rating:4.8, reviews:2340, price:85000,  emoji:'🏨', amenities:['Pool','Gym','Spa','Restaurant','WiFi'],    desc:'Iconic 5-star hotel on Victoria Island with stunning lagoon views.' },
-      { id:2,  name:'Transcorp Hilton Abuja',     location:'Abuja',         area:'Maitama',         stars:5, rating:4.9, reviews:1890, price:120000, emoji:'🏩', amenities:['Pool','Gym','Spa','Restaurant','WiFi','Bar'], desc:'Premium 5-star hotel in the heart of Abuja. World class facilities.' },
-      { id:3,  name:'Southern Sun Ikoyi',         location:'Lagos',         area:'Ikoyi',           stars:5, rating:4.7, reviews:1234, price:75000,  emoji:'🌅', amenities:['Pool','Restaurant','WiFi','Bar'],          desc:'Luxurious hotel in upscale Ikoyi. Business and leisure travelers.' },
-      { id:4,  name:'The George Hotel',           location:'Lagos',         area:'Victoria Island', stars:4, rating:4.8, reviews:890,  price:55000,  emoji:'🏛️', amenities:['Restaurant','WiFi','Bar','Gym'],           desc:'Boutique 4-star hotel with personalized service on Victoria Island.' },
-      { id:5,  name:'Protea Hotel PH',            location:'Port Harcourt', area:'GRA',             stars:4, rating:4.6, reviews:678,  price:45000,  emoji:'🏨', amenities:['Pool','Restaurant','WiFi'],                desc:'Modern 4-star hotel in the heart of Port Harcourt GRA.' },
-      { id:6,  name:'Hamdala Hotel',              location:'Kano',          area:'City Centre',     stars:4, rating:4.5, reviews:456,  price:35000,  emoji:'🕌', amenities:['Restaurant','WiFi','Parking'],             desc:'Premier hotel in Kano city centre with excellent local cuisine.' },
-      { id:7,  name:'Kakanfo Inn',                location:'Ibadan',        area:'Ring Road',       stars:3, rating:4.4, reviews:345,  price:25000,  emoji:'🏩', amenities:['Restaurant','WiFi','Pool'],                desc:'Comfortable 3-star hotel with great value in Ibadan.' },
-      { id:8,  name:'Tinapa Resort',              location:'Calabar',       area:'Tinapa',          stars:4, rating:4.7, reviews:567,  price:40000,  emoji:'🌴', amenities:['Pool','Restaurant','WiFi','Spa','Beach'],  desc:'Beautiful resort destination in Calabar with waterpark and beach.' },
-      { id:9,  name:'Wheatbaker Hotel',           location:'Lagos',         area:'Ikoyi',           stars:5, rating:4.9, reviews:567,  price:95000,  emoji:'🌟', amenities:['Pool','Gym','Spa','Restaurant','WiFi'],    desc:'Award winning luxury boutique hotel in Ikoyi Lagos.' },
-      { id:10, name:'Chartwell Hotel',            location:'Abuja',         area:'Wuse 2',          stars:4, rating:4.6, reviews:456,  price:50000,  emoji:'🏨', amenities:['Restaurant','WiFi','Gym','Bar'],           desc:'Business class hotel in Wuse 2 Abuja. Conference facilities available.' },
-      { id:11, name:'Nike Lake Resort',           location:'Enugu',         area:'Nike',            stars:4, rating:4.7, reviews:389,  price:30000,  emoji:'🏞️', amenities:['Pool','Restaurant','WiFi','Lake View'],    desc:'Serene lakeside resort in Enugu with stunning natural scenery.' },
-      { id:12, name:'De Kopper Hotel',            location:'Port Harcourt', area:'Trans Amadi',     stars:3, rating:4.3, reviews:234,  price:20000,  emoji:'🏨', amenities:['Restaurant','WiFi','Parking'],             desc:'Affordable 3-star hotel in Port Harcourt with good amenities.' },
-    ];
+    var DEMO_HOTELS = [];
 
     var ALL_HOTELS = [];
     var currentHotels = [];
@@ -387,8 +374,13 @@
       var count = document.getElementById('travel-count');
 
       if (currentHotels.length === 0) {
-        grid.innerHTML = '';
-        empty.style.display = 'block';
+        grid.innerHTML =
+          '<div style="text-align:center;padding:60px 20px;">' +
+            '<div style="font-size:4em;margin-bottom:16px;">🛍️</div>' +
+            '<h3 style="font-size:1.3em;margin-bottom:8px;">No Travel agent yet</h3>' +
+            '<p style="color:var(--text2);margin-bottom:20px;">Be the first travel agent!</p>' +
+            '<a href="../auth/register.html" style="background:var(--orange);color:white;padding:12px 24px;border-radius:8px;text-decoration:none;font-weight:700;">Start Selling →</a>' +
+          '</div>';
         return;
       }
 

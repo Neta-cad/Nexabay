@@ -197,24 +197,7 @@
   <script src="../../js/core/main.js"></script>
   <script>
 
-    var DEMO_RESTAURANTS = [
-      { id:1,  name:'The Place Restaurant',   category:'Nigerian',  rating:4.8, reviews:1240, deliveryTime:35, deliveryFee:500,  minOrder:3000,  emoji:'🍛', isOpen:true,  isFree:false, tags:['Jollof Rice','Egusi Soup','Pounded Yam'] },
-      { id:2,  name:'Chicken Republic',       category:'Fast Food', rating:4.7, reviews:2340, deliveryTime:25, deliveryFee:0,    minOrder:2000,  emoji:'🍗', isOpen:true,  isFree:true,  tags:['Fried Chicken','Burgers','Sides'] },
-      { id:3,  name:'Dominos Pizza',          category:'Pizza',     rating:4.6, reviews:890,  deliveryTime:45, deliveryFee:1000, minOrder:5000,  emoji:'🍕', isOpen:true,  isFree:false, tags:['Pizza','Pasta','Garlic Bread'] },
-      { id:4,  name:'Kilimanjaro',            category:'Nigerian',  rating:4.9, reviews:3450, deliveryTime:40, deliveryFee:700,  minOrder:4000,  emoji:'🍲', isOpen:true,  isFree:false, tags:['Suya','Pepper Soup','Nkwobi'] },
-      { id:5,  name:'Yellow Chilli',          category:'Nigerian',  rating:4.7, reviews:678,  deliveryTime:50, deliveryFee:500,  minOrder:5000,  emoji:'🌶️', isOpen:false, isFree:false, tags:['Continental','Nigerian Fusion'] },
-      { id:6,  name:'Mr Biggs',               category:'Fast Food', rating:4.5, reviews:1560, deliveryTime:30, deliveryFee:0,    minOrder:1500,  emoji:'🍔', isOpen:true,  isFree:true,  tags:['Pies','Burgers','Pastries'] },
-      { id:7,  name:'Dragon Palace',          category:'Chinese',   rating:4.6, reviews:456,  deliveryTime:45, deliveryFee:800,  minOrder:6000,  emoji:'🥡', isOpen:true,  isFree:false, tags:['Fried Rice','Noodles','Dim Sum'] },
-      { id:8,  name:'Shawarma World',         category:'Shawarma',  rating:4.8, reviews:2100, deliveryTime:20, deliveryFee:300,  minOrder:2000,  emoji:'🌯', isOpen:true,  isFree:false, tags:['Shawarma','Fries','Smoothies'] },
-      { id:9,  name:'Buka Spot',              category:'Nigerian',  rating:4.9, reviews:4560, deliveryTime:30, deliveryFee:400,  minOrder:1500,  emoji:'🍱', isOpen:true,  isFree:false, tags:['Amala','Ewedu','Gbegiri'] },
-      { id:10, name:'Tantalizers',            category:'Fast Food', rating:4.4, reviews:1890, deliveryTime:35, deliveryFee:0,    minOrder:2000,  emoji:'🍟', isOpen:true,  isFree:true,  tags:['Chicken','Rice','Snacks'] },
-      { id:11, name:'Ocean Basket',           category:'Seafood',   rating:4.7, reviews:567,  deliveryTime:50, deliveryFee:1000, minOrder:8000,  emoji:'🦞', isOpen:false, isFree:false, tags:['Prawns','Fish','Calamari'] },
-      { id:12, name:'Wrap It Up',             category:'Healthy',   rating:4.8, reviews:890,  deliveryTime:25, deliveryFee:500,  minOrder:3000,  emoji:'🥗', isOpen:true,  isFree:false, tags:['Salads','Wraps','Smoothies'] },
-      { id:13, name:'Suya Spot',              category:'Grills',    rating:4.9, reviews:3200, deliveryTime:30, deliveryFee:300,  minOrder:2000,  emoji:'🍖', isOpen:true,  isFree:false, tags:['Suya','Balangu','Kilishi'] },
-      { id:14, name:'FreshMart Groceries',    category:'Groceries', rating:4.6, reviews:780,  deliveryTime:60, deliveryFee:1000, minOrder:5000,  emoji:'🛒', isOpen:true,  isFree:false, tags:['Fresh Produce','Dairy','Beverages'] },
-      { id:15, name:'Sweet Sensations',       category:'Desserts',  rating:4.7, reviews:1200, deliveryTime:35, deliveryFee:500,  minOrder:2500,  emoji:'🍰', isOpen:true,  isFree:false, tags:['Cakes','Pastries','Ice Cream'] },
-      { id:16, name:'Coldstone Creamery',     category:'Desserts',  rating:4.8, reviews:2300, deliveryTime:30, deliveryFee:0,    minOrder:3000,  emoji:'🍦', isOpen:true,  isFree:true,  tags:['Ice Cream','Smoothies','Waffles'] },
-    ];
+    var DEMO_RESTAURANTS = [];
 
     var ALL_RESTAURANTS = [];
     var currentRestaurants = [];
@@ -268,8 +251,13 @@
       var count = document.getElementById('food-count');
 
       if (currentRestaurants.length === 0) {
-        grid.innerHTML = '';
-        empty.style.display = 'block';
+        grid.innerHTML =
+          '<div style="text-align:center;padding:60px 20px;">' +
+            '<div style="font-size:4em;margin-bottom:16px;">🍔</div>' +
+            '<h3 style="font-size:1.3em;margin-bottom:8px;">No Restaurants yet</h3>' +
+            '<p style="color:var(--text2);margin-bottom:20px;">Be the first restaurant partner!</p>' +
+            '<a href="../auth/register.html" style="background:var(--orange);color:white;padding:12px 24px;border-radius:8px;text-decoration:none;font-weight:700;">Start Selling →</a>' +
+          '</div>';
         return;
       }
 

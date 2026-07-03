@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Dashboard — Nexabay</title>
+  <link rel="stylesheet" href="../../css/main.css"/>
+  <link rel="stylesheet" href="../../css/dashboard.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <style>
+    .admin-stat-card { background:white;border-radius:12px;padding:20px;border:1px solid var(--border);display:flex;align-items:center;gap:16px; }
+    .admin-stat-icon { width:50px;height:50px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.5em; }
+    .admin-stat-icon.blue { background:#e8f0fe; }
+    .admin-stat-icon.orange { background:#fff3e0; }
+    .admin-stat-icon.green { background:#e8f5e9; }
+    .admin-stat-icon.red { background:#fce8e6; }
+    .admin-stat-icon.purple { background:#f3e8fd; }
+    .approval-card { background:white;border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:12px; }
+    .approval-card-header { display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px; }
+    .approval-actions { display:flex;gap:8px;margin-top:12px; }
+    .btn-approve { background:#00a651;color:white;border:none;padding:8px 16px;border-radius:8px;cursor:pointer;font-weight:600;font-size:0.85em; }
+    .btn-reject { background:#cc0000;color:white;border:none;padding:8px 16px;border-radius:8px;cursor:pointer;font-weight:600;font-size:0.85em; }
+    .btn-view { background:var(--gray);color:inherit;border:none;padding:8px 16px;border-radius:8px;cursor:pointer;font-weight:600;font-size:0.85em; }
+    .user-row { background:white;border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:10px;display:flex;align-items:center;gap:12px; }
+    .user-avatar-sm { width:40px;height:40px;border-radius:50%;background:var(--orange);color:white;display:flex;align-items:center;justify-content:center;font-weight:700; }
+    .withdrawal-card { background:white;border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:12px; }
+    .section-tabs { display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px; }
+    .section-tab { padding:8px 14px;border-radius:20px;border:1px solid var(--border);background:white;cursor:pointer;font-size:0.85em;font-weight:600; }
+    .section-tab.active { background:var(--orange);color:white;border-color:var(--orange); }
+    .admin-badge { background:linear-gradient(135deg,#0a0f1e,#1a237e);color:white;padding:4px 10px;border-radius:20px;font-size:0.75em;font-weight:700; }
+  </style>
+</head>
+<body class="dashboard-body">
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="nav-inner">
+      <a href="../../index.html" class="logo">
+        <span class="logo-nexa">Nexa</span><span class="logo-bay">bay</span>
+      </a>
+      <div class="nav-actions">
+        <span class="admin-badge">👑 ADMIN</span>
+        <a href="../../index.html" class="nav-link">← Site</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="dashboard-layout">
+
+    <!-- SIDEBAR -->
+    <aside class="dash-sidebar">
+      <div class="dash-profile">
+        <div class="dash-avatar" id="dash-avatar" style="background:linear-gradient(135deg,#0a0f1e,#1a237e);">A</div>
+        <div class="dash-name" id="dash-name">Admin</div>
+        <div class="dash-badge">👑 Super Admin</div>
+      </div>
+
+      <nav class="dash-nav">
+        <a href="#" class="dash-nav-item active" onclick="showTab('overview')">
+          📊 Overview
+        </a>
+        <a href="#" class="dash-nav-item" onclick="showTab('approvals')">
+          ✅ Approvals
+          <span id="pending-badge" style="background:#cc0000;color:white;border-radius:10px;padding:1px 7px;font-size:0.75em;margin-left:4px;display:none;">0</span>
+        </a>
+        <a href="#" class="dash-nav-item" onclick="showTab('users')">
+          👥 Users
+        </a>
+        <a href="#" class="dash-nav-item" onclick="showTab('orders')">
+          📦 All Orders
+        </a>
+        <a href="#" class="dash-nav-item" onclick="showTab('withdrawals')">
+          💸 Withdrawals
+          <span id="wd-badge" style="background:#cc0000;color:white;border-radius:10px;padding:1px 7px;font-size:0.75em;margin-left:4px;display:none;">0</span>
+        </a>
+        <a href="#" class="dash-nav-item" onclick="showTab('payments')">
+          💳 Payments
+        </a>
+        <a href="#" class="dash-nav-item" onclick="showTab('settings')">
+          ⚙️ Settings
+        </a>
+        <a href="#" class="dash-nav-item logout" onclick="doAdminLogout()">
+          🚪 Logout
+        </a>
+      </nav>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="dash-main">
+
+      <!-- OVERVIEW TAB -->
+      <div class="dash-tab" id="tab-overview">
+        <div class="dash-header">
+          <h1>Platform Overview 📊</h1>
+          <p id="last-updated" style="color:var(--text2);font-size:0.85em;"></p>
+        </div>
+
+        <div class="stats-grid">
+          <div class="admin-stat-card">
+            <div class="admin-stat-icon blue">👥</div>
+            <div>
+              <div class="stat-value" id="stat-users">0</div>
+              <div class="stat-label">Total Users</div>
+            </div>
+          </div>
+          <div class="admin-stat-card">
+            <div class="admin-stat-icon orange">🛍️</div>
+            <div>
+              <div class="stat-value" id="stat-products">0</div>
+              <div class="stat-label">Active Products</div>
+            </div>
+          </div>
+          <div class="admin-stat-card">
+            <div class="admin-stat-icon green">📦</div>
+            <div>
+              <div class="stat-value" id="stat-orders">0</div>
+              <div class="stat-label">Total Orders</div>
+            </div>
+          </div>
+          <div class="admin-stat-card">
+            <div class="admin-stat-icon purple">💰</div>
+            <div>
+              <div class="stat-value" id="stat-revenue">₦0</div>
+              <div class="stat-label">Total Revenue</div>
+            </div>
+          </div>
+          <div class="admin-stat-card">
+            <div class="admin-stat-icon orange">✅</div>
+            <div>
+              <div class="stat-value" id="stat-pending">0</div>
+              <div class="stat-label">Pending Approvals</div>
+            </div>
+          </div>
+          <div class="admin-stat-card">
+            <div class="admin-stat-icon red">💸</div>
+            <div>
+              <div class="stat-value" id="stat-withdrawals">0</div>
+              <div class="stat-label">Pending Withdrawals</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="dash-section" style="margin-top:24px;">
+          <h2>Quick Actions</h2>
+          <div class="quick-actions">
+            <button class="quick-btn" onclick="showTab('approvals')">
+              ✅ Review Approvals
+            </button>
+            <button class="quick-btn" onclick="showTab('withdrawals')">
+              💸 Process Withdrawals
+            </button>
+            <button class="quick-btn" onclick="showTab('users')">
+              👥 Manage Users
+            </button>
+            <button class="quick-btn" onclick="loadStats()">
+              🔄 Refresh Stats
+            </button>
+          </div>
+        </div>
+
+        <div class="dash-section" style="margin-top:24px;">
+          <h2>Recent Activity</h2>
+          <div id="recent-activity" style="color:var(--text2);font-size:0.85em;">Loading...</div>
+        </div>
+      </div>
+      <!-- APPROVALS TAB -->
+      <div class="dash-tab" id="tab-approvals" style="display:none;">
+        <div class="dash-header">
+          <h1>Pending Approvals ✅</h1>
+          <button onclick="loadAllPending()" style="background:var(--gray);border:none;padding:8px 16px;border-radius:8px;cursor:pointer;">🔄 Refresh</button>
+        </div>
+
+        <div class="section-tabs">
+          <button class="section-tab active" onclick="showPendingSection('products', this)">🛍️ Products</button>
+          <button class="section-tab" onclick="showPendingSection('services', this)">🛠️ Services</button>
+          <button class="section-tab" onclick="showPendingSection('rentals', this)">🏠 Rentals</button>
+          <button class="section-tab" onclick="showPendingSection('jobs', this)">💼 Jobs</button>
+          <button class="section-tab" onclick="showPendingSection('courses', this)">🎓 Courses</button>
+          <button class="section-tab" onclick="showPendingSection('foodItems', this)">🍔 Food</button>
+          <button class="section-tab" onclick="showPendingSection('events', this)">🎉 Events</button>
+          <button class="section-tab" onclick="showPendingSection('travelListings', this)">✈️ Travel</button>
+          <button class="section-tab" onclick="showPendingSection('healthListings', this)">🏥 Health</button>
+          <button class="section-tab" onclick="showPendingSection('drivers', this)">🚗 Drivers</button>
+        </div>
+
+        <div id="approvals-content">
+          <div style="text-align:center;padding:40px;color:var(--text2);">
+            <div style="font-size:3em;margin-bottom:12px;">⏳</div>
+            <p>Loading pending approvals...</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- USERS TAB -->
+      <div class="dash-tab" id="tab-users" style="display:none;">
+        <div class="dash-header">
+          <h1>All Users 👥</h1>
+          <button onclick="loadUsers()" style="background:var(--gray);border:none;padding:8px 16px;border-radius:8px;cursor:pointer;">🔄 Refresh</button>
+        </div>
+
+        <div style="margin-bottom:16px;">
+          <input type="text" id="user-search" placeholder="Search by name or email..." onkeyup="searchUsers()" style="width:100%;padding:12px;border:1px solid var(--border);border-radius:8px;font-size:0.9em;"/>
+        </div>
+
+        <div id="users-list">
+          <div style="text-align:center;padding:40px;color:var(--text2);">
+            <div style="font-size:3em;margin-bottom:12px;">⏳</div>
+            <p>Loading users...</p>
+          </div>
+        </div>
+      </div>
+      <!-- ORDERS TAB -->
+      <div class="dash-tab" id="tab-orders" style="display:none;">
+        <div class="dash-header">
+          <h1>All Orders 📦</h1>
+          <button onclick="loadOrders()" style="background:var(--gray);border:none;padding:8px 16px;border-radius:8px;cursor:pointer;">🔄 Refresh</button>
+        </div>
+
+        <div class="orders-filter" style="margin-bottom:16px;">
+          <button class="order-filter-btn active" onclick="filterAdminOrders('all', this)">All</button>
+          <button class="order-filter-btn" onclick="filterAdminOrders('confirmed', this)">Confirmed</button>
+          <button class="order-filter-btn" onclick="filterAdminOrders('processing', this)">Processing</button>
+          <button class="order-filter-btn" onclick="filterAdminOrders('shipped', this)">Shipped</button>
+          <button class="order-filter-btn" onclick="filterAdminOrders('delivered', this)">Delivered</button>
+        </div>
+
+        <div class="orders-table-wrap">
+          <table class="orders-table">
+            <thead>
+              <tr>
+                <th>Order ID</th>
+                <th>Buyer</th>
+                <th>Items</th>
+                <th>Total</th>
+                <th>Payment</th>
+                <th>Status</th>
+                <th>Date</th>
+              </tr>
+            </thead>
+            <tbody id="admin-orders-body">
+              <tr><td colspan="7" style="text-align:center;padding:20px;color:var(--text2);">Loading orders...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- WITHDRAWALS TAB -->
+      <div class="dash-tab" id="tab-withdrawals" style="display:none;">
+        <div class="dash-header">
+          <h1>Withdrawal Requests 💸</h1>
+          <button onclick="loadWithdrawals()" style="background:var(--gray);border:none;padding:8px 16px;border-radius:8px;cursor:pointer;">🔄 Refresh</button>
+        </div>
+
+        <div class="orders-filter" style="margin-bottom:16px;">
+          <button class="order-filter-btn active" onclick="filterWithdrawals('pending', this)">Pending</button>
+          <button class="order-filter-btn" onclick="filterWithdrawals('paid', this)">Paid</button>
+          <button class="order-filter-btn" onclick="filterWithdrawals('rejected', this)">Rejected</button>
+          <button class="order-filter-btn" onclick="filterWithdrawals('all', this)">All</button>
+        </div>
+
+        <div id="withdrawals-list">
+          <div style="text-align:center;padding:40px;color:var(--text2);">
+            <div style="font-size:3em;margin-bottom:12px;">⏳</div>
+            <p>Loading withdrawal requests...</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- PAYMENTS TAB -->
+      <div class="dash-tab" id="tab-payments" style="display:none;">
+        <div class="dash-header">
+          <h1>Payment Records 💳</h1>
+          <button onclick="loadPayments()" style="background:var(--gray);border:none;padding:8px 16px;border-radius:8px;cursor:pointer;">🔄 Refresh</button>
+        </div>
+
+        <div class="orders-table-wrap">
+          <table class="orders-table">
+            <thead>
+              <tr>
+                <th>Reference</th>
+                <th>Customer</th>
+                <th>Type</th>
+                <th>Amount</th>
+                <th>Status</th>
+                <th>Date</th>
+              </tr>
+            </thead>
+            <tbody id="payments-body">
+              <tr><td colspan="6" style="text-align:center;padding:20px;color:var(--text2);">Loading payments...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- SETTINGS TAB -->
+      <div class="dash-tab" id="tab-settings" style="display:none;">
+        <div class="dash-header">
+          <h1>Admin Settings ⚙️</h1>
+        </div>
+
+        <div class="settings-card" style="margin-bottom:16px;">
+          <h3>Platform Commission Rates</h3>
+          <p style="color:var(--text2);font-size:0.85em;margin-bottom:14px;">These are your current commission rates per section</p>
+          <div style="display:grid;gap:10px;">
+            <div style="display:flex;justify-content:space-between;padding:10px;background:var(--gray);border-radius:8px;">
+              <span>🛍️ NexaShop</span><span style="font-weight:700;color:var(--orange);">5%</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;padding:10px;background:var(--gray);border-radius:8px;">
+              <span>🛠️ NexaServices</span><span style="font-weight:700;color:var(--orange);">10%</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;padding:10px;background:var(--gray);border-radius:8px;">
+              <span>🏠 NexaRent</span><span style="font-weight:700;color:var(--orange);">5%</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;padding:10px;background:var(--gray);border-radius:8px;">
+              <span>🎓 NexaLearn</span><span style="font-weight:700;color:var(--orange);">20%</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;padding:10px;background:var(--gray);border-radius:8px;">
+              <span>💼 NexaJobs</span><span style="font-weight:700;color:var(--orange);">₦5,000 flat</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;padding:10px;background:var(--gray);border-radius:8px;">
+              <span>🍔 NexaFood</span><span style="font-weight:700;color:var(--orange);">10%</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;padding:10px;background:var(--gray);border-radius:8px;">
+              <span>🎉 NexaEvents</span><span style="font-weight:700;color:var(--orange);">8%</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;padding:10px;background:var(--gray);border-radius:8px;">
+              <span>✈️ NexaTravel</span><span style="font-weight:700;color:var(--orange);">8%</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;padding:10px;background:var(--gray);border-radius:8px;">
+              <span>🏥 NexaHealth</span><span style="font-weight:700;color:var(--orange);">10%</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;padding:10px;background:var(--gray);border-radius:8px;">
+              <span>🚗 NexaRide</span><span style="font-weight:700;color:var(--orange);">10%</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="settings-card">
+          <h3>Grant Admin Access</h3>
+          <p style="color:var(--text2);font-size:0.85em;margin-bottom:14px;">Enter a user's UID to grant them admin access</p>
+          <div class="form-group">
+            <label>User UID</label>
+            <input type="text" id="grant-uid" placeholder="Paste user UID here"/>
+          </div>
+          <div id="grant-error" style="color:#cc0000;font-size:0.85em;display:none;margin-bottom:8px;"></div>
+          <div id="grant-success" style="color:var(--green);font-size:0.85em;display:none;margin-bottom:8px;"></div>
+          <button onclick="grantAdminAccess()" class="btn-save">Grant Admin Access</button>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- REJECTION MODAL -->
+  <div id="reject-overlay" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);z-index:900;" onclick="closeRejectModal()"></div>
+  <div id="reject-modal" style="display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:white;border-radius:14px;max-width:380px;width:90%;z-index:901;padding:20px;">
+    <h3 style="margin-bottom:14px;">❌ Reject Listing</h3>
+    <div class="form-group">
+      <label>Reason for rejection</label>
+      <textarea id="reject-reason" rows="3" placeholder="Tell the seller why this was rejected..."></textarea>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:12px;">
+      <button onclick="confirmReject()" class="btn-reject" style="flex:1;padding:12px;">Confirm Reject</button>
+      <button onclick="closeRejectModal()" class="btn-view" style="flex:1;padding:12px;">Cancel</button>
+    </div>
+  </div>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="../../js/firebase/config.js"></script>
+  <script src="../../js/firebase/auth.js"></script>
+  <script src="../../js/firebase/admin.js"></script>
+  <script src="../../js/core/main.js"></script>
+  <script>
+
+    var allUsers = [];
+    var allOrders = [];
+    var allWithdrawals = [];
+    var allPayments = [];
+    var currentPendingCollection = 'products';
+    var rejectTarget = null;
+
+    function init() {
+      var user = JSON.parse(localStorage.getItem('nexa_current_user') || 'null');
+      if (!user) {
+        window.location.href = '../auth/login.html';
+        return;
+      }
+
+      nexaCheckIsAdmin(user.uid)
+        .then(function(isAdmin) {
+          if (!isAdmin) {
+            alert('Access denied. Admin only.');
+            window.location.href = '../../index.html';
+            return;
+          }
+
+          var nameEl   = document.getElementById('dash-name');
+          var avatarEl = document.getElementById('dash-avatar');
+          if (nameEl)   nameEl.textContent   = user.fullName || user.firstName || 'Admin';
+          if (avatarEl) avatarEl.textContent = (user.firstName || 'A')[0].toUpperCase();
+
+          loadStats();
+          loadAllPending();
+          loadUsers();
+          loadOrders();
+          loadWithdrawals();
+          loadPayments();
+
+          var updated = document.getElementById('last-updated');
+          if (updated) updated.textContent = 'Last updated: ' + new Date().toLocaleTimeString();
+        });
+    }
+
+    function showTab(tab) {
+      var tabs = document.querySelectorAll('.dash-tab');
+      tabs.forEach(function(t) { t.style.display = 'none'; });
+
+      var navItems = document.querySelectorAll('.dash-nav-item');
+      navItems.forEach(function(n) { n.classList.remove('active'); });
+
+      var target = document.getElementById('tab-' + tab);
+      if (target) target.style.display = 'block';
+
+      var navMap = {
+        'overview': 0, 'approvals': 1, 'users': 2,
+        'orders': 3, 'withdrawals': 4, 'payments': 5, 'settings': 6
+      };
+      var index = navMap[tab];
+      if (index !== undefined && navItems[index]) {
+        navItems[index].classList.add('active');
+      }
+    }
+
+    function loadStats() {
+      nexaGetPlatformStats()
+        .then(function(stats) {
+          document.getElementById('stat-users').textContent       = stats.totalUsers.toLocaleString();
+          document.getElementById('stat-products').textContent    = stats.totalProducts.toLocaleString();
+          document.getElementById('stat-orders').textContent      = stats.totalOrders.toLocaleString();
+          document.getElementById('stat-revenue').textContent     = '₦' + stats.totalRevenue.toLocaleString();
+          document.getElementById('stat-withdrawals').textContent = stats.pendingWithdrawals.toLocaleString();
+
+          var wdBadge = document.getElementById('wd-badge');
+          if (wdBadge && stats.pendingWithdrawals > 0) {
+            wdBadge.textContent = stats.pendingWithdrawals;
+            wdBadge.style.display = 'inline';
+          }
+
+          loadAllPendingCount();
+          renderRecentActivity(stats);
+        })
+        .catch(function(err) { console.log('Stats error:', err); });
+    }
+
+    function loadAllPendingCount() {
+      var collections = ['products','services','rentals','jobs','courses','foodItems','events','travelListings','healthListings','drivers'];
+      var total = 0;
+      var promises = collections.map(function(col) {
+        return db.collection(col).where('status', '==', 'pending').get()
+          .then(function(snap) { total += snap.size; })
+          .catch(function() {});
+      });
+      Promise.all(promises).then(function() {
+        document.getElementById('stat-pending').textContent = total;
+        var badge = document.getElementById('pending-badge');
+        if (badge && total > 0) {
+          badge.textContent = total;
+          badge.style.display = 'inline';
+        }
+      });
+    }
+
+    function renderRecentActivity(stats) {
+      var el = document.getElementById('recent-activity');
+      if (!el) return;
+      el.innerHTML =
+        '<div style="display:grid;gap:8px;">' +
+          '<div style="padding:10px;background:var(--gray);border-radius:8px;">👥 <b>' + stats.totalUsers + '</b> registered users on the platform</div>' +
+          '<div style="padding:10px;background:var(--gray);border-radius:8px;">📦 <b>' + stats.totalOrders + '</b> orders placed so far</div>' +
+          '<div style="padding:10px;background:var(--gray);border-radius:8px;">💰 <b>₦' + stats.totalRevenue.toLocaleString() + '</b> total revenue processed</div>' +
+          '<div style="padding:10px;background:var(--gray);border-radius:8px;">💸 <b>' + stats.pendingWithdrawals + '</b> withdrawal requests pending</div>' +
+        '</div>';
+    }
+
+    function loadAllPending() {
+      showPendingSection(currentPendingCollection, document.querySelector('.section-tab.active'));
+    }
+
+    function showPendingSection(collection, btn) {
+      currentPendingCollection = collection;
+
+      if (btn) {
+        document.querySelectorAll('.section-tab').forEach(function(b) { b.classList.remove('active'); });
+        btn.classList.add('active');
+      }
+
+      var content = document.getElementById('approvals-content');
+      content.innerHTML = '<div style="text-align:center;padding:30px;color:var(--text2);">⏳ Loading...</div>';
+
+      nexaGetPendingListings(collection)
+        .then(function(items) {
+          if (items.length === 0) {
+            content.innerHTML =
+              '<div style="text-align:center;padding:40px;">' +
+                '<div style="font-size:3em;margin-bottom:12px;">✅</div>' +
+                '<h3>All clear!</h3>' +
+                '<p style="color:var(--text2);">No pending approvals in this section</p>' +
+              '</div>';
+            return;
+          }
+
+          content.innerHTML = items.map(function(item) {
+            var title = item.title || item.name || 'Untitled';
+            var price = item.price || item.consultationFee || item.basePrice || 0;
+            var seller = item.sellerName || item.providerName || item.ownerName ||
+                         item.agentName || item.employerName || item.instructorName ||
+                         item.organizerName || item.restaurantName || item.driverName || 'Unknown';
+            var imgHtml = item.imageUrl
+              ? '<img src="' + item.imageUrl + '" style="width:60px;height:60px;object-fit:cover;border-radius:8px;margin-right:12px;"/>'
+              : '<div style="width:60px;height:60px;background:var(--gray);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1.5em;margin-right:12px;">' + (item.emoji || '📦') + '</div>';
+
+            return '<div class="approval-card">' +
+              '<div class="approval-card-header">' +
+                '<div style="display:flex;align-items:center;">' +
+                  imgHtml +
+                  '<div>' +
+                    '<div style="font-weight:700;font-size:1em;">' + title + '</div>' +
+                    '<div style="font-size:0.8em;color:var(--text2);">By: ' + seller + '</div>' +
+                    '<div style="font-size:0.8em;color:var(--text2);">Price: ₦' + parseInt(price).toLocaleString() + '</div>' +
+                    (item.category ? '<div style="font-size:0.8em;color:var(--text2);">Category: ' + item.category + '</div>' : '') +
+                  '</div>' +
+                '</div>' +
+                '<span style="background:#fff3cd;color:#856404;padding:4px 10px;border-radius:6px;font-size:0.75em;font-weight:700;">PENDING</span>' +
+              '</div>' +
+              (item.description ? '<p style="font-size:0.85em;color:var(--text2);margin-bottom:10px;line-height:1.5;">' + item.description.substring(0, 120) + (item.description.length > 120 ? '...' : '') + '</p>' : '') +
+              '<div class="approval-actions">' +
+                '<button class="btn-approve" onclick="approveItem(\'' + collection + '\', \'' + item.id + '\')">✅ Approve</button>' +
+                '<button class="btn-reject" onclick="openRejectModal(\'' + collection + '\', \'' + item.id + '\')">❌ Reject</button>' +
+              '</div>' +
+            '</div>';
+          }).join('');
+        })
+        .catch(function(err) {
+          content.innerHTML = '<p style="color:#cc0000;padding:20px;">Error loading: ' + err.message + '</p>';
+        });
+    }
+
+    function approveItem(collection, itemId) {
+      nexaApproveListing(collection, itemId)
+        .then(function() {
+          showToast('✅ Listing approved and now live!');
+          showPendingSection(collection, null);
+          loadStats();
+        })
+        .catch(function(err) { showToast('Error: ' + err.message); });
+    }
+
+    function openRejectModal(collection, itemId) {
+      rejectTarget = { collection: collection, itemId: itemId };
+      document.getElementById('reject-reason').value = '';
+      document.getElementById('reject-overlay').style.display = 'block';
+      document.getElementById('reject-modal').style.display   = 'block';
+    }
+
+    function closeRejectModal() {
+      document.getElementById('reject-overlay').style.display = 'none';
+      document.getElementById('reject-modal').style.display   = 'none';
+      rejectTarget = null;
+    }
+
+    function confirmReject() {
+      if (!rejectTarget) return;
+      var reason = document.getElementById('reject-reason').value.trim() || 'Does not meet Nexabay guidelines';
+      nexaRejectListing(rejectTarget.collection, rejectTarget.itemId, reason)
+        .then(function() {
+          showToast('❌ Listing rejected');
+          closeRejectModal();
+          showPendingSection(rejectTarget ? rejectTarget.collection : currentPendingCollection, null);
+          loadStats();
+        })
+        .catch(function(err) { showToast('Error: ' + err.message); });
+    }
+
+    function loadUsers() {
+      nexaGetAllUsers(100)
+        .then(function(users) {
+          allUsers = users;
+          renderUsers(users);
+        })
+        .catch(function(err) { console.log('Users error:', err); });
+    }
+
+    function renderUsers(users) {
+      var list = document.getElementById('users-list');
+      if (!list) return;
+      if (users.length === 0) {
+        list.innerHTML = '<div style="text-align:center;padding:40px;color:var(--text2);">No users found</div>';
+        return;
+      }
+      list.innerHTML = users.map(function(u) {
+        return '<div class="user-row">' +
+          '<div class="user-avatar-sm">' + (u.firstName || 'U')[0].toUpperCase() + '</div>' +
+          '<div style="flex:1;">' +
+            '<div style="font-weight:700;">' + (u.fullName || u.firstName || 'Unknown') + '</div>' +
+            '<div style="font-size:0.8em;color:var(--text2);">' + (u.email || '') + '</div>' +
+            '<div style="font-size:0.75em;color:var(--text2);">' +
+              '📍 ' + (u.state || 'N/A') + ' • ' +
+              '📱 ' + (u.phone || 'N/A') +
+              (u.isAdmin ? ' • <span style="color:var(--orange);font-weight:700;">👑 Admin</span>' : '') +
+              (u.suspended ? ' • <span style="color:#cc0000;font-weight:700;">🚫 Suspended</span>' : '') +
+            '</div>' +
+          '</div>' +
+          '<div style="display:flex;gap:6px;">' +
+            (!u.suspended
+              ? '<button onclick="suspendUser(\'' + u.uid + '\', true)" style="padding:6px 10px;background:#fff0f0;border:1px solid #ffcccc;border-radius:6px;cursor:pointer;font-size:0.8em;color:#cc0000;">Suspend</button>'
+              : '<button onclick="suspendUser(\'' + u.uid + '\', false)" style="padding:6px 10px;background:#f0fff0;border:1px solid #ccffcc;border-radius:6px;cursor:pointer;font-size:0.8em;color:var(--green);">Unsuspend</button>') +
+          '</div>' +
+        '</div>';
+      }).join('');
+    }
+
+    function searchUsers() {
+      var query = document.getElementById('user-search').value.toLowerCase();
+      var filtered = allUsers.filter(function(u) {
+        return (u.fullName || '').toLowerCase().includes(query) ||
+               (u.email || '').toLowerCase().includes(query) ||
+               (u.phone || '').toLowerCase().includes(query);
+      });
+      renderUsers(filtered);
+    }
+
+    function suspendUser(uid, suspend) {
+      if (!confirm((suspend ? 'Suspend' : 'Unsuspend') + ' this user?')) return;
+      nexaSuspendUser(uid, suspend)
+        .then(function() {
+          showToast(suspend ? '🚫 User suspended' : '✅ User unsuspended');
+          loadUsers();
+        })
+        .catch(function(err) { showToast('Error: ' + err.message); });
+    }
+
+    function loadOrders() {
+      db.collection('orders').get()
+        .then(function(snap) {
+          allOrders = [];
+          snap.forEach(function(doc) { allOrders.push(doc.data()); });
+          allOrders.sort(function(a, b) {
+            return new Date(b.date || 0) - new Date(a.date || 0);
+          });
+          renderAdminOrders(allOrders);
+        })
+        .catch(function(err) { console.log('Orders error:', err); });
+    }
+
+    function renderAdminOrders(orders) {
+      var body = document.getElementById('admin-orders-body');
+      if (!body) return;
+      if (orders.length === 0) {
+        body.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:20px;color:var(--text2);">No orders yet</td></tr>';
+        return;
+      }
+      body.innerHTML = orders.map(function(o) {
+        var itemNames = (o.items || []).map(function(i) { return i.name; }).join(', ');
+        return '<tr>' +
+          '<td><b>' + (o.id || 'N/A') + '</b></td>' +
+          '<td>' + (o.buyerName || 'Customer') + '</td>' +
+          '<td style="font-size:0.8em;max-width:120px;">' + itemNames + '</td>' +
+          '<td>₦' + (o.total || 0).toLocaleString() + '</td>' +
+          '<td style="font-size:0.8em;">' + (o.paymentRef ? '✅ ' + o.paymentRef.slice(0,10) + '...' : '—') + '</td>' +
+          '<td><span class="status-badge status-' + (o.status || 'confirmed') + '">' + (o.status || 'confirmed') + '</span></td>' +
+          '<td style="font-size:0.8em;">' + (o.date ? new Date(o.date).toLocaleDateString() : '—') + '</td>' +
+        '</tr>';
+      }).join('');
+    }
+
+    function filterAdminOrders(status, btn) {
+      document.querySelectorAll('.order-filter-btn').forEach(function(b) { b.classList.remove('active'); });
+      btn.classList.add('active');
+      var filtered = status === 'all'
+        ? allOrders
+        : allOrders.filter(function(o) { return o.status === status; });
+      renderAdminOrders(filtered);
+    }
+
+    function loadWithdrawals() {
+      db.collection('withdrawalRequests').get()
+        .then(function(snap) {
+          allWithdrawals = [];
+          snap.forEach(function(doc) {
+            allWithdrawals.push(Object.assign({ _id: doc.id }, doc.data()));
+          });
+          allWithdrawals.sort(function(a, b) {
+            var aTime = a.createdAt ? a.createdAt.toMillis() : 0;
+            var bTime = b.createdAt ? b.createdAt.toMillis() : 0;
+            return bTime - aTime;
+          });
+          renderWithdrawals('pending');
+        })
+        .catch(function(err) { console.log('Withdrawals error:', err); });
+    }
+
+    function renderWithdrawals(filter) {
+      var list = document.getElementById('withdrawals-list');
+      if (!list) return;
+
+      var filtered = filter === 'all'
+        ? allWithdrawals
+        : allWithdrawals.filter(function(w) { return w.status === filter; });
+
+      if (filtered.length === 0) {
+        list.innerHTML =
+          '<div style="text-align:center;padding:40px;">' +
+            '<div style="font-size:3em;margin-bottom:12px;">✅</div>' +
+            '<h3>No ' + filter + ' withdrawals</h3>' +
+          '</div>';
+        return;
+      }
+
+      list.innerHTML = filtered.map(function(w) {
+        return '<div class="withdrawal-card">' +
+          '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;">' +
+            '<div>' +
+              '<div style="font-weight:700;">₦' + (w.amount || 0).toLocaleString() + '</div>' +
+              '<div style="font-size:0.85em;color:var(--text2);">' + (w.userType || 'seller') + ' • ' + (w.bank || '') + '</div>' +
+              '<div style="font-size:0.85em;color:var(--text2);">Acct: ' + (w.account || '') + ' — ' + (w.name || '') + '</div>' +
+            '</div>' +
+            '<span style="background:' +
+              (w.status === 'pending' ? '#fff3cd' : w.status === 'paid' ? '#d4edda' : '#f8d7da') +
+              ';color:' +
+              (w.status === 'pending' ? '#856404' : w.status === 'paid' ? '#155724' : '#721c24') +
+              ';padding:4px 10px;border-radius:6px;font-size:0.75em;font-weight:700;">' +
+              w.status.toUpperCase() +
+            '</span>' +
+          '</div>' +
+          (w.status === 'pending'
+            ? '<div style="display:flex;gap:8px;">' +
+                '<button class="btn-approve" onclick="markWithdrawalPaid(\'' + w._id + '\')">✅ Mark as Paid</button>' +
+                '<button class="btn-reject" onclick="rejectWithdrawal(\'' + w._id + '\')">❌ Reject</button>' +
+              '</div>'
+            : '') +
+        '</div>';
+      }).join('');
+    }
+
+    function filterWithdrawals(status, btn) {
+      document.querySelectorAll('.order-filter-btn').forEach(function(b) { b.classList.remove('active'); });
+      btn.classList.add('active');
+      renderWithdrawals(status);
+    }
+
+    function markWithdrawalPaid(withdrawalId) {
+      if (!confirm('Mark this withdrawal as PAID? Only do this after you have transferred the money.')) return;
+      nexaMarkWithdrawalPaid(withdrawalId)
+        .then(function() {
+          showToast('✅ Withdrawal marked as paid');
+          loadWithdrawals();
+          loadStats();
+        })
+        .catch(function(err) { showToast('Error: ' + err.message); });
+    }
+
+    function rejectWithdrawal(withdrawalId) {
+      if (!confirm('Reject this withdrawal request?')) return;
+      nexaRejectWithdrawal(withdrawalId, 'Rejected by admin')
+        .then(function() {
+          showToast('❌ Withdrawal rejected');
+          loadWithdrawals();
+          loadStats();
+        })
+        .catch(function(err) { showToast('Error: ' + err.message); });
+    }
+
+    function loadPayments() {
+      db.collection('payments').get()
+        .then(function(snap) {
+          allPayments = [];
+          snap.forEach(function(doc) { allPayments.push(doc.data()); });
+          allPayments.sort(function(a, b) {
+            var aTime = a.createdAt ? a.createdAt.toMillis() : 0;
+            var bTime = b.createdAt ? b.createdAt.toMillis() : 0;
+            return bTime - aTime;
+          });
+          renderPayments();
+        })
+        .catch(function(err) { console.log('Payments error:', err); });
+    }
+
+    function renderPayments() {
+      var body = document.getElementById('payments-body');
+      if (!body) return;
+      if (allPayments.length === 0) {
+        body.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:20px;color:var(--text2);">No payment records yet</td></tr>';
+        return;
+      }
+      body.innerHTML = allPayments.map(function(p) {
+        return '<tr>' +
+          '<td style="font-size:0.8em;"><b>' + (p.reference || 'N/A') + '</b></td>' +
+          '<td>' + (p.customerName || p.email || 'Customer') + '</td>' +
+          '<td>' + (p.orderType || 'product') + '</td>' +
+          '<td>₦' + (p.amount || 0).toLocaleString() + '</td>' +
+          '<td><span class="status-badge status-confirmed">' + (p.status || 'paid') + '</span></td>' +
+          '<td style="font-size:0.8em;">' + (p.createdAt ? new Date(p.createdAt.toMillis()).toLocaleDateString() : '—') + '</td>' +
+        '</tr>';
+      }).join('');
+    }
+
+    function grantAdminAccess() {
+      var uid = document.getElementById('grant-uid').value.trim();
+      var errEl = document.getElementById('grant-error');
+      var sucEl = document.getElementById('grant-success');
+      errEl.style.display = 'none';
+      sucEl.style.display = 'none';
+
+      if (!uid) { errEl.textContent = 'Enter a UID'; errEl.style.display = 'block'; return; }
+
+      nexaGrantAdmin(uid)
+        .then(function() {
+          sucEl.textContent = '✅ Admin access granted to ' + uid;
+          sucEl.style.display = 'block';
+          document.getElementById('grant-uid').value = '';
+        })
+        .catch(function(err) {
+          errEl.textContent = 'Error: ' + err.message;
+          errEl.style.display = 'block';
+        });
+    }
+
+    function doAdminLogout() {
+      if (typeof nexaLogout === 'function') {
+        nexaLogout().then(function() {
+          localStorage.removeItem('nexa_current_user');
+          window.location.href = '../../index.html';
+        });
+      } else {
+        localStorage.removeItem('nexa_current_user');
+        window.location.href = '../../index.html';
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      init();
+    });
+
+  </script>
+
+</body>
+</html>

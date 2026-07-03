@@ -26,7 +26,7 @@ function nexaAddHealthListing(listingData, imageUrl) {
     qualifications:  listingData.qualifications || '',
     imageUrl:        imageUrl || '',
     emoji:           listingData.emoji || '🏥',
-    status:          'active',
+    status: 'pending',
     rating:          0,
     reviews:         0,
     appointments:    0,

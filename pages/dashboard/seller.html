@@ -701,11 +701,7 @@
 
     // Add sample orders if none
     if (myOrders.length === 0) {
-      myOrders = [
-        { id:'NXB001', product:'Sample Product', buyer:'John D.', amount:45000, status:'delivered', date:'2025-01-10' },
-        { id:'NXB002', product:'Another Product', buyer:'Fatima K.', amount:28000, status:'shipped', date:'2025-01-11' },
-        { id:'NXB003', product:'New Item', buyer:'Chidi E.', amount:15000, status:'pending', date:'2025-01-12' },
-      ];
+      myOrders = [];
       localStorage.setItem('seller_orders', JSON.stringify(myOrders));
     }
 

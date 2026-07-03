@@ -25,7 +25,7 @@ function nexaAddEvent(eventData, imageUrl) {
     ticketTiers:   eventData.ticketTiers || [],
     imageUrl:      imageUrl || '',
     emoji:         eventData.emoji || '🎉',
-    status:        'active',
+    status: 'pending',
     totalTickets:  eventData.totalTickets || 0,
     soldTickets:   0,
     rating:        0,

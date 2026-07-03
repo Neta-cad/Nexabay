@@ -20,7 +20,7 @@ function nexaAddMenuItem(itemData, imageUrl) {
     imageUrl:        imageUrl || '',
     emoji:           itemData.emoji || '🍽️',
     available:       true,
-    status:          'active',
+    status: 'pending',
     rating:          0,
     reviews:         0,
     orders:          0,

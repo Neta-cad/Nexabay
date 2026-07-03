@@ -186,24 +186,7 @@
   <script src="../../js/core/main.js"></script>
   <script>
 
-    var DEMO_SERVICES = [
-      { id:1,  name:'Professional Plumber',        category:'Home Repairs', provider:'Kunle Repairs',    rating:4.9, reviews:234, price:15000,  priceType:'per job',  location:'Lagos',  emoji:'🔧', verified:true,  desc:'Expert plumbing repairs, pipe fixing, bathroom installation.' },
-      { id:2,  name:'House Cleaning Service',       category:'Cleaning',     provider:'CleanPro NG',      rating:4.8, reviews:189, price:8000,   priceType:'per day',  location:'Lagos',  emoji:'🧹', verified:true,  desc:'Deep cleaning, regular cleaning for homes and offices.' },
-      { id:3,  name:'Hair Stylist & Makeup',        category:'Beauty',       provider:'Glamour Studio',   rating:4.9, reviews:312, price:12000,  priceType:'per session', location:'Abuja', emoji:'💄', verified:true,  desc:'Professional hair styling, braiding, makeup for events.' },
-      { id:4,  name:'Laptop & Phone Repair',        category:'Tech',         provider:'TechFix NG',       rating:4.7, reviews:156, price:5000,   priceType:'from',     location:'Lagos',  emoji:'💻', verified:true,  desc:'Expert repair for all laptop and phone brands. Fast service.' },
-      { id:5,  name:'Graphic Designer',             category:'Design',       provider:'Creative Hub',     rating:4.8, reviews:98,  price:20000,  priceType:'per project', location:'Remote', emoji:'🎨', verified:true,  desc:'Logo design, flyers, social media graphics, branding.' },
-      { id:6,  name:'Home Maths Tutor',             category:'Tutoring',     provider:'EduPro NG',        rating:4.9, reviews:267, price:10000,  priceType:'per month', location:'Lagos',  emoji:'📚', verified:true,  desc:'Expert maths tutor for JS1-SS3 and university students.' },
-      { id:7,  name:'Wedding Photographer',         category:'Photography',  provider:'Shuttercraft NG',  rating:4.9, reviews:145, price:150000, priceType:'per event', location:'Lagos',  emoji:'📷', verified:true,  desc:'Professional wedding and event photography & videography.' },
-      { id:8,  name:'Event Catering Service',       category:'Catering',     provider:'DeluxeCatering',   rating:4.8, reviews:89,  price:50000,  priceType:'from',     location:'Abuja',  emoji:'🍳', verified:true,  desc:'Full catering for weddings, parties and corporate events.' },
-      { id:9,  name:'Electrician Service',          category:'Home Repairs', provider:'PowerFix NG',      rating:4.7, reviews:178, price:10000,  priceType:'per job',  location:'Lagos',  emoji:'⚡', verified:false, desc:'Electrical repairs, wiring, installation and maintenance.' },
-      { id:10, name:'AC Installation & Repair',     category:'Home Repairs', provider:'CoolTech NG',      rating:4.8, reviews:134, price:25000,  priceType:'from',     location:'PH',     emoji:'❄️', verified:true,  desc:'Air conditioner installation, servicing and gas refilling.' },
-      { id:11, name:'Web Developer',                category:'Tech',         provider:'CodeMaster NG',    rating:4.9, reviews:67,  price:80000,  priceType:'from',     location:'Remote', emoji:'🌐', verified:true,  desc:'Custom websites, e-commerce, web apps. Fast delivery.' },
-      { id:12, name:'Legal Consultation',           category:'Legal',        provider:'LawBridge NG',     rating:4.8, reviews:45,  price:15000,  priceType:'per hour', location:'Lagos',  emoji:'⚖️', verified:true,  desc:'Legal advice for business, contracts, property and family.' },
-      { id:13, name:'Moving & Relocation',          category:'Transport',    provider:'MoveEase NG',      rating:4.7, reviews:112, price:30000,  priceType:'from',     location:'Lagos',  emoji:'🚛', verified:true,  desc:'Safe and reliable home and office moving services.' },
-      { id:14, name:'Carpentry & Furniture Repair', category:'Home Repairs', provider:'WoodCraft NG',     rating:4.6, reviews:89,  price:12000,  priceType:'from',     location:'Ibadan', emoji:'🪑', verified:false, desc:'Custom furniture making, repairs and wood finishing.' },
-      { id:15, name:'Office Cleaning',              category:'Cleaning',     provider:'CleanPro NG',      rating:4.8, reviews:56,  price:15000,  priceType:'per day',  location:'Lagos',  emoji:'🏢', verified:true,  desc:'Professional office cleaning, sanitization services.' },
-      { id:16, name:'Private English Tutor',        category:'Tutoring',     provider:'LearnFast NG',     rating:4.8, reviews:134, price:8000,   priceType:'per month', location:'Remote', emoji:'📖', verified:true,  desc:'English language tutoring for all ages and levels.' },
-    ];
+    var DEMO_SERVICES = [];
 
     var ALL_SERVICES = [];
     var currentServices = [];
@@ -246,8 +229,13 @@
       var count = document.getElementById('services-count');
 
       if (currentServices.length === 0) {
-        grid.innerHTML = '';
-        empty.style.display = 'block';
+        grid.innerHTML =
+          '<div style="text-align:center;padding:60px 20px;">' +
+            '<div style="font-size:4em;margin-bottom:16px;">🛠️</div>' +
+            '<h3 style="font-size:1.3em;margin-bottom:8px;">No Services yet</h3>' +
+            '<p style="color:var(--text2);margin-bottom:20px;">Be the first service provider!</p>' +
+            '<a href="../auth/register.html" style="background:var(--orange);color:white;padding:12px 24px;border-radius:8px;text-decoration:none;font-weight:700;">Start Selling →</a>' +
+          '</div>';
         return;
       }
 

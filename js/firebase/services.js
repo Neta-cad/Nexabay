@@ -19,7 +19,7 @@ function nexaAddService(serviceData, imageUrl) {
     deliveryTime: serviceData.deliveryTime || 'Negotiable',
     imageUrl:     imageUrl || '',
     emoji:        serviceData.emoji || '🛠️',
-    status:       'active',
+    status: 'pending',
     rating:       0,
     reviews:      0,
     completedJobs: 0,

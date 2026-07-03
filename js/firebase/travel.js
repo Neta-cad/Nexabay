@@ -27,7 +27,7 @@ function nexaAddTravelListing(listingData, imageUrl) {
     includes:      listingData.includes || '',
     imageUrl:      imageUrl || '',
     emoji:         listingData.emoji || '🏨',
-    status:        'active',
+    status: 'pending',
     rating:        0,
     reviews:       0,
     bookings:      0,

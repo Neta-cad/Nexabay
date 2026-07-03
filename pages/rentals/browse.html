@@ -266,24 +266,7 @@
   <script src="../../js/core/main.js"></script>
   <script>
 
-    var DEMO_RENTALS = [
-      { id:1,  name:'2 Bedroom Flat',           type:'Apartment', price:120000,  period:'month', beds:2, location:'Lagos',         area:'Lekki',          emoji:'🏢', verified:true,  features:['Furnished','Parking','Security'], desc:'Spacious 2 bedroom flat in Lekki Phase 1. Modern finishes, 24hr security.' },
-      { id:2,  name:'3 Bedroom Duplex',          type:'House',     price:250000,  period:'month', beds:3, location:'Lagos',         area:'Ikeja GRA',      emoji:'🏠', verified:true,  features:['Furnished','Parking','Security','Pool'], desc:'Beautiful 3 bedroom duplex with swimming pool in Ikeja GRA.' },
-      { id:3,  name:'1 Bedroom Apartment',       type:'Apartment', price:65000,   period:'month', beds:1, location:'Abuja',         area:'Wuse 2',         emoji:'🏢', verified:true,  features:['Furnished','Security'],           desc:'Cozy 1 bedroom apartment in prime Wuse 2 location.' },
-      { id:4,  name:'Office Space 100sqm',       type:'Office',    price:180000,  period:'month', beds:0, location:'Lagos',         area:'Victoria Island', emoji:'🏗️', verified:true, features:['Parking','Security'],             desc:'Open plan office space in Victoria Island. Includes reception area.' },
-      { id:5,  name:'Toyota Camry 2020',         type:'Car',       price:35000,   period:'day',   beds:0, location:'Lagos',         area:'Ikeja',          emoji:'🚗', verified:true,  features:['AC','GPS'],                       desc:'Well maintained Toyota Camry 2020. Driver available on request.' },
-      { id:6,  name:'Event Hall 500 capacity',   type:'Event Hall',price:350000,  period:'day',   beds:0, location:'Lagos',         area:'Lekki',          emoji:'🎉', verified:true,  features:['Parking','AC','Catering option'], desc:'Luxurious event hall with modern amenities. Perfect for weddings.' },
-      { id:7,  name:'Self Contained Studio',     type:'Apartment', price:45000,   period:'month', beds:1, location:'Port Harcourt', area:'GRA Phase 2',    emoji:'🏢', verified:false, features:['Security'],                       desc:'Clean self-contained studio apartment. Water and light included.' },
-      { id:8,  name:'5 Bedroom Mansion',         type:'House',     price:800000,  period:'month', beds:5, location:'Lagos',         area:'Banana Island',  emoji:'🏡', verified:true,  features:['Furnished','Parking','Security','Pool','Gym'], desc:'Luxury 5 bedroom mansion on Banana Island. All amenities included.' },
-      { id:9,  name:'Generator 100KVA',          type:'Equipment', price:50000,   period:'week',  beds:0, location:'Lagos',         area:'Isale Eko',      emoji:'⚡', verified:true,  features:['Fuel included'],                  desc:'100KVA generator for events and construction. Fuel included.' },
-      { id:10, name:'Honda Accord 2019',         type:'Car',       price:25000,   period:'day',   beds:0, location:'Abuja',         area:'Garki',          emoji:'🚗', verified:true,  features:['AC','GPS','Driver available'],     desc:'Clean Honda Accord 2019. Available for self drive or with driver.' },
-      { id:11, name:'2 Bedroom Terrace',         type:'House',     price:160000,  period:'month', beds:2, location:'Abuja',         area:'Maitama',        emoji:'🏠', verified:true,  features:['Parking','Security'],             desc:'Lovely 2 bedroom terrace in Maitama. Quiet and serene environment.' },
-      { id:12, name:'Camera Equipment Kit',      type:'Equipment', price:15000,   period:'day',   beds:0, location:'Lagos',         area:'Surulere',       emoji:'📷', verified:true,  features:['Lighting included'],              desc:'Professional camera kit with lighting. Perfect for photo shoots.' },
-      { id:13, name:'Coworking Space',           type:'Office',    price:15000,   period:'month', beds:0, location:'Lagos',         area:'Yaba',           emoji:'💼', verified:true,  features:['WiFi','AC','Coffee'],             desc:'Modern coworking space in Yaba tech hub. Hot desks available.' },
-      { id:14, name:'4 Bedroom Bungalow',        type:'House',     price:180000,  period:'month', beds:4, location:'Kano',          area:'GRA',            emoji:'🏠', verified:false, features:['Parking'],                        desc:'Spacious 4 bedroom bungalow in Kano GRA. Large compound.' },
-      { id:15, name:'Mini Flat',                 type:'Apartment', price:35000,   period:'month', beds:1, location:'Ibadan',        area:'Bodija',         emoji:'🏢', verified:true,  features:['Security'],                       desc:'Affordable mini flat in Bodija. Close to UI and Bodija market.' },
-      { id:16, name:'Tent & Chairs (100 seats)', type:'Equipment', price:30000,   period:'day',   beds:0, location:'Lagos',         area:'Alimosho',       emoji:'⛺', verified:false, features:['Setup included'],                 desc:'Party tent with 100 chairs and tables. Setup and takedown included.' },
-    ];
+    var DEMO_RENTALS = [];
 
     var ALL_RENTALS = [];
     var currentRentals = [];
@@ -327,8 +310,13 @@
       var count = document.getElementById('rentals-count');
 
       if (currentRentals.length === 0) {
-        grid.innerHTML = '';
-        empty.style.display = 'block';
+        grid.innerHTML =
+          '<div style="text-align:center;padding:60px 20px;">' +
+            '<div style="font-size:4em;margin-bottom:16px;">🏠</div>' +
+            '<h3 style="font-size:1.3em;margin-bottom:8px;">No Rentals yet</h3>' +
+            '<p style="color:var(--text2);margin-bottom:20px;">Be the first to list a property!</p>' +
+            '<a href="../auth/register.html" style="background:var(--orange);color:white;padding:12px 24px;border-radius:8px;text-decoration:none;font-weight:700;">Start Selling →</a>' +
+          '</div>';
         return;
       }
 

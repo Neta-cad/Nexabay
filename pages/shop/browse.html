@@ -226,24 +226,7 @@
   <script>
 
     // Demo fallback products (shown only if no real products exist yet)
-    var DEMO_PRODUCTS = [
-      { id:1,  name:'iPhone 15 Pro Max 256GB', price:850000, oldPrice:950000, rating:4.8, reviews:234, location:'Lagos',         emoji:'📱', category:'Electronics', condition:'new',  seller:'TechHub Lagos',    sold:1240 },
-      { id:2,  name:'Samsung Galaxy S24 Ultra', price:780000, oldPrice:900000, rating:4.7, reviews:189, location:'Abuja',         emoji:'📱', category:'Electronics', condition:'new',  seller:'GadgetPro NG',     sold:890  },
-      { id:3,  name:'Nike Air Force 1 Sneakers', price:45000, oldPrice:60000,  rating:4.7, reviews:312, location:'Lagos',         emoji:'👟', category:'Fashion',     condition:'new',  seller:'SneakerWorld',     sold:2100 },
-      { id:4,  name:'Ankara Print Dress',        price:15000, oldPrice:22000,  rating:4.9, reviews:445, location:'Kano',          emoji:'👗', category:'Fashion',     condition:'new',  seller:'AfrikaStyles',     sold:3400 },
-      { id:5,  name:'Samsung 55" Smart TV 4K',   price:320000,oldPrice:400000, rating:4.6, reviews:98,  location:'Port Harcourt', emoji:'📺', category:'Electronics', condition:'new',  seller:'ElectroNG',        sold:560  },
-      { id:6,  name:'Gaming Laptop RTX 4060',    price:650000,oldPrice:750000, rating:4.8, reviews:67,  location:'Lagos',         emoji:'💻', category:'Electronics', condition:'new',  seller:'TechHub Lagos',    sold:340  },
-      { id:7,  name:'Designer Leather Handbag',  price:28000, oldPrice:35000,  rating:4.5, reviews:156, location:'Lagos',         emoji:'👜', category:'Fashion',     condition:'new',  seller:'LuxuryBags NG',    sold:780  },
-      { id:8,  name:'Bluetooth Wireless Speaker',price:18000, oldPrice:25000,  rating:4.6, reviews:145, location:'Enugu',         emoji:'🔊', category:'Electronics', condition:'new',  seller:'SoundZone',        sold:920  },
-      { id:9,  name:'Gold Wrist Watch',          price:35000, oldPrice:45000,  rating:4.7, reviews:89,  location:'Abuja',         emoji:'⌚', category:'Fashion',     condition:'new',  seller:'TimeZone NG',      sold:450  },
-      { id:10, name:'PS5 Console + 2 Controllers',price:450000,oldPrice:520000,rating:4.9, reviews:234, location:'Lagos',         emoji:'🎮', category:'Electronics', condition:'new',  seller:'GameZone NG',      sold:670  },
-      { id:11, name:'Sofa Set 3+1+1',            price:180000,oldPrice:220000, rating:4.5, reviews:67,  location:'Lagos',         emoji:'🛋️', category:'Home',        condition:'new',  seller:'HomeStyle NG',     sold:230  },
-      { id:12, name:'Air Fryer 5L',              price:35000, oldPrice:45000,  rating:4.7, reviews:189, location:'Abuja',         emoji:'🍳', category:'Home',        condition:'new',  seller:'KitchenPlus',      sold:1100 },
-      { id:13, name:'Face Moisturizer SPF 50',   price:8500,  oldPrice:12000,  rating:4.6, reviews:267, location:'Lagos',         emoji:'💄', category:'Beauty',      condition:'new',  seller:'GlowUp Beauty',    sold:2300 },
-      { id:14, name:'Football Boots Size 40-45', price:22000, oldPrice:30000,  rating:4.5, reviews:134, location:'Kano',          emoji:'⚽', category:'Sports',      condition:'new',  seller:'SportZone NG',     sold:890  },
-      { id:15, name:'Organic Honey 1kg',         price:5000,  oldPrice:7000,   rating:4.8, reviews:345, location:'Ibadan',        emoji:'🍯', category:'Food',        condition:'new',  seller:'NatureFoods',      sold:4500 },
-      { id:16, name:'Refurbished iPhone 12',     price:180000,oldPrice:250000, rating:4.3, reviews:78,  location:'Lagos',         emoji:'📱', category:'Electronics', condition:'used', seller:'PhoneDeals NG',    sold:340  },
-    ];
+    var DEMO_PRODUCTS = [];
 
     var ALL_PRODUCTS = [];
     var currentProducts = [];
@@ -339,9 +322,13 @@
       var loadMore = document.getElementById('load-more-wrap');
 
       if (currentProducts.length === 0) {
-        container.innerHTML = '';
-        empty.style.display = 'block';
-        loadMore.style.display = 'none';
+        grid.innerHTML =
+          '<div style="text-align:center;padding:60px 20px;">' +
+            '<div style="font-size:4em;margin-bottom:16px;">🛍️</div>' +
+            '<h3 style="font-size:1.3em;margin-bottom:8px;">No products yet</h3>' +
+            '<p style="color:var(--text2);margin-bottom:20px;">Be the first seller on Nexabay!</p>' +
+            '<a href="../auth/register.html" style="background:var(--orange);color:white;padding:12px 24px;border-radius:8px;text-decoration:none;font-weight:700;">Start Selling →</a>' +
+          '</div>';
         return;
       }
 

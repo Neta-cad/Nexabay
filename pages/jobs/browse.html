@@ -243,24 +243,7 @@
   <script src="../../js/core/main.js"></script>
   <script>
 
-    var DEMO_JOBS = [
-      { id:1,  title:'Senior Software Engineer',      company:'Flutterwave',        category:'Technology',  type:'Full Time', level:'Senior', location:'Lagos',  salary:800000,  salaryMax:1200000, emoji:'💳', posted:'2 days ago',   desc:'We are looking for a senior software engineer to join our fintech team.' },
-      { id:2,  title:'UI/UX Designer',                company:'Andela',             category:'Technology',  type:'Full Time', level:'Mid',    location:'Remote', salary:400000,  salaryMax:600000,  emoji:'🖥️', posted:'1 day ago',    desc:'Design beautiful user experiences for our global products.' },
-      { id:3,  title:'Digital Marketing Manager',     company:'Konga',              category:'Marketing',   type:'Full Time', level:'Mid',    location:'Lagos',  salary:300000,  salaryMax:450000,  emoji:'🛒', posted:'3 days ago',   desc:'Lead our digital marketing strategy across all channels.' },
-      { id:4,  title:'Data Analyst',                  company:'MTN Nigeria',        category:'Technology',  type:'Full Time', level:'Mid',    location:'Lagos',  salary:350000,  salaryMax:500000,  emoji:'📡', posted:'Today',        desc:'Analyze data to drive business decisions at Nigeria biggest telco.' },
-      { id:5,  title:'Accountant',                    company:'Guaranty Trust Bank', category:'Finance',    type:'Full Time', level:'Mid',    location:'Lagos',  salary:250000,  salaryMax:380000,  emoji:'🏦', posted:'4 days ago',   desc:'Manage financial records and reporting for our retail banking division.' },
-      { id:6,  title:'Medical Doctor (MBBS)',          company:'Eko Hospital',       category:'Healthcare',  type:'Full Time', level:'Senior', location:'Lagos',  salary:500000,  salaryMax:800000,  emoji:'🏥', posted:'2 days ago',   desc:'Join our team of dedicated medical professionals.' },
-      { id:7,  title:'Secondary School Teacher',       company:'Greensprings School',category:'Education',   type:'Full Time', level:'Mid',    location:'Lagos',  salary:150000,  salaryMax:250000,  emoji:'🎓', posted:'1 week ago',   desc:'Teach mathematics and sciences to JSS1-SSS3 students.' },
-      { id:8,  title:'Sales Representative',           company:'Dangote Group',      category:'Sales',       type:'Full Time', level:'Entry',  location:'Abuja',  salary:120000,  salaryMax:200000,  emoji:'🏭', posted:'5 days ago',   desc:'Drive sales of our consumer goods across the FCT.' },
-      { id:9,  title:'Frontend Developer React',       company:'Paystack',           category:'Technology',  type:'Full Time', level:'Mid',    location:'Remote', salary:500000,  salaryMax:750000,  emoji:'💳', posted:'Today',        desc:'Build beautiful payment experiences for millions of users.' },
-      { id:10, title:'Civil Engineer',                 company:'Julius Berger',      category:'Engineering', type:'Full Time', level:'Senior', location:'Abuja',  salary:600000,  salaryMax:900000,  emoji:'🏗️', posted:'3 days ago',  desc:'Lead infrastructure projects across Nigeria.' },
-      { id:11, title:'Content Writer',                 company:'TechCabal',          category:'Marketing',   type:'Remote',    level:'Entry',  location:'Remote', salary:80000,   salaryMax:150000,  emoji:'✍️', posted:'2 days ago',   desc:'Write compelling tech and business content for African audiences.' },
-      { id:12, title:'Pharmacy Intern',                company:'Medplus',            category:'Healthcare',  type:'Internship',level:'Entry',  location:'Lagos',  salary:50000,   salaryMax:80000,   emoji:'💊', posted:'1 week ago',   desc:'6-month internship program for pharmacy students.' },
-      { id:13, title:'Product Manager',                company:'Interswitch',        category:'Technology',  type:'Full Time', level:'Senior', location:'Lagos',  salary:700000,  salaryMax:1000000, emoji:'💻', posted:'1 day ago',    desc:'Drive product strategy for our fintech solutions.' },
-      { id:14, title:'HR Manager',                     company:'Access Bank',        category:'Finance',     type:'Full Time', level:'Senior', location:'Lagos',  salary:450000,  salaryMax:650000,  emoji:'🏦', posted:'6 days ago',   desc:'Lead human resources operations for our retail banking division.' },
-      { id:15, title:'Electrical Engineer',            company:'AEDC',               category:'Engineering', type:'Full Time', level:'Mid',    location:'Abuja',  salary:300000,  salaryMax:450000,  emoji:'⚡', posted:'4 days ago',   desc:'Maintain and upgrade our power distribution infrastructure.' },
-      { id:16, title:'Social Media Manager',           company:'Jumia Nigeria',      category:'Marketing',   type:'Part Time', level:'Entry',  location:'Remote', salary:100000,  salaryMax:180000,  emoji:'📱', posted:'Today',        desc:'Manage our social media presence across all platforms.' },
-    ];
+    var DEMO_JOBS = [];
 
     var ALL_JOBS = [];
     var currentJobs = [];
@@ -319,8 +302,13 @@
       var count = document.getElementById('jobs-count');
 
       if (currentJobs.length === 0) {
-        list.innerHTML = '';
-        empty.style.display = 'block';
+        grid.innerHTML =
+          '<div style="text-align:center;padding:60px 20px;">' +
+            '<div style="font-size:4em;margin-bottom:16px;">💼</div>' +
+            '<h3 style="font-size:1.3em;margin-bottom:8px;">No Jobs yet</h3>' +
+            '<p style="color:var(--text2);margin-bottom:20px;">Be the first employer on Nexabay!</p>' +
+            '<a href="../auth/register.html" style="background:var(--orange);color:white;padding:12px 24px;border-radius:8px;text-decoration:none;font-weight:700;">Start Selling →</a>' +
+          '</div>';
         return;
       }
 

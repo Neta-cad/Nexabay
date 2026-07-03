@@ -237,20 +237,7 @@
   <script src="../../js/core/main.js"></script>
   <script>
 
-    var DEMO_DOCTORS = [
-      { id:1,  name:'Dr. Adebayo Okafor',   specialty:'General',       type:'both',     rating:4.9, reviews:456, fee:5000,  experience:12, location:'Lagos',  emoji:'👨‍⚕️', available:true,  about:'MBBS, FMCP. 12 years experience in general medicine and primary care.' },
-      { id:2,  name:'Dr. Amina Suleiman',   specialty:'Gynecologist',  type:'inperson', rating:4.8, reviews:234, fee:15000, experience:8,  location:'Abuja',  emoji:'👩‍⚕️', available:true,  about:'MBBS, FWACS. Specialist in obstetrics and gynecology.' },
-      { id:3,  name:'Dr. Chidi Eze',        specialty:'Mental Health', type:'online',   rating:4.9, reviews:567, fee:10000, experience:10, location:'Online', emoji:'🧠',   available:true,  about:'PhD Psychology. CBT therapist specializing in anxiety and depression.' },
-      { id:4,  name:'Dr. Funke Adeleke',    specialty:'Dermatologist', type:'both',     rating:4.7, reviews:189, fee:12000, experience:6,  location:'Lagos',  emoji:'🧴',   available:false, about:'MBBS, Dip Derm. Skin specialist with expertise in acne and eczema.' },
-      { id:5,  name:'Dr. Ibrahim Musa',     specialty:'Cardiologist',  type:'inperson', rating:4.9, reviews:345, fee:20000, experience:15, location:'Kano',   emoji:'❤️',   available:true,  about:'MBBS, FMCP Card. Interventional cardiologist with 15 years experience.' },
-      { id:6,  name:'Dr. Ngozi Obi',        specialty:'Dentist',       type:'inperson', rating:4.8, reviews:278, fee:8000,  experience:7,  location:'Lagos',  emoji:'🦷',   available:true,  about:'BDS, FMCDS. General and cosmetic dentistry specialist.' },
-      { id:7,  name:'Dr. Tunde Williams',   specialty:'Optician',      type:'both',     rating:4.7, reviews:134, fee:7000,  experience:9,  location:'Lagos',  emoji:'👁️',   available:true,  about:'OD, FNCO. Optometrist specializing in refractive errors and eye diseases.' },
-      { id:8,  name:'Dr. Seun Afolabi',     specialty:'Nutritionist',  type:'online',   rating:4.8, reviews:389, fee:6000,  experience:5,  location:'Online', emoji:'🥗',   available:true,  about:'MSc Nutrition. Certified nutritionist and wellness coach.' },
-      { id:9,  name:'Dr. Kemi Ogunleye',    specialty:'General',       type:'online',   rating:4.8, reviews:523, fee:4000,  experience:8,  location:'Online', emoji:'👩‍⚕️', available:true,  about:'MBBS, MPH. Online GP specializing in telemedicine consultations.' },
-      { id:10, name:'Dr. Emeka Nwosu',      specialty:'Cardiologist',  type:'inperson', rating:4.9, reviews:234, fee:25000, experience:20, location:'Lagos',  emoji:'❤️',   available:true,  about:'MBBS, PhD Cardiology. Pioneer in minimally invasive cardiac procedures.' },
-      { id:11, name:'Dr. Bisi Adeyemi',     specialty:'Gynecologist',  type:'both',     rating:4.7, reviews:167, fee:12000, experience:6,  location:'Lagos',  emoji:'👶',   available:false, about:'MBBS, FWACS. Specialist in high-risk pregnancy and infertility.' },
-      { id:12, name:'Dr. Audu Mohammed',    specialty:'Mental Health', type:'both',     rating:4.8, reviews:289, fee:8000,  experience:11, location:'Abuja',  emoji:'🧠',   available:true,  about:'MBChB, MRCPsych. Consultant psychiatrist with expertise in mood disorders.' },
-    ];
+    var DEMO_DOCTORS = [];
 
     var ALL_DOCTORS = [];
     var currentDoctors = [];
@@ -297,8 +284,13 @@
       var count = document.getElementById('doctors-count');
 
       if (currentDoctors.length === 0) {
-        grid.innerHTML = '';
-        empty.style.display = 'block';
+        grid.innerHTML =
+          '<div style="text-align:center;padding:60px 20px;">' +
+            '<div style="font-size:4em;margin-bottom:16px;">🏥</div>' +
+            '<h3 style="font-size:1.3em;margin-bottom:8px;">No health provider yet</h3>' +
+            '<p style="color:var(--text2);margin-bottom:20px;">Be the first health provider!</p>' +
+            '<a href="../auth/register.html" style="background:var(--orange);color:white;padding:12px 24px;border-radius:8px;text-decoration:none;font-weight:700;">Start Selling →</a>' +
+          '</div>';
         return;
       }
 

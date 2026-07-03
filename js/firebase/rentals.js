@@ -24,7 +24,7 @@ function nexaAddRental(rentalData, imageUrl) {
     condition:    rentalData.condition || '',
     imageUrl:     imageUrl || '',
     emoji:        rentalData.emoji || '🏠',
-    status:       'active',
+    status: 'pending',
     rating:       0,
     reviews:      0,
     createdAt:    firebase.firestore.FieldValue.serverTimestamp(),

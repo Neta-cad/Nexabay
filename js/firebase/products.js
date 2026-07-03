@@ -23,7 +23,7 @@ function nexaAddProduct(productData, imageUrl) {
     negotiable:  productData.negotiable || false,
     imageUrl:    imageUrl || '',
     emoji:       productData.emoji || '📦',
-    status:      'active',
+    status: 'pending',
     rating:      0,
     reviews:     0,
     sold:        0,
