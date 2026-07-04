@@ -58,6 +58,47 @@ function closeMobileMenu() {
   document.body.style.overflow = '';
 }
 
+function loadHomepageProducts() {
+  if (typeof db === 'undefined') return;
+  var grid = document.getElementById('homepage-products');
+  if (!grid) return;
+  db.collection('products')
+    .where('status', '==', 'active')
+    .limit(6)
+    .get()
+    .then(function(snap) {
+      var products = [];
+      snap.forEach(function(doc) { products.push(doc.data()); });
+      if (products.length === 0) {
+        grid.innerHTML =
+          '<div style="text-align:center;padding:40px;color:#aaa;grid-column:1/-1;">' +
+            '<div style="font-size:3em;margin-bottom:12px;">🛍️</div>' +
+            '<p>Be the first seller on Nexabay!</p>' +
+            '<a href="pages/auth/register.html" style="background:var(--orange);color:white;padding:10px 20px;border-radius:8px;text-decoration:none;font-weight:700;display:inline-block;margin-top:10px;">Start Selling →</a>' +
+          '</div>';
+        return;
+      }
+      grid.innerHTML = products.map(function(p) {
+        var discount = p.oldPrice && p.oldPrice > p.price
+          ? Math.round((1 - p.price / p.oldPrice) * 100) : 0;
+        var imgContent = p.imageUrl
+          ? '<img src="' + p.imageUrl + '" style="width:100%;height:140px;object-fit:cover;border-radius:8px 8px 0 0;"/>'
+          : '<div style="height:140px;background:var(--gray);border-radius:8px 8px 0 0;display:flex;align-items:center;justify-content:center;font-size:3em;">' + (p.emoji || '📦') + '</div>';
+        return '<div onclick="window.location.href=\'pages/shop/product.html?id=' + p.id + '\'" style="background:white;border-radius:10px;overflow:hidden;cursor:pointer;border:1px solid #eee;">' +
+          imgContent +
+          '<div style="padding:10px;">' +
+            (discount > 0 ? '<div style="background:#ff4444;color:white;font-size:0.7em;font-weight:700;padding:2px 6px;border-radius:4px;display:inline-block;margin-bottom:4px;">-' + discount + '%</div>' : '') +
+            '<div style="font-weight:700;font-size:0.85em;margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + p.name + '</div>' +
+            '<div style="color:var(--orange);font-weight:800;">₦' + parseInt(p.price).toLocaleString() + '</div>' +
+            '<div style="font-size:0.75em;color:#888;">📍 ' + (p.location || 'Nigeria') + '</div>' +
+          '</div>' +
+        '</div>';
+      }).join('');
+    })
+    .catch(function(err) { console.log('Homepage products error:', err); });
+}
+
+
 // ── AUTH STATE ────────────────────────────────
 function checkAuthState() {
   var user = JSON.parse(localStorage.getItem('nexa_current_user') || 'null');
@@ -221,6 +262,7 @@ function getParam(name) {
 
 // ── INIT ──────────────────────────────────────
 document.addEventListener('DOMContentLoaded', function() {
+  loadHomepageProducts();
   updateCartCount();
   startCountdown();
   loadFeaturedProducts();
