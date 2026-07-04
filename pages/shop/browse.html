@@ -271,7 +271,7 @@
               sold: p.sold || 0,
             };
           });
-          ALL_PRODUCTS = mapped.concat(DEMO_PRODUCTS);
+          ALL_PRODUCTS = mapped;
           applyFilters();
         })
         .catch(function(err) {

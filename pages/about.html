@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>About Us — Nexabay</title>
+  <title>About Nexabay — Africa's Everything Platform</title>
   <link rel="stylesheet" href="../css/main.css"/>
   <link rel="stylesheet" href="../css/static.css"/>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
@@ -16,275 +16,133 @@
       <a href="../index.html" class="logo">
         <span class="logo-nexa">Nexa</span><span class="logo-bay">bay</span>
       </a>
-      <div class="nav-actions">
+      <div class="nav-actions" id="nav-actions">
         <a href="auth/login.html" class="nav-link">Login</a>
         <a href="auth/register.html" class="nav-btn">Sign Up</a>
       </div>
-      <button class="hamburger" id="hamburger-btn" onclick="toggleMobileMenu()">☰</button>
+      <button class="hamburger" onclick="toggleMobileMenu()">☰</button>
     </div>
-    <div class="mobile-menu-overlay" id="mobile-overlay" onclick="closeMobileMenu()"></div>
     <div class="mobile-menu" id="mobile-menu">
-      <div class="mobile-menu-header">
-        <div class="logo"><span class="logo-nexa">Nexa</span><span class="logo-bay">bay</span></div>
-        <button onclick="closeMobileMenu()" class="close-menu-btn">✕</button>
-      </div>
-      <div class="mobile-menu-links">
-        <a href="../index.html">🏠 Home</a>
-        <a href="shop/browse.html">🛍️ Shop</a>
-        <a href="auth/login.html">Login</a>
-        <a href="auth/register.html">Sign Up</a>
-      </div>
+      <a href="../index.html">Home</a>
+      <a href="auth/login.html">Login</a>
+      <a href="auth/register.html">Sign Up</a>
     </div>
   </nav>
 
   <!-- HERO -->
-  <div class="about-hero">
-    <div class="container">
-      <div class="about-hero-badge">🌍 Africa's Everything Platform</div>
-      <h1>We Are <span>Nexabay</span></h1>
-      <p>Built by Africans, for Africa. One platform for everything you need in life.</p>
-      <div class="about-hero-stats">
-        <div class="ahs-item"><span>200K+</span>Active Users</div>
-        <div class="ahs-item"><span>10K+</span>Sellers</div>
-        <div class="ahs-item"><span>50K+</span>Products</div>
-        <div class="ahs-item"><span>36</span>States</div>
-      </div>
-    </div>
+  <div class="static-hero">
+    <div style="font-size:3em;margin-bottom:16px;">🌍</div>
+    <h1>About Nexabay</h1>
+    <p>Africa's Everything Platform — Built in Nigeria, for Africa</p>
   </div>
 
-  <!-- MISSION -->
-  <div class="about-mission">
-    <div class="container">
-      <div class="mission-inner">
-        <div class="mission-text">
-          <div class="section-label">Our Mission</div>
-          <h2>Empowering Every African to Buy, Sell and Thrive</h2>
-          <p>Nexabay was built with one mission — to give every African access to a world-class platform where they can shop, earn, learn, find work and manage their finances, all in one place.</p>
-          <p>We believe every Nigerian deserves the tools to build wealth, grow businesses and improve their lives through technology. No more switching between 10 different apps. Everything is here.</p>
-          <div class="mission-points">
-            <div class="mp-item">✅ Secure escrow payments</div>
-            <div class="mp-item">✅ Verified sellers & providers</div>
-            <div class="mp-item">✅ Built for Nigerian market</div>
-            <div class="mp-item">✅ 12 services in one platform</div>
-          </div>
-        </div>
-        <div class="mission-visual">
-          <div class="mv-card mv-blue">
-            <div class="mvc-icon">🛍️</div>
-            <div class="mvc-text">Buy & Sell</div>
-          </div>
-          <div class="mv-card mv-orange">
-            <div class="mvc-icon">🎓</div>
-            <div class="mvc-text">Learn & Earn</div>
-          </div>
-          <div class="mv-card mv-green">
-            <div class="mvc-icon">🏥</div>
-            <div class="mvc-text">Health & Travel</div>
-          </div>
-          <div class="mv-card mv-purple">
-            <div class="mvc-icon">🏦</div>
-            <div class="mvc-text">Pay & Save</div>
-          </div>
-          <div class="mv-card mv-red">
-            <div class="mvc-icon">💼</div>
-            <div class="mvc-text">Jobs & Services</div>
-          </div>
-          <div class="mv-card mv-teal">
-            <div class="mvc-icon">🤝</div>
-            <div class="mvc-text">Community</div>
-          </div>
-        </div>
+  <div class="static-page">
+
+    <!-- STATS -->
+    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:24px;">
+      <div style="background:white;border-radius:12px;padding:20px;text-align:center;border:1px solid var(--border);">
+        <div style="font-size:2em;font-weight:900;color:var(--orange);">12</div>
+        <div style="font-size:0.85em;color:var(--text2);">Platform Sections</div>
+      </div>
+      <div style="background:white;border-radius:12px;padding:20px;text-align:center;border:1px solid var(--border);">
+        <div style="font-size:2em;font-weight:900;color:var(--orange);">36</div>
+        <div style="font-size:0.85em;color:var(--text2);">Nigerian States</div>
+      </div>
+      <div style="background:white;border-radius:12px;padding:20px;text-align:center;border:1px solid var(--border);">
+        <div style="font-size:2em;font-weight:900;color:var(--orange);">Jan 1</div>
+        <div style="font-size:0.85em;color:var(--text2);">Launch Date 2025</div>
+      </div>
+      <div style="background:white;border-radius:12px;padding:20px;text-align:center;border:1px solid var(--border);">
+        <div style="font-size:2em;font-weight:900;color:var(--orange);">🇳🇬</div>
+        <div style="font-size:0.85em;color:var(--text2);">Made in Nigeria</div>
       </div>
     </div>
-  </div>
 
-  <!-- STORY -->
-  <div class="about-story">
-    <div class="container">
-      <div class="section-label" style="text-align:center">Our Story</div>
-      <h2 style="text-align:center;font-size:1.8em;font-weight:900;color:var(--dark);margin-bottom:16px">
-        From an Idea to Africa's Biggest Platform
-      </h2>
-      <p style="text-align:center;color:var(--text2);max-width:680px;margin:0 auto 40px;line-height:1.7">
-        Nexabay was born from a simple frustration — why do Nigerians need 10 different apps to handle daily life? We set out to build one platform that does it all, and today we are proud of what we have created.
-      </p>
-      <div class="story-timeline">
-        <div class="st-item">
-          <div class="st-dot"></div>
-          <div class="st-content">
-            <div class="st-year">The Idea</div>
-            <h3>One Platform for Everything</h3>
-            <p>Our founders identified a gap in the African market — no single platform served all the needs of everyday Nigerians. The vision of Nexabay was born.</p>
-          </div>
+    <!-- MISSION -->
+    <div class="static-section">
+      <h2>🎯 Our Mission</h2>
+      <p>Nexabay was built with one mission — to give every African access to a world-class platform where they can shop, earn, learn, find work and manage their daily needs, all in one place.</p>
+      <p>We believe every Nigerian deserves the tools to build wealth, grow businesses and improve their lives through technology. No more switching between 10 different apps. Everything is here.</p>
+    </div>
+
+    <!-- WHAT WE OFFER -->
+    <div class="static-section">
+      <h2>🚀 What We Offer</h2>
+      <ul>
+        <li>🛍️ <b>NexaShop</b> — Buy and sell products across Nigeria</li>
+        <li>🛠️ <b>NexaServices</b> — Hire skilled professionals for any job</li>
+        <li>🏠 <b>NexaRent</b> — Find houses, apartments and rental items</li>
+        <li>🎓 <b>NexaLearn</b> — Learn new skills from Nigerian instructors</li>
+        <li>💼 <b>NexaJobs</b> — Find your next job or hire talent</li>
+        <li>🍔 <b>NexaFood</b> — Order food from local restaurants</li>
+        <li>🏥 <b>NexaHealth</b> — Book doctors, pharmacies and labs</li>
+        <li>🎉 <b>NexaEvents</b> — Buy tickets for events across Nigeria</li>
+        <li>✈️ <b>NexaTravel</b> — Book hotels, flights and tour packages</li>
+        <li>🚗 <b>NexaRide</b> — Book rides and delivery services</li>
+        <li>💳 <b>NexaPay</b> — Secure payments and wallet system</li>
+        <li>👥 <b>NexaCommunity</b> — Connect with Nigerians nationwide</li>
+      </ul>
+    </div>
+
+    <!-- WHY US -->
+    <div class="static-section">
+      <h2>💪 Why Choose Nexabay</h2>
+      <ul>
+        <li>✅ One account for everything — buy, sell, learn, work</li>
+        <li>✅ Secure payments powered by Paystack escrow</li>
+        <li>✅ All sellers and providers verified by our admin team</li>
+        <li>✅ Built specifically for the Nigerian market</li>
+        <li>✅ Works perfectly on any smartphone</li>
+        <li>✅ 50% buyer protection guarantee on disputes</li>
+      </ul>
+    </div>
+
+    <!-- TEAM -->
+    <div class="static-section">
+      <h2>👥 Our Team</h2>
+      <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:8px;">
+        <div style="background:var(--gray);border-radius:10px;padding:16px;text-align:center;">
+          <div style="width:50px;height:50px;border-radius:50%;background:var(--orange);color:white;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1.2em;margin:0 auto 10px;">A</div>
+          <div style="font-weight:700;font-size:0.9em;">Akingboye Michelle</div>
+          <div style="font-size:0.78em;color:var(--text2);">CEO & Founder</div>
         </div>
-        <div class="st-item">
-          <div class="st-dot"></div>
-          <div class="st-content">
-            <div class="st-year">Building</div>
-            <h3>From Zero to Launch</h3>
-            <p>A small but passionate team began building Nexabay — designing every feature, every page and every system from the ground up with Nigerian users in mind.</p>
-          </div>
+        <div style="background:var(--gray);border-radius:10px;padding:16px;text-align:center;">
+          <div style="width:50px;height:50px;border-radius:50%;background:var(--orange);color:white;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1.2em;margin:0 auto 10px;">Z</div>
+          <div style="font-weight:700;font-size:0.9em;">Zebedee Emmanuel</div>
+          <div style="font-size:0.78em;color:var(--text2);">CTO</div>
         </div>
-        <div class="st-item">
-          <div class="st-dot"></div>
-          <div class="st-content">
-            <div class="st-year">Today</div>
-            <h3>200,000+ Users & Growing</h3>
-            <p>Nexabay now serves hundreds of thousands of Nigerians with 12 platform sections covering shopping, services, rentals, education, jobs, food, health, travel and more.</p>
-          </div>
+        <div style="background:var(--gray);border-radius:10px;padding:16px;text-align:center;">
+          <div style="width:50px;height:50px;border-radius:50%;background:var(--orange);color:white;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1.2em;margin:0 auto 10px;">T</div>
+          <div style="font-weight:700;font-size:0.9em;">Tirreni</div>
+          <div style="font-size:0.78em;color:var(--text2);">Head of Product</div>
         </div>
-        <div class="st-item">
-          <div class="st-dot"></div>
-          <div class="st-content">
-            <div class="st-year">The Future</div>
-            <h3>Pan-African Expansion</h3>
-            <p>Our vision extends beyond Nigeria. We are building towards a pan-African platform that will serve Ghana, Kenya, South Africa and the entire continent.</p>
-          </div>
+        <div style="background:var(--gray);border-radius:10px;padding:16px;text-align:center;">
+          <div style="width:50px;height:50px;border-radius:50%;background:var(--orange);color:white;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1.2em;margin:0 auto 10px;">A</div>
+          <div style="font-weight:700;font-size:0.9em;">Anthric</div>
+          <div style="font-size:0.78em;color:var(--text2);">Head of Operations</div>
         </div>
       </div>
     </div>
-  </div>
 
-  <!-- VALUES -->
-  <div class="about-values">
-    <div class="container">
-      <div class="section-label" style="text-align:center">What We Stand For</div>
-      <h2 style="text-align:center;font-size:1.8em;font-weight:900;color:var(--dark);margin-bottom:32px">Our Core Values</h2>
-      <div class="values-grid">
-        <div class="value-card">
-          <div class="vc-icon">🔒</div>
-          <h3>Trust & Safety</h3>
-          <p>Every seller is verified. Every payment is protected by our escrow system. We hold your money until you confirm delivery.</p>
-        </div>
-        <div class="value-card">
-          <div class="vc-icon">🌍</div>
-          <h3>Built for Africa</h3>
-          <p>Designed for Nigerian and African users — our currency, our culture, our payment methods, our needs.</p>
-        </div>
-        <div class="value-card">
-          <div class="vc-icon">🚀</div>
-          <h3>Innovation</h3>
-          <p>We are constantly building new features and improving the platform to serve you better every day.</p>
-        </div>
-        <div class="value-card">
-          <div class="vc-icon">🤝</div>
-          <h3>Community First</h3>
-          <p>We grow when our users grow. Your success as a seller or buyer is our greatest achievement.</p>
-        </div>
-        <div class="value-card">
-          <div class="vc-icon">⚡</div>
-          <h3>Speed & Reliability</h3>
-          <p>Fast transactions, instant transfers and reliable service — because your time is valuable.</p>
-        </div>
-        <div class="value-card">
-          <div class="vc-icon">💰</div>
-          <h3>Fair & Transparent</h3>
-          <p>No hidden fees. Clear pricing. Honest policies. We treat every user with fairness and respect.</p>
-        </div>
-      </div>
+    <!-- CONTACT CTA -->
+    <div class="static-contact-card">
+      <h3>Want to partner with us? 🤝</h3>
+      <p>We're always open to partnerships, investments and collaborations that align with our mission.</p>
+      <a href="contact.html">Get In Touch →</a>
     </div>
+
   </div>
 
-  <!-- TEAM -->
-  <div class="about-team">
-    <div class="container">
-      <div class="section-label" style="text-align:center">The People Behind Nexabay</div>
-      <h2 style="text-align:center;font-size:1.8em;font-weight:900;color:var(--dark);margin-bottom:8px">Meet Our Team</h2>
-      <p style="text-align:center;color:var(--text2);margin-bottom:36px">Passionate Nigerians building Africa's greatest platform</p>
-      <div class="team-grid">
-
-        <div class="team-card">
-          <div class="tc-avatar" style="background:linear-gradient(135deg,#1a73e8,#0d47a1)">AK</div>
-          <div class="tc-name">Akingboye Mishael</div>
-          <div class="tc-role">Co-Founder & CEO</div>
-          <div class="tc-bio">Visionary leader driving Nexabay's mission to empower African entrepreneurs and consumers.</div>
-          <div class="tc-socials">
-            <a href="#" class="tc-social">🐦</a>
-            <a href="#" class="tc-social">💼</a>
-          </div>
-        </div>
-
-        <div class="team-card">
-          <div class="tc-avatar" style="background:linear-gradient(135deg,#ff6b00,#e55a00)">ZE</div>
-          <div class="tc-name">Zebedee Emmanuel</div>
-          <div class="tc-role">Co-Founder & CTO</div>
-          <div class="tc-bio">Technical genius behind Nexabay's infrastructure, ensuring the platform runs fast, safe and reliably.</div>
-          <div class="tc-socials">
-            <a href="#" class="tc-social">🐦</a>
-            <a href="#" class="tc-social">💼</a>
-          </div>
-        </div>
-
-        <div class="team-card">
-          <div class="tc-avatar" style="background:linear-gradient(135deg,#00c851,#1b5e20)">TR</div>
-          <div class="tc-name">Tirreni</div>
-          <div class="tc-role">Head of Product</div>
-          <div class="tc-bio">Product strategist focused on creating the best possible experience for every Nexabay user.</div>
-          <div class="tc-socials">
-            <a href="#" class="tc-social">🐦</a>
-            <a href="#" class="tc-social">💼</a>
-          </div>
-        </div>
-
-        <div class="team-card">
-          <div class="tc-avatar" style="background:linear-gradient(135deg,#9c27b0,#6a1b9a)">AN</div>
-          <div class="tc-name">Apkan Judy</div>
-          <div class="tc-role">Head of Operations</div>
-          <div class="tc-bio">Operations expert ensuring Nexabay delivers on its promises to buyers and sellers across Nigeria.</div>
-          <div class="tc-socials">
-            <a href="#" class="tc-social">🐦</a>
-            <a href="#" class="tc-social">💼</a>
-          </div>
-        </div>
-
-      </div>
-      <div class="team-join">
-        <p>Want to build Africa's greatest platform with us?</p>
-        <a href="careers.html" class="btn-primary">View Open Positions →</a>
-      </div>
-    </div>
-  </div>
-
-  <!-- CTA -->
-  <div class="about-cta">
-    <div class="container">
-      <h2>Join 200,000+ Nigerians on Nexabay</h2>
-      <p>Buy, sell, learn, rent and earn — all on one platform. Free to join.</p>
-      <div class="about-cta-btns">
-        <a href="auth/register.html" class="btn-primary">Create Free Account →</a>
-        <a href="../index.html" class="btn-outline-dark">Explore Platform</a>
-      </div>
-    </div>
-  </div>
-
+  <!-- FOOTER -->
   <footer class="footer">
-    <div class="container">
-      <div class="footer-grid">
-        <div class="footer-brand">
-          <div class="logo"><span class="logo-nexa">Nexa</span><span class="logo-bay">bay</span></div>
-          <p>Africa's Everything Platform.</p>
-        </div>
-        <div class="footer-col">
-          <h4>Company</h4>
-          <a href="about.html">About Us</a>
-          <a href="careers.html">Careers</a>
-          <a href="contact.html">Contact</a>
-        </div>
-        <div class="footer-col">
-          <h4>Legal</h4>
-          <a href="privacy.html">Privacy Policy</a>
-          <a href="terms.html">Terms of Service</a>
-          <a href="refund.html">Refund Policy</a>
-        </div>
-        <div class="footer-col">
-          <h4>Support</h4>
-          <a href="help.html">Help Center</a>
-          <a href="contact.html">Contact Us</a>
-        </div>
+    <div class="footer-inner container">
+      <div class="footer-brand">
+        <div class="logo"><span class="logo-nexa">Nexa</span><span class="logo-bay">bay</span></div>
+        <p>Africa's Everything Platform</p>
       </div>
-      <div class="footer-bottom">
-        <p>© 2025 Nexabay. All rights reserved. Made with ❤️ in Africa.</p>
-      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2025 Nexabay. All rights reserved. Made with ❤️ in Africa.</p>
     </div>
   </footer>
 
