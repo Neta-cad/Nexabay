@@ -76,6 +76,10 @@
         <a href="#" class="dash-nav-item" onclick="showTab('payments')">
           💳 Payments
         </a>
+        <a href="#" class="dash-nav-item" onclick="showTab('messages')">
+          💬 Messages
+          <span id="msg-badge" style="background:#cc0000;color:white;border-radius:10px;padding:1px 7px;font-size:0.75em;margin-left:4px;display:none;">0</span>
+        </a>
         <a href="#" class="dash-nav-item" onclick="showTab('settings')">
           ⚙️ Settings
         </a>
@@ -292,6 +296,23 @@
         </div>
       </div>
 
+
+<!-- MESSAGES TAB -->
+      <div class="dash-tab" id="tab-messages" style="display:none;">
+        <div class="dash-header">
+          <h1>Contact Messages 💬</h1>
+          <button onclick="loadMessages()" style="background:var(--gray);border:none;padding:8px 16px;border-radius:8px;cursor:pointer;">🔄 Refresh</button>
+        </div>
+
+        <div id="messages-list">
+          <div style="text-align:center;padding:40px;color:var(--text2);">
+            <div style="font-size:3em;margin-bottom:12px;">⏳</div>
+            <p>Loading messages...</p>
+          </div>
+        </div>
+      </div>
+
+
       <!-- SETTINGS TAB -->
       <div class="dash-tab" id="tab-settings" style="display:none;">
         <div class="dash-header">
@@ -406,7 +427,7 @@
           loadOrders();
           loadWithdrawals();
           loadPayments();
-
+          loadMessages();
           var updated = document.getElementById('last-updated');
           if (updated) updated.textContent = 'Last updated: ' + new Date().toLocaleTimeString();
         });
@@ -424,7 +445,8 @@
 
       var navMap = {
         'overview': 0, 'approvals': 1, 'users': 2,
-        'orders': 3, 'withdrawals': 4, 'payments': 5, 'settings': 6
+        'orders': 3, 'withdrawals': 4, 'payments': 5,
+        'messages': 6, 'settings': 7
       };
       var index = navMap[tab];
       if (index !== undefined && navItems[index]) {
@@ -825,6 +847,78 @@
           errEl.style.display = 'block';
         });
     }
+
+
+function loadMessages() {
+      var list = document.getElementById('messages-list');
+      if (!list) return;
+
+      db.collection('contactMessages')
+        .orderBy('createdAt', 'desc')
+        .limit(50)
+        .get()
+        .then(function(snap) {
+          if (snap.empty) {
+            list.innerHTML =
+              '<div style="text-align:center;padding:40px;">' +
+                '<div style="font-size:3em;margin-bottom:12px;">💬</div>' +
+                '<h3>No messages yet</h3>' +
+                '<p style="color:var(--text2);">Contact form submissions will appear here</p>' +
+              '</div>';
+            return;
+          }
+
+          var unread = 0;
+          list.innerHTML = '<div style="display:grid;gap:12px;">' +
+            snap.docs.map(function(doc) {
+              var m = doc.data();
+              var id = doc.id;
+              if (m.status === 'unread') unread++;
+              return '<div style="background:white;border:1px solid ' + (m.status === 'unread' ? 'var(--orange)' : 'var(--border)') + ';border-radius:12px;padding:16px;">' +
+                '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;">' +
+                  '<div>' +
+                    '<div style="font-weight:700;">' + (m.name || 'Unknown') + '</div>' +
+                    '<div style="font-size:0.82em;color:var(--text2);">📧 ' + (m.email || '') + (m.phone ? ' • 📱 ' + m.phone : '') + '</div>' +
+                    '<div style="font-size:0.82em;color:var(--text2);margin-top:2px;">📌 ' + (m.subject || 'General') + '</div>' +
+                  '</div>' +
+                  '<div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;">' +
+                    '<span style="background:' + (m.status === 'unread' ? 'var(--orange)' : 'var(--gray)') + ';color:' + (m.status === 'unread' ? 'white' : 'var(--text2)') + ';padding:3px 10px;border-radius:20px;font-size:0.75em;font-weight:700;">' + (m.status === 'unread' ? 'NEW' : 'READ') + '</span>' +
+                    (m.createdAt ? '<div style="font-size:0.75em;color:var(--text2);">' + new Date(m.createdAt.toMillis()).toLocaleDateString() + '</div>' : '') +
+                  '</div>' +
+                '</div>' +
+                '<div style="background:var(--gray);border-radius:8px;padding:12px;font-size:0.88em;color:var(--text2);line-height:1.6;margin-bottom:12px;">' + (m.message || '') + '</div>' +
+                '<div style="display:flex;gap:8px;">' +
+                  '<a href="mailto:' + (m.email || '') + '" style="background:var(--orange);color:white;padding:8px 14px;border-radius:6px;text-decoration:none;font-size:0.82em;font-weight:700;">📧 Reply</a>' +
+                  '<a href="https://wa.me/' + (m.phone || '').replace(/[^0-9]/g, '') + '" target="_blank" style="background:#25d366;color:white;padding:8px 14px;border-radius:6px;text-decoration:none;font-size:0.82em;font-weight:700;">💬 WhatsApp</a>' +
+                  (m.status === 'unread'
+                    ? '<button onclick="markMessageRead(\'' + id + '\', this)" style="background:var(--gray);border:none;padding:8px 14px;border-radius:6px;cursor:pointer;font-size:0.82em;">✅ Mark Read</button>'
+                    : '') +
+                '</div>' +
+              '</div>';
+            }).join('') +
+          '</div>';
+
+          var badge = document.getElementById('msg-badge');
+          if (badge && unread > 0) {
+            badge.textContent = unread;
+            badge.style.display = 'inline';
+          }
+        })
+        .catch(function(err) {
+          list.innerHTML = '<p style="color:#cc0000;padding:20px;">Error: ' + err.message + '</p>';
+        });
+    }
+
+    function markMessageRead(messageId, btn) {
+      db.collection('contactMessages').doc(messageId).update({ status: 'read' })
+        .then(function() {
+          btn.remove();
+          showToast('✅ Marked as read');
+          loadMessages();
+        })
+        .catch(function(err) { showToast('Error: ' + err.message); });
+    }
+
 
     function doAdminLogout() {
       if (typeof nexaLogout === 'function') {

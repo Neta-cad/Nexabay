@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Contact Us — Nexabay</title>
+  <link rel="stylesheet" href="../css/main.css"/>
+  <link rel="stylesheet" href="../css/static.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="nav-inner">
+      <a href="../index.html" class="logo">
+        <span class="logo-nexa">Nexa</span><span class="logo-bay">bay</span>
+      </a>
+      <div class="nav-actions">
+        <a href="auth/login.html" class="nav-link">Login</a>
+        <a href="auth/register.html" class="nav-btn">Sign Up</a>
+      </div>
+      <button class="hamburger" onclick="toggleMobileMenu()">☰</button>
+    </div>
+    <div class="mobile-menu" id="mobile-menu">
+      <a href="../index.html">Home</a>
+      <a href="auth/login.html">Login</a>
+    </div>
+  </nav>
+
+  <div class="static-hero">
+    <div style="font-size:3em;margin-bottom:16px;">💬</div>
+    <h1>Contact Us</h1>
+    <p>We're here to help — reach us anytime and we'll respond fast</p>
+  </div>
+
+  <div class="static-page">
+
+    <!-- CONTACT CARDS -->
+    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:24px;">
+      <div class="static-section" style="text-align:center;margin-bottom:0;">
+        <div style="font-size:2em;margin-bottom:8px;">📧</div>
+        <h2 style="border:none;padding:0;font-size:0.95em;margin-bottom:6px;">Email Us</h2>
+        <p style="margin:0;font-size:0.85em;">nexabay7@gmail.com</p>
+        <a href="mailto:nexabay7@gmail.com" style="display:inline-block;margin-top:10px;background:var(--orange);color:white;padding:8px 14px;border-radius:6px;text-decoration:none;font-size:0.8em;font-weight:700;">Send Email →</a>
+      </div>
+
+      <div class="static-section" style="text-align:center;margin-bottom:0;">
+        <div style="font-size:2em;margin-bottom:8px;">💬</div>
+        <h2 style="border:none;padding:0;font-size:0.95em;margin-bottom:6px;">WhatsApp</h2>
+        <p style="margin:0;font-size:0.85em;">+234 907 651 9852</p>
+        <a href="https://wa.me/2349076519852" target="_blank" style="display:inline-block;margin-top:10px;background:#25d366;color:white;padding:8px 14px;border-radius:6px;text-decoration:none;font-size:0.8em;font-weight:700;">Chat Now →</a>
+      </div>
+
+      <div class="static-section" style="text-align:center;margin-bottom:0;">
+        <div style="font-size:2em;margin-bottom:8px;">📸</div>
+        <h2 style="border:none;padding:0;font-size:0.95em;margin-bottom:6px;">Instagram</h2>
+        <p style="margin:0;font-size:0.85em;">@NexabayNG</p>
+        <a href="https://instagram.com/NexabayNG" target="_blank" style="display:inline-block;margin-top:10px;background:linear-gradient(45deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);color:white;padding:8px 14px;border-radius:6px;text-decoration:none;font-size:0.8em;font-weight:700;">Follow Us →</a>
+      </div>
+
+      <div class="static-section" style="text-align:center;margin-bottom:0;">
+        <div style="font-size:2em;margin-bottom:8px;">🐦</div>
+        <h2 style="border:none;padding:0;font-size:0.95em;margin-bottom:6px;">Twitter/X</h2>
+        <p style="margin:0;font-size:0.85em;">@NexabayNG</p>
+        <a href="https://twitter.com/NexabayNG" target="_blank" style="display:inline-block;margin-top:10px;background:#000;color:white;padding:8px 14px;border-radius:6px;text-decoration:none;font-size:0.8em;font-weight:700;">Follow Us →</a>
+      </div>
+    </div>
+
+    <!-- CONTACT FORM -->
+    <div class="static-section">
+      <h2>📨 Send Us a Message</h2>
+      <p>Fill out the form below and we'll get back to you within 24 hours on business days.</p>
+
+      <div class="form-group">
+        <label>Your Full Name *</label>
+        <input type="text" id="ct-name" placeholder="e.g. Chidi Okafor"/>
+      </div>
+      <div class="form-group">
+        <label>Email Address *</label>
+        <input type="email" id="ct-email" placeholder="your@email.com"/>
+      </div>
+      <div class="form-group">
+        <label>Phone Number</label>
+        <input type="tel" id="ct-phone" placeholder="+234 8xx xxx xxxx"/>
+      </div>
+      <div class="form-group">
+        <label>Subject *</label>
+        <select id="ct-subject">
+          <option value="">Select a subject</option>
+          <option>General Enquiry</option>
+          <option>Order Issue</option>
+          <option>Payment Problem</option>
+          <option>Seller / Provider Support</option>
+          <option>Account Issue</option>
+          <option>Report a User or Listing</option>
+          <option>Withdrawal Request Issue</option>
+          <option>Partnership or Investment Enquiry</option>
+          <option>Media / Press Enquiry</option>
+          <option>Other</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Your Message *</label>
+        <textarea id="ct-message" rows="6" placeholder="Please describe your issue or question in as much detail as possible. If you have an order issue, include your Order ID."></textarea>
+      </div>
+
+      <div id="ct-error" style="display:none;background:#f8d7da;color:#721c24;padding:12px;border-radius:8px;margin-bottom:12px;font-size:0.88em;"></div>
+      <div id="ct-success" style="display:none;background:#d4edda;color:#155724;padding:12px;border-radius:8px;margin-bottom:12px;font-size:0.88em;">
+        ✅ Your message has been sent! We'll reply to <span id="ct-reply-email"></span> within 24 hours.
+      </div>
+
+      <button onclick="sendContactMessage()" style="background:var(--orange);color:white;border:none;padding:14px 24px;border-radius:8px;font-weight:700;cursor:pointer;width:100%;font-size:1em;">
+        📨 Send Message
+      </button>
+    </div>
+
+    <!-- SUPPORT HOURS -->
+    <div class="static-section">
+      <h2>⏰ Support Hours</h2>
+      <p>Our support team is based in Nigeria and operates on West Africa Time (WAT, UTC+1).</p>
+      <ul>
+        <li>🟢 <strong>Monday — Friday:</strong> 8:00 AM — 8:00 PM WAT</li>
+        <li>🟡 <strong>Saturday:</strong> 9:00 AM — 6:00 PM WAT</li>
+        <li>🔴 <strong>Sunday:</strong> 10:00 AM — 4:00 PM WAT</li>
+        <li>🔴 <strong>Public Holidays:</strong> Limited WhatsApp support only</li>
+      </ul>
+      <p>We typically respond to emails within 24 hours and WhatsApp messages within 2 hours during support hours. For urgent issues, WhatsApp is the fastest way to reach us.</p>
+    </div>
+
+    <!-- FAQ QUICK LINKS -->
+    <div class="static-section">
+      <h2>❓ Common Questions</h2>
+      <p>Before contacting us, you might find your answer in our Help Center:</p>
+      <div style="display:grid;gap:10px;margin-top:12px;">
+        <a href="help.html#orders" style="background:var(--gray);padding:14px;border-radius:8px;text-decoration:none;color:inherit;display:flex;justify-content:space-between;align-items:center;">
+          <span>📦 How do I track my order?</span><span style="color:var(--orange);">→</span>
+        </a>
+        <a href="help.html#payment" style="background:var(--gray);padding:14px;border-radius:8px;text-decoration:none;color:inherit;display:flex;justify-content:space-between;align-items:center;">
+          <span>💳 My payment failed, what do I do?</span><span style="color:var(--orange);">→</span>
+        </a>
+        <a href="help.html#seller" style="background:var(--gray);padding:14px;border-radius:8px;text-decoration:none;color:inherit;display:flex;justify-content:space-between;align-items:center;">
+          <span>🛍️ How do I start selling on Nexabay?</span><span style="color:var(--orange);">→</span>
+        </a>
+        <a href="help.html#refund" style="background:var(--gray);padding:14px;border-radius:8px;text-decoration:none;color:inherit;display:flex;justify-content:space-between;align-items:center;">
+          <span>💰 How do I request a refund?</span><span style="color:var(--orange);">→</span>
+        </a>
+        <a href="help.html#withdrawal" style="background:var(--gray);padding:14px;border-radius:8px;text-decoration:none;color:inherit;display:flex;justify-content:space-between;align-items:center;">
+          <span>💸 How do I withdraw my earnings?</span><span style="color:var(--orange);">→</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- LOCATION -->
+    <div class="static-section">
+      <h2>📍 Our Location</h2>
+      <p>Nexabay is a Nigerian technology company proudly built and operated from Lagos, Nigeria. We serve users across all 36 states of Nigeria and are expanding across Africa.</p>
+      <div style="background:var(--gray);border-radius:10px;padding:16px;margin-top:12px;">
+        <div style="font-weight:700;margin-bottom:4px;">Nexabay Ltd</div>
+        <div style="color:var(--text2);font-size:0.9em;">Lagos, Nigeria 🇳🇬</div>
+        <div style="color:var(--text2);font-size:0.9em;margin-top:4px;">nexabay7@gmail.com</div>
+        <div style="color:var(--text2);font-size:0.9em;">+234 907 651 9852</div>
+      </div>
+    </div>
+
+    <div class="static-contact-card">
+      <h3>Need urgent help? 🚨</h3>
+      <p>For urgent payment or order issues, WhatsApp is the fastest way to reach us.</p>
+      <a href="https://wa.me/2349076519852" target="_blank">WhatsApp Us Now →</a>
+    </div>
+
+  </div>
+
+  <footer class="footer">
+    <div class="footer-bottom">
+      <p>© 2025 Nexabay. All rights reserved. Made with ❤️ in Africa.</p>
+    </div>
+  </footer>
+
+  <script src="../js/core/main.js"></script>
+  <script>
+    function sendContactMessage() {
+      var name    = document.getElementById('ct-name').value.trim();
+      var email   = document.getElementById('ct-email').value.trim();
+      var subject = document.getElementById('ct-subject').value;
+      var message = document.getElementById('ct-message').value.trim();
+      var errEl   = document.getElementById('ct-error');
+      var sucEl   = document.getElementById('ct-success');
+
+      errEl.style.display = 'none';
+      sucEl.style.display = 'none';
+
+      if (!name)    { errEl.textContent = 'Please enter your name.';     errEl.style.display = 'block'; return; }
+      if (!email)   { errEl.textContent = 'Please enter your email.';    errEl.style.display = 'block'; return; }
+      if (!subject) { errEl.textContent = 'Please select a subject.';    errEl.style.display = 'block'; return; }
+      if (!message) { errEl.textContent = 'Please enter your message.';  errEl.style.display = 'block'; return; }
+
+      if (typeof db !== 'undefined') {
+        db.collection('contactMessages').add({
+          name:      name,
+          email:     email,
+          phone:     document.getElementById('ct-phone').value.trim(),
+          subject:   subject,
+          message:   message,
+          status:    'unread',
+          createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+        }).catch(function(err) { console.log('Contact save error:', err); });
+      }
+
+      document.getElementById('ct-reply-email').textContent = email;
+      sucEl.style.display = 'block';
+
+      document.getElementById('ct-name').value    = '';
+      document.getElementById('ct-email').value   = '';
+      document.getElementById('ct-phone').value   = '';
+      document.getElementById('ct-subject').value = '';
+      document.getElementById('ct-message').value = '';
+    }
+  </script>
+
+</body>
+</html>
