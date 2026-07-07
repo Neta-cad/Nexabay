@@ -163,17 +163,9 @@ function logoutUser() {
 
 // ── SEARCH ────────────────────────────────────
 function doSearch() {
-  var input = document.getElementById('search-input');
-  var catEl = document.getElementById('search-cat');
-  if (!input) return;
-  var q = input.value.trim();
-  var cat = catEl ? catEl.value : 'All';
-  if (!q) {
-    showToast('⚠️ Please enter a search term', '#ff6b00');
-    return;
-  }
-  window.location.href = 'pages/shop/browse.html?q='
-    + encodeURIComponent(q) + '&cat=' + encodeURIComponent(cat);
+  var query = document.getElementById('search-input').value.trim();
+  if (!query) return;
+  window.location.href = 'pages/search.html?q=' + encodeURIComponent(query);
 }
 
 // ── COUNTDOWN TIMER ───────────────────────────

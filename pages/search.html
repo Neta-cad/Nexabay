@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Search — Nexabay</title>
+  <link rel="stylesheet" href="../css/main.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <style>
+    .search-hero {
+      background: var(--dark);
+      padding: 30px 20px;
+    }
+    .search-hero-inner {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    .search-hero h1 {
+      color: white;
+      font-size: 1.4em;
+      margin-bottom: 16px;
+      text-align: center;
+    }
+    .search-bar-big {
+      display: flex;
+      gap: 8px;
+    }
+    .search-bar-big input {
+      flex: 1;
+      padding: 14px 16px;
+      border: none;
+      border-radius: 10px;
+      font-size: 1em;
+      outline: none;
+    }
+    .search-bar-big button {
+      background: var(--orange);
+      color: white;
+      border: none;
+      padding: 14px 20px;
+      border-radius: 10px;
+      font-size: 1em;
+      cursor: pointer;
+      font-weight: 700;
+    }
+    .search-filters {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding: 16px 0 8px;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    .search-filter-btn {
+      padding: 8px 16px;
+      border-radius: 20px;
+      border: 1px solid rgba(255,255,255,0.2);
+      background: transparent;
+      color: white;
+      cursor: pointer;
+      white-space: nowrap;
+      font-size: 0.85em;
+      font-weight: 600;
+    }
+    .search-filter-btn.active {
+      background: var(--orange);
+      border-color: var(--orange);
+    }
+    .search-page {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 24px 16px 80px;
+    }
+    .search-stats {
+      color: var(--text2);
+      font-size: 0.88em;
+      margin-bottom: 20px;
+    }
+    .search-result-card {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 12px;
+      display: flex;
+      gap: 14px;
+      align-items: center;
+      cursor: pointer;
+      transition: box-shadow 0.2s;
+    }
+    .search-result-card:hover {
+      box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+    }
+    .search-result-img {
+      width: 64px;
+      height: 64px;
+      border-radius: 10px;
+      background: var(--gray);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8em;
+      flex-shrink: 0;
+      overflow: hidden;
+    }
+    .search-result-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 10px;
+    }
+    .search-result-info {
+      flex: 1;
+      min-width: 0;
+    }
+    .search-result-title {
+      font-weight: 700;
+      font-size: 0.95em;
+      margin-bottom: 3px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .search-result-meta {
+      font-size: 0.8em;
+      color: var(--text2);
+      margin-bottom: 4px;
+    }
+    .search-result-price {
+      font-weight: 800;
+      color: var(--orange);
+      font-size: 0.95em;
+    }
+    .search-result-badge {
+      background: var(--gray);
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-size: 0.72em;
+      font-weight: 700;
+      color: var(--text2);
+      white-space: nowrap;
+    }
+    .search-empty {
+      text-align: center;
+      padding: 60px 20px;
+    }
+    .search-loading {
+      text-align: center;
+      padding: 40px;
+      color: var(--text2);
+    }
+    .section-group-title {
+      font-weight: 800;
+      font-size: 1em;
+      margin: 20px 0 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .section-group-title span {
+      background: var(--gray);
+      padding: 2px 10px;
+      border-radius: 10px;
+      font-size: 0.78em;
+      color: var(--text2);
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="nav-inner">
+      <a href="../index.html" class="logo">
+        <span class="logo-nexa">Nexa</span><span class="logo-bay">bay</span>
+      </a>
+      <div class="nav-actions" id="nav-actions">
+        <a href="auth/login.html" class="nav-link">Login</a>
+        <a href="auth/register.html" class="nav-btn">Sign Up</a>
+      </div>
+      <button class="hamburger" onclick="toggleMobileMenu()">☰</button>
+    </div>
+    <div class="mobile-menu" id="mobile-menu">
+      <a href="../index.html">Home</a>
+      <a href="auth/login.html">Login</a>
+    </div>
+  </nav>
+
+  <!-- SEARCH HERO -->
+  <div class="search-hero">
+    <div class="search-hero-inner">
+      <h1>🔍 Search Nexabay</h1>
+      <div class="search-bar-big">
+        <input type="text" id="search-input" placeholder="Search products, services, jobs, doctors..." autofocus/>
+        <button onclick="doSearch()">Search</button>
+      </div>
+      <div class="search-filters">
+        <button class="search-filter-btn active" onclick="setFilter('all', this)">🌍 All</button>
+        <button class="search-filter-btn" onclick="setFilter('products', this)">🛍️ Shop</button>
+        <button class="search-filter-btn" onclick="setFilter('services', this)">🛠️ Services</button>
+        <button class="search-filter-btn" onclick="setFilter('jobs', this)">💼 Jobs</button>
+        <button class="search-filter-btn" onclick="setFilter('courses', this)">🎓 Learn</button>
+        <button class="search-filter-btn" onclick="setFilter('foodItems', this)">🍔 Food</button>
+        <button class="search-filter-btn" onclick="setFilter('events', this)">🎉 Events</button>
+        <button class="search-filter-btn" onclick="setFilter('healthListings', this)">🏥 Health</button>
+        <button class="search-filter-btn" onclick="setFilter('travelListings', this)">✈️ Travel</button>
+        <button class="search-filter-btn" onclick="setFilter('drivers', this)">🚗 Ride</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESULTS -->
+  <div class="search-page">
+    <div id="search-stats" class="search-stats"></div>
+    <div id="search-results">
+      <div class="search-empty">
+        <div style="font-size:3em;margin-bottom:16px;">🔍</div>
+        <h3>Search for anything on Nexabay</h3>
+        <p style="color:var(--text2);">Products, services, jobs, courses, food, events, doctors, travel and more</p>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="../js/firebase/config.js"></script>
+  <script src="../js/firebase/auth.js"></script>
+  <script src="../js/core/main.js"></script>
+  <script>
+
+    var currentFilter = 'all';
+    var currentQuery  = '';
+
+    var COLLECTIONS = {
+      products:       { label: '🛍️ Products',  url: 'shop/product.html?id=',          titleField: 'name',        priceField: 'price',           imgField: 'imageUrl', emojiField: 'emoji' },
+      services:       { label: '🛠️ Services',   url: 'services/service.html?id=',      titleField: 'title',       priceField: 'price',           imgField: 'imageUrl', emojiField: 'emoji' },
+      rentals:        { label: '🏠 Rentals',    url: 'rentals/rental.html?id=',        titleField: 'title',       priceField: 'price',           imgField: 'imageUrl', emojiField: 'emoji' },
+      jobs:           { label: '💼 Jobs',        url: 'jobs/job.html?id=',             titleField: 'title',       priceField: 'salaryMin',       imgField: '',         emojiField: '' },
+      courses:        { label: '🎓 Courses',    url: 'learn/course.html?id=',          titleField: 'title',       priceField: 'price',           imgField: 'imageUrl', emojiField: 'emoji' },
+      foodItems:      { label: '🍔 Food',        url: 'food/restaurant.html?id=',      titleField: 'name',        priceField: 'price',           imgField: 'imageUrl', emojiField: 'emoji' },
+      events:         { label: '🎉 Events',      url: 'events/event.html?id=',         titleField: 'title',       priceField: '',                imgField: 'imageUrl', emojiField: 'emoji' },
+      travelListings: { label: '✈️ Travel',      url: 'travel/listing.html?id=',       titleField: 'title',       priceField: 'price',           imgField: 'imageUrl', emojiField: 'emoji' },
+      healthListings: { label: '🏥 Health',      url: 'health/provider.html?id=',      titleField: 'name',        priceField: 'consultationFee', imgField: 'imageUrl', emojiField: 'emoji' },
+      drivers:        { label: '🚗 Ride',        url: 'ride/driver.html?id=',          titleField: 'driverName',  priceField: 'basePrice',       imgField: 'imageUrl', emojiField: 'emoji' },
+    };
+
+    function setFilter(filter, btn) {
+      currentFilter = filter;
+      document.querySelectorAll('.search-filter-btn').forEach(function(b) {
+        b.classList.remove('active');
+      });
+      btn.classList.add('active');
+      if (currentQuery) doSearch();
+    }
+
+    function doSearch() {
+      var query = document.getElementById('search-input').value.trim().toLowerCase();
+      if (!query) return;
+      currentQuery = query;
+
+      var resultsEl = document.getElementById('search-results');
+      var statsEl   = document.getElementById('search-stats');
+
+      resultsEl.innerHTML =
+        '<div class="search-loading">' +
+          '<div style="font-size:2em;margin-bottom:10px;">⏳</div>' +
+          '<p>Searching across Nexabay...</p>' +
+        '</div>';
+      statsEl.innerHTML = '';
+
+      var collectionsToSearch = currentFilter === 'all'
+        ? Object.keys(COLLECTIONS)
+        : [currentFilter];
+
+      var allResults = [];
+      var promises = collectionsToSearch.map(function(col) {
+        return db.collection(col)
+          .where('status', '==', 'active')
+          .get()
+          .then(function(snap) {
+            snap.forEach(function(doc) {
+              var data  = doc.data();
+              var conf  = COLLECTIONS[col];
+              var title = (data[conf.titleField] || '').toLowerCase();
+              var desc  = (data.description || data.desc || '').toLowerCase();
+              var cat   = (data.category || '').toLowerCase();
+
+              if (title.includes(query) || desc.includes(query) || cat.includes(query)) {
+                allResults.push({
+                  id:         doc.id,
+                  collection: col,
+                  title:      data[conf.titleField] || 'Untitled',
+                  price:      conf.priceField ? data[conf.priceField] : null,
+                  imageUrl:   data[conf.imgField] || '',
+                  emoji:      data[conf.emojiField] || getDefaultEmoji(col),
+                  category:   data.category || data.specialization || '',
+                  location:   data.location || '',
+                  description: data.description || data.desc || '',
+                  url:        'pages/' + conf.url + doc.id,
+                  label:      conf.label,
+                });
+              }
+            });
+          })
+          .catch(function() {});
+      });
+
+      Promise.all(promises).then(function() {
+        renderResults(allResults, query);
+      });
+    }
+
+    function getDefaultEmoji(col) {
+      var emojis = {
+        products: '📦', services: '🛠️', rentals: '🏠',
+        jobs: '💼', courses: '🎓', foodItems: '🍔',
+        events: '🎉', travelListings: '✈️',
+        healthListings: '🏥', drivers: '🚗'
+      };
+      return emojis[col] || '📦';
+    }
+
+    function renderResults(results, query) {
+      var resultsEl = document.getElementById('search-results');
+      var statsEl   = document.getElementById('search-stats');
+
+      statsEl.innerHTML = '<b>' + results.length + '</b> result' + (results.length !== 1 ? 's' : '') + ' for "<b>' + query + '</b>"';
+
+      if (results.length === 0) {
+        resultsEl.innerHTML =
+          '<div class="search-empty">' +
+            '<div style="font-size:3em;margin-bottom:16px;">😕</div>' +
+            '<h3>No results found</h3>' +
+            '<p style="color:var(--text2);">Try a different search term or browse a specific section</p>' +
+            '<div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:20px;">' +
+              '<a href="shop/browse.html" style="background:var(--gray);padding:10px 16px;border-radius:8px;text-decoration:none;color:inherit;font-weight:600;">🛍️ Browse Shop</a>' +
+              '<a href="services/browse.html" style="background:var(--gray);padding:10px 16px;border-radius:8px;text-decoration:none;color:inherit;font-weight:600;">🛠️ Browse Services</a>' +
+              '<a href="jobs/browse.html" style="background:var(--gray);padding:10px 16px;border-radius:8px;text-decoration:none;color:inherit;font-weight:600;">💼 Browse Jobs</a>' +
+            '</div>' +
+          '</div>';
+        return;
+      }
+
+      var grouped = {};
+      results.forEach(function(r) {
+        if (!grouped[r.collection]) grouped[r.collection] = [];
+        grouped[r.collection].push(r);
+      });
+
+      var html = '';
+      Object.keys(grouped).forEach(function(col) {
+        var items = grouped[col];
+        var conf  = COLLECTIONS[col];
+        html += '<div class="section-group-title">' + conf.label + ' <span>' + items.length + '</span></div>';
+        html += items.map(function(r) {
+          var imgHtml = r.imageUrl
+            ? '<img src="' + r.imageUrl + '" alt="' + r.title + '"/>'
+            : r.emoji;
+          var priceHtml = r.price && r.price > 0
+            ? '<div class="search-result-price">₦' + parseInt(r.price).toLocaleString() + '</div>'
+            : '';
+          var desc = r.description
+            ? r.description.substring(0, 80) + (r.description.length > 80 ? '...' : '')
+            : '';
+          return '<div class="search-result-card" onclick="window.location.href=\'../' + r.url + '\'">' +
+            '<div class="search-result-img">' + imgHtml + '</div>' +
+            '<div class="search-result-info">' +
+              '<div class="search-result-title">' + r.title + '</div>' +
+              '<div class="search-result-meta">' +
+                (r.category ? r.category : '') +
+                (r.location ? ' • 📍 ' + r.location : '') +
+              '</div>' +
+              (desc ? '<div style="font-size:0.78em;color:var(--text2);">' + desc + '</div>' : '') +
+              priceHtml +
+            '</div>' +
+            '<div class="search-result-badge">' + conf.label.split(' ')[0] + '</div>' +
+          '</div>';
+        }).join('');
+      });
+
+      resultsEl.innerHTML = html;
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      checkAuthState();
+      updateCartCount();
+
+      var urlQuery = getParam('q');
+      if (urlQuery) {
+        document.getElementById('search-input').value = urlQuery;
+        doSearch();
+      }
+
+      document.getElementById('search-input').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') doSearch();
+      });
+    });
+
+  </script>
+
+</body>
+</html>
