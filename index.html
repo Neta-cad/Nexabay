@@ -7,6 +7,9 @@
   <link rel="stylesheet" href="css/main.css"/>
   <link rel="stylesheet" href="css/home.css"/>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <link rel="manifest" href="/manifest.json"/>
+<meta name="theme-color" content="#ff6b00"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
 </head>
 <body>
 
@@ -396,6 +399,15 @@
       </div>
     </div>
   </footer>
+  
+  <script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/sw.js')
+      .then(function() { console.log('Nexabay SW registered'); })
+      .catch(function(err) { console.log('SW error:', err); });
+  }
+</script>
+  
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>

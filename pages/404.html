@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Page Not Found — Nexabay</title>
+  <link rel="stylesheet" href="../css/main.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <style>
+    .error-page {
+      min-height: 80vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 40px 20px;
+    }
+    .error-code {
+      font-size: 6em;
+      font-weight: 900;
+      color: var(--orange);
+      line-height: 1;
+      margin-bottom: 16px;
+    }
+    .error-title {
+      font-size: 1.6em;
+      font-weight: 800;
+      margin-bottom: 10px;
+    }
+    .error-desc {
+      color: var(--text2);
+      font-size: 0.95em;
+      margin-bottom: 30px;
+      max-width: 320px;
+      line-height: 1.6;
+    }
+    .error-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      width: 100%;
+      max-width: 280px;
+    }
+    .error-btn-primary {
+      background: var(--orange);
+      color: white;
+      padding: 14px;
+      border-radius: 10px;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 1em;
+    }
+    .error-btn-secondary {
+      background: var(--gray);
+      color: inherit;
+      padding: 14px;
+      border-radius: 10px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.95em;
+    }
+    .error-links {
+      margin-top: 30px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+    }
+    .error-links a {
+      background: white;
+      border: 1px solid var(--border);
+      padding: 8px 16px;
+      border-radius: 20px;
+      text-decoration: none;
+      color: inherit;
+      font-size: 0.85em;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="nav-inner">
+      <a href="../index.html" class="logo">
+        <span class="logo-nexa">Nexa</span><span class="logo-bay">bay</span>
+      </a>
+    </div>
+  </nav>
+
+  <div class="error-page">
+    <div style="font-size:5em;margin-bottom:16px;">😕</div>
+    <div class="error-code">404</div>
+    <div class="error-title">Page Not Found</div>
+    <p class="error-desc">The page you are looking for does not exist or may have been moved. Let's get you back on track.</p>
+
+    <div class="error-actions">
+      <a href="../index.html" class="error-btn-primary">🏠 Go to Homepage</a>
+      <a href="javascript:history.back()" class="error-btn-secondary">← Go Back</a>
+    </div>
+
+    <div class="error-links">
+      <a href="../pages/shop/browse.html">🛍️ Shop</a>
+      <a href="../pages/services/browse.html">🛠️ Services</a>
+      <a href="../pages/jobs/browse.html">💼 Jobs</a>
+      <a href="../pages/learn/browse.html">🎓 Learn</a>
+      <a href="../pages/food/browse.html">🍔 Food</a>
+      <a href="../pages/health/browse.html">🏥 Health</a>
+      <a href="../pages/contact.html">💬 Help</a>
+    </div>
+  </div>
+
+  <script src="../js/core/main.js"></script>
+</body>
+</html>

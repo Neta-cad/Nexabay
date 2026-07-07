@@ -1,0 +1,42 @@
+{
+  "name": "Nexabay — Africa's Everything Platform",
+  "short_name": "Nexabay",
+  "description": "Shop, ride, eat, learn, rent, work, travel and heal — all in one Nigerian platform",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0f1e",
+  "theme_color": "#ff6b00",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/images/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/images/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["shopping", "lifestyle", "business"],
+  "shortcuts": [
+    {
+      "name": "Shop",
+      "url": "/pages/shop/browse.html",
+      "description": "Browse products"
+    },
+    {
+      "name": "Book a Ride",
+      "url": "/pages/ride/index.html",
+      "description": "Book a driver"
+    },
+    {
+      "name": "Find a Job",
+      "url": "/pages/jobs/browse.html",
+      "description": "Browse jobs"
+    }
+  ]
+}

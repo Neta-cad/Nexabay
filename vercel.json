@@ -1,0 +1,25 @@
+{
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/$1",
+      "continue": true
+    }
+  ],
+  "redirects": [],
+  "rewrites": [],
+  "headers": [
+    {
+      "source": "/sw.js",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=0, must-revalidate"
+        }
+      ]
+    }
+  ],
+  "error": {
+    "404": "/pages/404.html"
+  }
+}
