@@ -18,6 +18,10 @@
       </a>
       <div class="nav-actions">
         <span class="nav-link" id="nav-seller-name">My Shop</span>
+        <div style="position:relative;cursor:pointer;" onclick="showTab('orders')">
+          <span style="font-size:1.4em;">🔔</span>
+          <span id="notif-bell-badge" style="display:none;position:absolute;top:-4px;right:-4px;background:#cc0000;color:white;border-radius:50%;width:16px;height:16px;font-size:0.65em;display:none;align-items:center;justify-content:center;font-weight:700;"></span>
+        </div>
         <a href="../../index.html" class="nav-link">← Back to Site</a>
       </div>
     </div>
@@ -900,12 +904,89 @@ function fixExistingOrders() {
     });
 }
 
-  function loadSellerOrders() {
+  var ordersListener = null;
+
+    function loadSellerOrders() {
       var user = auth.currentUser;
       if (!user) return;
 
-      db.collection('orders').get()
-        .then(function(snap) {
+      if (ordersListener) ordersListener();
+
+      ordersListener = db.collection('orders')
+        .onSnapshot(function(snap) {
+          var sellerOrders = [];
+          snap.forEach(function(doc) {
+            var order = doc.data();
+            var sellerItems = (order.items || []).filter(function(item) {
+              return item.sellerId === user.uid;
+            });
+            if (sellerItems.length > 0) {
+              sellerOrders.push({
+                id:      order.id,
+                product: sellerItems.map(function(i) { return i.name; }).join(', '),
+                buyer:   order.buyerName || 'Customer',
+                amount:  sellerItems.reduce(function(s, i) {
+                  return s + (i.price || 0) * (i.qty || 1);
+                }, 0),
+                status:  order.status || 'confirmed',
+                date:    order.date ? new Date(order.date).toLocaleDateString() : 'Today',
+                phone:   order.buyerPhone || '',
+              });
+            }
+          });
+
+          var previousCount = myOrders.length;
+          myOrders = sellerOrders;
+          renderAllOrders();
+          renderRecentOrders();
+          updateStats();
+
+          if (previousCount > 0 && sellerOrders.length > previousCount) {
+            var newCount = sellerOrders.length - previousCount;
+            showToast('🎉 ' + newCount + ' new order' + (newCount > 1 ? 's' : '') + ' received!');
+            playNotificationSound();
+            updateOrderBadge(sellerOrders.filter(function(o) {
+              return o.status === 'confirmed' || o.status === 'pending';
+            }).length);
+          }
+        }, function(err) {
+          console.log('Orders listener error:', err);
+        });
+    }
+
+    function playNotificationSound() {
+      try {
+        var ctx = new (window.AudioContext || window.webkitAudioContext)();
+        var oscillator = ctx.createOscillator();
+        var gainNode = ctx.createGain();
+        oscillator.connect(gainNode);
+        gainNode.connect(ctx.destination);
+        oscillator.frequency.setValueAtTime(880, ctx.currentTime);
+        oscillator.frequency.setValueAtTime(1100, ctx.currentTime + 0.1);
+        gainNode.gain.setValueAtTime(0.3, ctx.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.3);
+        oscillator.start(ctx.currentTime);
+        oscillator.stop(ctx.currentTime + 0.3);
+      } catch(e) {}
+    }
+
+    function updateOrderBadge(count) {
+      var navItem = document.querySelector('.dash-nav-item[onclick="showTab(\'orders\')"]');
+      if (!navItem) return;
+      var badge = navItem.querySelector('.order-badge');
+      if (!badge) {
+        badge = document.createElement('span');
+        badge.className = 'order-badge';
+        badge.style.cssText = 'background:#cc0000;color:white;border-radius:10px;padding:1px 7px;font-size:0.75em;margin-left:4px;';
+        navItem.appendChild(badge);
+      }
+      if (count > 0) {
+        badge.textContent = count;
+        badge.style.display = 'inline';
+      } else {
+        badge.style.display = 'none';
+      }
+    }
           var sellerOrders = [];
           snap.forEach(function(doc) {
             var order = doc.data();

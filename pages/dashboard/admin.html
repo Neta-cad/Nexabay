@@ -424,7 +424,7 @@
           loadStats();
           loadAllPending();
           loadUsers();
-          loadOrders();
+          loadOrdersRealTime();();
           loadWithdrawals();
           loadPayments();
           loadMessages();
@@ -919,6 +919,23 @@ function loadMessages() {
         .catch(function(err) { showToast('Error: ' + err.message); });
     }
 
+
+var adminOrdersListener = null;
+
+    function loadOrdersRealTime() {
+      if (adminOrdersListener) adminOrdersListener();
+
+      adminOrdersListener = db.collection('orders')
+        .onSnapshot(function(snap) {
+          allOrders = [];
+          snap.forEach(function(doc) { allOrders.push(doc.data()); });
+          allOrders.sort(function(a, b) {
+            return new Date(b.date || 0) - new Date(a.date || 0);
+          });
+          renderAdminOrders(allOrders);
+          loadStats();
+        }, function(err) { console.log('Admin orders error:', err); });
+    }
 
     function doAdminLogout() {
       if (typeof nexaLogout === 'function') {

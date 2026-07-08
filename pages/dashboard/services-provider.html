@@ -426,20 +426,29 @@
       }
     }
 
+    var servicesListener = null;
+
     function loadMyServices() {
       var user = auth.currentUser;
       if (!user) { renderMyServices([]); return; }
 
-      nexaGetProviderServices(user.uid)
-        .then(function(services) {
+      if (servicesListener) servicesListener();
+
+      servicesListener = db.collection('services')
+        .where('providerId', '==', user.uid)
+        .onSnapshot(function(snap) {
+          var services = [];
+          snap.forEach(function(doc) {
+            var data = doc.data();
+            if (data.status !== 'deleted') services.push(data);
+          });
+          services.sort(function(a, b) {
+            return (b.createdAt ? b.createdAt.toMillis() : 0) - (a.createdAt ? a.createdAt.toMillis() : 0);
+          });
           myServices = services;
           renderMyServices(services);
           updateStats();
-        })
-        .catch(function(err) {
-          console.log('Error loading services:', err);
-          renderMyServices([]);
-        });
+        }, function(err) { console.log('Services listener error:', err); });
     }
 
     function updateStats() {

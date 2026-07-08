@@ -493,19 +493,47 @@
         });
     }
 
+    var ordersListener = null;
+
     function loadMyOrders() {
       var user = auth.currentUser;
       if (!user) return;
 
-      nexaGetRestaurantOrders(user.uid)
-        .then(function(orders) {
-          myFoodOrders = orders;
+      if (ordersListener) ordersListener();
+
+      ordersListener = db.collection('foodOrders')
+        .where('restaurantId', '==', user.uid)
+        .onSnapshot(function(snap) {
+          var previousCount = myFoodOrders.length;
+          myFoodOrders = [];
+          snap.forEach(function(doc) { myFoodOrders.push(doc.data()); });
+          myFoodOrders.sort(function(a, b) {
+            return (b.createdAt ? b.createdAt.toMillis() : 0) - (a.createdAt ? a.createdAt.toMillis() : 0);
+          });
           renderOrders('all');
           updateStats();
-        })
-        .catch(function(err) {
-          console.log('Error loading orders:', err);
-        });
+
+          if (previousCount > 0 && myFoodOrders.length > previousCount) {
+            showToast('🍔 New food order received!');
+            playNotificationSound();
+          }
+        }, function(err) { console.log('Food orders error:', err); });
+    }
+
+    function playNotificationSound() {
+      try {
+        var ctx = new (window.AudioContext || window.webkitAudioContext)();
+        var osc = ctx.createOscillator();
+        var gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.frequency.setValueAtTime(880, ctx.currentTime);
+        osc.frequency.setValueAtTime(1100, ctx.currentTime + 0.1);
+        gain.gain.setValueAtTime(0.3, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.3);
+        osc.start(ctx.currentTime);
+        osc.stop(ctx.currentTime + 0.3);
+      } catch(e) {}
     }
 
     function updateStats() {
