@@ -80,6 +80,10 @@
           💬 Messages
           <span id="msg-badge" style="background:#cc0000;color:white;border-radius:10px;padding:1px 7px;font-size:0.75em;margin-left:4px;display:none;">0</span>
         </a>
+        <a href="#" class="dash-nav-item" onclick="showTab('careers')">
+          🚀 Job Applications
+          <span id="careers-badge" style="background:#cc0000;color:white;border-radius:10px;padding:1px 7px;font-size:0.75em;margin-left:4px;display:none;">0</span>
+        </a>
         <a href="#" class="dash-nav-item" onclick="showTab('settings')">
           ⚙️ Settings
         </a>
@@ -297,6 +301,29 @@
       </div>
 
 
+<!-- CAREERS TAB -->
+      <div class="dash-tab" id="tab-careers" style="display:none;">
+        <div class="dash-header">
+          <h1>Job Applications 🚀</h1>
+          <button onclick="loadCareers()" style="background:var(--gray);border:none;padding:8px 16px;border-radius:8px;cursor:pointer;">🔄 Refresh</button>
+        </div>
+
+        <div class="orders-filter" style="margin-bottom:16px;">
+          <button class="order-filter-btn active" onclick="filterCareers('new', this)">🆕 New</button>
+          <button class="order-filter-btn" onclick="filterCareers('reviewed', this)">👀 Reviewed</button>
+          <button class="order-filter-btn" onclick="filterCareers('shortlisted', this)">✅ Shortlisted</button>
+          <button class="order-filter-btn" onclick="filterCareers('rejected', this)">❌ Rejected</button>
+          <button class="order-filter-btn" onclick="filterCareers('all', this)">All</button>
+        </div>
+
+        <div id="careers-list">
+          <div style="text-align:center;padding:40px;color:var(--text2);">
+            <div style="font-size:3em;margin-bottom:12px;">⏳</div>
+            <p>Loading applications...</p>
+          </div>
+        </div>
+      </div>
+
 <!-- MESSAGES TAB -->
       <div class="dash-tab" id="tab-messages" style="display:none;">
         <div class="dash-header">
@@ -428,6 +455,7 @@
           loadWithdrawals();
           loadPayments();
           loadMessages();
+          loadCareers();
           var updated = document.getElementById('last-updated');
           if (updated) updated.textContent = 'Last updated: ' + new Date().toLocaleTimeString();
         });
@@ -446,7 +474,7 @@
       var navMap = {
         'overview': 0, 'approvals': 1, 'users': 2,
         'orders': 3, 'withdrawals': 4, 'payments': 5,
-        'messages': 6, 'settings': 7
+        'messages': 6, 'careers': 7, 'settings': 8
       };
       var index = navMap[tab];
       if (index !== undefined && navItems[index]) {
@@ -907,6 +935,127 @@ function loadMessages() {
         .catch(function(err) {
           list.innerHTML = '<p style="color:#cc0000;padding:20px;">Error: ' + err.message + '</p>';
         });
+    }
+
+var allApplications = [];
+
+    function loadCareers() {
+      var list = document.getElementById('careers-list');
+      if (!list) return;
+
+      db.collection('jobApplications_careers')
+        .orderBy('createdAt', 'desc')
+        .get()
+        .then(function(snap) {
+          allApplications = [];
+          snap.forEach(function(doc) {
+            allApplications.push(Object.assign({ _id: doc.id }, doc.data()));
+          });
+
+          var newCount = allApplications.filter(function(a) { return a.status === 'new'; }).length;
+          var badge = document.getElementById('careers-badge');
+          if (badge && newCount > 0) {
+            badge.textContent = newCount;
+            badge.style.display = 'inline';
+          }
+
+          filterCareers('new', document.querySelector('.order-filter-btn.active'));
+        })
+        .catch(function(err) {
+          list.innerHTML = '<p style="color:#cc0000;padding:20px;">Error: ' + err.message + '</p>';
+        });
+    }
+
+    function filterCareers(status, btn) {
+      if (btn) {
+        document.querySelectorAll('#tab-careers .order-filter-btn').forEach(function(b) {
+          b.classList.remove('active');
+        });
+        btn.classList.add('active');
+      }
+
+      var filtered = status === 'all'
+        ? allApplications
+        : allApplications.filter(function(a) { return a.status === status; });
+
+      renderApplications(filtered);
+    }
+
+    function renderApplications(applications) {
+      var list = document.getElementById('careers-list');
+      if (!list) return;
+
+      if (applications.length === 0) {
+        list.innerHTML =
+          '<div style="text-align:center;padding:40px;">' +
+            '<div style="font-size:3em;margin-bottom:12px;">📋</div>' +
+            '<h3>No applications here</h3>' +
+            '<p style="color:var(--text2);">Applications will appear here once submitted</p>' +
+          '</div>';
+        return;
+      }
+
+      list.innerHTML = '<div style="display:grid;gap:12px;">' +
+        applications.map(function(a) {
+          var statusColor = {
+            new: '#fff3cd', reviewed: '#cce5ff',
+            shortlisted: '#d4edda', rejected: '#f8d7da'
+          }[a.status] || '#f8f9fa';
+
+          var statusTextColor = {
+            new: '#856404', reviewed: '#004085',
+            shortlisted: '#155724', rejected: '#721c24'
+          }[a.status] || '#333';
+
+          return '<div style="background:white;border:1px solid var(--border);border-radius:12px;padding:16px;">' +
+            '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;">' +
+              '<div>' +
+                '<div style="font-weight:700;font-size:1em;">' + (a.name || 'Unknown') + '</div>' +
+                '<div style="font-size:0.82em;color:var(--text2);">📧 ' + (a.email || '') + '</div>' +
+                '<div style="font-size:0.82em;color:var(--text2);">📱 ' + (a.phone || '') + '</div>' +
+                '<div style="font-size:0.82em;color:var(--orange);font-weight:700;margin-top:4px;">🎯 ' + (a.role || 'Unknown Role') + '</div>' +
+              '</div>' +
+              '<span style="background:' + statusColor + ';color:' + statusTextColor + ';padding:4px 10px;border-radius:6px;font-size:0.75em;font-weight:700;">' +
+                (a.status || 'new').toUpperCase() +
+              '</span>' +
+            '</div>' +
+
+            (a.portfolio ? '<div style="font-size:0.82em;margin-bottom:8px;"><b>Portfolio:</b> <a href="' + a.portfolio + '" target="_blank" style="color:var(--orange);">' + a.portfolio + '</a></div>' : '') +
+
+            '<div style="background:var(--gray);border-radius:8px;padding:12px;margin-bottom:8px;">' +
+              '<div style="font-size:0.8em;font-weight:700;margin-bottom:4px;">Why Nexabay:</div>' +
+              '<div style="font-size:0.82em;color:var(--text2);line-height:1.6;">' + (a.why || 'Not provided') + '</div>' +
+            '</div>' +
+
+            (a.experience ? (
+              '<div style="background:var(--gray);border-radius:8px;padding:12px;margin-bottom:12px;">' +
+                '<div style="font-size:0.8em;font-weight:700;margin-bottom:4px;">Experience:</div>' +
+                '<div style="font-size:0.82em;color:var(--text2);line-height:1.6;">' + a.experience + '</div>' +
+              '</div>'
+            ) : '') +
+
+            '<div style="display:flex;flex-wrap:wrap;gap:8px;">' +
+              '<a href="mailto:' + (a.email || '') + '" style="background:var(--orange);color:white;padding:8px 14px;border-radius:6px;text-decoration:none;font-size:0.82em;font-weight:700;">📧 Email</a>' +
+              '<a href="https://wa.me/' + (a.phone || '').replace(/[^0-9]/g, '') + '" target="_blank" style="background:#25d366;color:white;padding:8px 14px;border-radius:6px;text-decoration:none;font-size:0.82em;font-weight:700;">💬 WhatsApp</a>' +
+              (a.status === 'new'
+                ? '<button onclick="updateCareerStatus(\'' + a._id + '\', \'reviewed\', this.parentElement.parentElement)" style="background:#cce5ff;color:#004085;border:none;padding:8px 14px;border-radius:6px;cursor:pointer;font-size:0.82em;font-weight:700;">👀 Mark Reviewed</button>' : '') +
+              (a.status !== 'shortlisted'
+                ? '<button onclick="updateCareerStatus(\'' + a._id + '\', \'shortlisted\', this.parentElement.parentElement)" style="background:#d4edda;color:#155724;border:none;padding:8px 14px;border-radius:6px;cursor:pointer;font-size:0.82em;font-weight:700;">✅ Shortlist</button>' : '') +
+              (a.status !== 'rejected'
+                ? '<button onclick="updateCareerStatus(\'' + a._id + '\', \'rejected\', this.parentElement.parentElement)" style="background:#f8d7da;color:#721c24;border:none;padding:8px 14px;border-radius:6px;cursor:pointer;font-size:0.82em;font-weight:700;">❌ Reject</button>' : '') +
+            '</div>' +
+          '</div>';
+        }).join('') +
+      '</div>';
+    }
+
+    function updateCareerStatus(appId, status, card) {
+      db.collection('jobApplications_careers').doc(appId).update({ status: status })
+        .then(function() {
+          showToast('✅ Application marked as ' + status);
+          loadCareers();
+        })
+        .catch(function(err) { showToast('Error: ' + err.message); });
     }
 
     function markMessageRead(messageId, btn) {
