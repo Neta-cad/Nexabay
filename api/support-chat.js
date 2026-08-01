@@ -10,7 +10,7 @@ export default async function handler(req, res) {
   }
 
   const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
-  const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`;
+  const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent?key=${GEMINI_API_KEY}`;
 
   const systemPrompt = `You are Nexabay's customer care assistant. Nexabay is a Nigerian
 super app with: shopping, ride-booking, food delivery, rentals, jobs, learning (NexaLearn),
