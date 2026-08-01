@@ -80,6 +80,10 @@
           💬 Messages
           <span id="msg-badge" style="background:#cc0000;color:white;border-radius:10px;padding:1px 7px;font-size:0.75em;margin-left:4px;display:none;">0</span>
         </a>
+        <a href="#" class="dash-nav-item" onclick="showTab('support'); loadSupportTickets();">
+          🎧 AI Support
+          <span id="support-badge" style="background:#cc0000;color:white;border-radius:10px;padding:1px 7px;font-size:0.75em;margin-left:4px;display:none;">0</span>
+        </a>
         <a href="#" class="dash-nav-item" onclick="showTab('careers')">
           🚀 Job Applications
           <span id="careers-badge" style="background:#cc0000;color:white;border-radius:10px;padding:1px 7px;font-size:0.75em;margin-left:4px;display:none;">0</span>
@@ -338,6 +342,27 @@
           </div>
         </div>
       </div>
+      
+      <!-- AI SUPPORT TAB -->
+      <div class="dash-tab" id="tab-support" style="display:none;">
+        <div class="dash-header">
+          <h1>AI Support Tickets 🎧</h1>
+          <button onclick="loadSupportTickets()" style="background:var(--gray);border:none;padding:8px 16px;border-radius:8px;cursor:pointer;">🔄 Refresh</button>
+        </div>
+
+        <div class="section-tabs">
+          <button class="section-tab active" onclick="filterSupportTickets('open', this)">🟠 Open</button>
+          <button class="section-tab" onclick="filterSupportTickets('resolved', this)">✅ Resolved</button>
+          <button class="section-tab" onclick="filterSupportTickets('all', this)">All</button>
+        </div>
+
+        <div id="support-tickets-list">
+          <div style="text-align:center;padding:40px;color:var(--text2);">
+            <div style="font-size:3em;margin-bottom:12px;">⏳</div>
+            <p>Loading tickets...</p>
+          </div>
+        </div>
+      </div>
 
 
       <!-- SETTINGS TAB -->
@@ -451,7 +476,7 @@
           loadStats();
           loadAllPending();
           loadUsers();
-          loadOrdersRealTime();();
+          loadOrdersRealTime();
           loadWithdrawals();
           loadPayments();
           loadMessages();
@@ -474,7 +499,7 @@
       var navMap = {
         'overview': 0, 'approvals': 1, 'users': 2,
         'orders': 3, 'withdrawals': 4, 'payments': 5,
-        'messages': 6, 'careers': 7, 'settings': 8
+        'messages': 6, 'support': 7, 'careers': 8, 'settings': 9
       };
       var index = navMap[tab];
       if (index !== undefined && navItems[index]) {
@@ -1097,6 +1122,142 @@ var adminOrdersListener = null;
         window.location.href = '../../index.html';
       }
     }
+    
+    var allSupportTickets = [];
+
+function loadSupportTickets() {
+  var list = document.getElementById('support-tickets-list');
+  if (!list) return;
+
+  db.collection('support_tickets')
+    .orderBy('createdAt', 'desc')
+    .get()
+    .then(function(snap) {
+      allSupportTickets = [];
+      snap.forEach(function(doc) {
+        allSupportTickets.push(Object.assign({ _id: doc.id }, doc.data()));
+      });
+
+      var openCount = allSupportTickets.filter(function(t) { return t.status === 'open'; }).length;
+      var badge = document.getElementById('support-badge');
+      if (badge) {
+        if (openCount > 0) {
+          badge.textContent = openCount;
+          badge.style.display = 'inline';
+        } else {
+          badge.style.display = 'none';
+        }
+      }
+
+      filterSupportTickets('open', document.querySelector('#tab-support .section-tab.active'));
+    })
+    .catch(function(err) {
+      list.innerHTML = '<p style="color:#cc0000;padding:20px;">Error: ' + err.message + '</p>';
+    });
+}
+
+function filterSupportTickets(status, btn) {
+  if (btn) {
+    document.querySelectorAll('#tab-support .section-tab').forEach(function(b) {
+      b.classList.remove('active');
+    });
+    btn.classList.add('active');
+  }
+
+  var filtered = status === 'all'
+    ? allSupportTickets
+    : allSupportTickets.filter(function(t) { return t.status === status; });
+
+  renderSupportTickets(filtered);
+}
+
+function renderSupportTickets(tickets) {
+  var list = document.getElementById('support-tickets-list');
+  if (!list) return;
+
+  if (tickets.length === 0) {
+    list.innerHTML =
+      '<div style="text-align:center;padding:40px;">' +
+        '<div style="font-size:3em;margin-bottom:12px;">✅</div>' +
+        '<h3>No tickets here</h3>' +
+        '<p style="color:var(--text2);">Escalated questions from the AI assistant will appear here</p>' +
+      '</div>';
+    return;
+  }
+
+  list.innerHTML = '<div style="display:grid;gap:12px;">' +
+    tickets.map(function(t) {
+      var statusColor = t.status === 'resolved' ? '#d4edda' : '#fff3cd';
+      var statusTextColor = t.status === 'resolved' ? '#155724' : '#856404';
+      var dateStr = t.createdAt ? new Date(t.createdAt.toMillis()).toLocaleString() : '—';
+
+      return '<div style="background:white;border:1px solid var(--border);border-radius:12px;padding:16px;">' +
+        '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;">' +
+          '<div>' +
+            '<div style="font-size:0.8em;color:var(--text2);">👤 ' + (t.userId || 'guest') + ' • 🏷️ ' + (t.category || 'general') + '</div>' +
+            '<div style="font-size:0.75em;color:var(--text2);">' + dateStr + '</div>' +
+          '</div>' +
+          '<span style="background:' + statusColor + ';color:' + statusTextColor + ';padding:4px 10px;border-radius:6px;font-size:0.75em;font-weight:700;">' +
+            (t.status || 'open').toUpperCase() +
+          '</span>' +
+        '</div>' +
+
+        '<div style="background:var(--gray);border-radius:8px;padding:12px;margin-bottom:8px;">' +
+          '<div style="font-size:0.8em;font-weight:700;margin-bottom:4px;">Customer asked:</div>' +
+          '<div style="font-size:0.85em;color:var(--text2);line-height:1.5;">' + (t.question || '') + '</div>' +
+        '</div>' +
+
+        '<div style="background:#fff8f0;border:1px solid var(--orange);border-radius:8px;padding:12px;margin-bottom:12px;">' +
+          '<div style="font-size:0.8em;font-weight:700;margin-bottom:4px;">AI replied:</div>' +
+          '<div style="font-size:0.85em;color:var(--text2);line-height:1.5;">' + (t.aiAnswer || '') + '</div>' +
+        '</div>' +
+
+        (t.adminReply
+          ? '<div style="background:#e8f5e9;border-radius:8px;padding:12px;margin-bottom:12px;">' +
+              '<div style="font-size:0.8em;font-weight:700;margin-bottom:4px;">Your reply:</div>' +
+              '<div style="font-size:0.85em;color:var(--text2);line-height:1.5;">' + t.adminReply + '</div>' +
+            '</div>'
+          : '<textarea id="reply-' + t._id + '" rows="2" placeholder="Type your reply..." style="width:100%;padding:10px;border:1px solid var(--border);border-radius:8px;font-size:0.85em;margin-bottom:8px;"></textarea>'
+        ) +
+
+        (t.status !== 'resolved'
+          ? '<div style="display:flex;gap:8px;">' +
+              (!t.adminReply
+                ? '<button class="btn-approve" onclick="sendTicketReply(\'' + t._id + '\')">💾 Save Reply</button>'
+                : '') +
+              '<button class="btn-approve" onclick="resolveTicket(\'' + t._id + '\')">✅ Mark Resolved</button>' +
+            '</div>'
+          : '') +
+      '</div>';
+    }).join('') +
+  '</div>';
+}
+
+function sendTicketReply(ticketId) {
+  var textarea = document.getElementById('reply-' + ticketId);
+  var reply = textarea ? textarea.value.trim() : '';
+  if (!reply) { showToast('Please type a reply first'); return; }
+
+  db.collection('support_tickets').doc(ticketId).update({ adminReply: reply })
+    .then(function() {
+      showToast('✅ Reply saved');
+      loadSupportTickets();
+    })
+    .catch(function(err) { showToast('Error: ' + err.message); });
+}
+
+function resolveTicket(ticketId) {
+  db.collection('support_tickets').doc(ticketId).update({
+    status: 'resolved',
+    resolvedAt: firebase.firestore.FieldValue.serverTimestamp()
+  })
+    .then(function() {
+      showToast('✅ Ticket marked resolved');
+      loadSupportTickets();
+    })
+    .catch(function(err) { showToast('Error: ' + err.message); });
+}
+    
 
     document.addEventListener('DOMContentLoaded', function() {
       init();
