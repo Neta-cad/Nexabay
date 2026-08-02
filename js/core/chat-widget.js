@@ -122,10 +122,16 @@
         if (typeof saveSupportTicket === 'function') {
           saveSupportTicket(userId, text, data.answer, data.category)
             .then(function(ticketId) {
+              alert('✅ Ticket saved: ' + ticketId);
               activeTickets.push({ id: ticketId, replied: false });
               saveActiveTickets();
               listenForReply(ticketId);
+            })
+            .catch(function(err) {
+              alert('❌ Ticket save FAILED: ' + err.message);
             });
+        } else {
+          alert('❌ saveSupportTicket function not found — support.js did not load');
         }
       } else {
         addMessage('ai', data.answer);
