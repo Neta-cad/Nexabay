@@ -2,7 +2,7 @@
 (function () {
   var chatHistory = JSON.parse(localStorage.getItem('nb_chat_history') || '[]');
   var ticketId = localStorage.getItem('nb_ticket_id') || null;
-  var mode = localStorage.getItem('nb_mode') || 'ai'; // 'ai' or 'human'
+  var ticketStatus = ticketId ? 'open' : null;
   var renderedMessageCount = 0;
   var unsubscribe = null;
 
@@ -12,17 +12,15 @@
 
   function setTicket(id) {
     ticketId = id;
-    mode = 'human';
+    ticketStatus = 'open';
     localStorage.setItem('nb_ticket_id', ticketId);
-    localStorage.setItem('nb_mode', 'human');
     startListening();
   }
 
   function clearTicket() {
     ticketId = null;
-    mode = 'ai';
+    ticketStatus = null;
     localStorage.removeItem('nb_ticket_id');
-    localStorage.setItem('nb_mode', 'ai');
     if (unsubscribe) { unsubscribe(); unsubscribe = null; }
   }
 
@@ -30,6 +28,8 @@
     if (!ticketId || !window.firebase || typeof listenToTicket !== 'function') return;
     if (unsubscribe) unsubscribe();
     unsubscribe = listenToTicket(ticketId, function(ticket) {
+      ticketStatus = ticket.status;
+
       var msgs = ticket.messages || [];
       for (var i = renderedMessageCount; i < msgs.length; i++) {
         var m = msgs[i];
@@ -41,7 +41,7 @@
       }
       renderedMessageCount = msgs.length;
 
-      if (ticket.status === 'resolved' && mode === 'human') {
+      if (ticket.status === 'resolved') {
         addMessage('ai', "This conversation has been marked resolved by our team. Feel free to ask me anything else!");
         chatHistory.push({ role: 'ai', text: "This conversation has been marked resolved by our team. Feel free to ask me anything else!" });
         saveChatHistory();
@@ -121,15 +121,16 @@
     chatHistory.push({ role: 'user', text });
     saveChatHistory();
 
-    // HUMAN MODE: send straight to the ticket thread, skip AI entirely
-    if (mode === 'human' && ticketId) {
+    // If there's an active (non-resolved) ticket, ALWAYS go straight to the human thread.
+    // No AI involvement at all while a ticket is open — this is the single source of truth.
+    if (ticketId && ticketStatus !== 'resolved') {
       if (typeof appendTicketMessage === 'function') {
         appendTicketMessage(ticketId, 'customer', text).catch(function() {});
       }
       return;
     }
 
-    // AI MODE
+    // AI MODE (no active ticket)
     addMessage('ai', 'Typing...');
 
     try {
@@ -150,7 +151,7 @@
         if (typeof saveSupportTicket === 'function') {
           saveSupportTicket(userId, text, data.answer, data.category)
             .then(function(newTicketId) {
-              renderedMessageCount = 2; // question + AI answer already shown
+              renderedMessageCount = 2;
               setTicket(newTicketId);
             });
         }
