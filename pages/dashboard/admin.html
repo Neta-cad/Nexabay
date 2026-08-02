@@ -443,6 +443,7 @@
   <script src="../../js/firebase/config.js"></script>
   <script src="../../js/firebase/auth.js"></script>
   <script src="../../js/firebase/admin.js"></script>
+  <script src="../../js/firebase/support.js"></script>
   <script src="../../js/core/main.js"></script>
   <script>
 
@@ -1123,16 +1124,17 @@ var adminOrdersListener = null;
       }
     }
     
-    var allSupportTickets = [];
+    var supportTicketsListener = null;
 
 function loadSupportTickets() {
   var list = document.getElementById('support-tickets-list');
   if (!list) return;
 
-  db.collection('support_tickets')
+  if (supportTicketsListener) supportTicketsListener();
+
+  supportTicketsListener = db.collection('support_tickets')
     .orderBy('createdAt', 'desc')
-    .get()
-    .then(function(snap) {
+    .onSnapshot(function(snap) {
       allSupportTickets = [];
       snap.forEach(function(doc) {
         allSupportTickets.push(Object.assign({ _id: doc.id }, doc.data()));
@@ -1149,9 +1151,9 @@ function loadSupportTickets() {
         }
       }
 
-      filterSupportTickets('open', document.querySelector('#tab-support .section-tab.active'));
-    })
-    .catch(function(err) {
+      var activeBtn = document.querySelector('#tab-support .section-tab.active');
+      filterSupportTickets(activeBtn ? activeBtn.textContent.trim().toLowerCase().includes('open') ? 'open' : activeBtn.textContent.trim().toLowerCase().includes('resolved') ? 'resolved' : 'all' : 'open', activeBtn);
+    }, function(err) {
       list.innerHTML = '<p style="color:#cc0000;padding:20px;">Error: ' + err.message + '</p>';
     });
 }
@@ -1190,6 +1192,17 @@ function renderSupportTickets(tickets) {
       var statusColor = t.status === 'resolved' ? '#d4edda' : '#fff3cd';
       var statusTextColor = t.status === 'resolved' ? '#155724' : '#856404';
       var dateStr = t.createdAt ? new Date(t.createdAt.toMillis()).toLocaleString() : '—';
+      var msgs = t.messages || [];
+
+      var threadHtml = msgs.map(function(m) {
+        var bg = m.sender === 'customer' ? '#1a2236' : m.sender === 'admin' ? '#0F7A5C' : '#fff3e0';
+        var color = m.sender === 'customer' || m.sender === 'admin' ? 'white' : '#333';
+        var label = m.sender === 'customer' ? 'Customer' : m.sender === 'admin' ? 'You' : 'AI';
+        return '<div style="background:' + bg + ';color:' + color + ';border-radius:8px;padding:10px 12px;margin-bottom:6px;">' +
+          '<div style="font-size:0.7em;opacity:0.8;font-weight:700;margin-bottom:2px;">' + label + '</div>' +
+          '<div style="font-size:0.85em;line-height:1.5;">' + m.text + '</div>' +
+        '</div>';
+      }).join('');
 
       return '<div style="background:white;border:1px solid var(--border);border-radius:12px;padding:16px;">' +
         '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;">' +
@@ -1202,29 +1215,14 @@ function renderSupportTickets(tickets) {
           '</span>' +
         '</div>' +
 
-        '<div style="background:var(--gray);border-radius:8px;padding:12px;margin-bottom:8px;">' +
-          '<div style="font-size:0.8em;font-weight:700;margin-bottom:4px;">Customer asked:</div>' +
-          '<div style="font-size:0.85em;color:var(--text2);line-height:1.5;">' + (t.question || '') + '</div>' +
+        '<div style="max-height:280px;overflow-y:auto;background:var(--gray);border-radius:8px;padding:10px;margin-bottom:10px;">' +
+          threadHtml +
         '</div>' +
-
-        '<div style="background:#fff8f0;border:1px solid var(--orange);border-radius:8px;padding:12px;margin-bottom:12px;">' +
-          '<div style="font-size:0.8em;font-weight:700;margin-bottom:4px;">AI replied:</div>' +
-          '<div style="font-size:0.85em;color:var(--text2);line-height:1.5;">' + (t.aiAnswer || '') + '</div>' +
-        '</div>' +
-
-        (t.adminReply
-          ? '<div style="background:#e8f5e9;border-radius:8px;padding:12px;margin-bottom:12px;">' +
-              '<div style="font-size:0.8em;font-weight:700;margin-bottom:4px;">Your reply:</div>' +
-              '<div style="font-size:0.85em;color:var(--text2);line-height:1.5;">' + t.adminReply + '</div>' +
-            '</div>'
-          : '<textarea id="reply-' + t._id + '" rows="2" placeholder="Type your reply..." style="width:100%;padding:10px;border:1px solid var(--border);border-radius:8px;font-size:0.85em;margin-bottom:8px;"></textarea>'
-        ) +
 
         (t.status !== 'resolved'
-          ? '<div style="display:flex;gap:8px;">' +
-              (!t.adminReply
-                ? '<button class="btn-approve" onclick="sendTicketReply(\'' + t._id + '\')">💾 Save Reply</button>'
-                : '') +
+          ? '<textarea id="reply-' + t._id + '" rows="2" placeholder="Type your reply..." style="width:100%;padding:10px;border:1px solid var(--border);border-radius:8px;font-size:0.85em;margin-bottom:8px;"></textarea>' +
+            '<div style="display:flex;gap:8px;">' +
+              '<button class="btn-approve" onclick="sendTicketMessage(\'' + t._id + '\')">💬 Send Reply</button>' +
               '<button class="btn-approve" onclick="resolveTicket(\'' + t._id + '\')">✅ Mark Resolved</button>' +
             '</div>'
           : '') +
@@ -1233,15 +1231,15 @@ function renderSupportTickets(tickets) {
   '</div>';
 }
 
-function sendTicketReply(ticketId) {
+function sendTicketMessage(ticketId) {
   var textarea = document.getElementById('reply-' + ticketId);
   var reply = textarea ? textarea.value.trim() : '';
   if (!reply) { showToast('Please type a reply first'); return; }
 
-  db.collection('support_tickets').doc(ticketId).update({ adminReply: reply })
+  appendTicketMessage(ticketId, 'admin', reply)
     .then(function() {
-      showToast('✅ Reply saved');
-      loadSupportTickets();
+      showToast('✅ Reply sent');
+      if (textarea) textarea.value = '';
     })
     .catch(function(err) { showToast('Error: ' + err.message); });
 }

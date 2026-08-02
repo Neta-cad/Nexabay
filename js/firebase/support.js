@@ -1,38 +1,41 @@
 // js/firebase/support.js
-// Handles saving escalated support chats to Firestore
+// Handles two-way conversational support tickets
 
 function saveSupportTicket(userId, question, aiAnswer, category) {
-  const db = firebase.firestore();
+  var db = firebase.firestore();
 
   return db.collection('support_tickets').add({
     userId: userId || 'guest',
-    question: question,
-    aiAnswer: aiAnswer,
     category: category || 'general',
     status: 'open',
-    adminReply: '',
     createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-    resolvedAt: null
-  }).then((docRef) => {
-    console.log('Support ticket saved:', docRef.id);
+    resolvedAt: null,
+    messages: [
+      { sender: 'customer', text: question, ts: Date.now() },
+      { sender: 'ai', text: aiAnswer, ts: Date.now() }
+    ]
+  }).then(function(docRef) {
     return docRef.id;
-  }).catch((error) => {
-    console.error('Error saving support ticket:', error);
-    throw error;
   });
 }
 
-function listenToMyTickets(userId, callback) {
-  const db = firebase.firestore();
+function appendTicketMessage(ticketId, sender, text) {
+  var db = firebase.firestore();
+  var updates = {
+    messages: firebase.firestore.FieldValue.arrayUnion({
+      sender: sender, text: text, ts: Date.now()
+    })
+  };
+  if (sender === 'customer') {
+    updates.status = 'open'; // reopen if it was resolved
+  }
+  return db.collection('support_tickets').doc(ticketId).update(updates);
+}
 
-  return db.collection('support_tickets')
-    .where('userId', '==', userId)
-    .orderBy('createdAt', 'desc')
-    .onSnapshot((snapshot) => {
-      const tickets = [];
-      snapshot.forEach((doc) => {
-        tickets.push({ id: doc.id, ...doc.data() });
-      });
-      callback(tickets);
+function listenToTicket(ticketId, callback) {
+  var db = firebase.firestore();
+  return db.collection('support_tickets').doc(ticketId)
+    .onSnapshot(function(doc) {
+      if (doc.exists) callback(Object.assign({ id: doc.id }, doc.data()));
     });
 }

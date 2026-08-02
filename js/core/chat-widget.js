@@ -1,36 +1,53 @@
 // js/core/chat-widget.js
 (function () {
   var chatHistory = JSON.parse(localStorage.getItem('nb_chat_history') || '[]');
-  
-  var activeTickets = JSON.parse(localStorage.getItem('nb_active_tickets') || '[]');
-
-  function saveActiveTickets() {
-    localStorage.setItem('nb_active_tickets', JSON.stringify(activeTickets));
-  }
-
-  function listenForReply(ticketId) {
-    if (!window.firebase || !firebase.firestore) return;
-    firebase.firestore().collection('support_tickets').doc(ticketId)
-      .onSnapshot(function(doc) {
-        if (!doc.exists) return;
-        var data = doc.data();
-        var ticket = activeTickets.find(function(t) { return t.id === ticketId; });
-        if (ticket && data.adminReply && !ticket.replied) {
-          addMessage('team', data.adminReply);
-          chatHistory.push({ role: 'team', text: data.adminReply });
-          saveChatHistory();
-          ticket.replied = true;
-          saveActiveTickets();
-        }
-      });
-  }
-
-  activeTickets.forEach(function(t) {
-    if (!t.replied) listenForReply(t.id);
-  });
+  var ticketId = localStorage.getItem('nb_ticket_id') || null;
+  var mode = localStorage.getItem('nb_mode') || 'ai'; // 'ai' or 'human'
+  var renderedMessageCount = 0;
+  var unsubscribe = null;
 
   function saveChatHistory() {
     localStorage.setItem('nb_chat_history', JSON.stringify(chatHistory));
+  }
+
+  function setTicket(id) {
+    ticketId = id;
+    mode = 'human';
+    localStorage.setItem('nb_ticket_id', ticketId);
+    localStorage.setItem('nb_mode', 'human');
+    startListening();
+  }
+
+  function clearTicket() {
+    ticketId = null;
+    mode = 'ai';
+    localStorage.removeItem('nb_ticket_id');
+    localStorage.setItem('nb_mode', 'ai');
+    if (unsubscribe) { unsubscribe(); unsubscribe = null; }
+  }
+
+  function startListening() {
+    if (!ticketId || !window.firebase || typeof listenToTicket !== 'function') return;
+    if (unsubscribe) unsubscribe();
+    unsubscribe = listenToTicket(ticketId, function(ticket) {
+      var msgs = ticket.messages || [];
+      for (var i = renderedMessageCount; i < msgs.length; i++) {
+        var m = msgs[i];
+        if (m.sender === 'admin') {
+          addMessage('team', m.text);
+          chatHistory.push({ role: 'team', text: m.text });
+          saveChatHistory();
+        }
+      }
+      renderedMessageCount = msgs.length;
+
+      if (ticket.status === 'resolved' && mode === 'human') {
+        addMessage('ai', "This conversation has been marked resolved by our team. Feel free to ask me anything else!");
+        chatHistory.push({ role: 'ai', text: "This conversation has been marked resolved by our team. Feel free to ask me anything else!" });
+        saveChatHistory();
+        clearTicket();
+      }
+    });
   }
 
   function injectWidget() {
@@ -66,6 +83,7 @@
             addMessage(m.role === 'assistant' ? 'ai' : m.role, m.text);
           });
         }
+        if (ticketId) startListening();
       }
     });
 
@@ -77,6 +95,8 @@
     document.getElementById('nb-chat-input').addEventListener('keypress', (e) => {
       if (e.key === 'Enter') sendMessage();
     });
+
+    if (ticketId) startListening();
   }
 
   function addMessage(role, text) {
@@ -101,7 +121,15 @@
     chatHistory.push({ role: 'user', text });
     saveChatHistory();
 
-    const typingId = 'nb-typing-' + Date.now();
+    // HUMAN MODE: send straight to the ticket thread, skip AI entirely
+    if (mode === 'human' && ticketId) {
+      if (typeof appendTicketMessage === 'function') {
+        appendTicketMessage(ticketId, 'customer', text).catch(function() {});
+      }
+      return;
+    }
+
+    // AI MODE
     addMessage('ai', 'Typing...');
 
     try {
@@ -113,7 +141,7 @@
       const data = await response.json();
 
       const messages = document.getElementById('nb-chat-messages');
-      messages.removeChild(messages.lastChild); // remove "Typing..."
+      messages.removeChild(messages.lastChild);
 
       if (data.escalate) {
         addMessage('escalated', data.answer + " (We've logged this — our team will get back to you shortly.)");
@@ -121,17 +149,10 @@
           ? firebase.auth().currentUser.uid : 'guest';
         if (typeof saveSupportTicket === 'function') {
           saveSupportTicket(userId, text, data.answer, data.category)
-            .then(function(ticketId) {
-              alert('✅ Ticket saved: ' + ticketId);
-              activeTickets.push({ id: ticketId, replied: false });
-              saveActiveTickets();
-              listenForReply(ticketId);
-            })
-            .catch(function(err) {
-              alert('❌ Ticket save FAILED: ' + err.message);
+            .then(function(newTicketId) {
+              renderedMessageCount = 2; // question + AI answer already shown
+              setTicket(newTicketId);
             });
-        } else {
-          alert('❌ saveSupportTicket function not found — support.js did not load');
         }
       } else {
         addMessage('ai', data.answer);
