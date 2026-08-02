@@ -1,6 +1,37 @@
 // js/core/chat-widget.js
 (function () {
-  const chatHistory = [];
+  var chatHistory = JSON.parse(localStorage.getItem('nb_chat_history') || '[]');
+  
+  var activeTickets = JSON.parse(localStorage.getItem('nb_active_tickets') || '[]');
+
+  function saveActiveTickets() {
+    localStorage.setItem('nb_active_tickets', JSON.stringify(activeTickets));
+  }
+
+  function listenForReply(ticketId) {
+    if (!window.firebase || !firebase.firestore) return;
+    firebase.firestore().collection('support_tickets').doc(ticketId)
+      .onSnapshot(function(doc) {
+        if (!doc.exists) return;
+        var data = doc.data();
+        var ticket = activeTickets.find(function(t) { return t.id === ticketId; });
+        if (ticket && data.adminReply && !ticket.replied) {
+          addMessage('team', data.adminReply);
+          chatHistory.push({ role: 'team', text: data.adminReply });
+          saveChatHistory();
+          ticket.replied = true;
+          saveActiveTickets();
+        }
+      });
+  }
+
+  activeTickets.forEach(function(t) {
+    if (!t.replied) listenForReply(t.id);
+  });
+
+  function saveChatHistory() {
+    localStorage.setItem('nb_chat_history', JSON.stringify(chatHistory));
+  }
 
   function injectWidget() {
     const bubble = document.createElement('div');
@@ -25,8 +56,16 @@
 
     bubble.addEventListener('click', () => {
       panel.classList.toggle('open');
-      if (panel.classList.contains('open') && chatHistory.length === 0) {
-        addMessage('ai', "Hi! I'm Nexabay's assistant. Ask me anything about orders, selling, rides, or your account.");
+      if (panel.classList.contains('open')) {
+        if (chatHistory.length === 0) {
+          addMessage('ai', "Hi! I'm Nexabay's assistant. Ask me anything about orders, selling, rides, or your account.");
+        } else {
+          var messages = document.getElementById('nb-chat-messages');
+          messages.innerHTML = '';
+          chatHistory.forEach(function(m) {
+            addMessage(m.role === 'assistant' ? 'ai' : m.role, m.text);
+          });
+        }
       }
     });
 
@@ -45,6 +84,7 @@
     const div = document.createElement('div');
     div.className = role === 'user' ? 'nb-msg nb-msg-user'
       : role === 'escalated' ? 'nb-msg nb-msg-escalated'
+      : role === 'team' ? 'nb-msg nb-msg-team'
       : 'nb-msg nb-msg-ai';
     div.textContent = text;
     messages.appendChild(div);
@@ -59,6 +99,7 @@
     addMessage('user', text);
     input.value = '';
     chatHistory.push({ role: 'user', text });
+    saveChatHistory();
 
     const typingId = 'nb-typing-' + Date.now();
     addMessage('ai', 'Typing...');
@@ -79,13 +120,19 @@
         const userId = (window.firebase && firebase.auth().currentUser)
           ? firebase.auth().currentUser.uid : 'guest';
         if (typeof saveSupportTicket === 'function') {
-          saveSupportTicket(userId, text, data.answer, data.category);
+          saveSupportTicket(userId, text, data.answer, data.category)
+            .then(function(ticketId) {
+              activeTickets.push({ id: ticketId, replied: false });
+              saveActiveTickets();
+              listenForReply(ticketId);
+            });
         }
       } else {
         addMessage('ai', data.answer);
       }
 
       chatHistory.push({ role: 'assistant', text: data.answer });
+      saveChatHistory();
 
     } catch (err) {
       const messages = document.getElementById('nb-chat-messages');

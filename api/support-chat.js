@@ -214,6 +214,32 @@ A: Try closing and reopening the app first. If the issue continues, I've logged 
       };
     }
 
+    if (parsed.escalate) {
+      try {
+        await fetch('https://api.resend.com/emails', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${process.env.RESEND_API_KEY}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            from: 'Nexabay Support <onboarding@resend.dev>',
+            to: 'nexabay7@gmail.com',
+            subject: `New Support Escalation: ${parsed.category || 'general'}`,
+            html: `
+              <h3>A customer needs your help</h3>
+              <p><b>Question:</b> ${message}</p>
+              <p><b>AI's reply:</b> ${parsed.answer}</p>
+              <p><b>Category:</b> ${parsed.category || 'general'}</p>
+              <p style="color:#888;font-size:12px;">Reply from your admin dashboard's AI Support tab.</p>
+            `
+          })
+        });
+      } catch (emailError) {
+        console.error('Email notification failed:', emailError);
+      }
+    }
+
     return res.status(200).json(parsed);
 
   } catch (error) {
