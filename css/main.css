@@ -3,14 +3,13 @@
   padding: 0;
   box-sizing: border-box;
 }
-
 :root {
   --blue: #1a73e8;
-  --orange: #ff6b00;
+  --orange: #FF4D6D;      /* now coral — main action color, keeps old variable name so nothing breaks */
   --dark: #0a0f1e;
   --gray: #f5f7fa;
   --white: #ffffff;
-  --green: #00c851;
+  --green: #00C896;       /* now emerald — success/price/ratings */
   --text: #333333;
   --text2: #666666;
   --border: #e0e0e0;
@@ -21,7 +20,9 @@
   /* Brand palette */
   --sand: #F7F3EC;
   --teal: #0F7A5C;
+  --violet: #7C3AED;
   --gold: #E8B54D;
+  --gradient-sunset: linear-gradient(135deg, #FF6B9D, #FFA36C);
   --font-display: 'Fraunces', serif;
 }
 
@@ -229,10 +230,9 @@ img {
   white-space: nowrap;
   position: relative;
 }
-
 .cart-count {
-  background: var(--gold);
-  color: var(--dark);
+  background: var(--violet);
+  color: white;
   border-radius: 50%;
   padding: 1px 5px;
   font-size: 0.65em;
@@ -504,9 +504,8 @@ img {
   overflow: hidden;
   text-overflow: ellipsis;
 }
-
 .product-price {
-  color: var(--orange);
+  color: var(--green);
   font-weight: 800;
   font-size: 1em;
 }
