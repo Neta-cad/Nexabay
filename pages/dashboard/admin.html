@@ -507,7 +507,26 @@
       }
     }
 
-    .catch(function(err) { alert('Stats error: ' + err.message); });
+    function loadStats() {
+      nexaGetPlatformStats()
+        .then(function(stats) {
+          document.getElementById('stat-users').textContent       = stats.totalUsers.toLocaleString();
+          document.getElementById('stat-products').textContent    = stats.totalProducts.toLocaleString();
+          document.getElementById('stat-orders').textContent      = stats.totalOrders.toLocaleString();
+          document.getElementById('stat-revenue').textContent     = '₦' + stats.totalRevenue.toLocaleString();
+          document.getElementById('stat-withdrawals').textContent = stats.pendingWithdrawals.toLocaleString();
+
+          var wdBadge = document.getElementById('wd-badge');
+          if (wdBadge && stats.pendingWithdrawals > 0) {
+            wdBadge.textContent = stats.pendingWithdrawals;
+            wdBadge.style.display = 'inline';
+          }
+
+          loadAllPendingCount();
+          renderRecentActivity(stats);
+        })
+        .catch(function(err) { alert('Stats error: ' + err.message); });
+    }
 
     function loadAllPendingCount() {
       var collections = ['products','services','rentals','jobs','courses','foodItems','events','travelListings','healthListings','drivers'];
