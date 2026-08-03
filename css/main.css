@@ -455,6 +455,11 @@ img {
   color: #16a34a;
   border-bottom-color: #16a34a;
 }
+.cat-item.cat-active {
+  color: var(--orange);
+  border-bottom-color: var(--orange);
+  font-weight: 700;
+}
 
 /* ── PRODUCT CARDS ── */
 .products-grid {

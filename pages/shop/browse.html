@@ -45,6 +45,19 @@
       <a href="cart.html">Cart</a>
     </div>
   </nav>
+  
+  <!-- CATEGORY QUICK BAR -->
+  <div class="cat-bar">
+    <div class="cat-inner">
+      <a href="#" class="cat-item" onclick="selectCategory('all');return false;">🔎 All</a>
+      <a href="#" class="cat-item" onclick="selectCategory('Electronics');return false;">📱 Electronics</a>
+      <a href="#" class="cat-item" onclick="selectCategory('Fashion');return false;">👗 Fashion</a>
+      <a href="#" class="cat-item" onclick="selectCategory('Home');return false;">🏠 Home & Living</a>
+      <a href="#" class="cat-item" onclick="selectCategory('Beauty');return false;">💄 Beauty</a>
+      <a href="#" class="cat-item" onclick="selectCategory('Sports');return false;">⚽ Sports</a>
+      <a href="#" class="cat-item" onclick="selectCategory('Food');return false;">🍔 Food & Drinks</a>
+    </div>
+  </div>
 
   <!-- BREADCRUMB -->
   <div class="breadcrumb">
@@ -422,6 +435,22 @@
 
     function doSearch() {
       applyFilters();
+    }
+    
+    function selectCategory(cat) {
+      var radios = document.querySelectorAll('input[name="cat"]');
+      radios.forEach(function(r) {
+        if (r.value === cat) r.checked = true;
+      });
+      document.getElementById('bread-cat').textContent = cat === 'all' ? 'Shop' : cat;
+
+      document.querySelectorAll('.cat-bar .cat-item').forEach(function(el) {
+        el.classList.remove('cat-active');
+      });
+      event.target.classList.add('cat-active');
+
+      applyFilters();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     document.addEventListener('DOMContentLoaded', function() {
