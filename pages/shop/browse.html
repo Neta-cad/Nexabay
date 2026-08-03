@@ -38,13 +38,29 @@
       </div>
       <button class="hamburger" onclick="toggleMobileMenu()">☰</button>
     </div>
-    <div class="mobile-menu" id="mobile-menu">
-      <a href="../auth/login.html">Login</a>
-      <a href="../auth/register.html">Sign Up</a>
-      <a href="../../index.html">Home</a>
-      <a href="cart.html">Cart</a>
+    <div class="mobile-menu" id="mobile-menu" style="width:100%;right:-100%;display:flex;">
+  <div class="mm-verticals">
+    <div class="mobile-menu-header" style="padding:16px;">
+      <span class="logo" style="font-size:1.2em;">
+        <span class="logo-nexa">Nexa</span><span class="logo-bay">bay</span>
+      </span>
+      <button class="close-menu-btn" onclick="toggleMobileMenu()">✕</button>
     </div>
-  </nav>
+    <a href="#" class="mm-vert active" onclick="showMMCategory('shop');return false;">🛍️<span>Shop</span></a>
+    <a href="../services/browse.html" class="mm-vert">🔧<span>Services</span></a>
+    <a href="../rentals/browse.html" class="mm-vert">🏠<span>Rentals</span></a>
+    <a href="../jobs/browse.html" class="mm-vert">💼<span>Jobs</span></a>
+    <a href="../learn/browse.html" class="mm-vert">🎓<span>Learn</span></a>
+    <a href="../food/browse.html" class="mm-vert">🍔<span>Food</span></a>
+    <a href="../events/browse.html" class="mm-vert">🎉<span>Events</span></a>
+    <a href="../travel/browse.html" class="mm-vert">✈️<span>Travel</span></a>
+    <a href="../health/browse.html" class="mm-vert">🏥<span>Health</span></a>
+    <a href="../ride/index.html" class="mm-vert">🚗<span>Ride</span></a>
+  </div>
+  <div class="mm-subcats" id="mm-subcats">
+    <!-- filled by JS -->
+  </div>
+</div>
   
   <!-- CATEGORY QUICK BAR -->
   <div class="cat-bar">
@@ -436,6 +452,37 @@
     function doSearch() {
       applyFilters();
     }
+    
+    var MM_CATEGORIES = {
+      shop: [
+        { icon:'📱', name:'Electronics' },
+        { icon:'👗', name:'Fashion' },
+        { icon:'🏠', name:'Home & Living' },
+        { icon:'💄', name:'Beauty' },
+        { icon:'⚽', name:'Sports' },
+        { icon:'🍔', name:'Food & Drinks' }
+      ]
+    };
+
+    function showMMCategory(vertical) {
+      document.querySelectorAll('.mm-vert').forEach(function(v) { v.classList.remove('active'); });
+      event.target.closest('.mm-vert').classList.add('active');
+
+      var panel = document.getElementById('mm-subcats');
+      var cats = MM_CATEGORIES[vertical] || [];
+
+      panel.innerHTML = '<div class="mm-subcats-title">' + vertical.charAt(0).toUpperCase() + vertical.slice(1) + '</div>' +
+        '<div class="mm-subcats-grid">' +
+        cats.map(function(c) {
+          return '<a href="#" class="mm-subcat" onclick="selectCategory(\'' + c.name + '\');toggleMobileMenu();return false;">' +
+            '<span class="mm-subcat-icon">' + c.icon + '</span><span>' + c.name + '</span></a>';
+        }).join('') +
+        '</div>';
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      showMMCategory('shop');
+    });
     
     function selectCategory(cat) {
       var radios = document.querySelectorAll('input[name="cat"]');
