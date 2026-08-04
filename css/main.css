@@ -314,6 +314,69 @@ img {
 }
 .mobile-menu-overlay.open { display: block; }
 
+/* ── TWO-COLUMN MOBILE MENU (category explorer) ── */
+.mm-verticals {
+  width: 100px;
+  background: var(--card-dark, #14171c);
+  border-right: 1px solid var(--card-border, #22262d);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+.mm-vert {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 14px 6px;
+  font-size: 1.4em;
+  color: #8a8f98;
+  text-align: center;
+  border-left: 3px solid transparent;
+}
+.mm-vert span { font-size: 0.35em; font-weight: 600; }
+.mm-vert.active {
+  background: rgba(57,255,136,0.08);
+  color: var(--orange);
+  border-left-color: var(--orange);
+}
+.mm-subcats {
+  flex: 1;
+  padding: 20px 16px;
+  overflow-y: auto;
+  background: white;
+}
+.mm-subcats-title {
+  font-weight: 700;
+  font-size: 1.1em;
+  margin-bottom: 16px;
+  color: var(--dark);
+}
+.mm-subcats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+.mm-subcat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  text-align: center;
+  font-size: 0.8em;
+  color: var(--text);
+}
+.mm-subcat-icon {
+  width: 56px;
+  height: 56px;
+  background: var(--gray);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.6em;
+}
+
 /* MOBILE MENU DRAWER */
 .mobile-menu {
   position: fixed;

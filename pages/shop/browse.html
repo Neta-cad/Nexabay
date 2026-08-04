@@ -6,7 +6,7 @@
   <title>Shop — Nexabay</title>
   <link rel="stylesheet" href="../../css/main.css"/>
   <link rel="stylesheet" href="../../css/shop.css"/>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet"/>
 </head>
 <body>
 
@@ -32,46 +32,52 @@
       <div class="nav-actions">
         <a href="../auth/login.html" class="nav-link">Login</a>
         <a href="../auth/register.html" class="nav-btn">Sign Up</a>
-        <a href="cart.html" class="cart-icon">
+        <a href="cart.html" class="cart-icon-desk">
           🛒 <span class="cart-count" id="cart-count">0</span>
         </a>
       </div>
       <button class="hamburger" onclick="toggleMobileMenu()">☰</button>
     </div>
+
+    <!-- MOBILE MENU: two-column category explorer -->
+    <div class="mobile-menu-overlay" id="mobile-menu-overlay" onclick="toggleMobileMenu()"></div>
     <div class="mobile-menu" id="mobile-menu" style="width:100%;right:-100%;display:flex;">
-  <div class="mm-verticals">
-    <div class="mobile-menu-header" style="padding:16px;">
-      <span class="logo" style="font-size:1.2em;">
-        <span class="logo-nexa">Nexa</span><span class="logo-bay">bay</span>
-      </span>
-      <button class="close-menu-btn" onclick="toggleMobileMenu()">✕</button>
+      <div class="mm-verticals">
+        <div class="mobile-menu-header" style="padding:16px;">
+          <span class="logo" style="font-size:1.2em;">
+            <span class="logo-nexa">Nexa</span><span class="logo-bay">bay</span>
+          </span>
+          <button class="close-menu-btn" onclick="toggleMobileMenu()">✕</button>
+        </div>
+        <a href="#" class="mm-vert active" onclick="showMMCategory('shop', this);return false;">🛍️<span>Shop</span></a>
+        <a href="../services/browse.html" class="mm-vert">🔧<span>Services</span></a>
+        <a href="../rentals/browse.html" class="mm-vert">🏠<span>Rentals</span></a>
+        <a href="../jobs/browse.html" class="mm-vert">💼<span>Jobs</span></a>
+        <a href="../learn/browse.html" class="mm-vert">🎓<span>Learn</span></a>
+        <a href="../food/browse.html" class="mm-vert">🍔<span>Food</span></a>
+        <a href="../events/browse.html" class="mm-vert">🎉<span>Events</span></a>
+        <a href="../travel/browse.html" class="mm-vert">✈️<span>Travel</span></a>
+        <a href="../health/browse.html" class="mm-vert">🏥<span>Health</span></a>
+        <a href="../ride/index.html" class="mm-vert">🚗<span>Ride</span></a>
+      </div>
+      <div class="mm-subcats" id="mm-subcats"></div>
+      <div id="mobile-user-section">
+        <a href="../auth/login.html" class="mobile-auth-btn login">Login</a>
+        <a href="../auth/register.html" class="mobile-auth-btn signup">Sign Up</a>
+      </div>
     </div>
-    <a href="#" class="mm-vert active" onclick="showMMCategory('shop');return false;">🛍️<span>Shop</span></a>
-    <a href="../services/browse.html" class="mm-vert">🔧<span>Services</span></a>
-    <a href="../rentals/browse.html" class="mm-vert">🏠<span>Rentals</span></a>
-    <a href="../jobs/browse.html" class="mm-vert">💼<span>Jobs</span></a>
-    <a href="../learn/browse.html" class="mm-vert">🎓<span>Learn</span></a>
-    <a href="../food/browse.html" class="mm-vert">🍔<span>Food</span></a>
-    <a href="../events/browse.html" class="mm-vert">🎉<span>Events</span></a>
-    <a href="../travel/browse.html" class="mm-vert">✈️<span>Travel</span></a>
-    <a href="../health/browse.html" class="mm-vert">🏥<span>Health</span></a>
-    <a href="../ride/index.html" class="mm-vert">🚗<span>Ride</span></a>
-  </div>
-  <div class="mm-subcats" id="mm-subcats">
-    <!-- filled by JS -->
-  </div>
-</div>
-  
+  </nav>
+
   <!-- CATEGORY QUICK BAR -->
   <div class="cat-bar">
     <div class="cat-inner">
-      <a href="#" class="cat-item" onclick="selectCategory('all');return false;">🔎 All</a>
-      <a href="#" class="cat-item" onclick="selectCategory('Electronics');return false;">📱 Electronics</a>
-      <a href="#" class="cat-item" onclick="selectCategory('Fashion');return false;">👗 Fashion</a>
-      <a href="#" class="cat-item" onclick="selectCategory('Home');return false;">🏠 Home & Living</a>
-      <a href="#" class="cat-item" onclick="selectCategory('Beauty');return false;">💄 Beauty</a>
-      <a href="#" class="cat-item" onclick="selectCategory('Sports');return false;">⚽ Sports</a>
-      <a href="#" class="cat-item" onclick="selectCategory('Food');return false;">🍔 Food & Drinks</a>
+      <a href="#" class="cat-item cat-active" onclick="selectCategory('all', this);return false;">🔎 All</a>
+      <a href="#" class="cat-item" onclick="selectCategory('Electronics', this);return false;">📱 Electronics</a>
+      <a href="#" class="cat-item" onclick="selectCategory('Fashion', this);return false;">👗 Fashion</a>
+      <a href="#" class="cat-item" onclick="selectCategory('Home', this);return false;">🏠 Home & Living</a>
+      <a href="#" class="cat-item" onclick="selectCategory('Beauty', this);return false;">💄 Beauty</a>
+      <a href="#" class="cat-item" onclick="selectCategory('Sports', this);return false;">⚽ Sports</a>
+      <a href="#" class="cat-item" onclick="selectCategory('Food', this);return false;">🍔 Food & Drinks</a>
     </div>
   </div>
 
@@ -94,42 +100,19 @@
         <button onclick="clearFilters()" class="clear-btn">Clear All</button>
       </div>
 
-      <!-- CATEGORIES -->
       <div class="filter-group">
         <h4>Category</h4>
         <div class="filter-options">
-          <label class="filter-opt">
-            <input type="radio" name="cat" value="all" checked onchange="applyFilters()"/>
-            All Categories
-          </label>
-          <label class="filter-opt">
-            <input type="radio" name="cat" value="Electronics" onchange="applyFilters()"/>
-            📱 Electronics
-          </label>
-          <label class="filter-opt">
-            <input type="radio" name="cat" value="Fashion" onchange="applyFilters()"/>
-            👗 Fashion
-          </label>
-          <label class="filter-opt">
-            <input type="radio" name="cat" value="Home" onchange="applyFilters()"/>
-            🏠 Home & Living
-          </label>
-          <label class="filter-opt">
-            <input type="radio" name="cat" value="Beauty" onchange="applyFilters()"/>
-            💄 Beauty
-          </label>
-          <label class="filter-opt">
-            <input type="radio" name="cat" value="Sports" onchange="applyFilters()"/>
-            ⚽ Sports
-          </label>
-          <label class="filter-opt">
-            <input type="radio" name="cat" value="Food" onchange="applyFilters()"/>
-            🍔 Food & Drinks
-          </label>
+          <label class="filter-opt"><input type="radio" name="cat" value="all" checked onchange="applyFilters()"/>All Categories</label>
+          <label class="filter-opt"><input type="radio" name="cat" value="Electronics" onchange="applyFilters()"/>📱 Electronics</label>
+          <label class="filter-opt"><input type="radio" name="cat" value="Fashion" onchange="applyFilters()"/>👗 Fashion</label>
+          <label class="filter-opt"><input type="radio" name="cat" value="Home" onchange="applyFilters()"/>🏠 Home & Living</label>
+          <label class="filter-opt"><input type="radio" name="cat" value="Beauty" onchange="applyFilters()"/>💄 Beauty</label>
+          <label class="filter-opt"><input type="radio" name="cat" value="Sports" onchange="applyFilters()"/>⚽ Sports</label>
+          <label class="filter-opt"><input type="radio" name="cat" value="Food" onchange="applyFilters()"/>🍔 Food & Drinks</label>
         </div>
       </div>
 
-      <!-- PRICE RANGE -->
       <div class="filter-group">
         <h4>Price Range</h4>
         <div class="price-inputs">
@@ -139,69 +122,37 @@
         </div>
       </div>
 
-      <!-- RATING -->
       <div class="filter-group">
         <h4>Minimum Rating</h4>
         <div class="filter-options">
-          <label class="filter-opt">
-            <input type="radio" name="rating" value="0" checked onchange="applyFilters()"/>
-            All ratings
-          </label>
-          <label class="filter-opt">
-            <input type="radio" name="rating" value="4.5" onchange="applyFilters()"/>
-            ⭐⭐⭐⭐⭐ 4.5+
-          </label>
-          <label class="filter-opt">
-            <input type="radio" name="rating" value="4" onchange="applyFilters()"/>
-            ⭐⭐⭐⭐ 4.0+
-          </label>
-          <label class="filter-opt">
-            <input type="radio" name="rating" value="3" onchange="applyFilters()"/>
-            ⭐⭐⭐ 3.0+
-          </label>
+          <label class="filter-opt"><input type="radio" name="rating" value="0" checked onchange="applyFilters()"/>All ratings</label>
+          <label class="filter-opt"><input type="radio" name="rating" value="4.5" onchange="applyFilters()"/>⭐⭐⭐⭐⭐ 4.5+</label>
+          <label class="filter-opt"><input type="radio" name="rating" value="4" onchange="applyFilters()"/>⭐⭐⭐⭐ 4.0+</label>
+          <label class="filter-opt"><input type="radio" name="rating" value="3" onchange="applyFilters()"/>⭐⭐⭐ 3.0+</label>
         </div>
       </div>
 
-      <!-- LOCATION -->
       <div class="filter-group">
         <h4>Location</h4>
         <select id="filter-location" onchange="applyFilters()">
           <option value="">All States</option>
-          <option>Lagos</option>
-          <option>Abuja</option>
-          <option>Port Harcourt</option>
-          <option>Kano</option>
-          <option>Ibadan</option>
-          <option>Enugu</option>
-          <option>Benin City</option>
+          <option>Lagos</option><option>Abuja</option><option>Port Harcourt</option>
+          <option>Kano</option><option>Ibadan</option><option>Enugu</option><option>Benin City</option>
         </select>
       </div>
 
-      <!-- CONDITION -->
       <div class="filter-group">
         <h4>Condition</h4>
         <div class="filter-options">
-          <label class="filter-opt">
-            <input type="radio" name="condition" value="all" checked onchange="applyFilters()"/>
-            All
-          </label>
-          <label class="filter-opt">
-            <input type="radio" name="condition" value="new" onchange="applyFilters()"/>
-            New
-          </label>
-          <label class="filter-opt">
-            <input type="radio" name="condition" value="used" onchange="applyFilters()"/>
-            Used
-          </label>
+          <label class="filter-opt"><input type="radio" name="condition" value="all" checked onchange="applyFilters()"/>All</label>
+          <label class="filter-opt"><input type="radio" name="condition" value="new" onchange="applyFilters()"/>New</label>
+          <label class="filter-opt"><input type="radio" name="condition" value="used" onchange="applyFilters()"/>Used</label>
         </div>
       </div>
-
     </aside>
 
     <!-- MAIN CONTENT -->
     <main class="shop-main">
-
-      <!-- TOP BAR -->
       <div class="shop-topbar">
         <div class="shop-topbar-left">
           <button class="filter-toggle" onclick="toggleSidebar()">⚙️ Filters</button>
@@ -223,13 +174,9 @@
         </div>
       </div>
 
-      <!-- ACTIVE FILTERS -->
       <div class="active-filters" id="active-filters"></div>
-
-      <!-- PRODUCTS GRID -->
       <div class="products-grid" id="products-container"></div>
 
-      <!-- EMPTY STATE -->
       <div class="empty-state" id="empty-state" style="display:none;">
         <div class="empty-icon">🔍</div>
         <h3>No products found</h3>
@@ -237,13 +184,15 @@
         <button onclick="clearFilters()" class="btn-primary">Clear Filters</button>
       </div>
 
-      <!-- LOAD MORE -->
       <div class="load-more-wrap" id="load-more-wrap" style="display:none;">
         <button onclick="loadMore()" class="load-more-btn">Load More Products</button>
       </div>
-
     </main>
   </div>
+
+  <a href="cart.html" class="floating-cart">
+    🛒<span class="floating-cart-count" id="floating-cart-count">0</span>
+  </a>
 
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
@@ -254,75 +203,62 @@
   <script src="../../js/core/main.js"></script>
   <script>
 
-    // Demo fallback products (shown only if no real products exist yet)
-    var DEMO_PRODUCTS = [];
-
     var ALL_PRODUCTS = [];
     var currentProducts = [];
     var displayCount = 12;
     var currentView = 'grid';
 
+    var MM_CATEGORIES = {
+      shop: [
+        { icon:'📱', name:'Electronics' }, { icon:'👗', name:'Fashion' },
+        { icon:'🏠', name:'Home & Living' }, { icon:'💄', name:'Beauty' },
+        { icon:'⚽', name:'Sports' }, { icon:'🍔', name:'Food & Drinks' }
+      ]
+    };
+
     function init() {
       var q = getParam('q');
       var cat = getParam('cat');
-
-      if (q) {
-        document.getElementById('search-input').value = q;
-      }
+      if (q) document.getElementById('search-input').value = q;
       if (cat && cat !== 'All') {
         var radios = document.querySelectorAll('input[name="cat"]');
-        radios.forEach(function(r) {
-          if (r.value === cat) r.checked = true;
-        });
+        radios.forEach(function(r) { if (r.value === cat) r.checked = true; });
         document.getElementById('bread-cat').textContent = cat;
       }
-
       loadAllProducts();
+      showMMCategory('shop', document.querySelector('.mm-vert.active'));
     }
 
     function loadAllProducts() {
       nexaGetProducts('all')
         .then(function(realProducts) {
-          var mapped = realProducts.map(function(p) {
+          ALL_PRODUCTS = realProducts.map(function(p) {
             return {
-              id: p.id,
-              name: p.name,
-              price: p.price,
-              oldPrice: p.oldPrice || p.price,
-              rating: p.rating || 0,
-              reviews: p.reviews || 0,
-              location: p.location,
-              emoji: p.emoji || '📦',
-              imageUrl: p.imageUrl || '',
-              category: p.category,
+              id: p.id, name: p.name, price: p.price, oldPrice: p.oldPrice || p.price,
+              rating: p.rating || 0, reviews: p.reviews || 0, location: p.location,
+              emoji: p.emoji || '📦', imageUrl: p.imageUrl || '', category: p.category,
               condition: (p.condition || 'new').indexOf('used') === 0 ? 'used' : 'new',
-              seller: p.sellerName || 'Nexabay Seller',
-              sold: p.sold || 0,
+              seller: p.sellerName || 'Nexabay Seller', sold: p.sold || 0,
+              sellerId: p.sellerId || '',
             };
           });
-          ALL_PRODUCTS = mapped;
           applyFilters();
         })
-        .catch(function(err) {
-          console.log('Error loading products:', err);
-          ALL_PRODUCTS = DEMO_PRODUCTS.slice();
-          applyFilters();
-        });
+        .catch(function() { ALL_PRODUCTS = []; applyFilters(); });
     }
 
     function applyFilters() {
-      var searchQ   = (document.getElementById('search-input').value || '').toLowerCase().trim();
-      var catEl     = document.querySelector('input[name="cat"]:checked');
-      var ratingEl  = document.querySelector('input[name="rating"]:checked');
-      var condEl    = document.querySelector('input[name="condition"]:checked');
-      var minPrice  = parseFloat(document.getElementById('min-price').value) || 0;
-      var maxPrice  = parseFloat(document.getElementById('max-price').value) || Infinity;
-      var location  = document.getElementById('filter-location').value;
-      var sortBy    = document.getElementById('sort-by').value;
-
-      var cat     = catEl    ? catEl.value    : 'all';
-      var rating  = ratingEl ? parseFloat(ratingEl.value) : 0;
-      var cond    = condEl   ? condEl.value   : 'all';
+      var searchQ  = (document.getElementById('search-input').value || '').toLowerCase().trim();
+      var catEl    = document.querySelector('input[name="cat"]:checked');
+      var ratingEl = document.querySelector('input[name="rating"]:checked');
+      var condEl   = document.querySelector('input[name="condition"]:checked');
+      var minPrice = parseFloat(document.getElementById('min-price').value) || 0;
+      var maxPrice = parseFloat(document.getElementById('max-price').value) || Infinity;
+      var location = document.getElementById('filter-location').value;
+      var sortBy   = document.getElementById('sort-by').value;
+      var cat    = catEl ? catEl.value : 'all';
+      var rating = ratingEl ? parseFloat(ratingEl.value) : 0;
+      var cond   = condEl ? condEl.value : 'all';
 
       currentProducts = ALL_PRODUCTS.filter(function(p) {
         if (searchQ && !p.name.toLowerCase().includes(searchQ) && !p.category.toLowerCase().includes(searchQ)) return false;
@@ -334,7 +270,6 @@
         return true;
       });
 
-      // Sort
       if (sortBy === 'price-low')  currentProducts.sort(function(a,b){ return a.price - b.price; });
       if (sortBy === 'price-high') currentProducts.sort(function(a,b){ return b.price - a.price; });
       if (sortBy === 'rating')     currentProducts.sort(function(a,b){ return b.rating - a.rating; });
@@ -351,29 +286,24 @@
       var loadMore = document.getElementById('load-more-wrap');
 
       if (currentProducts.length === 0) {
-        grid.innerHTML =
-          '<div style="text-align:center;padding:60px 20px;">' +
-            '<div style="font-size:4em;margin-bottom:16px;">🛍️</div>' +
-            '<h3 style="font-size:1.3em;margin-bottom:8px;">No products yet</h3>' +
-            '<p style="color:var(--text2);margin-bottom:20px;">Be the first seller on Nexabay!</p>' +
-            '<a href="../auth/register.html" style="background:var(--orange);color:white;padding:12px 24px;border-radius:8px;text-decoration:none;font-weight:700;">Start Selling →</a>' +
-          '</div>';
+        container.innerHTML = '';
+        empty.style.display = 'block';
+        loadMore.style.display = 'none';
         return;
       }
 
       empty.style.display = 'none';
       var toShow = currentProducts.slice(0, displayCount);
-
       container.className = currentView === 'list' ? 'products-list' : 'products-grid';
 
       container.innerHTML = toShow.map(function(p) {
         var discount = Math.round((1 - p.price / p.oldPrice) * 100);
+        var cartArgs = "{id:'" + p.id + "',name:'" + p.name.replace(/'/g,"") + "',price:" + p.price + ",emoji:'" + (p.emoji||'📦') + "',sellerId:'" + (p.sellerId||'') + "',imageUrl:'" + (p.imageUrl||'') + "'}";
+
         if (currentView === 'list') {
-          var listImgContent = p.imageUrl
-            ? '<img src="' + p.imageUrl + '" style="width:100%;height:100%;object-fit:cover;border-radius:8px;"/>'
-            : p.emoji;
+          var listImg = p.imageUrl ? '<img src="' + p.imageUrl + '"/>' : p.emoji;
           return '<div class="product-list-item" onclick="viewProduct(\'' + p.id + '\')">' +
-            '<div class="pli-img">' + listImgContent + '</div>' +
+            '<div class="pli-img">' + listImg + '</div>' +
             '<div class="pli-info">' +
               '<div class="pli-name">' + p.name + '</div>' +
               '<div class="pli-seller">by ' + p.seller + ' • 📍' + p.location + '</div>' +
@@ -384,26 +314,20 @@
               '<div class="product-price">₦' + p.price.toLocaleString() + '</div>' +
               '<div class="product-old-price">₦' + p.oldPrice.toLocaleString() + '</div>' +
               '<div class="discount-badge">-' + discount + '%</div>' +
-              '<button class="add-cart-btn" onclick="event.stopPropagation();addToCart({id:\'' + p.id + '\',name:\'' + p.name + '\',price:' + p.price + ',emoji:\'' + (p.emoji || '📦') + '\',sellerId:\'' + (p.sellerId || '') + '\',imageUrl:\'' + (p.imageUrl || '') + '\'})">🛒 Add to Cart</button>' +
+              '<button class="add-cart-btn" onclick="event.stopPropagation();addToCart(' + cartArgs + ')">🛒 Add to Cart</button>' +
             '</div>' +
           '</div>';
         }
-        var imgContent = p.imageUrl
-  ? '<img src="' + p.imageUrl + '"/>'
-  : p.emoji;
+
+        var imgContent = p.imageUrl ? '<img src="' + p.imageUrl + '"/>' : p.emoji;
         return '<div class="product-card" onclick="viewProduct(\'' + p.id + '\')">' +
-          '<div class="product-img">' + imgContent +
-            '<div class="discount-badge">-' + discount + '%</div>' +
-          '</div>' +
+          '<div class="product-img">' + imgContent + '<div class="discount-badge">-' + discount + '%</div></div>' +
           '<div class="product-info">' +
             '<div class="product-name">' + p.name + '</div>' +
-            '<div>' +
-              '<span class="product-price">₦' + p.price.toLocaleString() + '</span>' +
-              '<span class="product-old-price">₦' + p.oldPrice.toLocaleString() + '</span>' +
-            '</div>' +
+            '<div><span class="product-price">₦' + p.price.toLocaleString() + '</span><span class="product-old-price">₦' + p.oldPrice.toLocaleString() + '</span></div>' +
             '<div class="product-rating">⭐ ' + p.rating + ' (' + p.reviews + ')</div>' +
             '<div class="product-location">📍 ' + p.location + '</div>' +
-            '<button class="add-cart-btn" onclick="event.stopPropagation();addToCart({id:\'' + p.id + '\',name:\'' + p.name + '\',price:' + p.price + ',emoji:\'' + (p.emoji || '📦') + '\',sellerId:\'' + (p.sellerId || '') + '\',imageUrl:\'' + (p.imageUrl || '') + '\'})">Add to Cart</button>' +
+            '<button class="add-cart-btn" onclick="event.stopPropagation();addToCart(' + cartArgs + ')">Add to Cart</button>' +
           '</div>' +
         '</div>';
       }).join('');
@@ -411,10 +335,7 @@
       loadMore.style.display = currentProducts.length > displayCount ? 'flex' : 'none';
     }
 
-    function loadMore() {
-      displayCount += 8;
-      renderProducts();
-    }
+    function loadMore() { displayCount += 8; renderProducts(); }
 
     function setView(view) {
       currentView = view;
@@ -425,7 +346,7 @@
 
     function updateResultsCount() {
       var el = document.getElementById('results-count');
-      if (el) el.textContent = 'Showing ' + currentProducts.length + ' products';
+      if (el) el.textContent = 'Showing ' + currentProducts.length + ' product' + (currentProducts.length===1?'':'s');
     }
 
     function clearFilters() {
@@ -437,77 +358,47 @@
       document.getElementById('filter-location').value = '';
       document.getElementById('sort-by').value = 'default';
       document.getElementById('search-input').value = '';
+      document.querySelectorAll('.cat-bar .cat-item').forEach(function(el){ el.classList.remove('cat-active'); });
+      document.querySelector('.cat-bar .cat-item').classList.add('cat-active');
+      document.getElementById('bread-cat').textContent = 'Shop';
       applyFilters();
     }
 
     function toggleSidebar() {
-      var sidebar = document.getElementById('shop-sidebar');
-      sidebar.classList.toggle('open');
+      document.getElementById('shop-sidebar').classList.toggle('open');
     }
 
-    function viewProduct(id) {
-      window.location.href = 'product.html?id=' + id;
-    }
+    function viewProduct(id) { window.location.href = 'product.html?id=' + id; }
+    function doSearch() { applyFilters(); }
 
-    function doSearch() {
+    function selectCategory(cat, el) {
+      var radios = document.querySelectorAll('input[name="cat"]');
+      radios.forEach(function(r) { if (r.value === cat) r.checked = true; });
+      document.getElementById('bread-cat').textContent = cat === 'all' ? 'Shop' : cat;
+      document.querySelectorAll('.cat-bar .cat-item').forEach(function(node) { node.classList.remove('cat-active'); });
+      if (el) el.classList.add('cat-active');
       applyFilters();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
-    
-    var MM_CATEGORIES = {
-      shop: [
-        { icon:'📱', name:'Electronics' },
-        { icon:'👗', name:'Fashion' },
-        { icon:'🏠', name:'Home & Living' },
-        { icon:'💄', name:'Beauty' },
-        { icon:'⚽', name:'Sports' },
-        { icon:'🍔', name:'Food & Drinks' }
-      ]
-    };
 
-    function showMMCategory(vertical) {
+    function showMMCategory(vertical, el) {
       document.querySelectorAll('.mm-vert').forEach(function(v) { v.classList.remove('active'); });
-      event.target.closest('.mm-vert').classList.add('active');
-
+      if (el) el.classList.add('active');
       var panel = document.getElementById('mm-subcats');
       var cats = MM_CATEGORIES[vertical] || [];
-
       panel.innerHTML = '<div class="mm-subcats-title">' + vertical.charAt(0).toUpperCase() + vertical.slice(1) + '</div>' +
         '<div class="mm-subcats-grid">' +
         cats.map(function(c) {
-          return '<a href="#" class="mm-subcat" onclick="selectCategory(\'' + c.name + '\');toggleMobileMenu();return false;">' +
+          return '<a href="#" class="mm-subcat" onclick="selectCategory(\'' + c.name + '\', document.querySelector(\'.cat-item\'));toggleMobileMenu();return false;">' +
             '<span class="mm-subcat-icon">' + c.icon + '</span><span>' + c.name + '</span></a>';
         }).join('') +
-        '</div>';
-    }
-
-    document.addEventListener('DOMContentLoaded', function() {
-      showMMCategory('shop');
-    });
-    
-    function selectCategory(cat) {
-      var radios = document.querySelectorAll('input[name="cat"]');
-      radios.forEach(function(r) {
-        if (r.value === cat) r.checked = true;
-      });
-      document.getElementById('bread-cat').textContent = cat === 'all' ? 'Shop' : cat;
-
-      document.querySelectorAll('.cat-bar .cat-item').forEach(function(el) {
-        el.classList.remove('cat-active');
-      });
-      event.target.classList.add('cat-active');
-
-      applyFilters();
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      '</div>';
     }
 
     document.addEventListener('DOMContentLoaded', function() {
       init();
       var input = document.getElementById('search-input');
-      if (input) {
-        input.addEventListener('keypress', function(e) {
-          if (e.key === 'Enter') applyFilters();
-        });
-      }
+      if (input) input.addEventListener('keypress', function(e) { if (e.key === 'Enter') applyFilters(); });
       updateCartCount();
     });
 

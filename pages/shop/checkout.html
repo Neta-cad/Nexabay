@@ -6,7 +6,7 @@
   <title>Checkout — Nexabay</title>
   <link rel="stylesheet" href="../../css/main.css"/>
   <link rel="stylesheet" href="../../css/checkout.css"/>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet"/>
 </head>
 <body>
 
@@ -48,7 +48,6 @@
   <div class="container checkout-page">
     <div class="checkout-layout">
 
-      <!-- LEFT — FORMS -->
       <div class="checkout-left">
 
         <!-- STEP 1 — DELIVERY -->
@@ -89,18 +88,10 @@
                 <label>State</label>
                 <select id="del-state">
                   <option value="">Select state</option>
-                  <option>Lagos</option>
-                  <option>Abuja FCT</option>
-                  <option>Rivers</option>
-                  <option>Kano</option>
-                  <option>Oyo</option>
-                  <option>Enugu</option>
-                  <option>Anambra</option>
-                  <option>Delta</option>
-                  <option>Kaduna</option>
-                  <option>Ogun</option>
-                  <option>Edo</option>
-                  <option>Imo</option>
+                  <option>Lagos</option><option>Abuja FCT</option><option>Rivers</option>
+                  <option>Kano</option><option>Oyo</option><option>Enugu</option>
+                  <option>Anambra</option><option>Delta</option><option>Kaduna</option>
+                  <option>Ogun</option><option>Edo</option><option>Imo</option>
                 </select>
               </div>
               <div class="form-group">
@@ -111,14 +102,9 @@
 
             <div class="form-group">
               <label>Delivery Note (Optional)</label>
-              <textarea
-                id="del-note"
-                placeholder="Any special instructions for delivery..."
-                rows="2"
-              ></textarea>
+              <textarea id="del-note" placeholder="Any special instructions for delivery..." rows="2"></textarea>
             </div>
 
-            <!-- DELIVERY OPTIONS -->
             <div class="delivery-options">
               <h4>Select Delivery Speed</h4>
               <label class="delivery-opt active" id="opt-standard">
@@ -147,13 +133,7 @@
               </label>
             </div>
 
-            <button
-              class="btn-next"
-              onclick="goToPayment()"
-            >
-              Continue to Payment →
-            </button>
-
+            <button class="btn-next" onclick="goToPayment()">Continue to Payment →</button>
           </div>
         </div>
 
@@ -164,11 +144,9 @@
             <button class="back-step-btn" onclick="goToStep(1)">← Edit Delivery</button>
           </div>
 
-          <!-- DELIVERY SUMMARY -->
           <div class="delivery-summary" id="delivery-summary"></div>
 
           <div class="payment-methods">
-
             <label class="payment-opt active" id="pay-card">
               <input type="radio" name="payment" value="card" checked onchange="selectPayment('card')"/>
               <span class="pay-icon">💳</span>
@@ -178,7 +156,6 @@
               </div>
               <span class="pay-check">✓</span>
             </label>
-
             <label class="payment-opt" id="pay-transfer">
               <input type="radio" name="payment" value="transfer" onchange="selectPayment('transfer')"/>
               <span class="pay-icon">🏦</span>
@@ -188,7 +165,6 @@
               </div>
               <span class="pay-check">✓</span>
             </label>
-
             <label class="payment-opt" id="pay-ussd">
               <input type="radio" name="payment" value="ussd" onchange="selectPayment('ussd')"/>
               <span class="pay-icon">📱</span>
@@ -198,7 +174,6 @@
               </div>
               <span class="pay-check">✓</span>
             </label>
-
             <label class="payment-opt" id="pay-wallet">
               <input type="radio" name="payment" value="wallet" onchange="selectPayment('wallet')"/>
               <span class="pay-icon">💰</span>
@@ -208,89 +183,42 @@
               </div>
               <span class="pay-check">✓</span>
             </label>
-
           </div>
 
-          <!-- CARD FORM -->
           <div class="card-form" id="card-form">
             <div class="form-group">
               <label>Card Number</label>
-              <input
-                type="text"
-                id="card-number"
-                placeholder="0000 0000 0000 0000"
-                maxlength="19"
-                oninput="formatCardNumber(this)"
-              />
+              <input type="text" id="card-number" placeholder="0000 0000 0000 0000" maxlength="19" oninput="formatCardNumber(this)"/>
             </div>
             <div class="form-row-2">
               <div class="form-group">
                 <label>Expiry Date</label>
-                <input
-                  type="text"
-                  id="card-expiry"
-                  placeholder="MM / YY"
-                  maxlength="7"
-                  oninput="formatExpiry(this)"
-                />
+                <input type="text" id="card-expiry" placeholder="MM / YY" maxlength="7" oninput="formatExpiry(this)"/>
               </div>
               <div class="form-group">
                 <label>CVV</label>
-                <input
-                  type="password"
-                  id="card-cvv"
-                  placeholder="•••"
-                  maxlength="3"
-                />
+                <input type="password" id="card-cvv" placeholder="•••" maxlength="3"/>
               </div>
             </div>
             <div class="form-group">
               <label>Cardholder Name</label>
-              <input
-                type="text"
-                id="card-name"
-                placeholder="Name on card"
-              />
+              <input type="text" id="card-name" placeholder="Name on card"/>
             </div>
-            <div class="card-secure">
-              🔒 Your card details are encrypted and secure
-            </div>
+            <div class="card-secure">🔒 Your card details are encrypted and secure</div>
           </div>
 
-          <!-- TRANSFER FORM -->
           <div class="transfer-form" id="transfer-form" style="display:none;">
             <div class="bank-details">
               <h4>Transfer to this account:</h4>
-              <div class="bank-detail-row">
-                <span>Bank</span>
-                <b>GTBank</b>
-              </div>
-              <div class="bank-detail-row">
-                <span>Account Name</span>
-                <b>Nexabay Escrow Ltd</b>
-              </div>
-              <div class="bank-detail-row">
-                <span>Account Number</span>
-                <b>0123456789</b>
-              </div>
-              <div class="bank-detail-row">
-                <span>Amount</span>
-                <b id="transfer-amount">₦0</b>
-              </div>
-              <p class="transfer-note">
-                ⚠️ Use your Order ID as payment reference.
-                Your order will be confirmed within 30 minutes.
-              </p>
+              <div class="bank-detail-row"><span>Bank</span><b>GTBank</b></div>
+              <div class="bank-detail-row"><span>Account Name</span><b>Nexabay Escrow Ltd</b></div>
+              <div class="bank-detail-row"><span>Account Number</span><b>0123456789</b></div>
+              <div class="bank-detail-row"><span>Amount</span><b id="transfer-amount">₦0</b></div>
+              <p class="transfer-note">⚠️ Use your Order ID as payment reference. Your order will be confirmed within 30 minutes.</p>
             </div>
           </div>
 
-          <button
-            class="btn-next"
-            onclick="goToConfirm()"
-          >
-            Review Order →
-          </button>
-
+          <button class="btn-next" onclick="goToConfirm()">Review Order →</button>
         </div>
 
         <!-- STEP 3 — CONFIRM -->
@@ -310,14 +238,7 @@
             </div>
           </div>
 
-          <button
-            class="btn-place-order"
-            onclick="placeOrder()"
-            id="place-order-btn"
-          >
-            Place Order — Pay Now
-          </button>
-
+          <button class="btn-place-order" onclick="placeOrder()" id="place-order-btn">Place Order — Pay Now</button>
         </div>
 
         <!-- STEP 4 — SUCCESS -->
@@ -326,9 +247,7 @@
             <div class="success-icon">🎉</div>
             <h2>Order Placed Successfully!</h2>
             <p>Your order has been confirmed and is being processed.</p>
-            <div class="order-id-box">
-              Order ID: <b id="order-id-display"></b>
-            </div>
+            <div class="order-id-box">Order ID: <b id="order-id-display"></b></div>
             <div class="success-steps">
               <div class="ss-step">📦 Order confirmed</div>
               <div class="ss-step">🏭 Seller preparing</div>
@@ -350,19 +269,10 @@
           <h3>Order Summary</h3>
           <div id="checkout-items-list"></div>
           <div class="summary-divider"></div>
-          <div class="summary-row">
-            <span>Subtotal</span>
-            <span id="co-subtotal">₦0</span>
-          </div>
-          <div class="summary-row">
-            <span>Delivery</span>
-            <span id="co-delivery">₦2,500</span>
-          </div>
+          <div class="summary-row"><span>Subtotal</span><span id="co-subtotal">₦0</span></div>
+          <div class="summary-row"><span>Delivery</span><span id="co-delivery">₦2,500</span></div>
           <div class="summary-divider"></div>
-          <div class="summary-total">
-            <span>Total</span>
-            <span id="co-total">₦0</span>
-          </div>
+          <div class="summary-total"><span>Total</span><span id="co-total">₦0</span></div>
         </div>
       </div>
 
@@ -386,18 +296,11 @@
     var deliveryInfo = {};
     var currentStep = 1;
 
-    var DELIVERY_FEES = {
-      standard: 2500,
-      express: 5000,
-      sameday: 8000,
-    };
+    var DELIVERY_FEES = { standard: 2500, express: 5000, sameday: 8000 };
 
     function loadCheckout() {
       var raw = localStorage.getItem('nexa_checkout_items');
-      if (!raw) {
-        window.location.href = 'cart.html';
-        return;
-      }
+      if (!raw) { window.location.href = 'cart.html'; return; }
       checkoutItems = JSON.parse(raw);
 
       var user = JSON.parse(localStorage.getItem('nexa_current_user') || 'null');
@@ -418,8 +321,9 @@
       var list = document.getElementById('checkout-items-list');
       if (!list) return;
       list.innerHTML = checkoutItems.map(function(item) {
+        var imgContent = item.imageUrl ? '<img src="' + item.imageUrl + '"/>' : item.emoji;
         return '<div class="co-item">' +
-          '<span class="co-item-emoji">' + item.emoji + '</span>' +
+          '<span class="co-item-emoji">' + imgContent + '</span>' +
           '<div class="co-item-info">' +
             '<div class="co-item-name">' + item.name + '</div>' +
             '<div class="co-item-qty">Qty: ' + (item.qty || 1) + '</div>' +
@@ -430,9 +334,7 @@
     }
 
     function updateTotals() {
-      var subtotal = checkoutItems.reduce(function(sum, item) {
-        return sum + item.price * (item.qty || 1);
-      }, 0);
+      var subtotal = checkoutItems.reduce(function(sum, item) { return sum + item.price * (item.qty || 1); }, 0);
       var total = subtotal + deliveryFee;
 
       var coSub = document.getElementById('co-subtotal');
@@ -448,8 +350,7 @@
 
     function selectDelivery(type) {
       deliveryFee = DELIVERY_FEES[type] || 2500;
-      var opts = ['standard', 'express', 'sameday'];
-      opts.forEach(function(o) {
+      ['standard','express','sameday'].forEach(function(o) {
         var el = document.getElementById('opt-' + o);
         if (el) el.classList.toggle('active', o === type);
       });
@@ -458,12 +359,10 @@
 
     function selectPayment(type) {
       selectedPayment = type;
-      var types = ['card', 'transfer', 'ussd', 'wallet'];
-      types.forEach(function(t) {
+      ['card','transfer','ussd','wallet'].forEach(function(t) {
         var el = document.getElementById('pay-' + t);
         if (el) el.classList.toggle('active', t === type);
       });
-
       document.getElementById('card-form').style.display = type === 'card' ? 'block' : 'none';
       document.getElementById('transfer-form').style.display = type === 'transfer' ? 'block' : 'none';
     }
@@ -475,11 +374,7 @@
 
     function formatExpiry(input) {
       var val = input.value.replace(/\D/g, '').substring(0, 4);
-      if (val.length >= 2) {
-        input.value = val.substring(0, 2) + ' / ' + val.substring(2);
-      } else {
-        input.value = val;
-      }
+      input.value = val.length >= 2 ? val.substring(0,2) + ' / ' + val.substring(2) : val;
     }
 
     function goToPayment() {
@@ -501,8 +396,7 @@
 
       deliveryInfo = {
         name: firstName + ' ' + lastName,
-        phone: phone,
-        email: email,
+        phone: phone, email: email,
         address: address + ', ' + city + ', ' + state,
       };
 
@@ -515,7 +409,6 @@
             '<div class="del-summary-row"><span>📱 Phone:</span><b>' + deliveryInfo.phone + '</b></div>' +
           '</div>';
       }
-
       goToStep(2);
     }
 
@@ -526,18 +419,13 @@
         var cvv     = document.getElementById('card-cvv').value.trim();
         var name    = document.getElementById('card-name').value.trim();
 
-        if (!cardNum || cardNum.replace(/\s/g, '').length < 16) {
-          showToast('⚠️ Enter valid card number', '#ff9500');
-          return;
-        }
+        if (!cardNum || cardNum.replace(/\s/g, '').length < 16) { showToast('⚠️ Enter valid card number', '#ff9500'); return; }
         if (!expiry) { showToast('⚠️ Enter expiry date', '#ff9500'); return; }
         if (!cvv || cvv.length < 3) { showToast('⚠️ Enter CVV', '#ff9500'); return; }
         if (!name) { showToast('⚠️ Enter cardholder name', '#ff9500'); return; }
       }
 
-      var subtotal = checkoutItems.reduce(function(sum, i) {
-        return sum + i.price * (i.qty || 1);
-      }, 0);
+      var subtotal = checkoutItems.reduce(function(sum, i) { return sum + i.price * (i.qty || 1); }, 0);
       var total = subtotal + deliveryFee;
 
       var review = document.getElementById('order-review');
@@ -546,10 +434,7 @@
           '<div class="order-review-card">' +
             '<h4>Items</h4>' +
             checkoutItems.map(function(item) {
-              return '<div class="or-item">' +
-                '<span>' + item.emoji + ' ' + item.name + ' x' + (item.qty || 1) + '</span>' +
-                '<span>₦' + (item.price * (item.qty || 1)).toLocaleString() + '</span>' +
-              '</div>';
+              return '<div class="or-item"><span>' + item.emoji + ' ' + item.name + ' x' + (item.qty || 1) + '</span><span>₦' + (item.price * (item.qty || 1)).toLocaleString() + '</span></div>';
             }).join('') +
             '<div class="or-divider"></div>' +
             '<div class="or-item"><span>Subtotal</span><span>₦' + subtotal.toLocaleString() + '</span></div>' +
@@ -561,7 +446,6 @@
             '<div class="or-item"><span>Payment</span><span>' + selectedPayment.toUpperCase() + '</span></div>' +
           '</div>';
       }
-
       goToStep(3);
     }
 
@@ -570,33 +454,19 @@
       btn.textContent = 'Processing...';
       btn.disabled = true;
 
-      var subtotal = checkoutItems.reduce(function(s, i) {
-        return s + i.price * (i.qty || 1);
-      }, 0);
+      var subtotal = checkoutItems.reduce(function(s, i) { return s + i.price * (i.qty || 1); }, 0);
       var total = subtotal + deliveryFee;
       var orderId = 'NXB' + Date.now().toString().slice(-8).toUpperCase();
       var user = JSON.parse(localStorage.getItem('nexa_current_user') || '{}');
       var email = deliveryInfo.email || user.email || 'customer@nexabay.com';
 
-      if (selectedPayment === 'transfer') {
-        finishOrder(orderId, 'bank_transfer', total);
-        return;
-      }
-
-      if (selectedPayment === 'wallet') {
-        finishOrder(orderId, 'wallet', total);
-        return;
-      }
+      if (selectedPayment === 'transfer') { finishOrder(orderId, 'bank_transfer', total); return; }
+      if (selectedPayment === 'wallet')   { finishOrder(orderId, 'wallet', total); return; }
 
       nexaPayWithPaystack({
-        email:     email,
-        amount:    total,
-        name:      deliveryInfo.name || user.fullName || '',
-        orderId:   orderId,
-        orderType: 'product',
-        onSuccess: function(reference) {
-          finishOrder(orderId, 'paystack', total, reference);
-        },
+        email: email, amount: total, name: deliveryInfo.name || user.fullName || '',
+        orderId: orderId, orderType: 'product',
+        onSuccess: function(reference) { finishOrder(orderId, 'paystack', total, reference); },
         onCancel: function() {
           btn.textContent = 'Place Order — Pay Now';
           btn.disabled = false;
@@ -607,18 +477,13 @@
 
     function finishOrder(orderId, paymentMethod, total, reference) {
       var orderData = {
-        id:          orderId,
-        buyerId:     (JSON.parse(localStorage.getItem('nexa_current_user') || '{}')).uid || '',
-        items:       checkoutItems,
-        delivery:    deliveryInfo,
-        payment:     paymentMethod,
-        paymentRef:  reference || '',
-        deliveryFee: deliveryFee,
-        subtotal:    total - deliveryFee,
-        total:       total,
-        status:      'confirmed',
-        date:        new Date().toISOString(),
-        createdAt:   firebase.firestore.FieldValue.serverTimestamp(),
+        id: orderId,
+        buyerId: (JSON.parse(localStorage.getItem('nexa_current_user') || '{}')).uid || '',
+        items: checkoutItems, delivery: deliveryInfo, payment: paymentMethod,
+        paymentRef: reference || '', deliveryFee: deliveryFee,
+        subtotal: total - deliveryFee, total: total, status: 'confirmed',
+        date: new Date().toISOString(),
+        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
       };
 
       var saveToFirestore = (typeof db !== 'undefined')
@@ -629,13 +494,10 @@
         var localOrders = JSON.parse(localStorage.getItem('nexa_orders') || '[]');
         localOrders.push(orderData);
         localStorage.setItem('nexa_orders', JSON.stringify(localOrders));
-
         localStorage.removeItem('nexa_cart');
         localStorage.removeItem('nexa_checkout_items');
-
         var display = document.getElementById('order-id-display');
         if (display) display.textContent = orderId;
-
         goToStep(4);
       }).catch(function() {
         var display = document.getElementById('order-id-display');
@@ -646,20 +508,14 @@
 
     function goToStep(step) {
       currentStep = step;
-      var steps = ['delivery', 'payment', 'confirm', 'success'];
-      steps.forEach(function(s, i) {
+      ['delivery','payment','confirm','success'].forEach(function(s, i) {
         var el = document.getElementById('step-' + s);
         if (el) el.style.display = (i + 1 === step) ? 'block' : 'none';
       });
-
       for (var i = 1; i <= 3; i++) {
         var el = document.getElementById('step' + i);
-        if (el) {
-          el.classList.toggle('active', i <= step);
-          el.classList.toggle('done', i < step);
-        }
+        if (el) { el.classList.toggle('active', i <= step); el.classList.toggle('done', i < step); }
       }
-
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 

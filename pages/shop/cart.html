@@ -6,7 +6,7 @@
   <title>Cart — Nexabay</title>
   <link rel="stylesheet" href="../../css/main.css"/>
   <link rel="stylesheet" href="../../css/cart.css"/>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet"/>
 </head>
 <body>
 
@@ -23,16 +23,30 @@
       <div class="nav-actions">
         <a href="../auth/login.html" class="nav-link">Login</a>
         <a href="../auth/register.html" class="nav-btn">Sign Up</a>
-        <a href="cart.html" class="cart-icon">
+        <a href="cart.html" class="cart-icon-desk">
           🛒 <span class="cart-count" id="cart-count">0</span>
         </a>
       </div>
       <button class="hamburger" onclick="toggleMobileMenu()">☰</button>
     </div>
+
+    <div class="mobile-menu-overlay" id="mobile-menu-overlay" onclick="toggleMobileMenu()"></div>
     <div class="mobile-menu" id="mobile-menu">
-      <a href="../../index.html">Home</a>
-      <a href="browse.html">Shop</a>
-      <a href="../auth/login.html">Login</a>
+      <div class="mobile-menu-header">
+        <span class="logo" style="font-size:1.2em;">
+          <span class="logo-nexa">Nexa</span><span class="logo-bay">bay</span>
+        </span>
+        <button class="close-menu-btn" onclick="toggleMobileMenu()">✕</button>
+      </div>
+      <div class="mobile-menu-links">
+        <a href="../../index.html">🏠 Home</a>
+        <a href="browse.html">🛍️ Shop</a>
+        <a href="cart.html">🛒 Cart</a>
+      </div>
+      <div id="mobile-user-section">
+        <a href="../auth/login.html" class="mobile-auth-btn login">Login</a>
+        <a href="../auth/register.html" class="mobile-auth-btn signup">Sign Up</a>
+      </div>
     </div>
   </nav>
 
@@ -52,7 +66,6 @@
 
     <h1 class="cart-title">🛒 My Cart <span id="cart-item-count"></span></h1>
 
-    <!-- EMPTY CART -->
     <div id="empty-cart" style="display:none;">
       <div class="empty-state">
         <div class="empty-icon">🛒</div>
@@ -62,14 +75,10 @@
       </div>
     </div>
 
-    <!-- CART CONTENT -->
     <div id="cart-content" style="display:none;">
       <div class="cart-layout">
 
-        <!-- CART ITEMS -->
         <div class="cart-items">
-
-          <!-- SELECT ALL -->
           <div class="cart-select-all">
             <label class="checkbox-label">
               <input type="checkbox" id="select-all" onchange="toggleSelectAll()"/>
@@ -79,12 +88,9 @@
               🗑️ Remove Selected
             </button>
           </div>
-
           <div id="cart-list"></div>
-
         </div>
 
-        <!-- ORDER SUMMARY -->
         <div class="cart-summary">
           <div class="summary-card">
             <h3>Order Summary</h3>
@@ -105,11 +111,7 @@
             </div>
 
             <div class="promo-input">
-              <input
-                type="text"
-                id="promo-code"
-                placeholder="Promo code"
-              />
+              <input type="text" id="promo-code" placeholder="Promo code"/>
               <button onclick="applyPromo()">Apply</button>
             </div>
 
@@ -122,31 +124,18 @@
 
             <div class="summary-savings" id="sum-savings"></div>
 
-            <button
-              class="checkout-btn"
-              onclick="proceedToCheckout()"
-            >
+            <button class="checkout-btn" onclick="proceedToCheckout()">
               Proceed to Checkout →
             </button>
 
-            <div class="summary-secure">
-              🔒 Secured by Nexabay Escrow
-            </div>
+            <div class="summary-secure">🔒 Secured by Nexabay Escrow</div>
 
             <div class="summary-methods">
-              <span>💳</span>
-              <span>🏦</span>
-              <span>📱</span>
-              <span>💰</span>
+              <span>💳</span><span>🏦</span><span>📱</span><span>💰</span>
             </div>
-
           </div>
 
-          <!-- CONTINUE SHOPPING -->
-          <a href="browse.html" class="continue-shopping">
-            ← Continue Shopping
-          </a>
-
+          <a href="browse.html" class="continue-shopping">← Continue Shopping</a>
         </div>
       </div>
     </div>
@@ -165,7 +154,6 @@
       var raw = localStorage.getItem('nexa_cart');
       var rawItems = raw ? JSON.parse(raw) : [];
 
-      // Group same items together
       var grouped = {};
       rawItems.forEach(function(item) {
         var key = item.id;
@@ -198,10 +186,11 @@
 
       var list = document.getElementById('cart-list');
       list.innerHTML = cartItems.map(function(item, i) {
+        var imgContent = item.imageUrl ? '<img src="' + item.imageUrl + '"/>' : item.emoji;
         return '<div class="cart-item" id="cart-item-' + i + '">' +
           '<div class="ci-left">' +
             '<input type="checkbox" class="ci-check" ' + (item.selected ? 'checked' : '') + ' onchange="toggleItem(' + i + ')">' +
-            '<div class="ci-img">' + item.emoji + '</div>' +
+            '<div class="ci-img">' + imgContent + '</div>' +
             '<div class="ci-info">' +
               '<div class="ci-name">' + item.name + '</div>' +
               '<div class="ci-price">₦' + item.price.toLocaleString() + '</div>' +
@@ -257,7 +246,7 @@
       var flat = [];
       cartItems.forEach(function(item) {
         for (var i = 0; i < item.qty; i++) {
-          flat.push({ id: item.id, name: item.name, price: item.price, emoji: item.emoji });
+          flat.push({ id: item.id, name: item.name, price: item.price, emoji: item.emoji, imageUrl: item.imageUrl || '' });
         }
       });
       localStorage.setItem('nexa_cart', JSON.stringify(flat));
@@ -287,21 +276,10 @@
 
     function applyPromo() {
       var code = document.getElementById('promo-code').value.trim().toUpperCase();
-      var PROMOS = {
-        'NEXA10': 0.10,
-        'WELCOME': 0.15,
-        'SAVE20': 0.20,
-      };
+      var PROMOS = { 'NEXA10': 0.10, 'WELCOME': 0.15, 'SAVE20': 0.20 };
 
-      if (!code) {
-        showToast('⚠️ Enter a promo code', '#ff9500');
-        return;
-      }
-
-      if (promoApplied) {
-        showToast('⚠️ Promo already applied', '#ff9500');
-        return;
-      }
+      if (!code) { showToast('⚠️ Enter a promo code', '#ff9500'); return; }
+      if (promoApplied) { showToast('⚠️ Promo already applied', '#ff9500'); return; }
 
       if (PROMOS[code]) {
         var selected = cartItems.filter(function(i) { return i.selected; });
@@ -317,17 +295,12 @@
 
     function proceedToCheckout() {
       var selected = cartItems.filter(function(i) { return i.selected; });
-      if (selected.length === 0) {
-        showToast('⚠️ Select items to checkout', '#ff9500');
-        return;
-      }
+      if (selected.length === 0) { showToast('⚠️ Select items to checkout', '#ff9500'); return; }
 
       var user = localStorage.getItem('nexa_current_user');
       if (!user) {
         showToast('⚠️ Please login to checkout', '#ff9500');
-        setTimeout(function() {
-          window.location.href = '../auth/login.html';
-        }, 1500);
+        setTimeout(function() { window.location.href = '../auth/login.html'; }, 1500);
         return;
       }
 
