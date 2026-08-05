@@ -3,181 +3,622 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Services — Nexabay</title>
+  <title>NexaServices — Hire Skilled Professionals | Nexabay</title>
   <link rel="stylesheet" href="../../css/main.css"/>
-  <link rel="stylesheet" href="../../css/services.css"/>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    /* ── HERO ── */
+    .ns-hero {
+      background: linear-gradient(135deg, #0a0f1e 0%, #1a237e 50%, #0a0f1e 100%);
+      padding: 50px 20px 40px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .ns-hero::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255,107,0,0.08) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    .ns-hero-badge {
+      display: inline-block;
+      background: rgba(255,107,0,0.15);
+      color: #ff6b00;
+      border: 1px solid rgba(255,107,0,0.3);
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-size: 0.8em;
+      font-weight: 700;
+      margin-bottom: 16px;
+      letter-spacing: 1px;
+    }
+    .ns-hero h1 {
+      color: white;
+      font-size: 2em;
+      font-weight: 900;
+      line-height: 1.2;
+      margin-bottom: 10px;
+    }
+    .ns-hero h1 span { color: #ff6b00; }
+    .ns-hero p {
+      color: rgba(255,255,255,0.7);
+      font-size: 0.95em;
+      margin-bottom: 24px;
+      line-height: 1.6;
+    }
+    .ns-search-bar {
+      display: flex;
+      max-width: 560px;
+      margin: 0 auto 20px;
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+    }
+    .ns-search-bar input {
+      flex: 1;
+      padding: 14px 16px;
+      border: none;
+      outline: none;
+      font-size: 0.92em;
+      font-family: 'Inter', sans-serif;
+    }
+    .ns-search-bar button {
+      background: #ff6b00;
+      color: white;
+      border: none;
+      padding: 14px 20px;
+      font-weight: 700;
+      font-size: 0.9em;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .ns-hero-stats {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+    .ns-hero-stat {
+      color: rgba(255,255,255,0.8);
+      font-size: 0.82em;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .ns-hero-stat strong { color: white; }
+
+    /* ── CATEGORIES STRIP ── */
+    .ns-cats-wrap {
+      background: white;
+      border-bottom: 1px solid #eee;
+      padding: 0 16px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+    .ns-cats {
+      display: flex;
+      gap: 4px;
+      overflow-x: auto;
+      padding: 12px 0;
+      scrollbar-width: none;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+    .ns-cats::-webkit-scrollbar { display: none; }
+    .ns-cat-btn {
+      padding: 8px 16px;
+      border-radius: 20px;
+      border: 1.5px solid #e0e0e0;
+      background: white;
+      cursor: pointer;
+      white-space: nowrap;
+      font-size: 0.82em;
+      font-weight: 600;
+      color: #333;
+      transition: all 0.2s;
+      font-family: 'Inter', sans-serif;
+    }
+    .ns-cat-btn.active, .ns-cat-btn:hover {
+      background: #ff6b00;
+      border-color: #ff6b00;
+      color: white;
+    }
+
+    /* ── MAIN LAYOUT ── */
+    .ns-main {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 24px 16px 80px;
+    }
+
+    /* ── TOOLBAR ── */
+    .ns-toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .ns-toolbar-left {
+      font-size: 0.88em;
+      color: #666;
+    }
+    .ns-toolbar-left strong { color: #333; }
+    .ns-sort-select {
+      padding: 8px 12px;
+      border: 1.5px solid #e0e0e0;
+      border-radius: 8px;
+      font-size: 0.85em;
+      outline: none;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      background: white;
+    }
+
+    /* ── SERVICE CARDS GRID ── */
+    .ns-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+    }
+    .ns-card {
+      background: white;
+      border-radius: 14px;
+      overflow: hidden;
+      border: 1px solid #f0f0f0;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .ns-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+    }
+    .ns-card-img {
+      width: 100%;
+      height: 120px;
+      object-fit: cover;
+      background: linear-gradient(135deg, #f5f5f5, #ebebeb);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3em;
+      position: relative;
+    }
+    .ns-card-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .ns-card-cat-badge {
+      position: absolute;
+      top: 8px;
+      left: 8px;
+      background: rgba(0,0,0,0.6);
+      color: white;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-size: 0.7em;
+      font-weight: 700;
+    }
+    .ns-card-body {
+      padding: 12px;
+    }
+    .ns-card-provider {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 6px;
+    }
+    .ns-card-avatar {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: #ff6b00;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.65em;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+    .ns-card-provider-name {
+      font-size: 0.78em;
+      color: #666;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .ns-card-title {
+      font-size: 0.88em;
+      font-weight: 700;
+      color: #1a1a1a;
+      line-height: 1.4;
+      margin-bottom: 8px;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .ns-card-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+      flex-wrap: wrap;
+    }
+    .ns-card-rating {
+      font-size: 0.75em;
+      color: #666;
+      display: flex;
+      align-items: center;
+      gap: 2px;
+    }
+    .ns-card-rating span { color: #f5a623; }
+    .ns-card-location {
+      font-size: 0.72em;
+      color: #999;
+      display: flex;
+      align-items: center;
+      gap: 2px;
+    }
+    .ns-card-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 8px;
+      border-top: 1px solid #f5f5f5;
+    }
+    .ns-card-price {
+      font-size: 1em;
+      font-weight: 800;
+      color: #ff6b00;
+    }
+    .ns-card-price small {
+      font-size: 0.65em;
+      font-weight: 500;
+      color: #999;
+    }
+    .ns-card-hire-btn {
+      background: #ff6b00;
+      color: white;
+      border: none;
+      padding: 7px 14px;
+      border-radius: 8px;
+      font-size: 0.78em;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+    }
+
+    /* ── EMPTY STATE ── */
+    .ns-empty {
+      text-align: center;
+      padding: 60px 20px;
+      grid-column: 1/-1;
+    }
+    .ns-empty-icon { font-size: 4em; margin-bottom: 16px; }
+    .ns-empty h3 { font-size: 1.2em; margin-bottom: 8px; color: #333; }
+    .ns-empty p { color: #999; font-size: 0.9em; margin-bottom: 20px; }
+    .ns-empty-btn {
+      display: inline-block;
+      background: #ff6b00;
+      color: white;
+      padding: 12px 24px;
+      border-radius: 10px;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 0.9em;
+    }
+
+    /* ── LOADING ── */
+    .ns-loading {
+      grid-column: 1/-1;
+      text-align: center;
+      padding: 40px;
+      color: #999;
+    }
+    .ns-skeleton {
+      background: linear-gradient(90deg, #f0f0f0 25%, #e8e8e8 50%, #f0f0f0 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
+      border-radius: 8px;
+    }
+    @keyframes shimmer {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+    .ns-skeleton-card {
+      background: white;
+      border-radius: 14px;
+      overflow: hidden;
+      border: 1px solid #f0f0f0;
+    }
+    .ns-skeleton-img {
+      height: 120px;
+      background: linear-gradient(90deg, #f0f0f0 25%, #e8e8e8 50%, #f0f0f0 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
+    }
+    .ns-skeleton-body { padding: 12px; }
+    .ns-skeleton-line {
+      height: 12px;
+      border-radius: 6px;
+      margin-bottom: 8px;
+      background: linear-gradient(90deg, #f0f0f0 25%, #e8e8e8 50%, #f0f0f0 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
+    }
+
+    /* ── HOW IT WORKS ── */
+    .ns-how {
+      background: linear-gradient(135deg, #0a0f1e, #1a237e);
+      padding: 40px 20px;
+      text-align: center;
+      margin-top: 40px;
+    }
+    .ns-how h2 {
+      color: white;
+      font-size: 1.4em;
+      margin-bottom: 6px;
+    }
+    .ns-how p {
+      color: rgba(255,255,255,0.6);
+      font-size: 0.88em;
+      margin-bottom: 28px;
+    }
+    .ns-how-steps {
+      display: grid;
+      grid-template-columns: repeat(3,1fr);
+      gap: 16px;
+      max-width: 600px;
+      margin: 0 auto 28px;
+    }
+    .ns-how-step {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 12px;
+      padding: 16px 10px;
+    }
+    .ns-how-step-num {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: #ff6b00;
+      color: white;
+      font-weight: 800;
+      font-size: 0.9em;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 8px;
+    }
+    .ns-how-step p {
+      color: rgba(255,255,255,0.8);
+      font-size: 0.78em;
+      margin: 0;
+      line-height: 1.5;
+    }
+    .ns-how-cta {
+      display: inline-block;
+      background: #ff6b00;
+      color: white;
+      padding: 14px 28px;
+      border-radius: 10px;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 0.95em;
+    }
+
+    /* ── BECOME PROVIDER BANNER ── */
+    .ns-provider-banner {
+      background: white;
+      border: 2px solid #ff6b00;
+      border-radius: 16px;
+      padding: 20px;
+      margin: 24px 0;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .ns-provider-banner-icon {
+      font-size: 2.5em;
+      flex-shrink: 0;
+    }
+    .ns-provider-banner-text h3 {
+      font-size: 1em;
+      margin-bottom: 4px;
+    }
+    .ns-provider-banner-text p {
+      font-size: 0.82em;
+      color: #666;
+      margin-bottom: 10px;
+      line-height: 1.5;
+    }
+    .ns-provider-banner-btn {
+      display: inline-block;
+      background: #ff6b00;
+      color: white;
+      padding: 9px 18px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 0.82em;
+    }
+
+    /* ── BOTTOM NAV ── */
+    .ns-bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: white;
+      border-top: 1px solid #eee;
+      display: flex;
+      z-index: 200;
+      box-shadow: 0 -4px 16px rgba(0,0,0,0.08);
+    }
+    .ns-bottom-nav a {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 10px 4px;
+      text-decoration: none;
+      color: #999;
+      font-size: 0.65em;
+      font-weight: 600;
+      gap: 3px;
+    }
+    .ns-bottom-nav a.active { color: #ff6b00; }
+    .ns-bottom-nav a span:first-child { font-size: 1.4em; }
+  </style>
 </head>
-<body>
-
-  <!-- NAVBAR -->
-  <nav class="navbar">
-    <div class="nav-inner">
-      <a href="../../index.html" class="logo">
-        <span class="logo-nexa">Nexa</span><span class="logo-bay">bay</span>
-      </a>
-      <div class="search-bar">
-        <input type="text" id="search-input" placeholder="Search services..."/>
-        <button onclick="doServiceSearch()" class="search-btn">🔍</button>
-      </div>
-      <div class="nav-actions">
-        <a href="../auth/login.html" class="nav-link">Login</a>
-        <a href="../auth/register.html" class="nav-btn">Sign Up</a>
-        <a href="../shop/cart.html" class="cart-icon-desk">
-          🛒 <span class="cart-count" id="cart-count">0</span>
-        </a>
-      </div>
-      <button class="hamburger" id="hamburger-btn" onclick="toggleMobileMenu()">☰</button>
-    </div>
-    <div class="mobile-menu-overlay" id="mobile-overlay" onclick="closeMobileMenu()"></div>
-    <div class="mobile-menu" id="mobile-menu">
-      <div class="mobile-menu-header">
-        <div class="logo"><span class="logo-nexa">Nexa</span><span class="logo-bay">bay</span></div>
-        <div id="mobile-header-actions" style="display:none;">
-          <a href="../dashboard/buyer.html" class="mh-btn account">Account</a>
-          <a href="#" onclick="logoutUser()" class="mh-btn logout">Logout</a>
-        </div>
-        <button onclick="closeMobileMenu()" class="close-menu-btn">✕</button>
-      </div>
-      <div id="mobile-user-section"></div>
-      <div class="mobile-menu-links">
-        <a href="../../index.html">🏠 Home</a>
-        <a href="../shop/browse.html">🛍️ Shop</a>
-        <a href="browse.html">🔧 Services</a>
-        <a href="../rentals/browse.html">🏠 Rentals</a>
-        <a href="../learn/browse.html">🎓 Learn</a>
-        <a href="../jobs/browse.html">💼 Jobs</a>
-      </div>
-    </div>
-  </nav>
-
-  <!-- FLOATING CART -->
-  <a href="../shop/cart.html" class="floating-cart" id="floating-cart">
-    🛒 <span class="floating-cart-count" id="floating-cart-count">0</span>
-  </a>
+<body style="background:#f8f9fa;font-family:'Inter',sans-serif;">
 
   <!-- HERO -->
-  <div class="services-hero">
-    <div class="container">
-      <h1>Find Trusted Professionals</h1>
-      <p>Hire verified experts for any job — home repairs, design, tutoring and more</p>
-      <div class="services-search">
-        <input type="text" id="hero-search" placeholder="What service do you need?"/>
-        <select id="hero-location">
-          <option value="">All States</option>
-          <option>Lagos</option>
-          <option>Abuja</option>
-          <option>Port Harcourt</option>
-          <option>Kano</option>
-          <option>Ibadan</option>
-          <option>Enugu</option>
-        </select>
-        <button onclick="doServiceSearch()">Search</button>
-      </div>
-      <div class="services-hero-stats">
-        <span>✅ 5,000+ Verified Providers</span>
-        <span>⭐ 4.8 Average Rating</span>
-        <span>🔒 Secure Payments</span>
-        <span>💬 Live Chat</span>
-      </div>
+  <div class="ns-hero">
+    <div class="ns-hero-badge">🛠️ NEXASERVICES</div>
+    <h1>Hire Skilled <span>Nigerian</span><br/>Professionals</h1>
+    <p>From graphic design to plumbing — find verified<br/>experts for any job, anywhere in Nigeria</p>
+
+    <div class="ns-search-bar">
+      <input type="text" id="search-input" placeholder="Try 'graphic designer' or 'plumber'..."/>
+      <button onclick="doServicesSearch()">🔍 Search</button>
+    </div>
+
+    <div class="ns-hero-stats">
+      <div class="ns-hero-stat">✅ <strong>Verified</strong> Providers</div>
+      <div class="ns-hero-stat">🔒 <strong>Secure</strong> Payments</div>
+      <div class="ns-hero-stat">⭐ <strong>Rated</strong> Professionals</div>
+      <div class="ns-hero-stat">🇳🇬 <strong>All 36</strong> States</div>
     </div>
   </div>
 
-  <!-- CATEGORIES -->
-  <div class="container">
-    <h2 class="section-title" style="margin-top:40px;">Browse by Category</h2>
-    <div class="service-cats">
-      <div class="scat active" onclick="filterServices('all', this)">All Services</div>
-      <div class="scat" onclick="filterServices('Home Repairs', this)">🔨 Home Repairs</div>
-      <div class="scat" onclick="filterServices('Cleaning', this)">🧹 Cleaning</div>
-      <div class="scat" onclick="filterServices('Beauty', this)">💄 Beauty</div>
-      <div class="scat" onclick="filterServices('Tech', this)">💻 Tech Support</div>
-      <div class="scat" onclick="filterServices('Design', this)">🎨 Design</div>
-      <div class="scat" onclick="filterServices('Tutoring', this)">📚 Tutoring</div>
-      <div class="scat" onclick="filterServices('Photography', this)">📷 Photography</div>
-      <div class="scat" onclick="filterServices('Catering', this)">🍳 Catering</div>
-      <div class="scat" onclick="filterServices('Legal', this)">⚖️ Legal</div>
-      <div class="scat" onclick="filterServices('Transport', this)">🚗 Transport</div>
+  <!-- CATEGORY STRIP -->
+  <div class="ns-cats-wrap">
+    <div class="ns-cats" id="cats-strip">
+      <button class="ns-cat-btn active" onclick="filterByCategory('all', this)">🌍 All Services</button>
+      <button class="ns-cat-btn" onclick="filterByCategory('Beauty & Hair', this)">💇 Beauty & Hair</button>
+      <button class="ns-cat-btn" onclick="filterByCategory('Tech & Repairs', this)">🔧 Tech & Repairs</button>
+      <button class="ns-cat-btn" onclick="filterByCategory('Cleaning', this)">🧹 Cleaning</button>
+      <button class="ns-cat-btn" onclick="filterByCategory('Graphic Design', this)">🎨 Graphic Design</button>
+      <button class="ns-cat-btn" onclick="filterByCategory('Writing & Translation', this)">✍️ Writing</button>
+      <button class="ns-cat-btn" onclick="filterByCategory('Tutoring', this)">📚 Tutoring</button>
+      <button class="ns-cat-btn" onclick="filterByCategory('Photography', this)">📸 Photography</button>
+      <button class="ns-cat-btn" onclick="filterByCategory('Plumbing', this)">🪠 Plumbing</button>
+      <button class="ns-cat-btn" onclick="filterByCategory('Electrical', this)">💡 Electrical</button>
+      <button class="ns-cat-btn" onclick="filterByCategory('Event Planning', this)">🎉 Events</button>
+      <button class="ns-cat-btn" onclick="filterByCategory('Fitness Training', this)">💪 Fitness</button>
     </div>
   </div>
 
-  <!-- SORT + RESULTS -->
-  <div class="container">
-    <div class="services-topbar">
-      <span id="services-count">Showing all services</span>
-      <select id="services-sort" onchange="sortServices()">
-        <option value="default">Sort: Featured</option>
+  <!-- MAIN -->
+  <div class="ns-main">
+
+    <!-- TOOLBAR -->
+    <div class="ns-toolbar">
+      <div class="ns-toolbar-left" id="results-count">Loading services...</div>
+      <select class="ns-sort-select" onchange="sortServices(this.value)">
+        <option value="newest">Newest First</option>
         <option value="price-low">Price: Low to High</option>
         <option value="price-high">Price: High to Low</option>
         <option value="rating">Highest Rated</option>
-        <option value="reviews">Most Reviews</option>
       </select>
     </div>
 
-    <!-- SERVICES GRID -->
-    <div class="services-grid" id="services-grid"></div>
+    <!-- BECOME PROVIDER BANNER -->
+    <div class="ns-provider-banner">
+      <div class="ns-provider-banner-icon">💼</div>
+      <div class="ns-provider-banner-text">
+        <h3>Have a skill? Start earning today!</h3>
+        <p>Join thousands of Nigerian professionals already earning on NexaServices. List your service for free.</p>
+        <a href="../dashboard/services-provider.html" class="ns-provider-banner-btn">Become a Provider →</a>
+      </div>
+    </div>
 
-    <!-- EMPTY -->
-    <div id="services-empty" style="display:none;">
-      <div class="empty-state">
-        <div class="empty-icon">🔍</div>
-        <h3>No services found</h3>
-        <p>Try a different search or category</p>
-        <button onclick="filterServices('all', null)" class="btn-primary">Show All</button>
+    <!-- GRID -->
+    <div class="ns-grid" id="services-grid">
+      <!-- Skeleton loaders -->
+      <div class="ns-skeleton-card">
+        <div class="ns-skeleton-img"></div>
+        <div class="ns-skeleton-body">
+          <div class="ns-skeleton-line" style="width:60%;"></div>
+          <div class="ns-skeleton-line" style="width:90%;"></div>
+          <div class="ns-skeleton-line" style="width:40%;"></div>
+        </div>
+      </div>
+      <div class="ns-skeleton-card">
+        <div class="ns-skeleton-img"></div>
+        <div class="ns-skeleton-body">
+          <div class="ns-skeleton-line" style="width:60%;"></div>
+          <div class="ns-skeleton-line" style="width:90%;"></div>
+          <div class="ns-skeleton-line" style="width:40%;"></div>
+        </div>
+      </div>
+      <div class="ns-skeleton-card">
+        <div class="ns-skeleton-img"></div>
+        <div class="ns-skeleton-body">
+          <div class="ns-skeleton-line" style="width:60%;"></div>
+          <div class="ns-skeleton-line" style="width:90%;"></div>
+          <div class="ns-skeleton-line" style="width:40%;"></div>
+        </div>
+      </div>
+      <div class="ns-skeleton-card">
+        <div class="ns-skeleton-img"></div>
+        <div class="ns-skeleton-body">
+          <div class="ns-skeleton-line" style="width:60%;"></div>
+          <div class="ns-skeleton-line" style="width:90%;"></div>
+          <div class="ns-skeleton-line" style="width:40%;"></div>
+        </div>
       </div>
     </div>
 
   </div>
 
   <!-- HOW IT WORKS -->
-  <div class="how-it-works">
-    <div class="container">
-      <h2 class="section-title" style="text-align:center">How It Works</h2>
-      <div class="hiw-steps">
-        <div class="hiw-step">
-          <div class="hiw-num">1</div>
-          <div class="hiw-icon">🔍</div>
-          <h3>Search</h3>
-          <p>Find the service you need from thousands of providers</p>
-        </div>
-        <div class="hiw-arrow">→</div>
-        <div class="hiw-step">
-          <div class="hiw-num">2</div>
-          <div class="hiw-icon">💬</div>
-          <h3>Chat</h3>
-          <p>Discuss your needs and get a custom quote</p>
-        </div>
-        <div class="hiw-arrow">→</div>
-        <div class="hiw-step">
-          <div class="hiw-num">3</div>
-          <div class="hiw-icon">🔒</div>
-          <h3>Pay Safe</h3>
-          <p>Pay securely — money held until job is done</p>
-        </div>
-        <div class="hiw-arrow">→</div>
-        <div class="hiw-step">
-          <div class="hiw-num">4</div>
-          <div class="hiw-icon">⭐</div>
-          <h3>Review</h3>
-          <p>Rate your experience and help others</p>
-        </div>
+  <div class="ns-how">
+    <h2>How NexaServices Works</h2>
+    <p>Hire a professional in 3 simple steps</p>
+    <div class="ns-how-steps">
+      <div class="ns-how-step">
+        <div class="ns-how-step-num">1</div>
+        <p>Browse verified service providers in your category</p>
+      </div>
+      <div class="ns-how-step">
+        <div class="ns-how-step-num">2</div>
+        <p>Pay securely through Nexabay escrow protection</p>
+      </div>
+      <div class="ns-how-step">
+        <div class="ns-how-step-num">3</div>
+        <p>Get the job done and confirm when satisfied</p>
       </div>
     </div>
+    <a href="../../pages/auth/register.html" class="ns-how-cta">Get Started Free →</a>
   </div>
 
-  <div style="margin-bottom:60px;"></div>
+  <!-- BOTTOM NAV -->
+  <div class="ns-bottom-nav">
+    <a href="../../index.html"><span>🏠</span><span>Home</span></a>
+    <a href="browse.html" class="active"><span>🛠️</span><span>Services</span></a>
+    <a href="../shop/browse.html"><span>🛍️</span><span>Shop</span></a>
+    <a href="../search.html"><span>🔍</span><span>Search</span></a>
+    <a href="../dashboard/buyer.html"><span>👤</span><span>Account</span></a>
+  </div>
 
-  <!-- FOOTER -->
-  <footer class="footer">
-    <div class="container">
-      <div class="footer-bottom">
-        <p>© 2025 Nexabay. All rights reserved.</p>
-        <a href="../../index.html" style="color:var(--orange)">← Back to Home</a>
-      </div>
-    </div>
-  </footer>
-
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
   <script src="../../js/firebase/config.js"></script>
@@ -186,142 +627,146 @@
   <script src="../../js/core/main.js"></script>
   <script>
 
-    var DEMO_SERVICES = [];
-
     var ALL_SERVICES = [];
-    var currentServices = [];
+    var FILTERED_SERVICES = [];
+    var currentCategory = 'all';
+    var currentSort = 'newest';
 
     function loadAllServices() {
       nexaGetServices('all')
-        .then(function(realServices) {
-          var mapped = realServices.map(function(s) {
-            return {
-              id: s.id,
-              name: s.title,
-              category: s.category,
-              provider: s.providerName || 'Nexabay Provider',
-              rating: s.rating || 0,
-              reviews: s.reviews || 0,
-              price: s.price,
-              priceType: s.deliveryTime || 'Negotiable',
-              location: s.location,
-              emoji: s.emoji || '🛠️',
-              imageUrl: s.imageUrl || '',
-              verified: false,
-              desc: s.description || '',
-            };
-          });
-          ALL_SERVICES = mapped.concat(DEMO_SERVICES);
-          currentServices = ALL_SERVICES.slice();
-          renderServices();
+        .then(function(services) {
+          ALL_SERVICES = services;
+          FILTERED_SERVICES = services.slice();
+          applyFiltersAndSort();
+          updateCount();
         })
         .catch(function(err) {
-          console.log('Error loading services:', err);
-          ALL_SERVICES = DEMO_SERVICES.slice();
-          currentServices = ALL_SERVICES.slice();
-          renderServices();
+          console.log('Error:', err);
+          renderServices([]);
         });
     }
 
-    function renderServices() {
-      var grid = document.getElementById('services-grid');
-      var empty = document.getElementById('services-empty');
-      var count = document.getElementById('services-count');
+    function filterByCategory(cat, btn) {
+      currentCategory = cat;
+      document.querySelectorAll('.ns-cat-btn').forEach(function(b) {
+        b.classList.remove('active');
+      });
+      btn.classList.add('active');
+      applyFiltersAndSort();
+    }
 
-      if (currentServices.length === 0) {
+    function sortServices(val) {
+      currentSort = val;
+      applyFiltersAndSort();
+    }
+
+    function applyFiltersAndSort() {
+      var filtered = currentCategory === 'all'
+        ? ALL_SERVICES.slice()
+        : ALL_SERVICES.filter(function(s) { return s.category === currentCategory; });
+
+      var searchQuery = document.getElementById('search-input').value.trim().toLowerCase();
+      if (searchQuery) {
+        filtered = filtered.filter(function(s) {
+          return (s.title || '').toLowerCase().includes(searchQuery) ||
+                 (s.description || '').toLowerCase().includes(searchQuery) ||
+                 (s.category || '').toLowerCase().includes(searchQuery);
+        });
+      }
+
+      if (currentSort === 'price-low') {
+        filtered.sort(function(a, b) { return (a.price || 0) - (b.price || 0); });
+      } else if (currentSort === 'price-high') {
+        filtered.sort(function(a, b) { return (b.price || 0) - (a.price || 0); });
+      } else if (currentSort === 'rating') {
+        filtered.sort(function(a, b) { return (b.rating || 0) - (a.rating || 0); });
+      } else {
+        filtered.sort(function(a, b) {
+          var aTime = a.createdAt ? a.createdAt.toMillis() : 0;
+          var bTime = b.createdAt ? b.createdAt.toMillis() : 0;
+          return bTime - aTime;
+        });
+      }
+
+      FILTERED_SERVICES = filtered;
+      renderServices(filtered);
+      updateCount();
+    }
+
+    function updateCount() {
+      var el = document.getElementById('results-count');
+      if (el) {
+        el.innerHTML = '<strong>' + FILTERED_SERVICES.length + '</strong> service' +
+          (FILTERED_SERVICES.length !== 1 ? 's' : '') + ' available' +
+          (currentCategory !== 'all' ? ' in <strong>' + currentCategory + '</strong>' : '');
+      }
+    }
+
+    function doServicesSearch() {
+      applyFiltersAndSort();
+    }
+
+    function renderServices(services) {
+      var grid = document.getElementById('services-grid');
+      if (!grid) return;
+
+      if (services.length === 0) {
         grid.innerHTML =
-          '<div style="text-align:center;padding:60px 20px;">' +
-            '<div style="font-size:4em;margin-bottom:16px;">🛠️</div>' +
-            '<h3 style="font-size:1.3em;margin-bottom:8px;">No Services yet</h3>' +
-            '<p style="color:var(--text2);margin-bottom:20px;">Be the first service provider!</p>' +
-            '<a href="../auth/register.html" style="background:var(--orange);color:white;padding:12px 24px;border-radius:8px;text-decoration:none;font-weight:700;">Start Selling →</a>' +
+          '<div class="ns-empty">' +
+            '<div class="ns-empty-icon">🔍</div>' +
+            '<h3>No services found</h3>' +
+            '<p>Be the first to offer this service on NexaServices!</p>' +
+            '<a href="../dashboard/services-provider.html" class="ns-empty-btn">List Your Service Free →</a>' +
           '</div>';
         return;
       }
 
-      empty.style.display = 'none';
-      if (count) count.textContent = 'Showing ' + currentServices.length + ' services';
+      grid.innerHTML = services.map(function(s) {
+        var imgHtml = s.imageUrl
+          ? '<img src="' + s.imageUrl + '" alt="' + (s.title || '') + '" style="width:100%;height:100%;object-fit:cover;"/>'
+          : '<span style="font-size:2.5em;">' + (s.emoji || '🛠️') + '</span>';
 
-      grid.innerHTML = currentServices.map(function(s) {
-        var emojiContent = s.imageUrl
-          ? '<img src="' + s.imageUrl + '" style="width:100%;height:100%;object-fit:cover;border-radius:8px;"/>'
-          : s.emoji;
-        return '<div class="service-card" onclick="viewService(\'' + s.id + '\')">' +
-          '<div class="sc-top">' +
-            '<div class="sc-emoji">' + emojiContent + '</div>' +
-            '<div class="sc-badges">' +
-              (s.verified ? '<span class="sc-verified">✅ Verified</span>' : '') +
-              '<span class="sc-location">📍 ' + s.location + '</span>' +
-            '</div>' +
+        var stars = '';
+        var rating = s.rating || 0;
+        for (var i = 0; i < 5; i++) {
+          stars += i < Math.round(rating) ? '★' : '☆';
+        }
+
+        return '<div class="ns-card" onclick="viewService(\'' + s.id + '\')">' +
+          '<div class="ns-card-img">' +
+            imgHtml +
+            '<div class="ns-card-cat-badge">' + (s.category || 'Service') + '</div>' +
           '</div>' +
-          '<h3 class="sc-name">' + s.name + '</h3>' +
-          '<div class="sc-provider">by ' + s.provider + '</div>' +
-          '<div class="sc-desc">' + s.desc + '</div>' +
-          '<div class="sc-rating">⭐ ' + s.rating + ' (' + s.reviews + ' reviews)</div>' +
-          '<div class="sc-bottom">' +
-            '<div class="sc-price">' +
-              '<span class="sc-price-label">' + s.priceType + '</span>' +
-              '<span class="sc-price-amount">₦' + s.price.toLocaleString() + '</span>' +
+          '<div class="ns-card-body">' +
+            '<div class="ns-card-provider">' +
+              '<div class="ns-card-avatar">' + (s.providerName || 'P')[0].toUpperCase() + '</div>' +
+              '<div class="ns-card-provider-name">' + (s.providerName || 'Nexabay Provider') + '</div>' +
             '</div>' +
-            '<button class="sc-hire-btn" onclick="event.stopPropagation();hireService(' + s.id + ')">Hire Now</button>' +
+            '<div class="ns-card-title">' + (s.title || 'Service') + '</div>' +
+            '<div class="ns-card-meta">' +
+              '<div class="ns-card-rating"><span>' + stars + '</span> ' + (rating > 0 ? rating.toFixed(1) : 'New') + '</div>' +
+              '<div class="ns-card-location">📍 ' + (s.location || 'Nigeria') + '</div>' +
+            '</div>' +
+            '<div class="ns-card-footer">' +
+              '<div class="ns-card-price">₦' + parseInt(s.price || 0).toLocaleString() + '<small> / ' + (s.deliveryTime || 'session') + '</small></div>' +
+              '<button class="ns-card-hire-btn" onclick="event.stopPropagation();viewService(\'' + s.id + '\')">Hire →</button>' +
+            '</div>' +
           '</div>' +
         '</div>';
       }).join('');
-    }
-
-    function filterServices(cat, el) {
-      var cats = document.querySelectorAll('.scat');
-      cats.forEach(function(c) { c.classList.remove('active'); });
-      if (el) el.classList.add('active');
-
-      var search = document.getElementById('search-input').value.toLowerCase().trim();
-      currentServices = ALL_SERVICES.filter(function(s) {
-        var matchCat = cat === 'all' || s.category === cat;
-        var matchSearch = !search || s.name.toLowerCase().includes(search) || s.category.toLowerCase().includes(search);
-        return matchCat && matchSearch;
-      });
-
-      sortServices();
-    }
-
-    function sortServices() {
-      var sort = document.getElementById('services-sort').value;
-      if (sort === 'price-low')  currentServices.sort(function(a,b) { return a.price - b.price; });
-      if (sort === 'price-high') currentServices.sort(function(a,b) { return b.price - a.price; });
-      if (sort === 'rating')     currentServices.sort(function(a,b) { return b.rating - a.rating; });
-      if (sort === 'reviews')    currentServices.sort(function(a,b) { return b.reviews - a.reviews; });
-      renderServices();
-    }
-
-    function doServiceSearch() {
-      filterServices('all', document.querySelector('.scat.active') || document.querySelector('.scat'));
     }
 
     function viewService(id) {
       window.location.href = 'service.html?id=' + id;
     }
 
-    function hireService(id) {
-      var user = localStorage.getItem('nexa_current_user');
-      if (!user) {
-        showToast('⚠️ Please login to hire', '#ff9500');
-        setTimeout(function() { window.location.href = '../auth/login.html'; }, 1500);
-        return;
-      }
-      showToast('✅ Request sent! Provider will contact you soon.');
-    }
-
     document.addEventListener('DOMContentLoaded', function() {
-      updateCartCount();
-      checkAuthState();
       loadAllServices();
+      checkAuthState();
 
-      var input = document.getElementById('search-input');
-      if (input) {
-        input.addEventListener('keypress', function(e) {
-          if (e.key === 'Enter') doServiceSearch();
-        });
-      }
+      document.getElementById('search-input').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') doServicesSearch();
+      });
     });
 
   </script>
