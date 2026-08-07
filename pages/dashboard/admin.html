@@ -80,6 +80,10 @@
           💬 Messages
           <span id="msg-badge" style="background:#cc0000;color:white;border-radius:10px;padding:1px 7px;font-size:0.75em;margin-left:4px;display:none;">0</span>
         </a>
+        <a href="#" class="dash-nav-item" onclick="showTab('providers')">
+          🚀 Provider Applications
+          <span id="providers-badge" style="background:#cc0000;color:white;border-radius:10px;padding:1px 7px;font-size:0.75em;margin-left:4px;display:none;">0</span>
+        </a>
         <a href="#" class="dash-nav-item" onclick="showTab('support'); loadSupportTickets();">
           🎧 AI Support
           <span id="support-badge" style="background:#cc0000;color:white;border-radius:10px;padding:1px 7px;font-size:0.75em;margin-left:4px;display:none;">0</span>
@@ -363,6 +367,29 @@
           </div>
         </div>
       </div>
+      
+      
+      <!-- PROVIDER APPLICATIONS TAB -->
+      <div class="dash-tab" id="tab-providers" style="display:none;">
+        <div class="dash-header">
+          <h1>Provider Applications 🚀</h1>
+          <button onclick="loadProviderApplications()" style="background:var(--gray);border:none;padding:8px 16px;border-radius:8px;cursor:pointer;">🔄 Refresh</button>
+        </div>
+
+        <div class="orders-filter" style="margin-bottom:16px;">
+          <button class="order-filter-btn active" onclick="filterProviders('pending', this)">⏳ Pending</button>
+          <button class="order-filter-btn" onclick="filterProviders('approved', this)">✅ Approved</button>
+          <button class="order-filter-btn" onclick="filterProviders('rejected', this)">❌ Rejected</button>
+          <button class="order-filter-btn" onclick="filterProviders('all', this)">All</button>
+        </div>
+
+        <div id="providers-list">
+          <div style="text-align:center;padding:40px;color:var(--text2);">
+            <div style="font-size:3em;margin-bottom:12px;">⏳</div>
+            <p>Loading applications...</p>
+          </div>
+        </div>
+      </div>
 
 
       <!-- SETTINGS TAB -->
@@ -500,7 +527,7 @@
       var navMap = {
         'overview': 0, 'approvals': 1, 'users': 2,
         'orders': 3, 'withdrawals': 4, 'payments': 5,
-        'messages': 6, 'support': 7, 'careers': 8, 'settings': 9
+        'messages': 6, 'careers': 7, 'providers': 8, 'settings': 9
       };
       var index = navMap[tab];
       if (index !== undefined && navItems[index]) {
@@ -1110,6 +1137,120 @@ var adminOrdersListener = null;
           renderAdminOrders(allOrders);
           loadStats();
         }, function(err) { console.log('Admin orders error:', err); });
+    }
+    
+    var allProviderApps = [];
+
+    function loadProviderApplications() {
+      var list = document.getElementById('providers-list');
+      if (!list) return;
+
+      db.collection('providerApplications')
+        .orderBy('submittedAt', 'desc')
+        .get()
+        .then(function(snap) {
+          allProviderApps = [];
+          snap.forEach(function(doc) {
+            allProviderApps.push(Object.assign({ _id: doc.id }, doc.data()));
+          });
+
+          var pendingCount = allProviderApps.filter(function(a) { return a.status === 'pending'; }).length;
+          var badge = document.getElementById('providers-badge');
+          if (badge && pendingCount > 0) {
+            badge.textContent = pendingCount;
+            badge.style.display = 'inline';
+          }
+
+          filterProviders('pending', document.querySelector('#tab-providers .order-filter-btn'));
+        })
+        .catch(function(err) {
+          list.innerHTML = '<p style="color:#cc0000;padding:20px;">Error: ' + err.message + '</p>';
+        });
+    }
+
+    function filterProviders(status, btn) {
+      if (btn) {
+        document.querySelectorAll('#tab-providers .order-filter-btn').forEach(function(b) {
+          b.classList.remove('active');
+        });
+        btn.classList.add('active');
+      }
+      var filtered = status === 'all'
+        ? allProviderApps
+        : allProviderApps.filter(function(a) { return a.status === status; });
+      renderProviderApps(filtered);
+    }
+
+    function renderProviderApps(apps) {
+      var list = document.getElementById('providers-list');
+      if (!list) return;
+
+      if (apps.length === 0) {
+        list.innerHTML =
+          '<div style="text-align:center;padding:40px;">' +
+            '<div style="font-size:3em;margin-bottom:12px;">🚀</div>' +
+            '<h3>No applications here</h3>' +
+          '</div>';
+        return;
+      }
+
+      list.innerHTML = '<div style="display:grid;gap:12px;">' +
+        apps.map(function(a) {
+          var statusColors = {
+            pending:  { bg: '#fff3cd', text: '#856404' },
+            approved: { bg: '#d4edda', text: '#155724' },
+            rejected: { bg: '#f8d7da', text: '#721c24' },
+          };
+          var sc = statusColors[a.status] || statusColors.pending;
+
+          return '<div style="background:white;border:1px solid var(--border);border-radius:12px;padding:16px;">' +
+            '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;">' +
+              '<div>' +
+                '<div style="font-weight:700;font-size:1em;">' + (a.firstName || '') + ' ' + (a.lastName || '') + '</div>' +
+                '<div style="font-size:0.82em;color:var(--orange);font-weight:700;">' + (a.providerLabel || a.providerType || '') + '</div>' +
+                '<div style="font-size:0.82em;color:var(--text2);">🏢 ' + (a.businessName || '') + '</div>' +
+                '<div style="font-size:0.82em;color:var(--text2);">📍 ' + (a.state || '') + '</div>' +
+              '</div>' +
+              '<span style="background:' + sc.bg + ';color:' + sc.text + ';padding:4px 10px;border-radius:6px;font-size:0.75em;font-weight:700;">' +
+                (a.status || 'pending').toUpperCase() +
+              '</span>' +
+            '</div>' +
+            '<div style="background:var(--gray);border-radius:8px;padding:10px;margin-bottom:10px;font-size:0.82em;color:var(--text2);">' +
+              '<b>What they offer:</b> ' + (a.description || 'N/A') +
+            '</div>' +
+            '<div style="font-size:0.8em;color:var(--text2);margin-bottom:10px;">' +
+              '📧 ' + (a.email || '') + ' • 📱 ' + (a.whatsapp || '') + '<br/>' +
+              '🏦 ' + (a.bank || '') + ' — ' + (a.accountNumber || '') + ' (' + (a.accountName || '') + ')<br/>' +
+              '🪪 ' + (a.idType || '') + ': ' + (a.idNumber || '') +
+            '</div>' +
+            (a.instagram || a.facebook || a.twitter || a.website
+              ? '<div style="font-size:0.78em;color:var(--text2);margin-bottom:10px;">' +
+                  (a.instagram ? '📸 ' + a.instagram + ' ' : '') +
+                  (a.facebook  ? '👤 ' + a.facebook  + ' ' : '') +
+                  (a.twitter   ? '🐦 ' + a.twitter   + ' ' : '') +
+                  (a.website   ? '🌐 ' + a.website   : '') +
+                '</div>'
+              : '') +
+            '<div style="display:flex;flex-wrap:wrap;gap:8px;">' +
+              '<a href="mailto:' + (a.email || '') + '" style="background:var(--orange);color:white;padding:8px 14px;border-radius:6px;text-decoration:none;font-size:0.82em;font-weight:700;">📧 Email</a>' +
+              '<a href="https://wa.me/' + (a.whatsapp || '').replace(/[^0-9]/g, '') + '" target="_blank" style="background:#25d366;color:white;padding:8px 14px;border-radius:6px;text-decoration:none;font-size:0.82em;font-weight:700;">💬 WhatsApp</a>' +
+              (a.status === 'pending'
+                ? '<button onclick="updateProviderApp(\'' + a._id + '\', \'approved\')" style="background:#d4edda;color:#155724;border:none;padding:8px 14px;border-radius:6px;cursor:pointer;font-size:0.82em;font-weight:700;">✅ Approve</button>' +
+                  '<button onclick="updateProviderApp(\'' + a._id + '\', \'rejected\')" style="background:#f8d7da;color:#721c24;border:none;padding:8px 14px;border-radius:6px;cursor:pointer;font-size:0.82em;font-weight:700;">❌ Reject</button>'
+                : '') +
+            '</div>' +
+          '</div>';
+        }).join('') +
+      '</div>';
+    }
+
+    function updateProviderApp(appId, status) {
+      db.collection('providerApplications').doc(appId).update({ status: status })
+        .then(function() {
+          showToast(status === 'approved' ? '✅ Application approved!' : '❌ Application rejected');
+          loadProviderApplications();
+        })
+        .catch(function(err) { showToast('Error: ' + err.message); });
     }
 
     function doAdminLogout() {

@@ -340,12 +340,12 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 
-function goToProviderDashboard(dashboardPath) {
+function goToProviderDashboard(type) {
   var user = JSON.parse(localStorage.getItem('nexa_current_user') || 'null');
   if (user) {
-    window.location.href = dashboardPath;
+    window.location.href = 'pages/auth/become-provider.html?type=' + (type || 'seller');
   } else {
-    localStorage.setItem('nexa_redirect_after_login', dashboardPath);
+    localStorage.setItem('nexa_redirect_after_login', 'pages/auth/become-provider.html?type=' + (type || 'seller'));
     window.location.href = 'pages/auth/register.html';
   }
 }

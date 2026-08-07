@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Become a Provider — Nexabay</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{background:#f5f5f5;font-family:'Inter',sans-serif;padding-bottom:40px;}
+
+    .bp-nav{
+      background:#0a0f1e;
+      padding:14px 16px;
+      display:flex;
+      align-items:center;
+      gap:12px;
+    }
+    .bp-nav-back{
+      color:white;
+      text-decoration:none;
+      font-size:1.2em;
+    }
+    .bp-nav-logo{
+      color:white;
+      font-weight:900;
+      font-size:1.1em;
+      text-decoration:none;
+    }
+    .bp-nav-logo span{color:#ff6b00;}
+
+    .bp-hero{
+      background:linear-gradient(135deg,#0a0f1e,#1a237e);
+      padding:30px 20px;
+      text-align:center;
+    }
+    .bp-hero-icon{font-size:3em;margin-bottom:12px;}
+    .bp-hero h1{
+      color:white;
+      font-size:1.4em;
+      font-weight:900;
+      margin-bottom:8px;
+    }
+    .bp-hero p{
+      color:rgba(255,255,255,0.65);
+      font-size:0.88em;
+      line-height:1.6;
+    }
+
+    .bp-type-select{
+      background:white;
+      padding:20px 16px;
+      margin-bottom:8px;
+    }
+    .bp-type-select h3{
+      font-size:0.9em;
+      font-weight:800;
+      margin-bottom:12px;
+      color:#333;
+    }
+    .bp-types{
+      display:grid;
+      grid-template-columns:repeat(2,1fr);
+      gap:8px;
+    }
+    .bp-type-btn{
+      border:2px solid #e0e0e0;
+      border-radius:10px;
+      padding:12px 8px;
+      text-align:center;
+      cursor:pointer;
+      background:white;
+      transition:all 0.2s;
+      font-family:'Inter',sans-serif;
+    }
+    .bp-type-btn.active{
+      border-color:#ff6b00;
+      background:#fff8f0;
+    }
+    .bp-type-btn-icon{font-size:1.8em;margin-bottom:4px;}
+    .bp-type-btn-label{
+      font-size:0.75em;
+      font-weight:700;
+      color:#333;
+    }
+
+    .bp-form-card{
+      background:white;
+      margin-bottom:8px;
+      padding:20px 16px;
+    }
+    .bp-form-card h3{
+      font-size:0.9em;
+      font-weight:800;
+      color:#333;
+      margin-bottom:14px;
+      padding-bottom:10px;
+      border-bottom:2px solid #f5f5f5;
+      display:flex;
+      align-items:center;
+      gap:8px;
+    }
+
+    .bp-field{margin-bottom:14px;}
+    .bp-label{
+      display:block;
+      font-size:0.8em;
+      font-weight:700;
+      color:#444;
+      margin-bottom:6px;
+    }
+    .bp-required{color:#ff6b00;}
+    .bp-input{
+      width:100%;
+      padding:12px 14px;
+      border:1.5px solid #e0e0e0;
+      border-radius:10px;
+      font-size:0.9em;
+      outline:none;
+      font-family:'Inter',sans-serif;
+      transition:border-color 0.2s;
+      background:white;
+    }
+    .bp-input:focus{border-color:#ff6b00;}
+    .bp-input.error{border-color:#cc0000;}
+    .bp-select{
+      width:100%;
+      padding:12px 14px;
+      border:1.5px solid #e0e0e0;
+      border-radius:10px;
+      font-size:0.9em;
+      outline:none;
+      font-family:'Inter',sans-serif;
+      background:white;
+      appearance:none;
+      cursor:pointer;
+    }
+    .bp-select:focus{border-color:#ff6b00;}
+    .bp-textarea{
+      width:100%;
+      padding:12px 14px;
+      border:1.5px solid #e0e0e0;
+      border-radius:10px;
+      font-size:0.9em;
+      outline:none;
+      font-family:'Inter',sans-serif;
+      resize:vertical;
+      min-height:80px;
+    }
+    .bp-textarea:focus{border-color:#ff6b00;}
+
+    .bp-row-2{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:10px;
+    }
+
+    .bp-optional-tag{
+      font-size:0.68em;
+      color:#999;
+      font-weight:400;
+      margin-left:4px;
+    }
+
+    .bp-file-upload{
+      border:2px dashed #e0e0e0;
+      border-radius:10px;
+      padding:20px;
+      text-align:center;
+      cursor:pointer;
+      transition:border-color 0.2s;
+    }
+    .bp-file-upload:hover{border-color:#ff6b00;}
+    .bp-file-upload input{display:none;}
+    .bp-file-icon{font-size:2em;margin-bottom:6px;}
+    .bp-file-text{font-size:0.8em;color:#666;}
+    .bp-file-name{
+      font-size:0.8em;
+      color:#ff6b00;
+      font-weight:700;
+      margin-top:6px;
+    }
+
+    .bp-social-row{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      margin-bottom:10px;
+    }
+    .bp-social-icon{
+      width:36px;
+      height:36px;
+      border-radius:8px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:1.1em;
+      flex-shrink:0;
+    }
+
+    .bp-terms-wrap{
+      display:flex;
+      align-items:flex-start;
+      gap:10px;
+      padding:16px;
+      background:#f8f9fa;
+      border-radius:10px;
+      margin-bottom:16px;
+    }
+    .bp-terms-wrap input{
+      width:18px;
+      height:18px;
+      flex-shrink:0;
+      margin-top:2px;
+      accent-color:#ff6b00;
+    }
+    .bp-terms-text{
+      font-size:0.82em;
+      color:#555;
+      line-height:1.5;
+    }
+    .bp-terms-text a{color:#ff6b00;text-decoration:none;}
+
+    .bp-error-box{
+      background:#fff0f0;
+      border:1px solid #ffcccc;
+      color:#cc0000;
+      padding:12px 14px;
+      border-radius:10px;
+      font-size:0.85em;
+      margin-bottom:14px;
+      display:none;
+    }
+    .bp-success-box{
+      background:#f0fff4;
+      border:1px solid #c3e6cb;
+      color:#155724;
+      padding:16px;
+      border-radius:10px;
+      font-size:0.88em;
+      margin-bottom:14px;
+      display:none;
+      text-align:center;
+      line-height:1.6;
+    }
+
+    .bp-submit-btn{
+      width:100%;
+      padding:16px;
+      background:#ff6b00;
+      color:white;
+      border:none;
+      border-radius:12px;
+      font-size:1em;
+      font-weight:800;
+      cursor:pointer;
+      font-family:'Inter',sans-serif;
+      box-shadow:0 4px 16px rgba(255,107,0,0.3);
+    }
+    .bp-submit-btn:disabled{
+      background:#ccc;
+      box-shadow:none;
+    }
+
+    .bp-secure-note{
+      text-align:center;
+      font-size:0.75em;
+      color:#999;
+      margin-top:12px;
+      line-height:1.6;
+    }
+
+    .bp-steps{
+      display:flex;
+      gap:0;
+      background:white;
+      border-bottom:1px solid #f0f0f0;
+      padding:0 16px;
+      overflow-x:auto;
+    }
+    .bp-step{
+      display:flex;
+      align-items:center;
+      gap:6px;
+      padding:12px 10px;
+      font-size:0.75em;
+      font-weight:600;
+      color:#999;
+      white-space:nowrap;
+      flex-shrink:0;
+    }
+    .bp-step.active{color:#ff6b00;}
+    .bp-step.done{color:#00a651;}
+    .bp-step-num{
+      width:20px;
+      height:20px;
+      border-radius:50%;
+      background:#f0f0f0;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:0.85em;
+      font-weight:800;
+    }
+    .bp-step.active .bp-step-num{background:#ff6b00;color:white;}
+    .bp-step.done .bp-step-num{background:#00a651;color:white;}
+    .bp-step-divider{
+      width:20px;
+      height:1px;
+      background:#e0e0e0;
+      flex-shrink:0;
+      align-self:center;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <div class="bp-nav">
+    <a href="../../index.html" class="bp-nav-back">←</a>
+    <a href="../../index.html" class="bp-nav-logo">Nexa<span>bay</span></a>
+  </div>
+
+  <!-- HERO -->
+  <div class="bp-hero">
+    <div class="bp-hero-icon">🚀</div>
+    <h1>Become a Nexabay Provider</h1>
+    <p>Join thousands of Nigerian businesses<br/>earning on Africa's Everything Platform</p>
+  </div>
+
+  <!-- STEPS -->
+  <div class="bp-steps">
+    <div class="bp-step active" id="step-indicator-1">
+      <div class="bp-step-num">1</div> Provider Type
+    </div>
+    <div class="bp-step-divider"></div>
+    <div class="bp-step" id="step-indicator-2">
+      <div class="bp-step-num">2</div> Business Info
+    </div>
+    <div class="bp-step-divider"></div>
+    <div class="bp-step" id="step-indicator-3">
+      <div class="bp-step-num">3</div> Verification
+    </div>
+    <div class="bp-step-divider"></div>
+    <div class="bp-step" id="step-indicator-4">
+      <div class="bp-step-num">4</div> Submit
+    </div>
+  </div>
+
+  <div style="padding:16px 16px 0;">
+
+    <!-- STEP 1 — PROVIDER TYPE -->
+    <div id="step-1">
+      <div class="bp-form-card">
+        <h3>🎯 What do you want to offer?</h3>
+        <div class="bp-types" id="provider-types">
+          <div class="bp-type-btn active" onclick="selectType('seller', this)">
+            <div class="bp-type-btn-icon">🛍️</div>
+            <div class="bp-type-btn-label">Sell Products</div>
+          </div>
+          <div class="bp-type-btn" onclick="selectType('service', this)">
+            <div class="bp-type-btn-icon">🛠️</div>
+            <div class="bp-type-btn-label">Offer Services</div>
+          </div>
+          <div class="bp-type-btn" onclick="selectType('rental', this)">
+            <div class="bp-type-btn-icon">🏠</div>
+            <div class="bp-type-btn-label">List Property</div>
+          </div>
+          <div class="bp-type-btn" onclick="selectType('restaurant', this)">
+            <div class="bp-type-btn-icon">🍔</div>
+            <div class="bp-type-btn-label">Restaurant/Food</div>
+          </div>
+          <div class="bp-type-btn" onclick="selectType('instructor', this)">
+            <div class="bp-type-btn-icon">🎓</div>
+            <div class="bp-type-btn-label">Teach/Instructor</div>
+          </div>
+          <div class="bp-type-btn" onclick="selectType('employer', this)">
+            <div class="bp-type-btn-icon">💼</div>
+            <div class="bp-type-btn-label">Post Jobs</div>
+          </div>
+          <div class="bp-type-btn" onclick="selectType('driver', this)">
+            <div class="bp-type-btn-icon">🚗</div>
+            <div class="bp-type-btn-label">Driver/Delivery</div>
+          </div>
+          <div class="bp-type-btn" onclick="selectType('health', this)">
+            <div class="bp-type-btn-icon">🏥</div>
+            <div class="bp-type-btn-label">Health Provider</div>
+          </div>
+          <div class="bp-type-btn" onclick="selectType('event', this)">
+            <div class="bp-type-btn-icon">🎉</div>
+            <div class="bp-type-btn-label">Event Organizer</div>
+          </div>
+          <div class="bp-type-btn" onclick="selectType('travel', this)">
+            <div class="bp-type-btn-icon">✈️</div>
+            <div class="bp-type-btn-label">Travel Agent</div>
+          </div>
+        </div>
+      </div>
+      <button class="bp-submit-btn" onclick="goToStep(2)">Continue →</button>
+    </div>
+
+    <!-- STEP 2 — BUSINESS INFO -->
+    <div id="step-2" style="display:none;">
+
+      <div class="bp-form-card">
+        <h3>👤 Personal Information</h3>
+
+        <div class="bp-row-2">
+          <div class="bp-field">
+            <label class="bp-label">First Name <span class="bp-required">*</span></label>
+            <input type="text" class="bp-input" id="bp-firstname" placeholder="e.g. Chidi"/>
+          </div>
+          <div class="bp-field">
+            <label class="bp-label">Last Name <span class="bp-required">*</span></label>
+            <input type="text" class="bp-input" id="bp-lastname" placeholder="e.g. Okafor"/>
+          </div>
+        </div>
+
+        <div class="bp-field">
+          <label class="bp-label">Email Address <span class="bp-required">*</span></label>
+          <input type="email" class="bp-input" id="bp-email" placeholder="your@email.com"/>
+        </div>
+
+        <div class="bp-field">
+          <label class="bp-label">WhatsApp Number <span class="bp-required">*</span></label>
+          <input type="tel" class="bp-input" id="bp-whatsapp" placeholder="e.g. 08012345678"/>
+          <div style="font-size:0.72em;color:#999;margin-top:4px;">Customers will contact you on this number</div>
+        </div>
+
+        <div class="bp-field">
+          <label class="bp-label">State <span class="bp-required">*</span></label>
+          <select class="bp-select" id="bp-state">
+            <option value="">Select your state</option>
+            <option>Lagos</option>
+            <option>Abuja FCT</option>
+            <option>Rivers</option>
+            <option>Kano</option>
+            <option>Oyo</option>
+            <option>Enugu</option>
+            <option>Anambra</option>
+            <option>Delta</option>
+            <option>Edo</option>
+            <option>Imo</option>
+            <option>Kaduna</option>
+            <option>Ogun</option>
+            <option>Osun</option>
+            <option>Ondo</option>
+            <option>Ekiti</option>
+            <option>Kwara</option>
+            <option>Benue</option>
+            <option>Plateau</option>
+            <option>Niger</option>
+            <option>Kogi</option>
+            <option>Nassarawa</option>
+            <option>Taraba</option>
+            <option>Adamawa</option>
+            <option>Gombe</option>
+            <option>Borno</option>
+            <option>Yobe</option>
+            <option>Bauchi</option>
+            <option>Jigawa</option>
+            <option>Katsina</option>
+            <option>Kebbi</option>
+            <option>Sokoto</option>
+            <option>Zamfara</option>
+            <option>Cross River</option>
+            <option>Akwa Ibom</option>
+            <option>Bayelsa</option>
+            <option>Abia</option>
+            <option>Ebonyi</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="bp-form-card">
+        <h3>🏢 Business Information</h3>
+
+        <div class="bp-field">
+          <label class="bp-label">Business/Brand Name <span class="bp-required">*</span></label>
+          <input type="text" class="bp-input" id="bp-business-name" placeholder="e.g. Chidi Electronics"/>
+        </div>
+
+        <div class="bp-field">
+          <label class="bp-label">What do you sell/offer? <span class="bp-required">*</span></label>
+          <textarea class="bp-textarea" id="bp-description" placeholder="Describe what you sell or offer in detail. Be specific — this helps customers find you and helps our admin approve your application faster."></textarea>
+        </div>
+
+        <div class="bp-field">
+          <label class="bp-label">Years in Business <span class="bp-required">*</span></label>
+          <select class="bp-select" id="bp-experience">
+            <option value="">Select experience</option>
+            <option value="new">Just starting out</option>
+            <option value="1">Less than 1 year</option>
+            <option value="1-3">1–3 years</option>
+            <option value="3-5">3–5 years</option>
+            <option value="5+">5+ years</option>
+          </select>
+        </div>
+
+        <div class="bp-field">
+          <label class="bp-label">Business Address <span class="bp-optional-tag">(optional)</span></label>
+          <input type="text" class="bp-input" id="bp-address" placeholder="Street, area, city"/>
+        </div>
+      </div>
+
+      <div class="bp-form-card">
+        <h3>📱 Social Media & Online Presence</h3>
+
+        <div class="bp-social-row">
+          <div class="bp-social-icon" style="background:#25d366;">💬</div>
+          <input type="tel" class="bp-input" id="bp-whatsapp2" placeholder="WhatsApp Business number (compulsory)" style="flex:1;"/>
+        </div>
+
+        <div class="bp-social-row">
+          <div class="bp-social-icon" style="background:linear-gradient(45deg,#f09433,#e6683c,#dc2743);">📸</div>
+          <input type="text" class="bp-input" id="bp-instagram" placeholder="Instagram handle e.g. @mybusiness (optional)" style="flex:1;"/>
+        </div>
+
+        <div class="bp-social-row">
+          <div class="bp-social-icon" style="background:#1877f2;">👤</div>
+          <input type="text" class="bp-input" id="bp-facebook" placeholder="Facebook page URL or name (optional)" style="flex:1;"/>
+        </div>
+
+        <div class="bp-social-row">
+          <div class="bp-social-icon" style="background:#000;">🐦</div>
+          <input type="text" class="bp-input" id="bp-twitter" placeholder="Twitter/X handle e.g. @mybusiness (optional)" style="flex:1;"/>
+        </div>
+
+        <div class="bp-social-row">
+          <div class="bp-social-icon" style="background:#e60023;">📌</div>
+          <input type="text" class="bp-input" id="bp-website" placeholder="Website URL (optional)" style="flex:1;"/>
+        </div>
+      </div>
+
+      <button class="bp-submit-btn" onclick="goToStep(3)">Continue →</button>
+      <div style="text-align:center;margin-top:12px;">
+        <button onclick="goToStep(1)" style="background:none;border:none;color:#999;font-size:0.85em;cursor:pointer;">← Back</button>
+      </div>
+    </div>
+
+    <!-- STEP 3 — VERIFICATION -->
+    <div id="step-3" style="display:none;">
+
+      <div class="bp-form-card">
+        <h3>🏦 Bank Details for Payouts</h3>
+        <p style="font-size:0.82em;color:#666;margin-bottom:14px;line-height:1.6;">Your earnings will be sent to this account. You can update this later from your dashboard.</p>
+
+        <div class="bp-field">
+          <label class="bp-label">Bank Name <span class="bp-required">*</span></label>
+          <select class="bp-select" id="bp-bank">
+            <option value="">Select your bank</option>
+            <option>GTBank</option>
+            <option>Access Bank</option>
+            <option>First Bank</option>
+            <option>Zenith Bank</option>
+            <option>UBA</option>
+            <option>Fidelity Bank</option>
+            <option>Sterling Bank</option>
+            <option>Union Bank</option>
+            <option>Stanbic IBTC</option>
+            <option>Opay</option>
+            <option>Palmpay</option>
+            <option>Kuda Bank</option>
+            <option>Moniepoint</option>
+            <option>Other</option>
+          </select>
+        </div>
+
+        <div class="bp-field">
+          <label class="bp-label">Account Number <span class="bp-required">*</span></label>
+          <input type="text" class="bp-input" id="bp-account-number" placeholder="10-digit account number" maxlength="10"/>
+        </div>
+
+        <div class="bp-field">
+          <label class="bp-label">Account Name <span class="bp-required">*</span></label>
+          <input type="text" class="bp-input" id="bp-account-name" placeholder="Exact name on your bank account"/>
+        </div>
+      </div>
+
+      <div class="bp-form-card">
+        <h3>🪪 Identity Verification</h3>
+        <p style="font-size:0.82em;color:#666;margin-bottom:14px;line-height:1.6;">We need to verify your identity to protect buyers and maintain platform trust. Your ID is stored securely and never shared.</p>
+
+        <div class="bp-field">
+          <label class="bp-label">ID Type <span class="bp-required">*</span></label>
+          <select class="bp-select" id="bp-id-type">
+            <option value="">Select ID type</option>
+            <option value="nin">NIN (National Identity Number)</option>
+            <option value="bvn">BVN (Bank Verification Number)</option>
+            <option value="passport">International Passport</option>
+            <option value="drivers">Driver's Licence</option>
+            <option value="voters">Voter's Card</option>
+          </select>
+        </div>
+
+        <div class="bp-field">
+          <label class="bp-label">ID Number <span class="bp-required">*</span></label>
+          <input type="text" class="bp-input" id="bp-id-number" placeholder="Enter your ID number"/>
+        </div>
+
+        <div class="bp-field">
+          <label class="bp-label">Upload ID Photo <span class="bp-optional-tag">(optional but recommended)</span></label>
+          <div class="bp-file-upload" onclick="document.getElementById('bp-id-file').click()">
+            <input type="file" id="bp-id-file" accept="image/*" onchange="handleIDUpload(this)"/>
+            <div class="bp-file-icon">📷</div>
+            <div class="bp-file-text">Tap to upload a clear photo of your ID</div>
+            <div class="bp-file-name" id="bp-id-filename"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bp-form-card">
+        <h3>📸 Profile/Business Photo <span class="bp-optional-tag">(optional)</span></h3>
+        <div class="bp-file-upload" onclick="document.getElementById('bp-profile-file').click()">
+          <input type="file" id="bp-profile-file" accept="image/*" onchange="handleProfileUpload(this)"/>
+          <div class="bp-file-icon">🤳</div>
+          <div class="bp-file-text">Upload a professional photo of yourself or your business</div>
+          <div class="bp-file-name" id="bp-profile-filename"></div>
+        </div>
+      </div>
+
+      <button class="bp-submit-btn" onclick="goToStep(4)">Continue →</button>
+      <div style="text-align:center;margin-top:12px;">
+        <button onclick="goToStep(2)" style="background:none;border:none;color:#999;font-size:0.85em;cursor:pointer;">← Back</button>
+      </div>
+    </div>
+
+    <!-- STEP 4 — REVIEW & SUBMIT -->
+    <div id="step-4" style="display:none;">
+
+      <div class="bp-form-card">
+        <h3>📋 Review Your Application</h3>
+        <div id="bp-review-summary" style="font-size:0.85em;color:#444;line-height:2;"></div>
+      </div>
+
+      <div class="bp-form-card">
+        <h3>📜 Agreement</h3>
+        <div class="bp-terms-wrap">
+          <input type="checkbox" id="bp-terms"/>
+          <div class="bp-terms-text">
+            I confirm that all information provided is accurate and truthful. I agree to Nexabay's
+            <a href="../terms.html">Terms of Service</a>,
+            <a href="../privacy.html">Privacy Policy</a> and
+            <a href="../refund.html">Seller Policy</a>.
+            I understand that Nexabay charges a commission on successful transactions and that my listings
+            must be approved by the admin team before going live.
+          </div>
+        </div>
+
+        <div class="bp-terms-wrap" style="margin-bottom:0;">
+          <input type="checkbox" id="bp-whatsapp-consent"/>
+          <div class="bp-terms-text">
+            I agree to receive order notifications, payment updates and important messages from Nexabay via WhatsApp on the number I provided.
+          </div>
+        </div>
+      </div>
+
+      <div class="bp-error-box" id="bp-error"></div>
+      <div class="bp-success-box" id="bp-success">
+        <div style="font-size:2em;margin-bottom:10px;">🎉</div>
+        <strong>Application Submitted Successfully!</strong><br/><br/>
+        Our team will review your application within 24–48 hours.<br/>
+        You'll receive a WhatsApp message once approved.<br/><br/>
+        <strong>What happens next:</strong><br/>
+        ✅ Admin reviews your application<br/>
+        ✅ You get WhatsApp notification when approved<br/>
+        ✅ Access your provider dashboard and start listing<br/><br/>
+        <a href="../../index.html" style="display:inline-block;background:#ff6b00;color:white;padding:12px 24px;border-radius:10px;text-decoration:none;font-weight:700;margin-top:8px;">Back to Nexabay →</a>
+      </div>
+
+      <button class="bp-submit-btn" id="bp-submit-btn" onclick="submitApplication()">
+        🚀 Submit Application
+      </button>
+      <div class="bp-secure-note">
+        🔒 Your information is encrypted and stored securely.<br/>
+        We never share your personal details with third parties.
+      </div>
+
+      <div style="text-align:center;margin-top:12px;">
+        <button onclick="goToStep(3)" style="background:none;border:none;color:#999;font-size:0.85em;cursor:pointer;">← Back</button>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="../../js/firebase/config.js"></script>
+  <script src="../../js/firebase/auth.js"></script>
+  <script src="../../js/firebase/imgbb.js"></script>
+  <script>
+
+    var selectedProviderType = 'seller';
+    var idFileUrl = '';
+    var profileFileUrl = '';
+
+    var PROVIDER_LABELS = {
+      seller:     '🛍️ Sell Products',
+      service:    '🛠️ Offer Services',
+      rental:     '🏠 List Property/Items',
+      restaurant: '🍔 Restaurant/Food',
+      instructor: '🎓 Teach/Instructor',
+      employer:   '💼 Post Jobs',
+      driver:     '🚗 Driver/Delivery',
+      health:     '🏥 Health Provider',
+      event:      '🎉 Event Organizer',
+      travel:     '✈️ Travel Agent',
+    };
+
+    var DASHBOARD_URLS = {
+      seller:     '../../pages/dashboard/seller.html',
+      service:    '../../pages/dashboard/services-provider.html',
+      rental:     '../../pages/dashboard/rentals-owner.html',
+      restaurant: '../../pages/dashboard/food-restaurant.html',
+      instructor: '../../pages/dashboard/learn-instructor.html',
+      employer:   '../../pages/dashboard/jobs-employer.html',
+      driver:     '../../pages/dashboard/ride-driver.html',
+      health:     '../../pages/dashboard/health-provider.html',
+      event:      '../../pages/dashboard/events-organizer.html',
+      travel:     '../../pages/dashboard/travel-agent.html',
+    };
+
+    function selectType(type, btn) {
+      selectedProviderType = type;
+      document.querySelectorAll('.bp-type-btn').forEach(function(b) {
+        b.classList.remove('active');
+      });
+      btn.classList.add('active');
+    }
+
+    function goToStep(step) {
+      if (step === 2) {
+        if (!selectedProviderType) {
+          alert('Please select a provider type');
+          return;
+        }
+      }
+
+      if (step === 3) {
+        var firstname = document.getElementById('bp-firstname').value.trim();
+        var lastname  = document.getElementById('bp-lastname').value.trim();
+        var email     = document.getElementById('bp-email').value.trim();
+        var whatsapp  = document.getElementById('bp-whatsapp').value.trim();
+        var state     = document.getElementById('bp-state').value;
+        var bizName   = document.getElementById('bp-business-name').value.trim();
+        var desc      = document.getElementById('bp-description').value.trim();
+        var exp       = document.getElementById('bp-experience').value;
+
+        if (!firstname || !lastname) { alert('Please enter your full name'); return; }
+        if (!email)    { alert('Please enter your email address'); return; }
+        if (!whatsapp) { alert('WhatsApp number is required'); return; }
+        if (!state)    { alert('Please select your state'); return; }
+        if (!bizName)  { alert('Please enter your business name'); return; }
+        if (!desc)     { alert('Please describe what you offer'); return; }
+        if (!exp)      { alert('Please select your experience level'); return; }
+      }
+
+      if (step === 4) {
+        var bank    = document.getElementById('bp-bank').value;
+        var acctNum = document.getElementById('bp-account-number').value.trim();
+        var acctName = document.getElementById('bp-account-name').value.trim();
+        var idType  = document.getElementById('bp-id-type').value;
+        var idNum   = document.getElementById('bp-id-number').value.trim();
+
+        if (!bank)     { alert('Please select your bank'); return; }
+        if (!acctNum || acctNum.length < 10) { alert('Please enter a valid 10-digit account number'); return; }
+        if (!acctName) { alert('Please enter your account name'); return; }
+        if (!idType)   { alert('Please select your ID type'); return; }
+        if (!idNum)    { alert('Please enter your ID number'); return; }
+
+        buildReviewSummary();
+      }
+
+      for (var i = 1; i <= 4; i++) {
+        var stepEl = document.getElementById('step-' + i);
+        var indEl  = document.getElementById('step-indicator-' + i);
+        if (stepEl) stepEl.style.display = i === step ? 'block' : 'none';
+        if (indEl) {
+          indEl.classList.remove('active', 'done');
+          if (i === step) indEl.classList.add('active');
+          if (i < step)  indEl.classList.add('done');
+        }
+      }
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function buildReviewSummary() {
+      var summary = document.getElementById('bp-review-summary');
+      if (!summary) return;
+      summary.innerHTML =
+        '<div style="display:grid;gap:8px;">' +
+          reviewRow('Provider Type', PROVIDER_LABELS[selectedProviderType] || selectedProviderType) +
+          reviewRow('Name', document.getElementById('bp-firstname').value + ' ' + document.getElementById('bp-lastname').value) +
+          reviewRow('Email', document.getElementById('bp-email').value) +
+          reviewRow('WhatsApp', document.getElementById('bp-whatsapp').value) +
+          reviewRow('State', document.getElementById('bp-state').value) +
+          reviewRow('Business Name', document.getElementById('bp-business-name').value) +
+          reviewRow('Experience', document.getElementById('bp-experience').value) +
+          reviewRow('Bank', document.getElementById('bp-bank').value) +
+          reviewRow('Account Number', document.getElementById('bp-account-number').value) +
+          reviewRow('ID Type', document.getElementById('bp-id-type').value) +
+        '</div>';
+    }
+
+    function reviewRow(label, value) {
+      return '<div style="display:flex;justify-content:space-between;padding:8px;background:#f8f9fa;border-radius:8px;">' +
+        '<span style="color:#666;font-size:0.85em;">' + label + '</span>' +
+        '<span style="font-weight:700;font-size:0.85em;color:#333;">' + (value || '—') + '</span>' +
+      '</div>';
+    }
+
+    function handleIDUpload(input) {
+      var file = input.files[0];
+      if (!file) return;
+      document.getElementById('bp-id-filename').textContent = '✅ ' + file.name;
+      if (typeof uploadImageToImgBB === 'function') {
+        uploadImageToImgBB(file).then(function(url) { idFileUrl = url; });
+      }
+    }
+
+    function handleProfileUpload(input) {
+      var file = input.files[0];
+      if (!file) return;
+      document.getElementById('bp-profile-filename').textContent = '✅ ' + file.name;
+      if (typeof uploadImageToImgBB === 'function') {
+        uploadImageToImgBB(file).then(function(url) { profileFileUrl = url; });
+      }
+    }
+
+    function submitApplication() {
+      var termsChecked    = document.getElementById('bp-terms').checked;
+      var whatsappChecked = document.getElementById('bp-whatsapp-consent').checked;
+      var errEl = document.getElementById('bp-error');
+      var sucEl = document.getElementById('bp-success');
+      var btn   = document.getElementById('bp-submit-btn');
+
+      errEl.style.display = 'none';
+
+      if (!termsChecked) {
+        errEl.textContent = 'Please agree to our Terms of Service to continue';
+        errEl.style.display = 'block';
+        return;
+      }
+      if (!whatsappChecked) {
+        errEl.textContent = 'Please agree to receive WhatsApp notifications';
+        errEl.style.display = 'block';
+        return;
+      }
+
+      btn.textContent = 'Submitting...';
+      btn.disabled = true;
+
+      var user = JSON.parse(localStorage.getItem('nexa_current_user') || 'null');
+
+      var applicationData = {
+        providerType:   selectedProviderType,
+        providerLabel:  PROVIDER_LABELS[selectedProviderType] || selectedProviderType,
+        dashboardUrl:   DASHBOARD_URLS[selectedProviderType] || '',
+        firstName:      document.getElementById('bp-firstname').value.trim(),
+        lastName:       document.getElementById('bp-lastname').value.trim(),
+        email:          document.getElementById('bp-email').value.trim(),
+        whatsapp:       document.getElementById('bp-whatsapp').value.trim(),
+        state:          document.getElementById('bp-state').value,
+        businessName:   document.getElementById('bp-business-name').value.trim(),
+        description:    document.getElementById('bp-description').value.trim(),
+        experience:     document.getElementById('bp-experience').value,
+        address:        document.getElementById('bp-address').value.trim(),
+        instagram:      document.getElementById('bp-instagram').value.trim(),
+        facebook:       document.getElementById('bp-facebook').value.trim(),
+        twitter:        document.getElementById('bp-twitter').value.trim(),
+        website:        document.getElementById('bp-website').value.trim(),
+        bank:           document.getElementById('bp-bank').value,
+        accountNumber:  document.getElementById('bp-account-number').value.trim(),
+        accountName:    document.getElementById('bp-account-name').value.trim(),
+        idType:         document.getElementById('bp-id-type').value,
+        idNumber:       document.getElementById('bp-id-number').value.trim(),
+        idFileUrl:      idFileUrl,
+        profileFileUrl: profileFileUrl,
+        userId:         user ? user.uid : null,
+        userEmail:      user ? user.email : null,
+        status:         'pending',
+        submittedAt:    firebase.firestore.FieldValue.serverTimestamp(),
+      };
+
+      db.collection('providerApplications').add(applicationData)
+        .then(function() {
+          btn.style.display = 'none';
+          sucEl.style.display = 'block';
+          document.querySelector('.bp-terms-wrap').style.display = 'none';
+
+          if (typeof db !== 'undefined') {
+            db.collection('contactMessages').add({
+              name:      applicationData.firstName + ' ' + applicationData.lastName,
+              email:     applicationData.email,
+              phone:     applicationData.whatsapp,
+              subject:   'New Provider Application — ' + applicationData.providerLabel,
+              message:   'Business: ' + applicationData.businessName + '\nType: ' + applicationData.providerLabel + '\nState: ' + applicationData.state,
+              status:    'unread',
+              createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+            });
+          }
+        })
+        .catch(function(err) {
+          errEl.textContent = 'Error submitting application: ' + err.message;
+          errEl.style.display = 'block';
+          btn.textContent = '🚀 Submit Application';
+          btn.disabled = false;
+        });
+    }
+
+  </script>
+
+</body>
+</html>
