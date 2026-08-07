@@ -33,71 +33,142 @@ function updateCartCount() {
 }
 
 // ── MOBILE MENU ───────────────────────────────
+// ── NAVIGATION ────────────────────────────────
+
 function toggleMobileMenu() {
-  var menu = document.getElementById('mobile-menu');
+  var menu    = document.getElementById('mobile-side-menu');
   var overlay = document.getElementById('mobile-overlay');
-  var btn = document.getElementById('hamburger-btn');
   if (!menu) return;
-  if (menu.classList.contains('open')) {
-    closeMobileMenu();
+  var isOpen = menu.classList.contains('open');
+  if (isOpen) {
+    menu.classList.remove('open');
+    if (overlay) overlay.classList.remove('open');
+    document.body.style.overflow = '';
   } else {
     menu.classList.add('open');
     if (overlay) overlay.classList.add('open');
-    if (btn) btn.textContent = '✕';
     document.body.style.overflow = 'hidden';
+    closeAllDropdowns();
   }
 }
 
 function closeMobileMenu() {
-  var menu = document.getElementById('mobile-menu');
+  var menu    = document.getElementById('mobile-side-menu');
   var overlay = document.getElementById('mobile-overlay');
-  var btn = document.getElementById('hamburger-btn');
-  if (menu) menu.classList.remove('open');
+  if (menu)    menu.classList.remove('open');
   if (overlay) overlay.classList.remove('open');
-  if (btn) btn.textContent = '☰';
   document.body.style.overflow = '';
 }
 
-function loadHomepageProducts() {
-  if (typeof db === 'undefined') return;
-  var grid = document.getElementById('homepage-products');
-  if (!grid) return;
-  db.collection('products')
-    .where('status', '==', 'active')
-    .limit(6)
-    .get()
-    .then(function(snap) {
-      var products = [];
-      snap.forEach(function(doc) { products.push(doc.data()); });
-      if (products.length === 0) {
-        grid.innerHTML =
-          '<div style="text-align:center;padding:40px;color:#aaa;grid-column:1/-1;">' +
-            '<div style="font-size:3em;margin-bottom:12px;">🛍️</div>' +
-            '<p>Be the first seller on Nexabay!</p>' +
-            '<a href="pages/auth/register.html" style="background:var(--orange);color:white;padding:10px 20px;border-radius:8px;text-decoration:none;font-weight:700;display:inline-block;margin-top:10px;">Start Selling →</a>' +
-          '</div>';
-        return;
-      }
-      grid.innerHTML = products.map(function(p) {
-        var discount = p.oldPrice && p.oldPrice > p.price
-          ? Math.round((1 - p.price / p.oldPrice) * 100) : 0;
-        var imgContent = p.imageUrl
-          ? '<img src="' + p.imageUrl + '" style="width:100%;height:140px;object-fit:cover;border-radius:8px 8px 0 0;"/>'
-          : '<div style="height:140px;background:var(--gray);border-radius:8px 8px 0 0;display:flex;align-items:center;justify-content:center;font-size:3em;">' + (p.emoji || '📦') + '</div>';
-        return '<div onclick="window.location.href=\'pages/shop/product.html?id=' + p.id + '\'" style="background:white;border-radius:10px;overflow:hidden;cursor:pointer;border:1px solid #eee;">' +
-          imgContent +
-          '<div style="padding:10px;">' +
-            (discount > 0 ? '<div style="background:#ff4444;color:white;font-size:0.7em;font-weight:700;padding:2px 6px;border-radius:4px;display:inline-block;margin-bottom:4px;">-' + discount + '%</div>' : '') +
-            '<div style="font-weight:700;font-size:0.85em;margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + p.name + '</div>' +
-            '<div style="color:var(--orange);font-weight:800;">₦' + parseInt(p.price).toLocaleString() + '</div>' +
-            '<div style="font-size:0.75em;color:#888;">📍 ' + (p.location || 'Nigeria') + '</div>' +
-          '</div>' +
-        '</div>';
-      }).join('');
-    })
-    .catch(function(err) { console.log('Homepage products error:', err); });
+function toggleDropdown(name) {
+  var dropdown = document.getElementById('dropdown-' + name);
+  var arrow    = dropdown ? dropdown.previousElementSibling : null;
+  if (!dropdown) return;
+
+  var isOpen = dropdown.classList.contains('open');
+  closeAllDropdowns();
+
+  if (!isOpen) {
+    dropdown.classList.add('open');
+    if (arrow && arrow.classList.contains('snav-arrow')) {
+      arrow.classList.add('open');
+    }
+  }
 }
 
+function closeAllDropdowns() {
+  document.querySelectorAll('.snav-dropdown').forEach(function(d) {
+    d.classList.remove('open');
+  });
+  document.querySelectorAll('.snav-arrow').forEach(function(a) {
+    a.classList.remove('open');
+  });
+}
+
+function navSearch() {
+  var input = document.getElementById('nav-search-input');
+  if (!input) return;
+  var q = input.value.trim();
+  if (!q) return;
+  var base = window.location.pathname.includes('/pages/') ? '../' : '';
+  window.location.href = base + 'pages/search.html?q=' + encodeURIComponent(q);
+}
+
+function checkAuthState() {
+  var user = JSON.parse(localStorage.getItem('nexa_current_user') || 'null');
+
+  var loginBtn  = document.getElementById('nav-login-btn');
+  var signupBtn = document.getElementById('nav-signup-btn');
+  var msmUser   = document.getElementById('msm-user');
+  var msmLogout = document.getElementById('msm-logout');
+
+  if (user) {
+    if (loginBtn)  loginBtn.style.display  = 'none';
+    if (signupBtn) signupBtn.textContent   = user.firstName || 'Account';
+    if (signupBtn) signupBtn.href          = 'pages/dashboard/buyer.html';
+
+    if (msmUser) {
+      msmUser.innerHTML =
+        '<div class="msm-user-info">' +
+          '<div class="msm-user-avatar">' + (user.firstName || 'U')[0].toUpperCase() + '</div>' +
+          '<div>' +
+            '<div class="msm-user-name">' + (user.fullName || user.firstName || 'User') + '</div>' +
+            '<div class="msm-user-email">' + (user.email || '') + '</div>' +
+          '</div>' +
+        '</div>';
+    }
+
+    if (msmLogout) msmLogout.style.display = 'block';
+  } else {
+    if (msmLogout) msmLogout.style.display = 'none';
+  }
+}
+
+function logoutUser() {
+  if (typeof nexaLogout === 'function') {
+    nexaLogout().then(function() {
+      localStorage.removeItem('nexa_current_user');
+      checkAuthState();
+      closeMobileMenu();
+      showToast('👋 Logged out successfully');
+      setTimeout(function() { window.location.reload(); }, 800);
+    });
+  } else {
+    localStorage.removeItem('nexa_current_user');
+    checkAuthState();
+    closeMobileMenu();
+    showToast('👋 Logged out successfully');
+  }
+}
+
+function updateCartCount() {
+  var cart  = JSON.parse(localStorage.getItem('nexa_cart') || '[]');
+  var count = cart.reduce(function(s, i) { return s + (i.qty || 1); }, 0);
+  var badges = document.querySelectorAll('#nav-cart-count, #cart-count, .cart-count');
+  badges.forEach(function(b) { b.textContent = count; });
+}
+
+// Close dropdowns when clicking outside
+document.addEventListener('click', function(e) {
+  if (!e.target.closest('.section-nav-item') &&
+      !e.target.closest('.snav-arrow')) {
+    closeAllDropdowns();
+  }
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+  checkAuthState();
+  updateCartCount();
+
+  var navSearchInput = document.getElementById('nav-search-input');
+  if (navSearchInput) {
+    navSearchInput.addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') navSearch();
+    });
+  }
+
+  loadHomepageProducts();
+});
 
 // ── AUTH STATE ────────────────────────────────
 function checkAuthState() {

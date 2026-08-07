@@ -17,75 +17,228 @@
 <body>
 
 <!-- NAVBAR -->
-  <nav class="navbar">
-    <div class="nav-inner">
-      <a href="index.html" class="logo">
-        <span class="logo-nexa">Nexa</span><span class="logo-bay">bay</span>
-      </a>
-      <div class="search-bar">
-        <select class="search-cat" id="search-cat">
-          <option>All</option>
-          <option>Shop</option>
-          <option>Services</option>
-          <option>Rentals</option>
-          <option>Learn</option>
-          <option>Jobs</option>
-          <option>Food</option>
-        </select>
-        <input type="text" id="search-input" placeholder="Search anything..."/>
-        <button onclick="doSearch()" class="search-btn">🔍</button>
-      </div>
-      <div class="nav-actions">
-        <div id="nav-guest">
-          <a href="pages/auth/login.html" class="nav-link">Login</a>
-          <a href="pages/auth/register.html" class="nav-btn">Sign Up</a>
-        </div>
-        <div id="nav-user" style="display:none;">
-          <div class="nav-user-info">
-            <div class="nav-avatar-circle" id="nav-avatar-circle">U</div>
-            <span id="nav-username"></span>
-            <div class="nav-dropdown">
-              <a href="pages/dashboard/buyer.html">My Account</a>
-              <a href="pages/dashboard/seller.html">Seller Dashboard</a>
-              <a href="#" onclick="logoutUser()">Logout</a>
-            </div>
-          </div>
-        </div>
-        <a href="pages/shop/cart.html" class="cart-icon-desk">
-          🛒 <span class="cart-count" id="cart-count">0</span>
-        </a>
-      </div>
-      <button class="hamburger" id="hamburger-btn" onclick="toggleMobileMenu()">☰</button>
+  <nav class="navbar" id="main-navbar">
+  <div class="nav-inner">
+
+    <!-- LOGO -->
+    <a href="index.html" class="logo">
+      <span class="logo-nexa">Nexa</span><span class="logo-bay">bay</span>
+    </a>
+
+    <!-- SEARCH BAR -->
+    <div class="nav-search">
+      <input type="text" id="nav-search-input" placeholder="Search anything..."/>
+      <button onclick="navSearch()">🔍</button>
     </div>
 
-    <!-- MOBILE MENU OVERLAY -->
-    <div class="mobile-menu-overlay" id="mobile-overlay" onclick="closeMobileMenu()"></div>
-    <div class="mobile-menu" id="mobile-menu">
-      <div class="mobile-menu-header">
-  <div class="logo"><span class="logo-nexa">Nexa</span><span class="logo-bay">bay</span></div>
-  <div id="mobile-header-actions" style="display:none;">
-    <a href="pages/dashboard/buyer.html" class="mh-btn account">Account</a>
-    <a href="#" onclick="logoutUser()" class="mh-btn logout">Logout</a>
-  </div>
-  <button onclick="closeMobileMenu()" class="close-menu-btn">✕</button>
-</div>
-      <div id="mobile-user-section">
-        <a href="pages/auth/login.html" class="mobile-auth-btn login">Login</a>
-        <a href="pages/auth/register.html" class="mobile-auth-btn signup">Sign Up</a>
+    <!-- RIGHT ACTIONS -->
+    <div class="nav-right">
+      <a href="pages/shop/cart.html" class="nav-cart-btn" id="nav-cart-btn">
+        🛒
+        <span class="nav-cart-badge" id="nav-cart-count">0</span>
+      </a>
+      <div class="nav-account-wrap" id="nav-account-wrap">
+        <a href="pages/auth/login.html" class="nav-link" id="nav-login-btn">Login</a>
+        <a href="pages/auth/register.html" class="nav-btn" id="nav-signup-btn">Sign Up</a>
       </div>
-      <div class="mobile-menu-links">
-        <a href="pages/shop/browse.html">🛍️ Shop</a>
-        <a href="pages/services/browse.html">🔧 Services</a>
-        <a href="pages/rentals/browse.html">🏠 Rentals</a>
-        <a href="pages/learn/browse.html">🎓 Learn</a>
-        <a href="pages/jobs/browse.html">💼 Jobs</a>
-        <a href="pages/food/browse.html">🍔 Food</a>
-        <a href="pages/health/browse.html">🏥 Health</a>
-        <a href="pages/events/browse.html">🎉 Events</a>
-        <a href="pages/travel/browse.html">✈️ Travel</a>
-        <a href="pages/pay/index.html">🏦 NexaPay</a>
+      <button class="hamburger" onclick="toggleMobileMenu()" id="hamburger-btn">☰</button>
+    </div>
+
+  </div>
+
+  <!-- SECTION NAV BAR -->
+  <div class="section-nav" id="section-nav">
+
+    <div class="section-nav-item" id="snav-shop">
+      <a href="pages/shop/browse.html" class="snav-link">🛍️ Shop</a>
+      <button class="snav-arrow" onclick="toggleDropdown('shop')">▾</button>
+      <div class="snav-dropdown" id="dropdown-shop">
+        <div class="snav-dropdown-inner">
+          <div class="snav-dropdown-section">
+            <div class="snav-dropdown-title">Browse</div>
+            <a href="pages/shop/browse.html" class="snav-dropdown-link">🛍️ All Products</a>
+            <a href="pages/shop/cart.html" class="snav-dropdown-link">🛒 My Cart</a>
+            <a href="pages/dashboard/buyer.html" class="snav-dropdown-link">📦 Track Orders</a>
+          </div>
+          <div class="snav-dropdown-divider"></div>
+          <div class="snav-dropdown-section">
+            <div class="snav-dropdown-title">For Sellers</div>
+            <a href="pages/dashboard/seller.html" class="snav-dropdown-link snav-provider-link">🟠 Become a Seller</a>
+            <a href="pages/dashboard/seller.html" class="snav-dropdown-link">📊 Seller Dashboard</a>
+          </div>
+        </div>
       </div>
     </div>
+
+    <div class="section-nav-item" id="snav-services">
+      <a href="pages/services/browse.html" class="snav-link">🛠️ Services</a>
+      <button class="snav-arrow" onclick="toggleDropdown('services')">▾</button>
+      <div class="snav-dropdown" id="dropdown-services">
+        <div class="snav-dropdown-inner">
+          <div class="snav-dropdown-section">
+            <div class="snav-dropdown-title">Browse</div>
+            <a href="pages/services/browse.html" class="snav-dropdown-link">🛠️ All Services</a>
+            <a href="pages/dashboard/buyer.html" class="snav-dropdown-link">📋 My Bookings</a>
+          </div>
+          <div class="snav-dropdown-divider"></div>
+          <div class="snav-dropdown-section">
+            <div class="snav-dropdown-title">For Providers</div>
+            <a href="pages/dashboard/services-provider.html" class="snav-dropdown-link snav-provider-link">🟠 Become a Provider</a>
+            <a href="pages/dashboard/services-provider.html" class="snav-dropdown-link">📊 Provider Dashboard</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-nav-item" id="snav-rent">
+      <a href="pages/rentals/browse.html" class="snav-link">🏠 Rent</a>
+      <button class="snav-arrow" onclick="toggleDropdown('rent')">▾</button>
+      <div class="snav-dropdown" id="dropdown-rent">
+        <div class="snav-dropdown-inner">
+          <div class="snav-dropdown-section">
+            <div class="snav-dropdown-title">Browse</div>
+            <a href="pages/rentals/browse.html" class="snav-dropdown-link">🏠 All Listings</a>
+          </div>
+          <div class="snav-dropdown-divider"></div>
+          <div class="snav-dropdown-section">
+            <div class="snav-dropdown-title">For Owners</div>
+            <a href="pages/dashboard/rentals-owner.html" class="snav-dropdown-link snav-provider-link">🟠 List Your Property</a>
+            <a href="pages/dashboard/rentals-owner.html" class="snav-dropdown-link">📊 Owner Dashboard</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-nav-item" id="snav-jobs">
+      <a href="pages/jobs/browse.html" class="snav-link">💼 Jobs</a>
+      <button class="snav-arrow" onclick="toggleDropdown('jobs')">▾</button>
+      <div class="snav-dropdown" id="dropdown-jobs">
+        <div class="snav-dropdown-inner">
+          <div class="snav-dropdown-section">
+            <div class="snav-dropdown-title">Browse</div>
+            <a href="pages/jobs/browse.html" class="snav-dropdown-link">💼 All Jobs</a>
+          </div>
+          <div class="snav-dropdown-divider"></div>
+          <div class="snav-dropdown-section">
+            <div class="snav-dropdown-title">For Employers</div>
+            <a href="pages/dashboard/jobs-employer.html" class="snav-dropdown-link snav-provider-link">🟠 Post a Job</a>
+            <a href="pages/dashboard/jobs-employer.html" class="snav-dropdown-link">📊 Employer Dashboard</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-nav-item" id="snav-learn">
+      <a href="pages/learn/browse.html" class="snav-link">🎓 Learn</a>
+      <button class="snav-arrow" onclick="toggleDropdown('learn')">▾</button>
+      <div class="snav-dropdown" id="dropdown-learn">
+        <div class="snav-dropdown-inner">
+          <div class="snav-dropdown-section">
+            <div class="snav-dropdown-title">Browse</div>
+            <a href="pages/learn/browse.html" class="snav-dropdown-link">🎓 All Courses</a>
+          </div>
+          <div class="snav-dropdown-divider"></div>
+          <div class="snav-dropdown-section">
+            <div class="snav-dropdown-title">For Instructors</div>
+            <a href="pages/dashboard/learn-instructor.html" class="snav-dropdown-link snav-provider-link">🟠 Become an Instructor</a>
+            <a href="pages/dashboard/learn-instructor.html" class="snav-dropdown-link">📊 Instructor Dashboard</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-nav-item" id="snav-food">
+      <a href="pages/food/browse.html" class="snav-link">🍔 Food</a>
+      <button class="snav-arrow" onclick="toggleDropdown('food')">▾</button>
+      <div class="snav-dropdown" id="dropdown-food">
+        <div class="snav-dropdown-inner">
+          <div class="snav-dropdown-section">
+            <div class="snav-dropdown-title">Browse</div>
+            <a href="pages/food/browse.html" class="snav-dropdown-link">🍔 Order Food</a>
+          </div>
+          <div class="snav-dropdown-divider"></div>
+          <div class="snav-dropdown-section">
+            <div class="snav-dropdown-title">For Restaurants</div>
+            <a href="pages/dashboard/food-restaurant.html" class="snav-dropdown-link snav-provider-link">🟠 Register Restaurant</a>
+            <a href="pages/dashboard/food-restaurant.html" class="snav-dropdown-link">📊 Restaurant Dashboard</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-nav-item" id="snav-more">
+      <span class="snav-link" style="cursor:pointer;" onclick="toggleDropdown('more')">More ▾</span>
+      <div class="snav-dropdown" id="dropdown-more" style="min-width:260px;">
+        <div class="snav-dropdown-inner">
+          <a href="pages/health/browse.html" class="snav-dropdown-link">🏥 Health</a>
+          <a href="pages/dashboard/health-provider.html" class="snav-dropdown-link snav-provider-link">🟠 List Health Service</a>
+          <div class="snav-dropdown-divider"></div>
+          <a href="pages/events/browse.html" class="snav-dropdown-link">🎉 Events</a>
+          <a href="pages/dashboard/events-organizer.html" class="snav-dropdown-link snav-provider-link">🟠 Create an Event</a>
+          <div class="snav-dropdown-divider"></div>
+          <a href="pages/travel/browse.html" class="snav-dropdown-link">✈️ Travel</a>
+          <a href="pages/dashboard/travel-agent.html" class="snav-dropdown-link snav-provider-link">🟠 List Travel Package</a>
+          <div class="snav-dropdown-divider"></div>
+          <a href="pages/ride/index.html" class="snav-dropdown-link">🚗 Ride</a>
+          <a href="pages/dashboard/ride-driver.html" class="snav-dropdown-link snav-provider-link">🟠 Become a Driver</a>
+          <div class="snav-dropdown-divider"></div>
+          <a href="pages/community/index.html" class="snav-dropdown-link">👥 Community</a>
+          <a href="pages/pay/index.html" class="snav-dropdown-link">💳 NexaPay</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</nav>
+
+<!-- MOBILE MENU OVERLAY -->
+<div class="mobile-menu-overlay" id="mobile-overlay" onclick="closeMobileMenu()"></div>
+
+<!-- MOBILE SIDE MENU -->
+<div class="mobile-side-menu" id="mobile-side-menu">
+  <div class="msm-header">
+    <div class="msm-logo">Nexa<span>bay</span></div>
+    <button class="msm-close" onclick="closeMobileMenu()">✕</button>
+  </div>
+
+  <div class="msm-user" id="msm-user">
+    <a href="pages/auth/login.html" class="msm-login-btn">Login / Sign Up</a>
+  </div>
+
+  <div class="msm-links">
+    <div class="msm-section-title">Shop & Services</div>
+    <a href="pages/shop/browse.html" class="msm-link">🛍️ NexaShop</a>
+    <a href="pages/services/browse.html" class="msm-link">🛠️ NexaServices</a>
+    <a href="pages/rentals/browse.html" class="msm-link">🏠 NexaRent</a>
+    <a href="pages/jobs/browse.html" class="msm-link">💼 NexaJobs</a>
+    <a href="pages/learn/browse.html" class="msm-link">🎓 NexaLearn</a>
+    <a href="pages/food/browse.html" class="msm-link">🍔 NexaFood</a>
+    <a href="pages/health/browse.html" class="msm-link">🏥 NexaHealth</a>
+    <a href="pages/events/browse.html" class="msm-link">🎉 NexaEvents</a>
+    <a href="pages/travel/browse.html" class="msm-link">✈️ NexaTravel</a>
+    <a href="pages/ride/index.html" class="msm-link">🚗 NexaRide</a>
+    <a href="pages/pay/index.html" class="msm-link">💳 NexaPay</a>
+    <a href="pages/community/index.html" class="msm-link">👥 Community</a>
+
+    <div class="msm-section-title" style="margin-top:16px;">Become a Provider</div>
+    <a href="pages/dashboard/seller.html" class="msm-link msm-provider">🟠 Sell on Nexabay</a>
+    <a href="pages/dashboard/services-provider.html" class="msm-link msm-provider">🟠 Offer a Service</a>
+    <a href="pages/dashboard/rentals-owner.html" class="msm-link msm-provider">🟠 List Property</a>
+    <a href="pages/dashboard/jobs-employer.html" class="msm-link msm-provider">🟠 Post a Job</a>
+    <a href="pages/dashboard/learn-instructor.html" class="msm-link msm-provider">🟠 Teach a Course</a>
+    <a href="pages/dashboard/food-restaurant.html" class="msm-link msm-provider">🟠 Register Restaurant</a>
+    <a href="pages/dashboard/ride-driver.html" class="msm-link msm-provider">🟠 Drive with Nexabay</a>
+
+    <div class="msm-section-title" style="margin-top:16px;">Account</div>
+    <a href="pages/dashboard/buyer.html" class="msm-link">👤 My Account</a>
+    <a href="pages/shop/cart.html" class="msm-link">🛒 My Cart</a>
+    <a href="pages/search.html" class="msm-link">🔍 Search</a>
+    <a href="pages/help.html" class="msm-link">❓ Help Center</a>
+    <a href="pages/contact.html" class="msm-link">💬 Contact Us</a>
+    <a href="#" class="msm-link" id="msm-logout" style="display:none;" onclick="logoutUser()">🚪 Logout</a>
+  </div>
+</div>
   </nav>
 
   <!-- FLOATING CART (mobile only) -->
