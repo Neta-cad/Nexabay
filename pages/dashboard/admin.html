@@ -4,544 +4,1337 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Admin Dashboard — Nexabay</title>
-  <link rel="stylesheet" href="../../css/main.css"/>
-  <link rel="stylesheet" href="../../css/dashboard.css"/>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
   <style>
-    .admin-stat-card { background:white;border-radius:12px;padding:20px;border:1px solid var(--border);display:flex;align-items:center;gap:16px; }
-    .admin-stat-icon { width:50px;height:50px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.5em; }
-    .admin-stat-icon.blue { background:#e8f0fe; }
-    .admin-stat-icon.orange { background:#fff3e0; }
-    .admin-stat-icon.green { background:#e8f5e9; }
-    .admin-stat-icon.red { background:#fce8e6; }
-    .admin-stat-icon.purple { background:#f3e8fd; }
-    .approval-card { background:white;border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:12px; }
-    .approval-card-header { display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px; }
-    .approval-actions { display:flex;gap:8px;margin-top:12px; }
-    .btn-approve { background:#00a651;color:white;border:none;padding:8px 16px;border-radius:8px;cursor:pointer;font-weight:600;font-size:0.85em; }
-    .btn-reject { background:#cc0000;color:white;border:none;padding:8px 16px;border-radius:8px;cursor:pointer;font-weight:600;font-size:0.85em; }
-    .btn-view { background:var(--gray);color:inherit;border:none;padding:8px 16px;border-radius:8px;cursor:pointer;font-weight:600;font-size:0.85em; }
-    .user-row { background:white;border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:10px;display:flex;align-items:center;gap:12px; }
-    .user-avatar-sm { width:40px;height:40px;border-radius:50%;background:var(--orange);color:white;display:flex;align-items:center;justify-content:center;font-weight:700; }
-    .withdrawal-card { background:white;border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:12px; }
-    .section-tabs { display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px; }
-    .section-tab { padding:8px 14px;border-radius:20px;border:1px solid var(--border);background:white;cursor:pointer;font-size:0.85em;font-weight:600; }
-    .section-tab.active { background:var(--orange);color:white;border-color:var(--orange); }
-    .admin-badge { background:linear-gradient(135deg,#0a0f1e,#1a237e);color:white;padding:4px 10px;border-radius:20px;font-size:0.75em;font-weight:700; }
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{background:#0d1117;font-family:'Inter',sans-serif;color:#e6edf3;}
+
+    /* ── SIDEBAR ── */
+    .ad-layout{display:flex;min-height:100vh;}
+    .ad-sidebar{
+      width:240px;
+      background:#161b22;
+      border-right:1px solid #30363d;
+      position:fixed;
+      top:0;left:0;
+      height:100vh;
+      overflow-y:auto;
+      z-index:100;
+      display:flex;
+      flex-direction:column;
+    }
+    .ad-sidebar-header{
+      padding:20px 16px;
+      border-bottom:1px solid #30363d;
+    }
+    .ad-logo{
+      font-weight:900;
+      font-size:1.2em;
+      color:white;
+    }
+    .ad-logo span{color:#ff6b00;}
+    .ad-admin-badge{
+      display:inline-block;
+      background:linear-gradient(135deg,#1f6feb,#0d419d);
+      color:white;
+      padding:3px 10px;
+      border-radius:20px;
+      font-size:0.68em;
+      font-weight:700;
+      margin-top:6px;
+      letter-spacing:0.5px;
+    }
+    .ad-profile-mini{
+      padding:16px;
+      display:flex;
+      align-items:center;
+      gap:10px;
+      border-bottom:1px solid #30363d;
+    }
+    .ad-profile-avatar{
+      width:36px;
+      height:36px;
+      border-radius:50%;
+      background:linear-gradient(135deg,#1f6feb,#ff6b00);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-weight:700;
+      font-size:0.9em;
+      flex-shrink:0;
+    }
+    .ad-profile-name{
+      font-size:0.85em;
+      font-weight:700;
+      color:#e6edf3;
+    }
+    .ad-profile-role{
+      font-size:0.72em;
+      color:#8b949e;
+    }
+    .ad-nav{padding:8px 0;flex:1;}
+    .ad-nav-section{
+      padding:8px 16px 4px;
+      font-size:0.68em;
+      font-weight:700;
+      color:#8b949e;
+      text-transform:uppercase;
+      letter-spacing:0.8px;
+    }
+    .ad-nav-item{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      padding:10px 16px;
+      color:#8b949e;
+      text-decoration:none;
+      font-size:0.85em;
+      font-weight:500;
+      cursor:pointer;
+      border:none;
+      background:none;
+      width:100%;
+      text-align:left;
+      transition:all 0.15s;
+      border-left:3px solid transparent;
+    }
+    .ad-nav-item:hover{
+      background:#21262d;
+      color:#e6edf3;
+    }
+    .ad-nav-item.active{
+      background:#1f2d3d;
+      color:#1f6feb;
+      border-left-color:#1f6feb;
+      font-weight:700;
+    }
+    .ad-nav-item.danger{color:#f85149;}
+    .ad-nav-item.danger:hover{background:#2d1b1b;color:#f85149;}
+    .ad-nav-badge{
+      margin-left:auto;
+      background:#da3633;
+      color:white;
+      border-radius:10px;
+      padding:1px 7px;
+      font-size:0.72em;
+      font-weight:700;
+    }
+    .ad-nav-icon{font-size:1em;width:18px;text-align:center;}
+
+    /* ── MAIN ── */
+    .ad-main{
+      margin-left:240px;
+      flex:1;
+      min-height:100vh;
+    }
+
+    /* ── TOP BAR ── */
+    .ad-topbar{
+      background:#161b22;
+      border-bottom:1px solid #30363d;
+      padding:12px 24px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      position:sticky;
+      top:0;
+      z-index:50;
+    }
+    .ad-topbar-title{
+      font-size:1em;
+      font-weight:700;
+      color:#e6edf3;
+    }
+    .ad-topbar-right{
+      display:flex;
+      align-items:center;
+      gap:12px;
+    }
+    .ad-site-btn{
+      background:#21262d;
+      border:1px solid #30363d;
+      color:#e6edf3;
+      padding:6px 14px;
+      border-radius:8px;
+      font-size:0.8em;
+      font-weight:600;
+      cursor:pointer;
+      text-decoration:none;
+      font-family:'Inter',sans-serif;
+    }
+    .ad-refresh-btn{
+      background:#1f6feb;
+      border:none;
+      color:white;
+      padding:6px 14px;
+      border-radius:8px;
+      font-size:0.8em;
+      font-weight:600;
+      cursor:pointer;
+      font-family:'Inter',sans-serif;
+    }
+    .ad-last-updated{
+      font-size:0.75em;
+      color:#8b949e;
+    }
+
+    /* ── CONTENT ── */
+    .ad-content{padding:24px;}
+
+    /* ── STAT CARDS ── */
+    .ad-stats-grid{
+      display:grid;
+      grid-template-columns:repeat(2,1fr);
+      gap:12px;
+      margin-bottom:24px;
+    }
+    .ad-stat-card{
+      background:#161b22;
+      border:1px solid #30363d;
+      border-radius:12px;
+      padding:16px;
+      transition:border-color 0.2s;
+    }
+    .ad-stat-card:hover{border-color:#1f6feb;}
+    .ad-stat-card-header{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      margin-bottom:10px;
+    }
+    .ad-stat-label{
+      font-size:0.75em;
+      color:#8b949e;
+      font-weight:600;
+      text-transform:uppercase;
+      letter-spacing:0.5px;
+    }
+    .ad-stat-icon{
+      width:32px;
+      height:32px;
+      border-radius:8px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:1em;
+    }
+    .ad-stat-icon.blue{background:rgba(31,111,235,0.15);}
+    .ad-stat-icon.orange{background:rgba(255,107,0,0.15);}
+    .ad-stat-icon.green{background:rgba(46,160,67,0.15);}
+    .ad-stat-icon.red{background:rgba(248,81,73,0.15);}
+    .ad-stat-icon.purple{background:rgba(188,140,255,0.15);}
+    .ad-stat-value{
+      font-size:1.6em;
+      font-weight:900;
+      color:#e6edf3;
+      line-height:1;
+      margin-bottom:4px;
+    }
+    .ad-stat-sub{
+      font-size:0.72em;
+      color:#8b949e;
+    }
+
+    /* ── SECTION HEADER ── */
+    .ad-section-header{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:14px;
+    }
+    .ad-section-title{
+      font-size:1em;
+      font-weight:700;
+      color:#e6edf3;
+    }
+    .ad-section-sub{
+      font-size:0.78em;
+      color:#8b949e;
+      margin-top:2px;
+    }
+
+    /* ── CARDS ── */
+    .ad-card{
+      background:#161b22;
+      border:1px solid #30363d;
+      border-radius:12px;
+      overflow:hidden;
+      margin-bottom:16px;
+    }
+    .ad-card-header{
+      padding:14px 16px;
+      border-bottom:1px solid #30363d;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+    }
+    .ad-card-title{
+      font-size:0.88em;
+      font-weight:700;
+      color:#e6edf3;
+    }
+    .ad-card-body{padding:16px;}
+
+    /* ── FILTER TABS ── */
+    .ad-filters{
+      display:flex;
+      gap:6px;
+      flex-wrap:wrap;
+      margin-bottom:16px;
+    }
+    .ad-filter-btn{
+      padding:6px 14px;
+      border-radius:20px;
+      border:1px solid #30363d;
+      background:transparent;
+      color:#8b949e;
+      font-size:0.8em;
+      font-weight:600;
+      cursor:pointer;
+      font-family:'Inter',sans-serif;
+      transition:all 0.15s;
+    }
+    .ad-filter-btn.active{
+      background:#1f6feb;
+      border-color:#1f6feb;
+      color:white;
+    }
+
+    /* ── SECTION TABS (for approvals) ── */
+    .ad-section-tabs{
+      display:flex;
+      gap:4px;
+      flex-wrap:wrap;
+      margin-bottom:16px;
+    }
+    .ad-section-tab{
+      padding:6px 12px;
+      border-radius:8px;
+      border:1px solid #30363d;
+      background:transparent;
+      color:#8b949e;
+      font-size:0.75em;
+      font-weight:600;
+      cursor:pointer;
+      font-family:'Inter',sans-serif;
+    }
+    .ad-section-tab.active{
+      background:#1f6feb;
+      border-color:#1f6feb;
+      color:white;
+    }
+
+    /* ── APPROVAL CARDS ── */
+    .ad-approval-card{
+      background:#0d1117;
+      border:1px solid #30363d;
+      border-radius:10px;
+      padding:14px;
+      margin-bottom:10px;
+      transition:border-color 0.2s;
+    }
+    .ad-approval-card:hover{border-color:#1f6feb;}
+    .ad-approval-header{
+      display:flex;
+      gap:12px;
+      align-items:flex-start;
+      margin-bottom:10px;
+    }
+    .ad-approval-img{
+      width:52px;
+      height:52px;
+      border-radius:8px;
+      background:#21262d;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:1.5em;
+      flex-shrink:0;
+      overflow:hidden;
+    }
+    .ad-approval-img img{width:100%;height:100%;object-fit:cover;}
+    .ad-approval-info{flex:1;}
+    .ad-approval-name{
+      font-weight:700;
+      font-size:0.9em;
+      color:#e6edf3;
+      margin-bottom:3px;
+    }
+    .ad-approval-meta{
+      font-size:0.75em;
+      color:#8b949e;
+      line-height:1.5;
+    }
+    .ad-approval-price{
+      font-size:0.95em;
+      font-weight:800;
+      color:#ff6b00;
+    }
+    .ad-pending-badge{
+      background:rgba(187,128,9,0.15);
+      color:#d29922;
+      padding:3px 8px;
+      border-radius:4px;
+      font-size:0.7em;
+      font-weight:700;
+      white-space:nowrap;
+    }
+    .ad-approval-desc{
+      font-size:0.78em;
+      color:#8b949e;
+      line-height:1.6;
+      margin-bottom:10px;
+      background:#21262d;
+      padding:8px 10px;
+      border-radius:6px;
+    }
+    .ad-approval-actions{display:flex;gap:8px;}
+    .ad-btn-approve{
+      background:#2ea043;
+      color:white;
+      border:none;
+      padding:7px 16px;
+      border-radius:7px;
+      font-size:0.8em;
+      font-weight:700;
+      cursor:pointer;
+      font-family:'Inter',sans-serif;
+    }
+    .ad-btn-reject{
+      background:#da3633;
+      color:white;
+      border:none;
+      padding:7px 16px;
+      border-radius:7px;
+      font-size:0.8em;
+      font-weight:700;
+      cursor:pointer;
+      font-family:'Inter',sans-serif;
+    }
+    .ad-btn-secondary{
+      background:#21262d;
+      color:#e6edf3;
+      border:1px solid #30363d;
+      padding:7px 16px;
+      border-radius:7px;
+      font-size:0.8em;
+      font-weight:600;
+      cursor:pointer;
+      font-family:'Inter',sans-serif;
+    }
+
+    /* ── TABLE ── */
+    .ad-table-wrap{overflow-x:auto;}
+    .ad-table{
+      width:100%;
+      border-collapse:collapse;
+      font-size:0.82em;
+    }
+    .ad-table th{
+      background:#21262d;
+      color:#8b949e;
+      padding:10px 12px;
+      text-align:left;
+      font-weight:700;
+      font-size:0.75em;
+      text-transform:uppercase;
+      letter-spacing:0.5px;
+      white-space:nowrap;
+    }
+    .ad-table td{
+      padding:10px 12px;
+      border-top:1px solid #21262d;
+      color:#e6edf3;
+      vertical-align:middle;
+    }
+    .ad-table tr:hover td{background:#21262d;}
+
+    /* ── STATUS BADGES ── */
+    .ad-badge{
+      padding:3px 8px;
+      border-radius:4px;
+      font-size:0.72em;
+      font-weight:700;
+      white-space:nowrap;
+    }
+    .ad-badge-confirmed{background:rgba(46,160,67,0.15);color:#3fb950;}
+    .ad-badge-pending{background:rgba(187,128,9,0.15);color:#d29922;}
+    .ad-badge-processing{background:rgba(31,111,235,0.15);color:#58a6ff;}
+    .ad-badge-shipped{background:rgba(188,140,255,0.15);color:#bc8cff;}
+    .ad-badge-delivered{background:rgba(46,160,67,0.15);color:#3fb950;}
+    .ad-badge-rejected{background:rgba(248,81,73,0.15);color:#f85149;}
+    .ad-badge-paid{background:rgba(46,160,67,0.15);color:#3fb950;}
+
+    /* ── USER ROW ── */
+    .ad-user-row{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      padding:12px;
+      background:#0d1117;
+      border:1px solid #30363d;
+      border-radius:10px;
+      margin-bottom:8px;
+      transition:border-color 0.2s;
+    }
+    .ad-user-row:hover{border-color:#1f6feb;}
+    .ad-user-avatar{
+      width:38px;
+      height:38px;
+      border-radius:50%;
+      background:linear-gradient(135deg,#1f6feb,#ff6b00);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-weight:700;
+      font-size:0.9em;
+      flex-shrink:0;
+    }
+    .ad-user-info{flex:1;}
+    .ad-user-name{
+      font-weight:700;
+      font-size:0.85em;
+      color:#e6edf3;
+    }
+    .ad-user-email{
+      font-size:0.75em;
+      color:#8b949e;
+    }
+    .ad-user-meta{
+      font-size:0.72em;
+      color:#8b949e;
+      margin-top:2px;
+    }
+
+    /* ── WITHDRAWAL CARD ── */
+    .ad-withdrawal-card{
+      background:#0d1117;
+      border:1px solid #30363d;
+      border-radius:10px;
+      padding:14px;
+      margin-bottom:10px;
+    }
+    .ad-withdrawal-header{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      margin-bottom:10px;
+    }
+    .ad-withdrawal-amount{
+      font-size:1.3em;
+      font-weight:900;
+      color:#e6edf3;
+    }
+    .ad-withdrawal-meta{
+      font-size:0.78em;
+      color:#8b949e;
+      margin-top:3px;
+      line-height:1.5;
+    }
+
+    /* ── MESSAGE CARD ── */
+    .ad-msg-card{
+      background:#0d1117;
+      border:1px solid #30363d;
+      border-radius:10px;
+      padding:14px;
+      margin-bottom:10px;
+      transition:border-color 0.2s;
+    }
+    .ad-msg-card.unread{border-color:#1f6feb;}
+    .ad-msg-card-header{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      margin-bottom:8px;
+    }
+    .ad-msg-sender{
+      font-weight:700;
+      font-size:0.88em;
+      color:#e6edf3;
+    }
+    .ad-msg-subject{
+      font-size:0.75em;
+      color:#ff6b00;
+      font-weight:600;
+      margin-top:2px;
+    }
+    .ad-msg-contact{
+      font-size:0.72em;
+      color:#8b949e;
+    }
+    .ad-msg-body{
+      background:#21262d;
+      border-radius:8px;
+      padding:10px;
+      font-size:0.8em;
+      color:#8b949e;
+      line-height:1.6;
+      margin-bottom:10px;
+    }
+
+    /* ── COMMISSION TABLE ── */
+    .ad-commission-grid{display:grid;gap:6px;}
+    .ad-commission-row{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      padding:10px 12px;
+      background:#0d1117;
+      border:1px solid #30363d;
+      border-radius:8px;
+    }
+    .ad-commission-section{
+      font-size:0.85em;
+      color:#e6edf3;
+      font-weight:500;
+    }
+    .ad-commission-rate{
+      font-size:0.88em;
+      font-weight:800;
+      color:#ff6b00;
+    }
+
+    /* ── SETTINGS ── */
+    .ad-settings-card{
+      background:#161b22;
+      border:1px solid #30363d;
+      border-radius:12px;
+      padding:20px;
+      margin-bottom:16px;
+    }
+    .ad-settings-title{
+      font-size:0.95em;
+      font-weight:700;
+      color:#e6edf3;
+      margin-bottom:14px;
+      padding-bottom:10px;
+      border-bottom:1px solid #30363d;
+    }
+    .ad-form-group{margin-bottom:14px;}
+    .ad-form-label{
+      display:block;
+      font-size:0.78em;
+      font-weight:700;
+      color:#8b949e;
+      margin-bottom:6px;
+      text-transform:uppercase;
+      letter-spacing:0.5px;
+    }
+    .ad-form-input{
+      width:100%;
+      padding:10px 12px;
+      background:#0d1117;
+      border:1px solid #30363d;
+      border-radius:8px;
+      color:#e6edf3;
+      font-size:0.88em;
+      outline:none;
+      font-family:'Inter',sans-serif;
+      transition:border-color 0.2s;
+    }
+    .ad-form-input:focus{border-color:#1f6feb;}
+
+    /* ── QUICK ACTIONS ── */
+    .ad-quick-grid{
+      display:grid;
+      grid-template-columns:repeat(2,1fr);
+      gap:10px;
+      margin-top:16px;
+    }
+    .ad-quick-btn{
+      background:#161b22;
+      border:1px solid #30363d;
+      border-radius:10px;
+      padding:14px;
+      text-align:center;
+      cursor:pointer;
+      font-family:'Inter',sans-serif;
+      color:#e6edf3;
+      font-size:0.82em;
+      font-weight:600;
+      transition:all 0.15s;
+    }
+    .ad-quick-btn:hover{
+      background:#21262d;
+      border-color:#1f6feb;
+      color:#1f6feb;
+    }
+    .ad-quick-btn-icon{font-size:1.5em;margin-bottom:6px;}
+
+    /* ── EMPTY STATE ── */
+    .ad-empty{
+      text-align:center;
+      padding:40px 20px;
+      color:#8b949e;
+    }
+    .ad-empty-icon{font-size:3em;margin-bottom:12px;}
+    .ad-empty h3{font-size:1em;color:#e6edf3;margin-bottom:6px;}
+    .ad-empty p{font-size:0.85em;}
+
+    /* ── PROVIDER APP CARD ── */
+    .ad-provider-card{
+      background:#0d1117;
+      border:1px solid #30363d;
+      border-radius:10px;
+      padding:14px;
+      margin-bottom:10px;
+    }
+    .ad-provider-header{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      margin-bottom:10px;
+    }
+    .ad-provider-name{
+      font-weight:700;
+      color:#e6edf3;
+      font-size:0.9em;
+    }
+    .ad-provider-type{
+      color:#ff6b00;
+      font-size:0.78em;
+      font-weight:700;
+      margin-top:2px;
+    }
+    .ad-provider-meta{
+      font-size:0.75em;
+      color:#8b949e;
+      line-height:1.6;
+    }
+    .ad-provider-desc{
+      background:#21262d;
+      border-radius:6px;
+      padding:8px 10px;
+      font-size:0.78em;
+      color:#8b949e;
+      line-height:1.6;
+      margin-bottom:10px;
+    }
+
+    /* ── MOBILE ── */
+    .ad-hamburger{
+      display:none;
+      position:fixed;
+      top:12px;
+      left:12px;
+      z-index:200;
+      background:#1f6feb;
+      border:none;
+      color:white;
+      width:36px;
+      height:36px;
+      border-radius:8px;
+      font-size:1em;
+      cursor:pointer;
+    }
+    .ad-sidebar-overlay{
+      display:none;
+      position:fixed;
+      top:0;left:0;width:100%;height:100%;
+      background:rgba(0,0,0,0.7);
+      z-index:99;
+    }
+
+    @media(max-width:768px){
+      .ad-sidebar{left:-240px;transition:left 0.3s;}
+      .ad-sidebar.open{left:0;}
+      .ad-main{margin-left:0;}
+      .ad-hamburger{display:flex;align-items:center;justify-content:center;}
+      .ad-sidebar-overlay.open{display:block;}
+      .ad-stats-grid{grid-template-columns:repeat(2,1fr);}
+      .ad-content{padding:16px;}
+      .ad-topbar{padding:10px 16px 10px 56px;}
+    }
+
+    /* ── TABS ── */
+    .ad-tab{display:none;}
+    .ad-tab.active{display:block;}
+
+    /* ── TOAST ── */
+    .ad-toast{
+      position:fixed;
+      bottom:24px;
+      left:50%;
+      transform:translateX(-50%);
+      background:#1f6feb;
+      color:white;
+      padding:12px 20px;
+      border-radius:10px;
+      font-size:0.85em;
+      font-weight:600;
+      z-index:9999;
+      box-shadow:0 4px 16px rgba(0,0,0,0.4);
+      white-space:nowrap;
+      display:none;
+    }
+
+    /* ── MODAL ── */
+    .ad-modal-overlay{
+      display:none;
+      position:fixed;
+      top:0;left:0;width:100%;height:100%;
+      background:rgba(0,0,0,0.7);
+      z-index:900;
+    }
+    .ad-modal{
+      display:none;
+      position:fixed;
+      top:50%;left:50%;
+      transform:translate(-50%,-50%);
+      background:#161b22;
+      border:1px solid #30363d;
+      border-radius:14px;
+      max-width:380px;
+      width:90%;
+      padding:20px;
+      z-index:901;
+    }
+    .ad-modal h3{
+      font-size:1em;
+      font-weight:700;
+      color:#e6edf3;
+      margin-bottom:12px;
+    }
+    .ad-modal textarea{
+      width:100%;
+      padding:10px;
+      background:#0d1117;
+      border:1px solid #30363d;
+      border-radius:8px;
+      color:#e6edf3;
+      font-family:'Inter',sans-serif;
+      font-size:0.85em;
+      resize:vertical;
+      min-height:80px;
+      outline:none;
+    }
+    .ad-modal-actions{
+      display:flex;
+      gap:8px;
+      margin-top:12px;
+    }
   </style>
 </head>
-<body class="dashboard-body">
+<body>
 
-  <!-- NAVBAR -->
-  <nav class="navbar">
-    <div class="nav-inner">
-      <a href="../../index.html" class="logo">
-        <span class="logo-nexa">Nexa</span><span class="logo-bay">bay</span>
-      </a>
-      <div class="nav-actions">
-        <span class="admin-badge">👑 ADMIN</span>
-        <a href="../../index.html" class="nav-link">← Site</a>
-      </div>
+  <!-- HAMBURGER -->
+  <button class="ad-hamburger" onclick="toggleSidebar()">☰</button>
+  <div class="ad-sidebar-overlay" id="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+  <!-- TOAST -->
+  <div class="ad-toast" id="ad-toast"></div>
+
+  <!-- REJECT MODAL -->
+  <div class="ad-modal-overlay" id="reject-overlay" onclick="closeRejectModal()"></div>
+  <div class="ad-modal" id="reject-modal">
+    <h3>❌ Reason for Rejection</h3>
+    <textarea id="reject-reason" placeholder="Tell the seller why this was rejected..."></textarea>
+    <div class="ad-modal-actions">
+      <button class="ad-btn-reject" style="flex:1;padding:10px;" onclick="confirmReject()">Confirm Reject</button>
+      <button class="ad-btn-secondary" style="flex:1;padding:10px;" onclick="closeRejectModal()">Cancel</button>
     </div>
-  </nav>
+  </div>
 
-  <div class="dashboard-layout">
+  <div class="ad-layout">
 
     <!-- SIDEBAR -->
-    <aside class="dash-sidebar">
-      <div class="dash-profile">
-        <div class="dash-avatar" id="dash-avatar" style="background:linear-gradient(135deg,#0a0f1e,#1a237e);">A</div>
-        <div class="dash-name" id="dash-name">Admin</div>
-        <div class="dash-badge">👑 Super Admin</div>
+    <aside class="ad-sidebar" id="ad-sidebar">
+      <div class="ad-sidebar-header">
+        <div class="ad-logo">Nexa<span>bay</span></div>
+        <div class="ad-admin-badge">👑 ADMIN PANEL</div>
       </div>
 
-      <nav class="dash-nav">
-        <a href="#" class="dash-nav-item active" onclick="showTab('overview')">
-          📊 Overview
+      <div class="ad-profile-mini">
+        <div class="ad-profile-avatar" id="admin-avatar">A</div>
+        <div>
+          <div class="ad-profile-name" id="admin-name">Admin</div>
+          <div class="ad-profile-role">Super Administrator</div>
+        </div>
+      </div>
+
+      <nav class="ad-nav">
+        <div class="ad-nav-section">Main</div>
+        <button class="ad-nav-item active" onclick="showTab('overview')">
+          <span class="ad-nav-icon">📊</span> Overview
+        </button>
+
+        <div class="ad-nav-section">Management</div>
+        <button class="ad-nav-item" onclick="showTab('approvals')">
+          <span class="ad-nav-icon">✅</span> Approvals
+          <span class="ad-nav-badge" id="pending-badge" style="display:none;">0</span>
+        </button>
+        <button class="ad-nav-item" onclick="showTab('users')">
+          <span class="ad-nav-icon">👥</span> Users
+        </button>
+        <button class="ad-nav-item" onclick="showTab('orders')">
+          <span class="ad-nav-icon">📦</span> Orders
+        </button>
+
+        <div class="ad-nav-section">Finance</div>
+        <button class="ad-nav-item" onclick="showTab('withdrawals')">
+          <span class="ad-nav-icon">💸</span> Withdrawals
+          <span class="ad-nav-badge" id="wd-badge" style="display:none;">0</span>
+        </button>
+        <button class="ad-nav-item" onclick="showTab('payments')">
+          <span class="ad-nav-icon">💳</span> Payments
+        </button>
+
+        <div class="ad-nav-section">Communication</div>
+        <button class="ad-nav-item" onclick="showTab('messages')">
+          <span class="ad-nav-icon">💬</span> Messages
+          <span class="ad-nav-badge" id="msg-badge" style="display:none;">0</span>
+        </button>
+        <button class="ad-nav-item" onclick="showTab('careers')">
+          <span class="ad-nav-icon">🚀</span> Job Applications
+          <span class="ad-nav-badge" id="careers-badge" style="display:none;">0</span>
+        </button>
+        <button class="ad-nav-item" onclick="showTab('providers')">
+          <span class="ad-nav-icon">🏪</span> Provider Apps
+          <span class="ad-nav-badge" id="providers-badge" style="display:none;">0</span>
+        </button>
+
+        <div class="ad-nav-section">System</div>
+        <button class="ad-nav-item" onclick="showTab('settings')">
+          <span class="ad-nav-icon">⚙️</span> Settings
+        </button>
+        <a href="../../index.html" class="ad-nav-item">
+          <span class="ad-nav-icon">🌐</span> View Site
         </a>
-        <a href="#" class="dash-nav-item" onclick="showTab('approvals')">
-          ✅ Approvals
-          <span id="pending-badge" style="background:#cc0000;color:white;border-radius:10px;padding:1px 7px;font-size:0.75em;margin-left:4px;display:none;">0</span>
-        </a>
-        <a href="#" class="dash-nav-item" onclick="showTab('users')">
-          👥 Users
-        </a>
-        <a href="#" class="dash-nav-item" onclick="showTab('orders')">
-          📦 All Orders
-        </a>
-        <a href="#" class="dash-nav-item" onclick="showTab('withdrawals')">
-          💸 Withdrawals
-          <span id="wd-badge" style="background:#cc0000;color:white;border-radius:10px;padding:1px 7px;font-size:0.75em;margin-left:4px;display:none;">0</span>
-        </a>
-        <a href="#" class="dash-nav-item" onclick="showTab('payments')">
-          💳 Payments
-        </a>
-        <a href="#" class="dash-nav-item" onclick="showTab('messages')">
-          💬 Messages
-          <span id="msg-badge" style="background:#cc0000;color:white;border-radius:10px;padding:1px 7px;font-size:0.75em;margin-left:4px;display:none;">0</span>
-        </a>
-        <a href="#" class="dash-nav-item" onclick="showTab('providers')">
-          🚀 Provider Applications
-          <span id="providers-badge" style="background:#cc0000;color:white;border-radius:10px;padding:1px 7px;font-size:0.75em;margin-left:4px;display:none;">0</span>
-        </a>
-        <a href="#" class="dash-nav-item" onclick="showTab('support'); loadSupportTickets();">
-          🎧 AI Support
-          <span id="support-badge" style="background:#cc0000;color:white;border-radius:10px;padding:1px 7px;font-size:0.75em;margin-left:4px;display:none;">0</span>
-        </a>
-        <a href="#" class="dash-nav-item" onclick="showTab('careers')">
-          🚀 Job Applications
-          <span id="careers-badge" style="background:#cc0000;color:white;border-radius:10px;padding:1px 7px;font-size:0.75em;margin-left:4px;display:none;">0</span>
-        </a>
-        <a href="#" class="dash-nav-item" onclick="showTab('settings')">
-          ⚙️ Settings
-        </a>
-        <a href="#" class="dash-nav-item logout" onclick="doAdminLogout()">
-          🚪 Logout
-        </a>
+        <button class="ad-nav-item danger" onclick="doAdminLogout()">
+          <span class="ad-nav-icon">🚪</span> Logout
+        </button>
       </nav>
     </aside>
 
     <!-- MAIN CONTENT -->
-    <main class="dash-main">
+    <main class="ad-main">
 
-      <!-- OVERVIEW TAB -->
-      <div class="dash-tab" id="tab-overview">
-        <div class="dash-header">
-          <h1>Platform Overview 📊</h1>
-          <p id="last-updated" style="color:var(--text2);font-size:0.85em;"></p>
+      <!-- TOP BAR -->
+      <div class="ad-topbar">
+        <div>
+          <div class="ad-topbar-title" id="topbar-title">Platform Overview</div>
+          <div class="ad-last-updated" id="last-updated"></div>
+        </div>
+        <div class="ad-topbar-right">
+          <button class="ad-refresh-btn" onclick="loadStats()">↻ Refresh</button>
+          <a href="../../index.html" class="ad-site-btn">View Site →</a>
+        </div>
+      </div>
+
+      <div class="ad-content">
+
+        <!-- ── OVERVIEW TAB ── -->
+        <div class="ad-tab active" id="tab-overview">
+
+          <div class="ad-stats-grid">
+            <div class="ad-stat-card">
+              <div class="ad-stat-card-header">
+                <div class="ad-stat-label">Total Users</div>
+                <div class="ad-stat-icon blue">👥</div>
+              </div>
+              <div class="ad-stat-value" id="stat-users">—</div>
+              <div class="ad-stat-sub">Registered accounts</div>
+            </div>
+            <div class="ad-stat-card">
+              <div class="ad-stat-card-header">
+                <div class="ad-stat-label">Active Products</div>
+                <div class="ad-stat-icon orange">🛍️</div>
+              </div>
+              <div class="ad-stat-value" id="stat-products">—</div>
+              <div class="ad-stat-sub">Live listings</div>
+            </div>
+            <div class="ad-stat-card">
+              <div class="ad-stat-card-header">
+                <div class="ad-stat-label">Total Orders</div>
+                <div class="ad-stat-icon green">📦</div>
+              </div>
+              <div class="ad-stat-value" id="stat-orders">—</div>
+              <div class="ad-stat-sub">All time</div>
+            </div>
+            <div class="ad-stat-card">
+              <div class="ad-stat-card-header">
+                <div class="ad-stat-label">Revenue</div>
+                <div class="ad-stat-icon purple">💰</div>
+              </div>
+              <div class="ad-stat-value" id="stat-revenue">—</div>
+              <div class="ad-stat-sub">Total processed</div>
+            </div>
+            <div class="ad-stat-card">
+              <div class="ad-stat-card-header">
+                <div class="ad-stat-label">Pending Approvals</div>
+                <div class="ad-stat-icon orange">⏳</div>
+              </div>
+              <div class="ad-stat-value" id="stat-pending">—</div>
+              <div class="ad-stat-sub">Needs review</div>
+            </div>
+            <div class="ad-stat-card">
+              <div class="ad-stat-card-header">
+                <div class="ad-stat-label">Pending Withdrawals</div>
+                <div class="ad-stat-icon red">💸</div>
+              </div>
+              <div class="ad-stat-value" id="stat-withdrawals">—</div>
+              <div class="ad-stat-sub">Awaiting payment</div>
+            </div>
+          </div>
+
+          <div class="ad-card">
+            <div class="ad-card-header">
+              <div class="ad-card-title">⚡ Quick Actions</div>
+            </div>
+            <div class="ad-card-body">
+              <div class="ad-quick-grid">
+                <button class="ad-quick-btn" onclick="showTab('approvals')">
+                  <div class="ad-quick-btn-icon">✅</div>
+                  Review Approvals
+                </button>
+                <button class="ad-quick-btn" onclick="showTab('withdrawals')">
+                  <div class="ad-quick-btn-icon">💸</div>
+                  Process Withdrawals
+                </button>
+                <button class="ad-quick-btn" onclick="showTab('users')">
+                  <div class="ad-quick-btn-icon">👥</div>
+                  Manage Users
+                </button>
+                <button class="ad-quick-btn" onclick="showTab('providers')">
+                  <div class="ad-quick-btn-icon">🏪</div>
+                  Provider Applications
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="ad-card">
+            <div class="ad-card-header">
+              <div class="ad-card-title">📈 Recent Activity</div>
+            </div>
+            <div class="ad-card-body" id="recent-activity">
+              <div style="color:#8b949e;font-size:0.85em;">Loading activity...</div>
+            </div>
+          </div>
+
         </div>
 
-        <div class="stats-grid">
-          <div class="admin-stat-card">
-            <div class="admin-stat-icon blue">👥</div>
+        <!-- ── APPROVALS TAB ── -->
+        <div class="ad-tab" id="tab-approvals">
+          <div class="ad-section-header">
             <div>
-              <div class="stat-value" id="stat-users">0</div>
-              <div class="stat-label">Total Users</div>
+              <div class="ad-section-title">Pending Approvals</div>
+              <div class="ad-section-sub">Review and approve new listings</div>
             </div>
+            <button class="ad-refresh-btn" onclick="loadAllPending()">↻ Refresh</button>
           </div>
-          <div class="admin-stat-card">
-            <div class="admin-stat-icon orange">🛍️</div>
+
+          <div class="ad-section-tabs" id="approval-section-tabs">
+            <button class="ad-section-tab active" onclick="showPendingSection('products',this)">🛍️ Shop</button>
+            <button class="ad-section-tab" onclick="showPendingSection('services',this)">🛠️ Services</button>
+            <button class="ad-section-tab" onclick="showPendingSection('rentals',this)">🏠 Rent</button>
+            <button class="ad-section-tab" onclick="showPendingSection('jobs',this)">💼 Jobs</button>
+            <button class="ad-section-tab" onclick="showPendingSection('courses',this)">🎓 Learn</button>
+            <button class="ad-section-tab" onclick="showPendingSection('foodItems',this)">🍔 Food</button>
+            <button class="ad-section-tab" onclick="showPendingSection('events',this)">🎉 Events</button>
+            <button class="ad-section-tab" onclick="showPendingSection('travelListings',this)">✈️ Travel</button>
+            <button class="ad-section-tab" onclick="showPendingSection('healthListings',this)">🏥 Health</button>
+            <button class="ad-section-tab" onclick="showPendingSection('drivers',this)">🚗 Ride</button>
+          </div>
+
+          <div id="approvals-content"></div>
+        </div>
+
+        <!-- ── USERS TAB ── -->
+        <div class="ad-tab" id="tab-users">
+          <div class="ad-section-header">
             <div>
-              <div class="stat-value" id="stat-products">0</div>
-              <div class="stat-label">Active Products</div>
+              <div class="ad-section-title">All Users</div>
+              <div class="ad-section-sub">Manage registered accounts</div>
+            </div>
+            <button class="ad-refresh-btn" onclick="loadUsers()">↻ Refresh</button>
+          </div>
+          <div class="ad-card" style="margin-bottom:16px;">
+            <div class="ad-card-body" style="padding:12px;">
+              <input type="text" class="ad-form-input" id="user-search" placeholder="🔍 Search by name, email or phone..." onkeyup="searchUsers()"/>
             </div>
           </div>
-          <div class="admin-stat-card">
-            <div class="admin-stat-icon green">📦</div>
+          <div id="users-list"></div>
+        </div>
+
+        <!-- ── ORDERS TAB ── -->
+        <div class="ad-tab" id="tab-orders">
+          <div class="ad-section-header">
             <div>
-              <div class="stat-value" id="stat-orders">0</div>
-              <div class="stat-label">Total Orders</div>
+              <div class="ad-section-title">All Orders</div>
+              <div class="ad-section-sub">Platform-wide order overview</div>
+            </div>
+            <button class="ad-refresh-btn" onclick="loadOrdersRealTime()">↻ Refresh</button>
+          </div>
+          <div class="ad-filters">
+            <button class="ad-filter-btn active" onclick="filterAdminOrders('all',this)">All</button>
+            <button class="ad-filter-btn" onclick="filterAdminOrders('confirmed',this)">Confirmed</button>
+            <button class="ad-filter-btn" onclick="filterAdminOrders('processing',this)">Processing</button>
+            <button class="ad-filter-btn" onclick="filterAdminOrders('shipped',this)">Shipped</button>
+            <button class="ad-filter-btn" onclick="filterAdminOrders('delivered',this)">Delivered</button>
+          </div>
+          <div class="ad-card">
+            <div class="ad-table-wrap">
+              <table class="ad-table">
+                <thead>
+                  <tr>
+                    <th>Order ID</th>
+                    <th>Buyer</th>
+                    <th>Items</th>
+                    <th>Total</th>
+                    <th>Payment</th>
+                    <th>Status</th>
+                    <th>Date</th>
+                  </tr>
+                </thead>
+                <tbody id="admin-orders-body">
+                  <tr><td colspan="7" style="text-align:center;color:#8b949e;padding:20px;">Loading orders...</td></tr>
+                </tbody>
+              </table>
             </div>
           </div>
-          <div class="admin-stat-card">
-            <div class="admin-stat-icon purple">💰</div>
+        </div>
+
+        <!-- ── WITHDRAWALS TAB ── -->
+        <div class="ad-tab" id="tab-withdrawals">
+          <div class="ad-section-header">
             <div>
-              <div class="stat-value" id="stat-revenue">₦0</div>
-              <div class="stat-label">Total Revenue</div>
+              <div class="ad-section-title">Withdrawal Requests</div>
+              <div class="ad-section-sub">Review and process provider payouts</div>
             </div>
+            <button class="ad-refresh-btn" onclick="loadWithdrawals()">↻ Refresh</button>
           </div>
-          <div class="admin-stat-card">
-            <div class="admin-stat-icon orange">✅</div>
+          <div class="ad-filters">
+            <button class="ad-filter-btn active" onclick="filterWithdrawals('pending',this)">⏳ Pending</button>
+            <button class="ad-filter-btn" onclick="filterWithdrawals('paid',this)">✅ Paid</button>
+            <button class="ad-filter-btn" onclick="filterWithdrawals('rejected',this)">❌ Rejected</button>
+            <button class="ad-filter-btn" onclick="filterWithdrawals('all',this)">All</button>
+          </div>
+          <div id="withdrawals-list"></div>
+        </div>
+
+        <!-- ── PAYMENTS TAB ── -->
+        <div class="ad-tab" id="tab-payments">
+          <div class="ad-section-header">
             <div>
-              <div class="stat-value" id="stat-pending">0</div>
-              <div class="stat-label">Pending Approvals</div>
+              <div class="ad-section-title">Payment Records</div>
+              <div class="ad-section-sub">All Paystack transactions</div>
+            </div>
+            <button class="ad-refresh-btn" onclick="loadPayments()">↻ Refresh</button>
+          </div>
+          <div class="ad-card">
+            <div class="ad-table-wrap">
+              <table class="ad-table">
+                <thead>
+                  <tr>
+                    <th>Reference</th>
+                    <th>Customer</th>
+                    <th>Type</th>
+                    <th>Amount</th>
+                    <th>Status</th>
+                    <th>Date</th>
+                  </tr>
+                </thead>
+                <tbody id="payments-body">
+                  <tr><td colspan="6" style="text-align:center;color:#8b949e;padding:20px;">Loading payments...</td></tr>
+                </tbody>
+              </table>
             </div>
           </div>
-          <div class="admin-stat-card">
-            <div class="admin-stat-icon red">💸</div>
+        </div>
+
+        <!-- ── MESSAGES TAB ── -->
+        <div class="ad-tab" id="tab-messages">
+          <div class="ad-section-header">
             <div>
-              <div class="stat-value" id="stat-withdrawals">0</div>
-              <div class="stat-label">Pending Withdrawals</div>
+              <div class="ad-section-title">Contact Messages</div>
+              <div class="ad-section-sub">Support enquiries from users</div>
+            </div>
+            <button class="ad-refresh-btn" onclick="loadMessages()">↻ Refresh</button>
+          </div>
+          <div id="messages-list"></div>
+        </div>
+
+        <!-- ── CAREERS TAB ── -->
+        <div class="ad-tab" id="tab-careers">
+          <div class="ad-section-header">
+            <div>
+              <div class="ad-section-title">Job Applications</div>
+              <div class="ad-section-sub">Career applications from candidates</div>
+            </div>
+            <button class="ad-refresh-btn" onclick="loadCareers()">↻ Refresh</button>
+          </div>
+          <div class="ad-filters">
+            <button class="ad-filter-btn active" onclick="filterCareers('new',this)">🆕 New</button>
+            <button class="ad-filter-btn" onclick="filterCareers('reviewed',this)">👀 Reviewed</button>
+            <button class="ad-filter-btn" onclick="filterCareers('shortlisted',this)">✅ Shortlisted</button>
+            <button class="ad-filter-btn" onclick="filterCareers('rejected',this)">❌ Rejected</button>
+            <button class="ad-filter-btn" onclick="filterCareers('all',this)">All</button>
+          </div>
+          <div id="careers-list"></div>
+        </div>
+
+        <!-- ── PROVIDERS TAB ── -->
+        <div class="ad-tab" id="tab-providers">
+          <div class="ad-section-header">
+            <div>
+              <div class="ad-section-title">Provider Applications</div>
+              <div class="ad-section-sub">Business onboarding requests</div>
+            </div>
+            <button class="ad-refresh-btn" onclick="loadProviderApplications()">↻ Refresh</button>
+          </div>
+          <div class="ad-filters">
+            <button class="ad-filter-btn active" onclick="filterProviders('pending',this)">⏳ Pending</button>
+            <button class="ad-filter-btn" onclick="filterProviders('approved',this)">✅ Approved</button>
+            <button class="ad-filter-btn" onclick="filterProviders('rejected',this)">❌ Rejected</button>
+            <button class="ad-filter-btn" onclick="filterProviders('all',this)">All</button>
+          </div>
+          <div id="providers-list"></div>
+        </div>
+
+        <!-- ── SETTINGS TAB ── -->
+        <div class="ad-tab" id="tab-settings">
+          <div class="ad-section-title" style="margin-bottom:16px;">Settings & Configuration</div>
+
+          <div class="ad-settings-card">
+            <div class="ad-settings-title">💰 Commission Rates</div>
+            <div class="ad-commission-grid">
+              <div class="ad-commission-row"><span class="ad-commission-section">🛍️ NexaShop</span><span class="ad-commission-rate">5%</span></div>
+              <div class="ad-commission-row"><span class="ad-commission-section">🛠️ NexaServices</span><span class="ad-commission-rate">10%</span></div>
+              <div class="ad-commission-row"><span class="ad-commission-section">🏠 NexaRent</span><span class="ad-commission-rate">5%</span></div>
+              <div class="ad-commission-row"><span class="ad-commission-section">🎓 NexaLearn</span><span class="ad-commission-rate">20%</span></div>
+              <div class="ad-commission-row"><span class="ad-commission-section">💼 NexaJobs</span><span class="ad-commission-rate">₦5,000 flat</span></div>
+              <div class="ad-commission-row"><span class="ad-commission-section">🍔 NexaFood</span><span class="ad-commission-rate">10%</span></div>
+              <div class="ad-commission-row"><span class="ad-commission-section">🎉 NexaEvents</span><span class="ad-commission-rate">8%</span></div>
+              <div class="ad-commission-row"><span class="ad-commission-section">✈️ NexaTravel</span><span class="ad-commission-rate">8%</span></div>
+              <div class="ad-commission-row"><span class="ad-commission-section">🏥 NexaHealth</span><span class="ad-commission-rate">10%</span></div>
+              <div class="ad-commission-row"><span class="ad-commission-section">🚗 NexaRide</span><span class="ad-commission-rate">10%</span></div>
+            </div>
+          </div>
+
+          <div class="ad-settings-card">
+            <div class="ad-settings-title">👑 Grant Admin Access</div>
+            <div class="ad-form-group">
+              <label class="ad-form-label">User UID</label>
+              <input type="text" class="ad-form-input" id="grant-uid" placeholder="Paste user UID here"/>
+            </div>
+            <div id="grant-error" style="color:#f85149;font-size:0.82em;display:none;margin-bottom:8px;"></div>
+            <div id="grant-success" style="color:#3fb950;font-size:0.82em;display:none;margin-bottom:8px;"></div>
+            <button class="ad-btn-approve" onclick="grantAdminAccess()">Grant Admin Access</button>
+          </div>
+
+          <div class="ad-settings-card">
+            <div class="ad-settings-title">ℹ️ System Info</div>
+            <div style="font-size:0.82em;color:#8b949e;line-height:2;">
+              <div>Platform: Nexabay Super App</div>
+              <div>Version: 1.0.0</div>
+              <div>Firebase Project: nexabay-a67c2</div>
+              <div>Payment: Paystack</div>
+              <div>Images: ImgBB</div>
+              <div>Deployment: Vercel</div>
             </div>
           </div>
         </div>
 
-        <div class="dash-section" style="margin-top:24px;">
-          <h2>Quick Actions</h2>
-          <div class="quick-actions">
-            <button class="quick-btn" onclick="showTab('approvals')">
-              ✅ Review Approvals
-            </button>
-            <button class="quick-btn" onclick="showTab('withdrawals')">
-              💸 Process Withdrawals
-            </button>
-            <button class="quick-btn" onclick="showTab('users')">
-              👥 Manage Users
-            </button>
-            <button class="quick-btn" onclick="loadStats()">
-              🔄 Refresh Stats
-            </button>
-          </div>
-        </div>
-
-        <div class="dash-section" style="margin-top:24px;">
-          <h2>Recent Activity</h2>
-          <div id="recent-activity" style="color:var(--text2);font-size:0.85em;">Loading...</div>
-        </div>
       </div>
-      <!-- APPROVALS TAB -->
-      <div class="dash-tab" id="tab-approvals" style="display:none;">
-        <div class="dash-header">
-          <h1>Pending Approvals ✅</h1>
-          <button onclick="loadAllPending()" style="background:var(--gray);border:none;padding:8px 16px;border-radius:8px;cursor:pointer;">🔄 Refresh</button>
-        </div>
-
-        <div class="section-tabs">
-          <button class="section-tab active" onclick="showPendingSection('products', this)">🛍️ Products</button>
-          <button class="section-tab" onclick="showPendingSection('services', this)">🛠️ Services</button>
-          <button class="section-tab" onclick="showPendingSection('rentals', this)">🏠 Rentals</button>
-          <button class="section-tab" onclick="showPendingSection('jobs', this)">💼 Jobs</button>
-          <button class="section-tab" onclick="showPendingSection('courses', this)">🎓 Courses</button>
-          <button class="section-tab" onclick="showPendingSection('foodItems', this)">🍔 Food</button>
-          <button class="section-tab" onclick="showPendingSection('events', this)">🎉 Events</button>
-          <button class="section-tab" onclick="showPendingSection('travelListings', this)">✈️ Travel</button>
-          <button class="section-tab" onclick="showPendingSection('healthListings', this)">🏥 Health</button>
-          <button class="section-tab" onclick="showPendingSection('drivers', this)">🚗 Drivers</button>
-        </div>
-
-        <div id="approvals-content">
-          <div style="text-align:center;padding:40px;color:var(--text2);">
-            <div style="font-size:3em;margin-bottom:12px;">⏳</div>
-            <p>Loading pending approvals...</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- USERS TAB -->
-      <div class="dash-tab" id="tab-users" style="display:none;">
-        <div class="dash-header">
-          <h1>All Users 👥</h1>
-          <button onclick="loadUsers()" style="background:var(--gray);border:none;padding:8px 16px;border-radius:8px;cursor:pointer;">🔄 Refresh</button>
-        </div>
-
-        <div style="margin-bottom:16px;">
-          <input type="text" id="user-search" placeholder="Search by name or email..." onkeyup="searchUsers()" style="width:100%;padding:12px;border:1px solid var(--border);border-radius:8px;font-size:0.9em;"/>
-        </div>
-
-        <div id="users-list">
-          <div style="text-align:center;padding:40px;color:var(--text2);">
-            <div style="font-size:3em;margin-bottom:12px;">⏳</div>
-            <p>Loading users...</p>
-          </div>
-        </div>
-      </div>
-      <!-- ORDERS TAB -->
-      <div class="dash-tab" id="tab-orders" style="display:none;">
-        <div class="dash-header">
-          <h1>All Orders 📦</h1>
-          <button onclick="loadOrders()" style="background:var(--gray);border:none;padding:8px 16px;border-radius:8px;cursor:pointer;">🔄 Refresh</button>
-        </div>
-
-        <div class="orders-filter" style="margin-bottom:16px;">
-          <button class="order-filter-btn active" onclick="filterAdminOrders('all', this)">All</button>
-          <button class="order-filter-btn" onclick="filterAdminOrders('confirmed', this)">Confirmed</button>
-          <button class="order-filter-btn" onclick="filterAdminOrders('processing', this)">Processing</button>
-          <button class="order-filter-btn" onclick="filterAdminOrders('shipped', this)">Shipped</button>
-          <button class="order-filter-btn" onclick="filterAdminOrders('delivered', this)">Delivered</button>
-        </div>
-
-        <div class="orders-table-wrap">
-          <table class="orders-table">
-            <thead>
-              <tr>
-                <th>Order ID</th>
-                <th>Buyer</th>
-                <th>Items</th>
-                <th>Total</th>
-                <th>Payment</th>
-                <th>Status</th>
-                <th>Date</th>
-              </tr>
-            </thead>
-            <tbody id="admin-orders-body">
-              <tr><td colspan="7" style="text-align:center;padding:20px;color:var(--text2);">Loading orders...</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <!-- WITHDRAWALS TAB -->
-      <div class="dash-tab" id="tab-withdrawals" style="display:none;">
-        <div class="dash-header">
-          <h1>Withdrawal Requests 💸</h1>
-          <button onclick="loadWithdrawals()" style="background:var(--gray);border:none;padding:8px 16px;border-radius:8px;cursor:pointer;">🔄 Refresh</button>
-        </div>
-
-        <div class="orders-filter" style="margin-bottom:16px;">
-          <button class="order-filter-btn active" onclick="filterWithdrawals('pending', this)">Pending</button>
-          <button class="order-filter-btn" onclick="filterWithdrawals('paid', this)">Paid</button>
-          <button class="order-filter-btn" onclick="filterWithdrawals('rejected', this)">Rejected</button>
-          <button class="order-filter-btn" onclick="filterWithdrawals('all', this)">All</button>
-        </div>
-
-        <div id="withdrawals-list">
-          <div style="text-align:center;padding:40px;color:var(--text2);">
-            <div style="font-size:3em;margin-bottom:12px;">⏳</div>
-            <p>Loading withdrawal requests...</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- PAYMENTS TAB -->
-      <div class="dash-tab" id="tab-payments" style="display:none;">
-        <div class="dash-header">
-          <h1>Payment Records 💳</h1>
-          <button onclick="loadPayments()" style="background:var(--gray);border:none;padding:8px 16px;border-radius:8px;cursor:pointer;">🔄 Refresh</button>
-        </div>
-
-        <div class="orders-table-wrap">
-          <table class="orders-table">
-            <thead>
-              <tr>
-                <th>Reference</th>
-                <th>Customer</th>
-                <th>Type</th>
-                <th>Amount</th>
-                <th>Status</th>
-                <th>Date</th>
-              </tr>
-            </thead>
-            <tbody id="payments-body">
-              <tr><td colspan="6" style="text-align:center;padding:20px;color:var(--text2);">Loading payments...</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-
-<!-- CAREERS TAB -->
-      <div class="dash-tab" id="tab-careers" style="display:none;">
-        <div class="dash-header">
-          <h1>Job Applications 🚀</h1>
-          <button onclick="loadCareers()" style="background:var(--gray);border:none;padding:8px 16px;border-radius:8px;cursor:pointer;">🔄 Refresh</button>
-        </div>
-
-        <div class="orders-filter" style="margin-bottom:16px;">
-          <button class="order-filter-btn active" onclick="filterCareers('new', this)">🆕 New</button>
-          <button class="order-filter-btn" onclick="filterCareers('reviewed', this)">👀 Reviewed</button>
-          <button class="order-filter-btn" onclick="filterCareers('shortlisted', this)">✅ Shortlisted</button>
-          <button class="order-filter-btn" onclick="filterCareers('rejected', this)">❌ Rejected</button>
-          <button class="order-filter-btn" onclick="filterCareers('all', this)">All</button>
-        </div>
-
-        <div id="careers-list">
-          <div style="text-align:center;padding:40px;color:var(--text2);">
-            <div style="font-size:3em;margin-bottom:12px;">⏳</div>
-            <p>Loading applications...</p>
-          </div>
-        </div>
-      </div>
-
-<!-- MESSAGES TAB -->
-      <div class="dash-tab" id="tab-messages" style="display:none;">
-        <div class="dash-header">
-          <h1>Contact Messages 💬</h1>
-          <button onclick="loadMessages()" style="background:var(--gray);border:none;padding:8px 16px;border-radius:8px;cursor:pointer;">🔄 Refresh</button>
-        </div>
-
-        <div id="messages-list">
-          <div style="text-align:center;padding:40px;color:var(--text2);">
-            <div style="font-size:3em;margin-bottom:12px;">⏳</div>
-            <p>Loading messages...</p>
-          </div>
-        </div>
-      </div>
-      
-      <!-- AI SUPPORT TAB -->
-      <div class="dash-tab" id="tab-support" style="display:none;">
-        <div class="dash-header">
-          <h1>AI Support Tickets 🎧</h1>
-          <button onclick="loadSupportTickets()" style="background:var(--gray);border:none;padding:8px 16px;border-radius:8px;cursor:pointer;">🔄 Refresh</button>
-        </div>
-
-        <div class="section-tabs">
-          <button class="section-tab active" onclick="filterSupportTickets('open', this)">🟠 Open</button>
-          <button class="section-tab" onclick="filterSupportTickets('resolved', this)">✅ Resolved</button>
-          <button class="section-tab" onclick="filterSupportTickets('all', this)">All</button>
-        </div>
-
-        <div id="support-tickets-list">
-          <div style="text-align:center;padding:40px;color:var(--text2);">
-            <div style="font-size:3em;margin-bottom:12px;">⏳</div>
-            <p>Loading tickets...</p>
-          </div>
-        </div>
-      </div>
-      
-      
-      <!-- PROVIDER APPLICATIONS TAB -->
-      <div class="dash-tab" id="tab-providers" style="display:none;">
-        <div class="dash-header">
-          <h1>Provider Applications 🚀</h1>
-          <button onclick="loadProviderApplications()" style="background:var(--gray);border:none;padding:8px 16px;border-radius:8px;cursor:pointer;">🔄 Refresh</button>
-        </div>
-
-        <div class="orders-filter" style="margin-bottom:16px;">
-          <button class="order-filter-btn active" onclick="filterProviders('pending', this)">⏳ Pending</button>
-          <button class="order-filter-btn" onclick="filterProviders('approved', this)">✅ Approved</button>
-          <button class="order-filter-btn" onclick="filterProviders('rejected', this)">❌ Rejected</button>
-          <button class="order-filter-btn" onclick="filterProviders('all', this)">All</button>
-        </div>
-
-        <div id="providers-list">
-          <div style="text-align:center;padding:40px;color:var(--text2);">
-            <div style="font-size:3em;margin-bottom:12px;">⏳</div>
-            <p>Loading applications...</p>
-          </div>
-        </div>
-      </div>
-
-
-      <!-- SETTINGS TAB -->
-      <div class="dash-tab" id="tab-settings" style="display:none;">
-        <div class="dash-header">
-          <h1>Admin Settings ⚙️</h1>
-        </div>
-
-        <div class="settings-card" style="margin-bottom:16px;">
-          <h3>Platform Commission Rates</h3>
-          <p style="color:var(--text2);font-size:0.85em;margin-bottom:14px;">These are your current commission rates per section</p>
-          <div style="display:grid;gap:10px;">
-            <div style="display:flex;justify-content:space-between;padding:10px;background:var(--gray);border-radius:8px;">
-              <span>🛍️ NexaShop</span><span style="font-weight:700;color:var(--orange);">5%</span>
-            </div>
-            <div style="display:flex;justify-content:space-between;padding:10px;background:var(--gray);border-radius:8px;">
-              <span>🛠️ NexaServices</span><span style="font-weight:700;color:var(--orange);">10%</span>
-            </div>
-            <div style="display:flex;justify-content:space-between;padding:10px;background:var(--gray);border-radius:8px;">
-              <span>🏠 NexaRent</span><span style="font-weight:700;color:var(--orange);">5%</span>
-            </div>
-            <div style="display:flex;justify-content:space-between;padding:10px;background:var(--gray);border-radius:8px;">
-              <span>🎓 NexaLearn</span><span style="font-weight:700;color:var(--orange);">20%</span>
-            </div>
-            <div style="display:flex;justify-content:space-between;padding:10px;background:var(--gray);border-radius:8px;">
-              <span>💼 NexaJobs</span><span style="font-weight:700;color:var(--orange);">₦5,000 flat</span>
-            </div>
-            <div style="display:flex;justify-content:space-between;padding:10px;background:var(--gray);border-radius:8px;">
-              <span>🍔 NexaFood</span><span style="font-weight:700;color:var(--orange);">10%</span>
-            </div>
-            <div style="display:flex;justify-content:space-between;padding:10px;background:var(--gray);border-radius:8px;">
-              <span>🎉 NexaEvents</span><span style="font-weight:700;color:var(--orange);">8%</span>
-            </div>
-            <div style="display:flex;justify-content:space-between;padding:10px;background:var(--gray);border-radius:8px;">
-              <span>✈️ NexaTravel</span><span style="font-weight:700;color:var(--orange);">8%</span>
-            </div>
-            <div style="display:flex;justify-content:space-between;padding:10px;background:var(--gray);border-radius:8px;">
-              <span>🏥 NexaHealth</span><span style="font-weight:700;color:var(--orange);">10%</span>
-            </div>
-            <div style="display:flex;justify-content:space-between;padding:10px;background:var(--gray);border-radius:8px;">
-              <span>🚗 NexaRide</span><span style="font-weight:700;color:var(--orange);">10%</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="settings-card">
-          <h3>Grant Admin Access</h3>
-          <p style="color:var(--text2);font-size:0.85em;margin-bottom:14px;">Enter a user's UID to grant them admin access</p>
-          <div class="form-group">
-            <label>User UID</label>
-            <input type="text" id="grant-uid" placeholder="Paste user UID here"/>
-          </div>
-          <div id="grant-error" style="color:#cc0000;font-size:0.85em;display:none;margin-bottom:8px;"></div>
-          <div id="grant-success" style="color:var(--green);font-size:0.85em;display:none;margin-bottom:8px;"></div>
-          <button onclick="grantAdminAccess()" class="btn-save">Grant Admin Access</button>
-        </div>
-      </div>
-
     </main>
   </div>
 
-  <!-- REJECTION MODAL -->
-  <div id="reject-overlay" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);z-index:900;" onclick="closeRejectModal()"></div>
-  <div id="reject-modal" style="display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:white;border-radius:14px;max-width:380px;width:90%;z-index:901;padding:20px;">
-    <h3 style="margin-bottom:14px;">❌ Reject Listing</h3>
-    <div class="form-group">
-      <label>Reason for rejection</label>
-      <textarea id="reject-reason" rows="3" placeholder="Tell the seller why this was rejected..."></textarea>
-    </div>
-    <div style="display:flex;gap:8px;margin-top:12px;">
-      <button onclick="confirmReject()" class="btn-reject" style="flex:1;padding:12px;">Confirm Reject</button>
-      <button onclick="closeRejectModal()" class="btn-view" style="flex:1;padding:12px;">Cancel</button>
-    </div>
-  </div>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
   <script src="../../js/firebase/config.js"></script>
   <script src="../../js/firebase/auth.js"></script>
   <script src="../../js/firebase/admin.js"></script>
-  <script src="../../js/firebase/support.js"></script>
   <script src="../../js/core/main.js"></script>
   <script>
 
-    var allUsers = [];
-    var allOrders = [];
-    var allWithdrawals = [];
-    var allPayments = [];
+    var allUsers = [], allOrders = [], allWithdrawals = [], allPayments = [];
+    var allApplications = [], allProviderApps = [];
     var currentPendingCollection = 'products';
     var rejectTarget = null;
+    var adminOrdersListener = null;
+    var ADMIN_UID = 'BCkKeqX8PfaKDE1MBxzXbwdsjPo1';
 
+    /* ── INIT ── */
     function init() {
       var user = JSON.parse(localStorage.getItem('nexa_current_user') || 'null');
-      if (!user) {
-        window.location.href = '../auth/login.html';
-        return;
+      if (!user) { window.location.href = '../auth/login.html'; return; }
+
+      if (user.uid !== ADMIN_UID) {
+        nexaCheckIsAdmin(user.uid).then(function(isAdmin) {
+          if (!isAdmin) {
+            alert('Access denied. Admins only.');
+            window.location.href = '../../index.html';
+          }
+        });
       }
 
-      nexaCheckIsAdmin(user.uid)
-        .then(function(isAdmin) {
-          if (!isAdmin) {
-            alert('Access denied. Admin only.');
-            window.location.href = '../../index.html';
-            return;
-          }
+      var nameEl   = document.getElementById('admin-name');
+      var avatarEl = document.getElementById('admin-avatar');
+      if (nameEl)   nameEl.textContent   = user.firstName || 'Admin';
+      if (avatarEl) avatarEl.textContent = (user.firstName || 'A')[0].toUpperCase();
 
-          var nameEl   = document.getElementById('dash-name');
-          var avatarEl = document.getElementById('dash-avatar');
-          if (nameEl)   nameEl.textContent   = user.fullName || user.firstName || 'Admin';
-          if (avatarEl) avatarEl.textContent = (user.firstName || 'A')[0].toUpperCase();
+      var updated = document.getElementById('last-updated');
+      if (updated) updated.textContent = 'Last updated: ' + new Date().toLocaleTimeString();
 
-          loadStats();
-          loadAllPending();
-          loadUsers();
-          loadOrdersRealTime();
-          loadWithdrawals();
-          loadPayments();
-          loadMessages();
-          loadCareers();
-          var updated = document.getElementById('last-updated');
-          if (updated) updated.textContent = 'Last updated: ' + new Date().toLocaleTimeString();
-        });
+      loadStats();
+      loadAllPending();
+      loadUsers();
+      loadOrdersRealTime();
+      loadWithdrawals();
+      loadPayments();
+      loadMessages();
+      loadCareers();
+      loadProviderApplications();
     }
+
+    /* ── SIDEBAR ── */
+    function toggleSidebar() {
+      var sb  = document.getElementById('ad-sidebar');
+      var ov  = document.getElementById('sidebar-overlay');
+      var open = sb.classList.contains('open');
+      sb.classList.toggle('open', !open);
+      ov.classList.toggle('open', !open);
+    }
+
+    /* ── SHOW TAB ── */
+    var TAB_TITLES = {
+      overview: 'Platform Overview', approvals: 'Pending Approvals',
+      users: 'All Users', orders: 'All Orders',
+      withdrawals: 'Withdrawal Requests', payments: 'Payment Records',
+      messages: 'Contact Messages', careers: 'Job Applications',
+      providers: 'Provider Applications', settings: 'Settings',
+    };
 
     function showTab(tab) {
-      var tabs = document.querySelectorAll('.dash-tab');
-      tabs.forEach(function(t) { t.style.display = 'none'; });
-
-      var navItems = document.querySelectorAll('.dash-nav-item');
-      navItems.forEach(function(n) { n.classList.remove('active'); });
+      document.querySelectorAll('.ad-tab').forEach(function(t) { t.classList.remove('active'); });
+      document.querySelectorAll('.ad-nav-item').forEach(function(n) { n.classList.remove('active'); });
 
       var target = document.getElementById('tab-' + tab);
-      if (target) target.style.display = 'block';
+      if (target) target.classList.add('active');
 
-      var navMap = {
-        'overview': 0, 'approvals': 1, 'users': 2,
-        'orders': 3, 'withdrawals': 4, 'payments': 5,
-        'messages': 6, 'careers': 7, 'providers': 8, 'settings': 9
-      };
-      var index = navMap[tab];
-      if (index !== undefined && navItems[index]) {
-        navItems[index].classList.add('active');
-      }
+      document.querySelectorAll('.ad-nav-item').forEach(function(btn) {
+        if (btn.getAttribute('onclick') === "showTab('" + tab + "')") {
+          btn.classList.add('active');
+        }
+      });
+
+      var titleEl = document.getElementById('topbar-title');
+      if (titleEl) titleEl.textContent = TAB_TITLES[tab] || tab;
+
+      if (window.innerWidth <= 768) toggleSidebar();
     }
 
+    /* ── STATS ── */
     function loadStats() {
       nexaGetPlatformStats()
         .then(function(stats) {
-          document.getElementById('stat-users').textContent       = stats.totalUsers.toLocaleString();
-          document.getElementById('stat-products').textContent    = stats.totalProducts.toLocaleString();
-          document.getElementById('stat-orders').textContent      = stats.totalOrders.toLocaleString();
-          document.getElementById('stat-revenue').textContent     = '₦' + stats.totalRevenue.toLocaleString();
+          document.getElementById('stat-users').textContent     = stats.totalUsers.toLocaleString();
+          document.getElementById('stat-products').textContent  = stats.totalProducts.toLocaleString();
+          document.getElementById('stat-orders').textContent    = stats.totalOrders.toLocaleString();
+          document.getElementById('stat-revenue').textContent   = '₦' + stats.totalRevenue.toLocaleString();
           document.getElementById('stat-withdrawals').textContent = stats.pendingWithdrawals.toLocaleString();
 
           var wdBadge = document.getElementById('wd-badge');
@@ -553,24 +1346,20 @@
           loadAllPendingCount();
           renderRecentActivity(stats);
         })
-        .catch(function(err) { alert('Stats error: ' + err.message); });
+        .catch(function(err) { console.log('Stats error:', err); });
     }
 
     function loadAllPendingCount() {
-      var collections = ['products','services','rentals','jobs','courses','foodItems','events','travelListings','healthListings','drivers'];
+      var cols = ['products','services','rentals','jobs','courses','foodItems','events','travelListings','healthListings','drivers'];
       var total = 0;
-      var promises = collections.map(function(col) {
-        return db.collection(col).where('status', '==', 'pending').get()
-          .then(function(snap) { total += snap.size; })
-          .catch(function() {});
+      var promises = cols.map(function(col) {
+        return db.collection(col).where('status','==','pending').get()
+          .then(function(snap) { total += snap.size; }).catch(function(){});
       });
       Promise.all(promises).then(function() {
         document.getElementById('stat-pending').textContent = total;
         var badge = document.getElementById('pending-badge');
-        if (badge && total > 0) {
-          badge.textContent = total;
-          badge.style.display = 'inline';
-        }
+        if (badge && total > 0) { badge.textContent = total; badge.style.display = 'inline'; }
       });
     }
 
@@ -579,73 +1368,77 @@
       if (!el) return;
       el.innerHTML =
         '<div style="display:grid;gap:8px;">' +
-          '<div style="padding:10px;background:var(--gray);border-radius:8px;">👥 <b>' + stats.totalUsers + '</b> registered users on the platform</div>' +
-          '<div style="padding:10px;background:var(--gray);border-radius:8px;">📦 <b>' + stats.totalOrders + '</b> orders placed so far</div>' +
-          '<div style="padding:10px;background:var(--gray);border-radius:8px;">💰 <b>₦' + stats.totalRevenue.toLocaleString() + '</b> total revenue processed</div>' +
-          '<div style="padding:10px;background:var(--gray);border-radius:8px;">💸 <b>' + stats.pendingWithdrawals + '</b> withdrawal requests pending</div>' +
+          activityRow('👥', 'Registered Users', stats.totalUsers.toLocaleString(), '#58a6ff') +
+          activityRow('📦', 'Total Orders Placed', stats.totalOrders.toLocaleString(), '#3fb950') +
+          activityRow('💰', 'Revenue Processed', '₦' + stats.totalRevenue.toLocaleString(), '#ff6b00') +
+          activityRow('💸', 'Pending Withdrawals', stats.pendingWithdrawals.toLocaleString(), '#f85149') +
         '</div>';
     }
 
+    function activityRow(icon, label, value, color) {
+      return '<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 12px;background:#0d1117;border:1px solid #30363d;border-radius:8px;">' +
+        '<div style="display:flex;align-items:center;gap:10px;">' +
+          '<span style="font-size:1.1em;">' + icon + '</span>' +
+          '<span style="font-size:0.85em;color:#8b949e;">' + label + '</span>' +
+        '</div>' +
+        '<span style="font-weight:800;color:' + color + ';font-size:0.9em;">' + value + '</span>' +
+      '</div>';
+    }
+
+    /* ── APPROVALS ── */
     function loadAllPending() {
-      showPendingSection(currentPendingCollection, document.querySelector('.section-tab.active'));
+      showPendingSection(currentPendingCollection, document.querySelector('.ad-section-tab.active'));
     }
 
     function showPendingSection(collection, btn) {
       currentPendingCollection = collection;
-
       if (btn) {
-        document.querySelectorAll('.section-tab').forEach(function(b) { b.classList.remove('active'); });
+        document.querySelectorAll('.ad-section-tab').forEach(function(b) { b.classList.remove('active'); });
         btn.classList.add('active');
       }
 
       var content = document.getElementById('approvals-content');
-      content.innerHTML = '<div style="text-align:center;padding:30px;color:var(--text2);">⏳ Loading...</div>';
+      content.innerHTML = '<div class="ad-empty"><div class="ad-empty-icon">⏳</div><p>Loading...</p></div>';
 
       nexaGetPendingListings(collection)
         .then(function(items) {
           if (items.length === 0) {
-            content.innerHTML =
-              '<div style="text-align:center;padding:40px;">' +
-                '<div style="font-size:3em;margin-bottom:12px;">✅</div>' +
-                '<h3>All clear!</h3>' +
-                '<p style="color:var(--text2);">No pending approvals in this section</p>' +
-              '</div>';
+            content.innerHTML = '<div class="ad-empty"><div class="ad-empty-icon">✅</div><h3>All clear!</h3><p>No pending approvals in this section</p></div>';
             return;
           }
 
           content.innerHTML = items.map(function(item) {
-            var title = item.title || item.name || 'Untitled';
-            var price = item.price || item.consultationFee || item.basePrice || 0;
-            var seller = item.sellerName || item.providerName || item.ownerName ||
-                         item.agentName || item.employerName || item.instructorName ||
+            var title  = item.title || item.name || 'Untitled';
+            var price  = item.price || item.consultationFee || item.basePrice || 0;
+            var seller = item.sellerName || item.providerName || item.ownerName || item.agentName ||
                          item.organizerName || item.restaurantName || item.driverName || 'Unknown';
             var imgHtml = item.imageUrl
-              ? '<img src="' + item.imageUrl + '" style="width:60px;height:60px;object-fit:cover;border-radius:8px;margin-right:12px;"/>'
-              : '<div style="width:60px;height:60px;background:var(--gray);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1.5em;margin-right:12px;">' + (item.emoji || '📦') + '</div>';
+              ? '<img src="' + item.imageUrl + '" style="width:100%;height:100%;object-fit:cover;border-radius:7px;"/>'
+              : item.emoji || '📦';
 
-            return '<div class="approval-card">' +
-              '<div class="approval-card-header">' +
-                '<div style="display:flex;align-items:center;">' +
-                  imgHtml +
-                  '<div>' +
-                    '<div style="font-weight:700;font-size:1em;">' + title + '</div>' +
-                    '<div style="font-size:0.8em;color:var(--text2);">By: ' + seller + '</div>' +
-                    '<div style="font-size:0.8em;color:var(--text2);">Price: ₦' + parseInt(price).toLocaleString() + '</div>' +
-                    (item.category ? '<div style="font-size:0.8em;color:var(--text2);">Category: ' + item.category + '</div>' : '') +
+            return '<div class="ad-approval-card">' +
+              '<div class="ad-approval-header">' +
+                '<div class="ad-approval-img">' + imgHtml + '</div>' +
+                '<div class="ad-approval-info">' +
+                  '<div class="ad-approval-name">' + title + '</div>' +
+                  '<div class="ad-approval-meta">' +
+                    'By: ' + seller + '<br/>' +
+                    'Price: ₦' + parseInt(price).toLocaleString() +
+                    (item.category ? ' • ' + item.category : '') +
                   '</div>' +
                 '</div>' +
-                '<span style="background:#fff3cd;color:#856404;padding:4px 10px;border-radius:6px;font-size:0.75em;font-weight:700;">PENDING</span>' +
+                '<div class="ad-pending-badge">PENDING</div>' +
               '</div>' +
-              (item.description ? '<p style="font-size:0.85em;color:var(--text2);margin-bottom:10px;line-height:1.5;">' + item.description.substring(0, 120) + (item.description.length > 120 ? '...' : '') + '</p>' : '') +
-              '<div class="approval-actions">' +
-                '<button class="btn-approve" onclick="approveItem(\'' + collection + '\', \'' + item.id + '\')">✅ Approve</button>' +
-                '<button class="btn-reject" onclick="openRejectModal(\'' + collection + '\', \'' + item.id + '\')">❌ Reject</button>' +
+              (item.description ? '<div class="ad-approval-desc">' + item.description.substring(0,140) + (item.description.length > 140 ? '...' : '') + '</div>' : '') +
+              '<div class="ad-approval-actions">' +
+                '<button class="ad-btn-approve" onclick="approveItem(\'' + collection + '\',\'' + item.id + '\')">✅ Approve</button>' +
+                '<button class="ad-btn-reject" onclick="openRejectModal(\'' + collection + '\',\'' + item.id + '\')">❌ Reject</button>' +
               '</div>' +
             '</div>';
           }).join('');
         })
         .catch(function(err) {
-          content.innerHTML = '<p style="color:#cc0000;padding:20px;">Error loading: ' + err.message + '</p>';
+          content.innerHTML = '<div class="ad-empty"><div class="ad-empty-icon">❌</div><p>' + err.message + '</p></div>';
         });
     }
 
@@ -679,18 +1472,16 @@
         .then(function() {
           showToast('❌ Listing rejected');
           closeRejectModal();
-          showPendingSection(rejectTarget ? rejectTarget.collection : currentPendingCollection, null);
+          showPendingSection(currentPendingCollection, null);
           loadStats();
         })
         .catch(function(err) { showToast('Error: ' + err.message); });
     }
 
+    /* ── USERS ── */
     function loadUsers() {
       nexaGetAllUsers(100)
-        .then(function(users) {
-          allUsers = users;
-          renderUsers(users);
-        })
+        .then(function(users) { allUsers = users; renderUsers(users); })
         .catch(function(err) { console.log('Users error:', err); });
     }
 
@@ -698,105 +1489,92 @@
       var list = document.getElementById('users-list');
       if (!list) return;
       if (users.length === 0) {
-        list.innerHTML = '<div style="text-align:center;padding:40px;color:var(--text2);">No users found</div>';
+        list.innerHTML = '<div class="ad-empty"><div class="ad-empty-icon">👥</div><h3>No users found</h3></div>';
         return;
       }
       list.innerHTML = users.map(function(u) {
-        return '<div class="user-row">' +
-          '<div class="user-avatar-sm">' + (u.firstName || 'U')[0].toUpperCase() + '</div>' +
-          '<div style="flex:1;">' +
-            '<div style="font-weight:700;">' + (u.fullName || u.firstName || 'Unknown') + '</div>' +
-            '<div style="font-size:0.8em;color:var(--text2);">' + (u.email || '') + '</div>' +
-            '<div style="font-size:0.75em;color:var(--text2);">' +
-              '📍 ' + (u.state || 'N/A') + ' • ' +
-              '📱 ' + (u.phone || 'N/A') +
-              (u.isAdmin ? ' • <span style="color:var(--orange);font-weight:700;">👑 Admin</span>' : '') +
-              (u.suspended ? ' • <span style="color:#cc0000;font-weight:700;">🚫 Suspended</span>' : '') +
+        return '<div class="ad-user-row">' +
+          '<div class="ad-user-avatar">' + (u.firstName || 'U')[0].toUpperCase() + '</div>' +
+          '<div class="ad-user-info">' +
+            '<div class="ad-user-name">' + (u.fullName || u.firstName || 'Unknown') +
+              (u.isAdmin ? ' <span style="background:rgba(31,111,235,0.2);color:#58a6ff;padding:2px 6px;border-radius:4px;font-size:0.7em;font-weight:700;">ADMIN</span>' : '') +
+              (u.suspended ? ' <span style="background:rgba(248,81,73,0.2);color:#f85149;padding:2px 6px;border-radius:4px;font-size:0.7em;font-weight:700;">SUSPENDED</span>' : '') +
             '</div>' +
+            '<div class="ad-user-email">' + (u.email || '') + '</div>' +
+            '<div class="ad-user-meta">📍 ' + (u.state || 'N/A') + ' • 📱 ' + (u.phone || 'N/A') + '</div>' +
           '</div>' +
-          '<div style="display:flex;gap:6px;">' +
+          '<div>' +
             (!u.suspended
-              ? '<button onclick="suspendUser(\'' + u.uid + '\', true)" style="padding:6px 10px;background:#fff0f0;border:1px solid #ffcccc;border-radius:6px;cursor:pointer;font-size:0.8em;color:#cc0000;">Suspend</button>'
-              : '<button onclick="suspendUser(\'' + u.uid + '\', false)" style="padding:6px 10px;background:#f0fff0;border:1px solid #ccffcc;border-radius:6px;cursor:pointer;font-size:0.8em;color:var(--green);">Unsuspend</button>') +
+              ? '<button onclick="suspendUser(\'' + u.uid + '\',true)" class="ad-btn-reject" style="padding:6px 12px;font-size:0.75em;">Suspend</button>'
+              : '<button onclick="suspendUser(\'' + u.uid + '\',false)" class="ad-btn-approve" style="padding:6px 12px;font-size:0.75em;">Unsuspend</button>') +
           '</div>' +
         '</div>';
       }).join('');
     }
 
     function searchUsers() {
-      var query = document.getElementById('user-search').value.toLowerCase();
-      var filtered = allUsers.filter(function(u) {
-        return (u.fullName || '').toLowerCase().includes(query) ||
-               (u.email || '').toLowerCase().includes(query) ||
-               (u.phone || '').toLowerCase().includes(query);
-      });
-      renderUsers(filtered);
+      var q = document.getElementById('user-search').value.toLowerCase();
+      renderUsers(allUsers.filter(function(u) {
+        return (u.fullName||'').toLowerCase().includes(q) ||
+               (u.email||'').toLowerCase().includes(q) ||
+               (u.phone||'').toLowerCase().includes(q);
+      }));
     }
 
     function suspendUser(uid, suspend) {
       if (!confirm((suspend ? 'Suspend' : 'Unsuspend') + ' this user?')) return;
       nexaSuspendUser(uid, suspend)
-        .then(function() {
-          showToast(suspend ? '🚫 User suspended' : '✅ User unsuspended');
-          loadUsers();
-        })
+        .then(function() { showToast(suspend ? '🚫 User suspended' : '✅ User unsuspended'); loadUsers(); })
         .catch(function(err) { showToast('Error: ' + err.message); });
     }
 
-    function loadOrders() {
-      db.collection('orders').get()
-        .then(function(snap) {
-          allOrders = [];
-          snap.forEach(function(doc) { allOrders.push(doc.data()); });
-          allOrders.sort(function(a, b) {
-            return new Date(b.date || 0) - new Date(a.date || 0);
-          });
-          renderAdminOrders(allOrders);
-        })
-        .catch(function(err) { console.log('Orders error:', err); });
+    /* ── ORDERS ── */
+    function loadOrdersRealTime() {
+      if (adminOrdersListener) adminOrdersListener();
+      adminOrdersListener = db.collection('orders').onSnapshot(function(snap) {
+        allOrders = [];
+        snap.forEach(function(doc) { allOrders.push(doc.data()); });
+        allOrders.sort(function(a,b) { return new Date(b.date||0) - new Date(a.date||0); });
+        renderAdminOrders(allOrders);
+        loadStats();
+      }, function(err) { console.log('Orders error:', err); });
     }
 
     function renderAdminOrders(orders) {
       var body = document.getElementById('admin-orders-body');
       if (!body) return;
       if (orders.length === 0) {
-        body.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:20px;color:var(--text2);">No orders yet</td></tr>';
+        body.innerHTML = '<tr><td colspan="7" style="text-align:center;color:#8b949e;padding:20px;">No orders yet</td></tr>';
         return;
       }
       body.innerHTML = orders.map(function(o) {
-        var itemNames = (o.items || []).map(function(i) { return i.name; }).join(', ');
+        var items = (o.items||[]).map(function(i){ return i.name; }).join(', ');
         return '<tr>' +
-          '<td><b>' + (o.id || 'N/A') + '</b></td>' +
-          '<td>' + (o.buyerName || 'Customer') + '</td>' +
-          '<td style="font-size:0.8em;max-width:120px;">' + itemNames + '</td>' +
-          '<td>₦' + (o.total || 0).toLocaleString() + '</td>' +
-          '<td style="font-size:0.8em;">' + (o.paymentRef ? '✅ ' + o.paymentRef.slice(0,10) + '...' : '—') + '</td>' +
-          '<td><span class="status-badge status-' + (o.status || 'confirmed') + '">' + (o.status || 'confirmed') + '</span></td>' +
-          '<td style="font-size:0.8em;">' + (o.date ? new Date(o.date).toLocaleDateString() : '—') + '</td>' +
+          '<td style="font-size:0.78em;"><strong style="color:#58a6ff;">' + (o.id||'N/A') + '</strong></td>' +
+          '<td>' + (o.buyerName||'Customer') + '</td>' +
+          '<td style="font-size:0.78em;max-width:100px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + items + '</td>' +
+          '<td style="color:#ff6b00;font-weight:700;">₦' + (o.total||0).toLocaleString() + '</td>' +
+          '<td style="font-size:0.75em;">' + (o.paymentRef ? '<span style="color:#3fb950;">✅ ' + o.paymentRef.slice(0,10) + '...</span>' : '—') + '</td>' +
+          '<td><span class="ad-badge ad-badge-' + (o.status||'confirmed') + '">' + (o.status||'confirmed') + '</span></td>' +
+          '<td style="font-size:0.78em;color:#8b949e;">' + (o.date ? new Date(o.date).toLocaleDateString() : '—') + '</td>' +
         '</tr>';
       }).join('');
     }
 
     function filterAdminOrders(status, btn) {
-      document.querySelectorAll('.order-filter-btn').forEach(function(b) { b.classList.remove('active'); });
+      document.querySelectorAll('#tab-orders .ad-filter-btn').forEach(function(b){ b.classList.remove('active'); });
       btn.classList.add('active');
-      var filtered = status === 'all'
-        ? allOrders
-        : allOrders.filter(function(o) { return o.status === status; });
-      renderAdminOrders(filtered);
+      renderAdminOrders(status === 'all' ? allOrders : allOrders.filter(function(o){ return o.status === status; }));
     }
 
+    /* ── WITHDRAWALS ── */
     function loadWithdrawals() {
       db.collection('withdrawalRequests').get()
         .then(function(snap) {
           allWithdrawals = [];
-          snap.forEach(function(doc) {
-            allWithdrawals.push(Object.assign({ _id: doc.id }, doc.data()));
-          });
-          allWithdrawals.sort(function(a, b) {
-            var aTime = a.createdAt ? a.createdAt.toMillis() : 0;
-            var bTime = b.createdAt ? b.createdAt.toMillis() : 0;
-            return bTime - aTime;
+          snap.forEach(function(doc) { allWithdrawals.push(Object.assign({_id:doc.id}, doc.data())); });
+          allWithdrawals.sort(function(a,b) {
+            return (b.createdAt?b.createdAt.toMillis():0) - (a.createdAt?a.createdAt.toMillis():0);
           });
           renderWithdrawals('pending');
         })
@@ -806,40 +1584,29 @@
     function renderWithdrawals(filter) {
       var list = document.getElementById('withdrawals-list');
       if (!list) return;
-
-      var filtered = filter === 'all'
-        ? allWithdrawals
-        : allWithdrawals.filter(function(w) { return w.status === filter; });
-
+      var filtered = filter === 'all' ? allWithdrawals : allWithdrawals.filter(function(w){ return w.status === filter; });
       if (filtered.length === 0) {
-        list.innerHTML =
-          '<div style="text-align:center;padding:40px;">' +
-            '<div style="font-size:3em;margin-bottom:12px;">✅</div>' +
-            '<h3>No ' + filter + ' withdrawals</h3>' +
-          '</div>';
+        list.innerHTML = '<div class="ad-empty"><div class="ad-empty-icon">✅</div><h3>No ' + filter + ' withdrawals</h3></div>';
         return;
       }
-
       list.innerHTML = filtered.map(function(w) {
-        return '<div class="withdrawal-card">' +
-          '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;">' +
+        var statusColor = { pending:'#d29922', paid:'#3fb950', rejected:'#f85149' }[w.status] || '#8b949e';
+        var statusBg    = { pending:'rgba(187,128,9,0.15)', paid:'rgba(46,160,67,0.15)', rejected:'rgba(248,81,73,0.15)' }[w.status] || 'transparent';
+        return '<div class="ad-withdrawal-card">' +
+          '<div class="ad-withdrawal-header">' +
             '<div>' +
-              '<div style="font-weight:700;">₦' + (w.amount || 0).toLocaleString() + '</div>' +
-              '<div style="font-size:0.85em;color:var(--text2);">' + (w.userType || 'seller') + ' • ' + (w.bank || '') + '</div>' +
-              '<div style="font-size:0.85em;color:var(--text2);">Acct: ' + (w.account || '') + ' — ' + (w.name || '') + '</div>' +
+              '<div class="ad-withdrawal-amount">₦' + (w.amount||0).toLocaleString() + '</div>' +
+              '<div class="ad-withdrawal-meta">' +
+                '👤 ' + (w.userType||'seller') + ' • 🏦 ' + (w.bank||'') + '<br/>' +
+                '📋 ' + (w.account||'') + ' — ' + (w.name||'') +
+              '</div>' +
             '</div>' +
-            '<span style="background:' +
-              (w.status === 'pending' ? '#fff3cd' : w.status === 'paid' ? '#d4edda' : '#f8d7da') +
-              ';color:' +
-              (w.status === 'pending' ? '#856404' : w.status === 'paid' ? '#155724' : '#721c24') +
-              ';padding:4px 10px;border-radius:6px;font-size:0.75em;font-weight:700;">' +
-              w.status.toUpperCase() +
-            '</span>' +
+            '<span style="background:' + statusBg + ';color:' + statusColor + ';padding:4px 10px;border-radius:4px;font-size:0.72em;font-weight:700;">' + (w.status||'pending').toUpperCase() + '</span>' +
           '</div>' +
           (w.status === 'pending'
-            ? '<div style="display:flex;gap:8px;">' +
-                '<button class="btn-approve" onclick="markWithdrawalPaid(\'' + w._id + '\')">✅ Mark as Paid</button>' +
-                '<button class="btn-reject" onclick="rejectWithdrawal(\'' + w._id + '\')">❌ Reject</button>' +
+            ? '<div style="display:flex;gap:8px;margin-top:10px;">' +
+                '<button class="ad-btn-approve" onclick="markWithdrawalPaid(\'' + w._id + '\')">✅ Mark Paid</button>' +
+                '<button class="ad-btn-reject" onclick="rejectWithdrawal(\'' + w._id + '\')">❌ Reject</button>' +
               '</div>'
             : '') +
         '</div>';
@@ -847,42 +1614,33 @@
     }
 
     function filterWithdrawals(status, btn) {
-      document.querySelectorAll('.order-filter-btn').forEach(function(b) { b.classList.remove('active'); });
+      document.querySelectorAll('#tab-withdrawals .ad-filter-btn').forEach(function(b){ b.classList.remove('active'); });
       btn.classList.add('active');
       renderWithdrawals(status);
     }
 
-    function markWithdrawalPaid(withdrawalId) {
-      if (!confirm('Mark this withdrawal as PAID? Only do this after you have transferred the money.')) return;
-      nexaMarkWithdrawalPaid(withdrawalId)
-        .then(function() {
-          showToast('✅ Withdrawal marked as paid');
-          loadWithdrawals();
-          loadStats();
-        })
+    function markWithdrawalPaid(id) {
+      if (!confirm('Mark as PAID? Only do this after transferring the money.')) return;
+      nexaMarkWithdrawalPaid(id)
+        .then(function() { showToast('✅ Marked as paid'); loadWithdrawals(); loadStats(); })
         .catch(function(err) { showToast('Error: ' + err.message); });
     }
 
-    function rejectWithdrawal(withdrawalId) {
-      if (!confirm('Reject this withdrawal request?')) return;
-      nexaRejectWithdrawal(withdrawalId, 'Rejected by admin')
-        .then(function() {
-          showToast('❌ Withdrawal rejected');
-          loadWithdrawals();
-          loadStats();
-        })
+    function rejectWithdrawal(id) {
+      if (!confirm('Reject this withdrawal?')) return;
+      nexaRejectWithdrawal(id, 'Rejected by admin')
+        .then(function() { showToast('❌ Withdrawal rejected'); loadWithdrawals(); loadStats(); })
         .catch(function(err) { showToast('Error: ' + err.message); });
     }
 
+    /* ── PAYMENTS ── */
     function loadPayments() {
       db.collection('payments').get()
         .then(function(snap) {
           allPayments = [];
           snap.forEach(function(doc) { allPayments.push(doc.data()); });
-          allPayments.sort(function(a, b) {
-            var aTime = a.createdAt ? a.createdAt.toMillis() : 0;
-            var bTime = b.createdAt ? b.createdAt.toMillis() : 0;
-            return bTime - aTime;
+          allPayments.sort(function(a,b) {
+            return (b.createdAt?b.createdAt.toMillis():0) - (a.createdAt?a.createdAt.toMillis():0);
           });
           renderPayments();
         })
@@ -893,359 +1651,205 @@
       var body = document.getElementById('payments-body');
       if (!body) return;
       if (allPayments.length === 0) {
-        body.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:20px;color:var(--text2);">No payment records yet</td></tr>';
+        body.innerHTML = '<tr><td colspan="6" style="text-align:center;color:#8b949e;padding:20px;">No payment records yet</td></tr>';
         return;
       }
       body.innerHTML = allPayments.map(function(p) {
         return '<tr>' +
-          '<td style="font-size:0.8em;"><b>' + (p.reference || 'N/A') + '</b></td>' +
-          '<td>' + (p.customerName || p.email || 'Customer') + '</td>' +
-          '<td>' + (p.orderType || 'product') + '</td>' +
-          '<td>₦' + (p.amount || 0).toLocaleString() + '</td>' +
-          '<td><span class="status-badge status-confirmed">' + (p.status || 'paid') + '</span></td>' +
-          '<td style="font-size:0.8em;">' + (p.createdAt ? new Date(p.createdAt.toMillis()).toLocaleDateString() : '—') + '</td>' +
+          '<td style="font-size:0.75em;"><strong style="color:#58a6ff;">' + (p.reference||'N/A') + '</strong></td>' +
+          '<td>' + (p.customerName||p.email||'Customer') + '</td>' +
+          '<td><span class="ad-badge ad-badge-confirmed">' + (p.orderType||'product') + '</span></td>' +
+          '<td style="color:#ff6b00;font-weight:700;">₦' + (p.amount||0).toLocaleString() + '</td>' +
+          '<td><span class="ad-badge ad-badge-paid">' + (p.status||'paid') + '</span></td>' +
+          '<td style="font-size:0.78em;color:#8b949e;">' + (p.createdAt ? new Date(p.createdAt.toMillis()).toLocaleDateString() : '—') + '</td>' +
         '</tr>';
       }).join('');
     }
 
-    function grantAdminAccess() {
-      var uid = document.getElementById('grant-uid').value.trim();
-      var errEl = document.getElementById('grant-error');
-      var sucEl = document.getElementById('grant-success');
-      errEl.style.display = 'none';
-      sucEl.style.display = 'none';
-
-      if (!uid) { errEl.textContent = 'Enter a UID'; errEl.style.display = 'block'; return; }
-
-      nexaGrantAdmin(uid)
-        .then(function() {
-          sucEl.textContent = '✅ Admin access granted to ' + uid;
-          sucEl.style.display = 'block';
-          document.getElementById('grant-uid').value = '';
-        })
-        .catch(function(err) {
-          errEl.textContent = 'Error: ' + err.message;
-          errEl.style.display = 'block';
-        });
-    }
-
-
-function loadMessages() {
+    /* ── MESSAGES ── */
+    function loadMessages() {
       var list = document.getElementById('messages-list');
       if (!list) return;
-
-      db.collection('contactMessages')
-        .orderBy('createdAt', 'desc')
-        .limit(50)
-        .get()
+      db.collection('contactMessages').get()
         .then(function(snap) {
-          if (snap.empty) {
-            list.innerHTML =
-              '<div style="text-align:center;padding:40px;">' +
-                '<div style="font-size:3em;margin-bottom:12px;">💬</div>' +
-                '<h3>No messages yet</h3>' +
-                '<p style="color:var(--text2);">Contact form submissions will appear here</p>' +
-              '</div>';
+          var messages = [];
+          snap.forEach(function(doc) { messages.push(Object.assign({_id:doc.id}, doc.data())); });
+          messages.sort(function(a,b) {
+            return (b.createdAt?b.createdAt.toMillis():0) - (a.createdAt?a.createdAt.toMillis():0);
+          });
+
+          if (messages.length === 0) {
+            list.innerHTML = '<div class="ad-empty"><div class="ad-empty-icon">💬</div><h3>No messages yet</h3></div>';
             return;
           }
 
           var unread = 0;
-          list.innerHTML = '<div style="display:grid;gap:12px;">' +
-            snap.docs.map(function(doc) {
-              var m = doc.data();
-              var id = doc.id;
-              if (m.status === 'unread') unread++;
-              return '<div style="background:white;border:1px solid ' + (m.status === 'unread' ? 'var(--orange)' : 'var(--border)') + ';border-radius:12px;padding:16px;">' +
-                '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;">' +
-                  '<div>' +
-                    '<div style="font-weight:700;">' + (m.name || 'Unknown') + '</div>' +
-                    '<div style="font-size:0.82em;color:var(--text2);">📧 ' + (m.email || '') + (m.phone ? ' • 📱 ' + m.phone : '') + '</div>' +
-                    '<div style="font-size:0.82em;color:var(--text2);margin-top:2px;">📌 ' + (m.subject || 'General') + '</div>' +
-                  '</div>' +
-                  '<div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;">' +
-                    '<span style="background:' + (m.status === 'unread' ? 'var(--orange)' : 'var(--gray)') + ';color:' + (m.status === 'unread' ? 'white' : 'var(--text2)') + ';padding:3px 10px;border-radius:20px;font-size:0.75em;font-weight:700;">' + (m.status === 'unread' ? 'NEW' : 'READ') + '</span>' +
-                    (m.createdAt ? '<div style="font-size:0.75em;color:var(--text2);">' + new Date(m.createdAt.toMillis()).toLocaleDateString() + '</div>' : '') +
-                  '</div>' +
+          list.innerHTML = messages.map(function(m) {
+            if (m.status === 'unread') unread++;
+            return '<div class="ad-msg-card ' + (m.status === 'unread' ? 'unread' : '') + '">' +
+              '<div class="ad-msg-card-header">' +
+                '<div>' +
+                  '<div class="ad-msg-sender">' + (m.name||'Unknown') + '</div>' +
+                  '<div class="ad-msg-subject">' + (m.subject||'General') + '</div>' +
+                  '<div class="ad-msg-contact">📧 ' + (m.email||'') + (m.phone ? ' • 📱 ' + m.phone : '') + '</div>' +
                 '</div>' +
-                '<div style="background:var(--gray);border-radius:8px;padding:12px;font-size:0.88em;color:var(--text2);line-height:1.6;margin-bottom:12px;">' + (m.message || '') + '</div>' +
-                '<div style="display:flex;gap:8px;">' +
-                  '<a href="mailto:' + (m.email || '') + '" style="background:var(--orange);color:white;padding:8px 14px;border-radius:6px;text-decoration:none;font-size:0.82em;font-weight:700;">📧 Reply</a>' +
-                  '<a href="https://wa.me/' + (m.phone || '').replace(/[^0-9]/g, '') + '" target="_blank" style="background:#25d366;color:white;padding:8px 14px;border-radius:6px;text-decoration:none;font-size:0.82em;font-weight:700;">💬 WhatsApp</a>' +
-                  (m.status === 'unread'
-                    ? '<button onclick="markMessageRead(\'' + id + '\', this)" style="background:var(--gray);border:none;padding:8px 14px;border-radius:6px;cursor:pointer;font-size:0.82em;">✅ Mark Read</button>'
-                    : '') +
-                '</div>' +
-              '</div>';
-            }).join('') +
-          '</div>';
+                (m.status === 'unread' ? '<span style="background:rgba(31,111,235,0.2);color:#58a6ff;padding:3px 8px;border-radius:4px;font-size:0.72em;font-weight:700;">NEW</span>' : '') +
+              '</div>' +
+              '<div class="ad-msg-body">' + (m.message||'') + '</div>' +
+              '<div style="display:flex;gap:8px;">' +
+                '<a href="mailto:' + (m.email||'') + '" class="ad-btn-approve" style="padding:7px 14px;text-decoration:none;font-size:0.8em;">📧 Reply</a>' +
+                (m.phone ? '<a href="https://wa.me/' + (m.phone||'').replace(/[^0-9]/g,'') + '" target="_blank" class="ad-btn-secondary" style="padding:7px 14px;text-decoration:none;font-size:0.8em;background:#25d366;color:white;border:none;">💬 WhatsApp</a>' : '') +
+                (m.status === 'unread' ? '<button onclick="markMessageRead(\'' + m._id + '\')" class="ad-btn-secondary" style="padding:7px 14px;font-size:0.8em;">✅ Mark Read</button>' : '') +
+              '</div>' +
+            '</div>';
+          }).join('');
 
           var badge = document.getElementById('msg-badge');
-          if (badge && unread > 0) {
-            badge.textContent = unread;
-            badge.style.display = 'inline';
-          }
+          if (badge && unread > 0) { badge.textContent = unread; badge.style.display = 'inline'; }
         })
-        .catch(function(err) {
-          list.innerHTML = '<p style="color:#cc0000;padding:20px;">Error: ' + err.message + '</p>';
-        });
+        .catch(function(err) { console.log('Messages error:', err); });
     }
 
-var allApplications = [];
+    function markMessageRead(id) {
+      db.collection('contactMessages').doc(id).update({status:'read'})
+        .then(function() { showToast('✅ Marked as read'); loadMessages(); })
+        .catch(function(err) { showToast('Error: ' + err.message); });
+    }
 
+    /* ── CAREERS ── */
     function loadCareers() {
-      var list = document.getElementById('careers-list');
-      if (!list) return;
-
-      db.collection('jobApplications_careers')
-        .orderBy('createdAt', 'desc')
-        .get()
+      db.collection('jobApplications_careers').get()
         .then(function(snap) {
           allApplications = [];
-          snap.forEach(function(doc) {
-            allApplications.push(Object.assign({ _id: doc.id }, doc.data()));
+          snap.forEach(function(doc) { allApplications.push(Object.assign({_id:doc.id}, doc.data())); });
+          allApplications.sort(function(a,b) {
+            return (b.createdAt?b.createdAt.toMillis():0) - (a.createdAt?a.createdAt.toMillis():0);
           });
-
-          var newCount = allApplications.filter(function(a) { return a.status === 'new'; }).length;
+          var newCount = allApplications.filter(function(a){ return a.status === 'new'; }).length;
           var badge = document.getElementById('careers-badge');
-          if (badge && newCount > 0) {
-            badge.textContent = newCount;
-            badge.style.display = 'inline';
-          }
-
-          filterCareers('new', document.querySelector('.order-filter-btn.active'));
+          if (badge && newCount > 0) { badge.textContent = newCount; badge.style.display = 'inline'; }
+          filterCareers('new', document.querySelector('#tab-careers .ad-filter-btn'));
         })
-        .catch(function(err) {
-          list.innerHTML = '<p style="color:#cc0000;padding:20px;">Error: ' + err.message + '</p>';
-        });
+        .catch(function(err) { console.log('Careers error:', err); });
     }
 
     function filterCareers(status, btn) {
       if (btn) {
-        document.querySelectorAll('#tab-careers .order-filter-btn').forEach(function(b) {
-          b.classList.remove('active');
-        });
+        document.querySelectorAll('#tab-careers .ad-filter-btn').forEach(function(b){ b.classList.remove('active'); });
         btn.classList.add('active');
       }
-
-      var filtered = status === 'all'
-        ? allApplications
-        : allApplications.filter(function(a) { return a.status === status; });
-
+      var filtered = status === 'all' ? allApplications : allApplications.filter(function(a){ return a.status === status; });
       renderApplications(filtered);
     }
 
-    function renderApplications(applications) {
+    function renderApplications(apps) {
       var list = document.getElementById('careers-list');
       if (!list) return;
-
-      if (applications.length === 0) {
-        list.innerHTML =
-          '<div style="text-align:center;padding:40px;">' +
-            '<div style="font-size:3em;margin-bottom:12px;">📋</div>' +
-            '<h3>No applications here</h3>' +
-            '<p style="color:var(--text2);">Applications will appear here once submitted</p>' +
-          '</div>';
+      if (apps.length === 0) {
+        list.innerHTML = '<div class="ad-empty"><div class="ad-empty-icon">📋</div><h3>No applications here</h3></div>';
         return;
       }
-
-      list.innerHTML = '<div style="display:grid;gap:12px;">' +
-        applications.map(function(a) {
-          var statusColor = {
-            new: '#fff3cd', reviewed: '#cce5ff',
-            shortlisted: '#d4edda', rejected: '#f8d7da'
-          }[a.status] || '#f8f9fa';
-
-          var statusTextColor = {
-            new: '#856404', reviewed: '#004085',
-            shortlisted: '#155724', rejected: '#721c24'
-          }[a.status] || '#333';
-
-          return '<div style="background:white;border:1px solid var(--border);border-radius:12px;padding:16px;">' +
-            '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;">' +
-              '<div>' +
-                '<div style="font-weight:700;font-size:1em;">' + (a.name || 'Unknown') + '</div>' +
-                '<div style="font-size:0.82em;color:var(--text2);">📧 ' + (a.email || '') + '</div>' +
-                '<div style="font-size:0.82em;color:var(--text2);">📱 ' + (a.phone || '') + '</div>' +
-                '<div style="font-size:0.82em;color:var(--orange);font-weight:700;margin-top:4px;">🎯 ' + (a.role || 'Unknown Role') + '</div>' +
-              '</div>' +
-              '<span style="background:' + statusColor + ';color:' + statusTextColor + ';padding:4px 10px;border-radius:6px;font-size:0.75em;font-weight:700;">' +
-                (a.status || 'new').toUpperCase() +
-              '</span>' +
+      list.innerHTML = apps.map(function(a) {
+        var sc = { new:'#d29922', reviewed:'#58a6ff', shortlisted:'#3fb950', rejected:'#f85149' }[a.status] || '#8b949e';
+        var sb = { new:'rgba(187,128,9,0.15)', reviewed:'rgba(31,111,235,0.15)', shortlisted:'rgba(46,160,67,0.15)', rejected:'rgba(248,81,73,0.15)' }[a.status] || 'transparent';
+        return '<div class="ad-provider-card">' +
+          '<div class="ad-provider-header">' +
+            '<div>' +
+              '<div class="ad-provider-name">' + (a.name||'Unknown') + '</div>' +
+              '<div class="ad-provider-type">🎯 ' + (a.role||'Unknown Role') + '</div>' +
+              '<div class="ad-provider-meta">📧 ' + (a.email||'') + ' • 📱 ' + (a.phone||'') + '</div>' +
             '</div>' +
-
-            (a.portfolio ? '<div style="font-size:0.82em;margin-bottom:8px;"><b>Portfolio:</b> <a href="' + a.portfolio + '" target="_blank" style="color:var(--orange);">' + a.portfolio + '</a></div>' : '') +
-
-            '<div style="background:var(--gray);border-radius:8px;padding:12px;margin-bottom:8px;">' +
-              '<div style="font-size:0.8em;font-weight:700;margin-bottom:4px;">Why Nexabay:</div>' +
-              '<div style="font-size:0.82em;color:var(--text2);line-height:1.6;">' + (a.why || 'Not provided') + '</div>' +
-            '</div>' +
-
-            (a.experience ? (
-              '<div style="background:var(--gray);border-radius:8px;padding:12px;margin-bottom:12px;">' +
-                '<div style="font-size:0.8em;font-weight:700;margin-bottom:4px;">Experience:</div>' +
-                '<div style="font-size:0.82em;color:var(--text2);line-height:1.6;">' + a.experience + '</div>' +
-              '</div>'
-            ) : '') +
-
-            '<div style="display:flex;flex-wrap:wrap;gap:8px;">' +
-              '<a href="mailto:' + (a.email || '') + '" style="background:var(--orange);color:white;padding:8px 14px;border-radius:6px;text-decoration:none;font-size:0.82em;font-weight:700;">📧 Email</a>' +
-              '<a href="https://wa.me/' + (a.phone || '').replace(/[^0-9]/g, '') + '" target="_blank" style="background:#25d366;color:white;padding:8px 14px;border-radius:6px;text-decoration:none;font-size:0.82em;font-weight:700;">💬 WhatsApp</a>' +
-              (a.status === 'new'
-                ? '<button onclick="updateCareerStatus(\'' + a._id + '\', \'reviewed\', this.parentElement.parentElement)" style="background:#cce5ff;color:#004085;border:none;padding:8px 14px;border-radius:6px;cursor:pointer;font-size:0.82em;font-weight:700;">👀 Mark Reviewed</button>' : '') +
-              (a.status !== 'shortlisted'
-                ? '<button onclick="updateCareerStatus(\'' + a._id + '\', \'shortlisted\', this.parentElement.parentElement)" style="background:#d4edda;color:#155724;border:none;padding:8px 14px;border-radius:6px;cursor:pointer;font-size:0.82em;font-weight:700;">✅ Shortlist</button>' : '') +
-              (a.status !== 'rejected'
-                ? '<button onclick="updateCareerStatus(\'' + a._id + '\', \'rejected\', this.parentElement.parentElement)" style="background:#f8d7da;color:#721c24;border:none;padding:8px 14px;border-radius:6px;cursor:pointer;font-size:0.82em;font-weight:700;">❌ Reject</button>' : '') +
-            '</div>' +
-          '</div>';
-        }).join('') +
-      '</div>';
+            '<span style="background:' + sb + ';color:' + sc + ';padding:3px 8px;border-radius:4px;font-size:0.72em;font-weight:700;">' + (a.status||'new').toUpperCase() + '</span>' +
+          '</div>' +
+          (a.why ? '<div class="ad-provider-desc"><strong>Why Nexabay:</strong> ' + a.why + '</div>' : '') +
+          '<div style="display:flex;flex-wrap:wrap;gap:8px;">' +
+            '<a href="mailto:' + (a.email||'') + '" class="ad-btn-approve" style="padding:7px 14px;text-decoration:none;font-size:0.8em;">📧 Email</a>' +
+            '<a href="https://wa.me/' + (a.phone||'').replace(/[^0-9]/g,'') + '" target="_blank" style="background:#25d366;color:white;border:none;padding:7px 14px;border-radius:7px;text-decoration:none;font-size:0.8em;font-weight:700;">💬 WhatsApp</a>' +
+            (a.status !== 'shortlisted' ? '<button onclick="updateCareerStatus(\'' + a._id + '\',\'shortlisted\')" class="ad-btn-secondary" style="padding:7px 14px;font-size:0.8em;">✅ Shortlist</button>' : '') +
+            (a.status !== 'rejected' ? '<button onclick="updateCareerStatus(\'' + a._id + '\',\'rejected\')" class="ad-btn-reject" style="padding:7px 14px;font-size:0.8em;">❌ Reject</button>' : '') +
+          '</div>' +
+        '</div>';
+      }).join('');
     }
 
-    function updateCareerStatus(appId, status, card) {
-      db.collection('jobApplications_careers').doc(appId).update({ status: status })
-        .then(function() {
-          showToast('✅ Application marked as ' + status);
-          loadCareers();
-        })
+    function updateCareerStatus(id, status) {
+      db.collection('jobApplications_careers').doc(id).update({status:status})
+        .then(function() { showToast('✅ Updated to ' + status); loadCareers(); })
         .catch(function(err) { showToast('Error: ' + err.message); });
     }
 
-    function markMessageRead(messageId, btn) {
-      db.collection('contactMessages').doc(messageId).update({ status: 'read' })
-        .then(function() {
-          btn.remove();
-          showToast('✅ Marked as read');
-          loadMessages();
-        })
-        .catch(function(err) { showToast('Error: ' + err.message); });
-    }
-
-
-var adminOrdersListener = null;
-
-    function loadOrdersRealTime() {
-      if (adminOrdersListener) adminOrdersListener();
-
-      adminOrdersListener = db.collection('orders')
-        .onSnapshot(function(snap) {
-          allOrders = [];
-          snap.forEach(function(doc) { allOrders.push(doc.data()); });
-          allOrders.sort(function(a, b) {
-            return new Date(b.date || 0) - new Date(a.date || 0);
-          });
-          renderAdminOrders(allOrders);
-          loadStats();
-        }, function(err) { console.log('Admin orders error:', err); });
-    }
-    
-    var allProviderApps = [];
-
+    /* ── PROVIDER APPS ── */
     function loadProviderApplications() {
       var list = document.getElementById('providers-list');
-      if (!list) return;
+      if (list) list.innerHTML = '<div class="ad-empty"><div class="ad-empty-icon">⏳</div><p>Loading...</p></div>';
 
-      db.collection('providerApplications')
-        .orderBy('submittedAt', 'desc')
-        .get()
+      db.collection('providerApplications').get()
         .then(function(snap) {
           allProviderApps = [];
-          snap.forEach(function(doc) {
-            allProviderApps.push(Object.assign({ _id: doc.id }, doc.data()));
+          snap.forEach(function(doc) { allProviderApps.push(Object.assign({_id:doc.id}, doc.data())); });
+          allProviderApps.sort(function(a,b) {
+            return (b.submittedAt?b.submittedAt.toMillis():0) - (a.submittedAt?a.submittedAt.toMillis():0);
           });
-
-          var pendingCount = allProviderApps.filter(function(a) { return a.status === 'pending'; }).length;
+          var pendingCount = allProviderApps.filter(function(a){ return a.status === 'pending'; }).length;
           var badge = document.getElementById('providers-badge');
-          if (badge && pendingCount > 0) {
-            badge.textContent = pendingCount;
-            badge.style.display = 'inline';
-          }
-
-          filterProviders('pending', document.querySelector('#tab-providers .order-filter-btn'));
+          if (badge && pendingCount > 0) { badge.textContent = pendingCount; badge.style.display = 'inline'; }
+          filterProviders('pending', document.querySelector('#tab-providers .ad-filter-btn'));
         })
         .catch(function(err) {
-          list.innerHTML = '<p style="color:#cc0000;padding:20px;">Error: ' + err.message + '</p>';
+          if (list) list.innerHTML = '<div class="ad-empty"><div class="ad-empty-icon">❌</div><p>' + err.message + '</p></div>';
         });
     }
 
     function filterProviders(status, btn) {
       if (btn) {
-        document.querySelectorAll('#tab-providers .order-filter-btn').forEach(function(b) {
-          b.classList.remove('active');
-        });
+        document.querySelectorAll('#tab-providers .ad-filter-btn').forEach(function(b){ b.classList.remove('active'); });
         btn.classList.add('active');
       }
-      var filtered = status === 'all'
-        ? allProviderApps
-        : allProviderApps.filter(function(a) { return a.status === status; });
+      var filtered = status === 'all' ? allProviderApps : allProviderApps.filter(function(a){ return a.status === status; });
       renderProviderApps(filtered);
     }
 
     function renderProviderApps(apps) {
       var list = document.getElementById('providers-list');
       if (!list) return;
-
       if (apps.length === 0) {
-        list.innerHTML =
-          '<div style="text-align:center;padding:40px;">' +
-            '<div style="font-size:3em;margin-bottom:12px;">🚀</div>' +
-            '<h3>No applications here</h3>' +
-          '</div>';
+        list.innerHTML = '<div class="ad-empty"><div class="ad-empty-icon">🏪</div><h3>No applications here</h3></div>';
         return;
       }
-
-      list.innerHTML = '<div style="display:grid;gap:12px;">' +
-        apps.map(function(a) {
-          var statusColors = {
-            pending:  { bg: '#fff3cd', text: '#856404' },
-            approved: { bg: '#d4edda', text: '#155724' },
-            rejected: { bg: '#f8d7da', text: '#721c24' },
-          };
-          var sc = statusColors[a.status] || statusColors.pending;
-
-          return '<div style="background:white;border:1px solid var(--border);border-radius:12px;padding:16px;">' +
-            '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;">' +
-              '<div>' +
-                '<div style="font-weight:700;font-size:1em;">' + (a.firstName || '') + ' ' + (a.lastName || '') + '</div>' +
-                '<div style="font-size:0.82em;color:var(--orange);font-weight:700;">' + (a.providerLabel || a.providerType || '') + '</div>' +
-                '<div style="font-size:0.82em;color:var(--text2);">🏢 ' + (a.businessName || '') + '</div>' +
-                '<div style="font-size:0.82em;color:var(--text2);">📍 ' + (a.state || '') + '</div>' +
+      list.innerHTML = apps.map(function(a) {
+        var sc = { pending:'#d29922', approved:'#3fb950', rejected:'#f85149' }[a.status] || '#8b949e';
+        var sb = { pending:'rgba(187,128,9,0.15)', approved:'rgba(46,160,67,0.15)', rejected:'rgba(248,81,73,0.15)' }[a.status] || 'transparent';
+        return '<div class="ad-provider-card">' +
+          '<div class="ad-provider-header">' +
+            '<div>' +
+              '<div class="ad-provider-name">' + (a.firstName||'') + ' ' + (a.lastName||'') + '</div>' +
+              '<div class="ad-provider-type">' + (a.providerLabel||a.providerType||'') + '</div>' +
+              '<div class="ad-provider-meta">' +
+                '🏢 ' + (a.businessName||'N/A') + ' • 📍 ' + (a.state||'N/A') + '<br/>' +
+                '📧 ' + (a.email||'') + ' • 📱 ' + (a.whatsapp||'') +
               '</div>' +
-              '<span style="background:' + sc.bg + ';color:' + sc.text + ';padding:4px 10px;border-radius:6px;font-size:0.75em;font-weight:700;">' +
-                (a.status || 'pending').toUpperCase() +
-              '</span>' +
             '</div>' +
-            '<div style="background:var(--gray);border-radius:8px;padding:10px;margin-bottom:10px;font-size:0.82em;color:var(--text2);">' +
-              '<b>What they offer:</b> ' + (a.description || 'N/A') +
-            '</div>' +
-            '<div style="font-size:0.8em;color:var(--text2);margin-bottom:10px;">' +
-              '📧 ' + (a.email || '') + ' • 📱 ' + (a.whatsapp || '') + '<br/>' +
-              '🏦 ' + (a.bank || '') + ' — ' + (a.accountNumber || '') + ' (' + (a.accountName || '') + ')<br/>' +
-              '🪪 ' + (a.idType || '') + ': ' + (a.idNumber || '') +
-            '</div>' +
-            (a.instagram || a.facebook || a.twitter || a.website
-              ? '<div style="font-size:0.78em;color:var(--text2);margin-bottom:10px;">' +
-                  (a.instagram ? '📸 ' + a.instagram + ' ' : '') +
-                  (a.facebook  ? '👤 ' + a.facebook  + ' ' : '') +
-                  (a.twitter   ? '🐦 ' + a.twitter   + ' ' : '') +
-                  (a.website   ? '🌐 ' + a.website   : '') +
-                '</div>'
+            '<span style="background:' + sb + ';color:' + sc + ';padding:3px 8px;border-radius:4px;font-size:0.72em;font-weight:700;">' + (a.status||'pending').toUpperCase() + '</span>' +
+          '</div>' +
+          (a.description ? '<div class="ad-provider-desc"><strong>Offers:</strong> ' + a.description.substring(0,120) + (a.description.length > 120 ? '...' : '') + '</div>' : '') +
+          '<div style="font-size:0.75em;color:#8b949e;margin-bottom:10px;">' +
+            '🏦 ' + (a.bank||'') + ' — ' + (a.accountNumber||'') + ' (' + (a.accountName||'') + ')<br/>' +
+            '🪪 ' + (a.idType||'') + ': ' + (a.idNumber||'') +
+          '</div>' +
+          '<div style="display:flex;flex-wrap:wrap;gap:8px;">' +
+            '<a href="mailto:' + (a.email||'') + '" class="ad-btn-approve" style="padding:7px 14px;text-decoration:none;font-size:0.8em;">📧 Email</a>' +
+            '<a href="https://wa.me/' + (a.whatsapp||'').replace(/[^0-9]/g,'') + '" target="_blank" style="background:#25d366;color:white;border:none;padding:7px 14px;border-radius:7px;text-decoration:none;font-size:0.8em;font-weight:700;">💬 WhatsApp</a>' +
+            (a.status === 'pending'
+              ? '<button onclick="updateProviderApp(\'' + a._id + '\',\'approved\')" class="ad-btn-approve" style="padding:7px 14px;font-size:0.8em;">✅ Approve</button>' +
+                '<button onclick="updateProviderApp(\'' + a._id + '\',\'rejected\')" class="ad-btn-reject" style="padding:7px 14px;font-size:0.8em;">❌ Reject</button>'
               : '') +
-            '<div style="display:flex;flex-wrap:wrap;gap:8px;">' +
-              '<a href="mailto:' + (a.email || '') + '" style="background:var(--orange);color:white;padding:8px 14px;border-radius:6px;text-decoration:none;font-size:0.82em;font-weight:700;">📧 Email</a>' +
-              '<a href="https://wa.me/' + (a.whatsapp || '').replace(/[^0-9]/g, '') + '" target="_blank" style="background:#25d366;color:white;padding:8px 14px;border-radius:6px;text-decoration:none;font-size:0.82em;font-weight:700;">💬 WhatsApp</a>' +
-              (a.status === 'pending'
-                ? '<button onclick="updateProviderApp(\'' + a._id + '\', \'approved\')" style="background:#d4edda;color:#155724;border:none;padding:8px 14px;border-radius:6px;cursor:pointer;font-size:0.82em;font-weight:700;">✅ Approve</button>' +
-                  '<button onclick="updateProviderApp(\'' + a._id + '\', \'rejected\')" style="background:#f8d7da;color:#721c24;border:none;padding:8px 14px;border-radius:6px;cursor:pointer;font-size:0.82em;font-weight:700;">❌ Reject</button>'
-                : '') +
-            '</div>' +
-          '</div>';
-        }).join('') +
-      '</div>';
+          '</div>' +
+        '</div>';
+      }).join('');
     }
 
-    function updateProviderApp(appId, status) {
-      db.collection('providerApplications').doc(appId).update({ status: status })
+    function updateProviderApp(id, status) {
+      db.collection('providerApplications').doc(id).update({status:status})
         .then(function() {
           showToast(status === 'approved' ? '✅ Application approved!' : '❌ Application rejected');
           loadProviderApplications();
@@ -1253,6 +1857,29 @@ var adminOrdersListener = null;
         .catch(function(err) { showToast('Error: ' + err.message); });
     }
 
+    /* ── GRANT ADMIN ── */
+    function grantAdminAccess() {
+      var uid = document.getElementById('grant-uid').value.trim();
+      var errEl = document.getElementById('grant-error');
+      var sucEl = document.getElementById('grant-success');
+      errEl.style.display = 'none';
+      sucEl.style.display = 'none';
+      if (!uid) { errEl.textContent = 'Enter a UID'; errEl.style.display = 'block'; return; }
+      nexaGrantAdmin(uid)
+        .then(function() { sucEl.textContent = '✅ Admin access granted to ' + uid; sucEl.style.display = 'block'; document.getElementById('grant-uid').value = ''; })
+        .catch(function(err) { errEl.textContent = 'Error: ' + err.message; errEl.style.display = 'block'; });
+    }
+
+    /* ── TOAST ── */
+    function showToast(msg) {
+      var t = document.getElementById('ad-toast');
+      if (!t) return;
+      t.textContent = msg;
+      t.style.display = 'block';
+      setTimeout(function() { t.style.display = 'none'; }, 2500);
+    }
+
+    /* ── LOGOUT ── */
     function doAdminLogout() {
       if (typeof nexaLogout === 'function') {
         nexaLogout().then(function() {
@@ -1264,140 +1891,8 @@ var adminOrdersListener = null;
         window.location.href = '../../index.html';
       }
     }
-    
-    var supportTicketsListener = null;
 
-function loadSupportTickets() {
-  var list = document.getElementById('support-tickets-list');
-  if (!list) return;
-
-  if (supportTicketsListener) supportTicketsListener();
-
-  supportTicketsListener = db.collection('support_tickets')
-    .orderBy('createdAt', 'desc')
-    .onSnapshot(function(snap) {
-      allSupportTickets = [];
-      snap.forEach(function(doc) {
-        allSupportTickets.push(Object.assign({ _id: doc.id }, doc.data()));
-      });
-
-      var openCount = allSupportTickets.filter(function(t) { return t.status === 'open'; }).length;
-      var badge = document.getElementById('support-badge');
-      if (badge) {
-        if (openCount > 0) {
-          badge.textContent = openCount;
-          badge.style.display = 'inline';
-        } else {
-          badge.style.display = 'none';
-        }
-      }
-
-      var activeBtn = document.querySelector('#tab-support .section-tab.active');
-      filterSupportTickets(activeBtn ? activeBtn.textContent.trim().toLowerCase().includes('open') ? 'open' : activeBtn.textContent.trim().toLowerCase().includes('resolved') ? 'resolved' : 'all' : 'open', activeBtn);
-    }, function(err) {
-      list.innerHTML = '<p style="color:#cc0000;padding:20px;">Error: ' + err.message + '</p>';
-    });
-}
-
-function filterSupportTickets(status, btn) {
-  if (btn) {
-    document.querySelectorAll('#tab-support .section-tab').forEach(function(b) {
-      b.classList.remove('active');
-    });
-    btn.classList.add('active');
-  }
-
-  var filtered = status === 'all'
-    ? allSupportTickets
-    : allSupportTickets.filter(function(t) { return t.status === status; });
-
-  renderSupportTickets(filtered);
-}
-
-function renderSupportTickets(tickets) {
-  var list = document.getElementById('support-tickets-list');
-  if (!list) return;
-
-  if (tickets.length === 0) {
-    list.innerHTML =
-      '<div style="text-align:center;padding:40px;">' +
-        '<div style="font-size:3em;margin-bottom:12px;">✅</div>' +
-        '<h3>No tickets here</h3>' +
-        '<p style="color:var(--text2);">Escalated questions from the AI assistant will appear here</p>' +
-      '</div>';
-    return;
-  }
-
-  list.innerHTML = '<div style="display:grid;gap:12px;">' +
-    tickets.map(function(t) {
-      var statusColor = t.status === 'resolved' ? '#d4edda' : '#fff3cd';
-      var statusTextColor = t.status === 'resolved' ? '#155724' : '#856404';
-      var dateStr = t.createdAt ? new Date(t.createdAt.toMillis()).toLocaleString() : '—';
-      var msgs = t.messages || [];
-
-      var threadHtml = msgs.map(function(m) {
-        var bg = m.sender === 'customer' ? '#1a2236' : m.sender === 'admin' ? '#0F7A5C' : '#fff3e0';
-        var color = m.sender === 'customer' || m.sender === 'admin' ? 'white' : '#333';
-        var label = m.sender === 'customer' ? 'Customer' : m.sender === 'admin' ? 'You' : 'AI';
-        return '<div style="background:' + bg + ';color:' + color + ';border-radius:8px;padding:10px 12px;margin-bottom:6px;">' +
-          '<div style="font-size:0.7em;opacity:0.8;font-weight:700;margin-bottom:2px;">' + label + '</div>' +
-          '<div style="font-size:0.85em;line-height:1.5;">' + m.text + '</div>' +
-        '</div>';
-      }).join('');
-
-      return '<div style="background:white;border:1px solid var(--border);border-radius:12px;padding:16px;">' +
-        '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;">' +
-          '<div>' +
-            '<div style="font-size:0.8em;color:var(--text2);">👤 ' + (t.userId || 'guest') + ' • 🏷️ ' + (t.category || 'general') + '</div>' +
-            '<div style="font-size:0.75em;color:var(--text2);">' + dateStr + '</div>' +
-          '</div>' +
-          '<span style="background:' + statusColor + ';color:' + statusTextColor + ';padding:4px 10px;border-radius:6px;font-size:0.75em;font-weight:700;">' +
-            (t.status || 'open').toUpperCase() +
-          '</span>' +
-        '</div>' +
-
-        '<div style="max-height:280px;overflow-y:auto;background:var(--gray);border-radius:8px;padding:10px;margin-bottom:10px;">' +
-          threadHtml +
-        '</div>' +
-
-        (t.status !== 'resolved'
-          ? '<textarea id="reply-' + t._id + '" rows="2" placeholder="Type your reply..." style="width:100%;padding:10px;border:1px solid var(--border);border-radius:8px;font-size:0.85em;margin-bottom:8px;"></textarea>' +
-            '<div style="display:flex;gap:8px;">' +
-              '<button class="btn-approve" onclick="sendTicketMessage(\'' + t._id + '\')">💬 Send Reply</button>' +
-              '<button class="btn-approve" onclick="resolveTicket(\'' + t._id + '\')">✅ Mark Resolved</button>' +
-            '</div>'
-          : '') +
-      '</div>';
-    }).join('') +
-  '</div>';
-}
-
-function sendTicketMessage(ticketId) {
-  var textarea = document.getElementById('reply-' + ticketId);
-  var reply = textarea ? textarea.value.trim() : '';
-  if (!reply) { showToast('Please type a reply first'); return; }
-
-  appendTicketMessage(ticketId, 'admin', reply)
-    .then(function() {
-      showToast('✅ Reply sent');
-      if (textarea) textarea.value = '';
-    })
-    .catch(function(err) { showToast('Error: ' + err.message); });
-}
-
-function resolveTicket(ticketId) {
-  db.collection('support_tickets').doc(ticketId).update({
-    status: 'resolved',
-    resolvedAt: firebase.firestore.FieldValue.serverTimestamp()
-  })
-    .then(function() {
-      showToast('✅ Ticket marked resolved');
-      loadSupportTickets();
-    })
-    .catch(function(err) { showToast('Error: ' + err.message); });
-}
-    
-
+    /* ── START ── */
     document.addEventListener('DOMContentLoaded', function() {
       init();
     });

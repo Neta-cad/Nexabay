@@ -157,8 +157,34 @@ document.addEventListener('click', function(e) {
 });
 
 document.addEventListener('DOMContentLoaded', function() {
-  checkAuthState();
   updateCartCount();
+
+  if (typeof auth !== 'undefined') {
+    auth.onAuthStateChanged(function(firebaseUser) {
+      if (firebaseUser) {
+        firebaseUser.getIdToken().then(function() {
+          var stored = JSON.parse(localStorage.getItem('nexa_current_user') || 'null');
+          if (!stored) {
+            db.collection('users').doc(firebaseUser.uid).get()
+              .then(function(doc) {
+                if (doc.exists) {
+                  localStorage.setItem('nexa_current_user', JSON.stringify(doc.data()));
+                }
+                checkAuthState();
+              });
+          } else {
+            checkAuthState();
+          }
+        });
+      } else {
+        localStorage.removeItem('nexa_current_user');
+        checkAuthState();
+      }
+    });
+  } else {
+    checkAuthState();
+  }
+});
 
   var navSearchInput = document.getElementById('nav-search-input');
   if (navSearchInput) {

@@ -830,6 +830,10 @@
     }
 
     function submitApplication() {
+      if (typeof db === 'undefined') {
+        alert('Connection error. Please refresh the page and try again.');
+        return;
+      }
       var termsChecked    = document.getElementById('bp-terms').checked;
       var whatsappChecked = document.getElementById('bp-whatsapp-consent').checked;
       var errEl = document.getElementById('bp-error');
