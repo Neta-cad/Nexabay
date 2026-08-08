@@ -25,19 +25,15 @@ function showToast(msg, color) {
 // ── CART COUNT ────────────────────────────────
 function updateCartCount() {
   var cartData = JSON.parse(localStorage.getItem('nexa_cart') || '[]');
-  var count = cartData.length;
-  var el = document.getElementById('cart-count');
-  var floatEl = document.getElementById('floating-cart-count');
-  if (el) el.textContent = count;
-  if (floatEl) floatEl.textContent = count;
+  var count = cartData.reduce(function(s, i) { return s + (i.qty || 1); }, 0);
+  var badges = document.querySelectorAll('#nav-cart-count, #cart-count, .cart-count, #floating-cart-count');
+  badges.forEach(function(b) { b.textContent = count; });
 }
 
-// ── MOBILE MENU ───────────────────────────────
-// ── NAVIGATION ────────────────────────────────
-
+// ── MOBILE MENU / NAVIGATION ──────────────────
 function toggleMobileMenu() {
-  var menu    = document.getElementById('mobile-side-menu');
-  var overlay = document.getElementById('mobile-overlay');
+  var menu    = document.getElementById('mobile-side-menu') || document.getElementById('mobile-menu');
+  var overlay = document.getElementById('mobile-overlay') || document.getElementById('mobile-menu-overlay');
   if (!menu) return;
   var isOpen = menu.classList.contains('open');
   if (isOpen) {
@@ -53,8 +49,8 @@ function toggleMobileMenu() {
 }
 
 function closeMobileMenu() {
-  var menu    = document.getElementById('mobile-side-menu');
-  var overlay = document.getElementById('mobile-overlay');
+  var menu    = document.getElementById('mobile-side-menu') || document.getElementById('mobile-menu');
+  var overlay = document.getElementById('mobile-overlay') || document.getElementById('mobile-menu-overlay');
   if (menu)    menu.classList.remove('open');
   if (overlay) overlay.classList.remove('open');
   document.body.style.overflow = '';
@@ -94,6 +90,7 @@ function navSearch() {
   window.location.href = base + 'pages/search.html?q=' + encodeURIComponent(q);
 }
 
+// ── AUTH STATE (merged: supports both old and new nav markup) ──
 function checkAuthState() {
   var user = JSON.parse(localStorage.getItem('nexa_current_user') || 'null');
 
@@ -102,10 +99,14 @@ function checkAuthState() {
   var msmUser   = document.getElementById('msm-user');
   var msmLogout = document.getElementById('msm-logout');
 
+  var guestEl = document.getElementById('nav-guest');
+  var userEl  = document.getElementById('nav-user');
+  var mobileUserEl = document.getElementById('mobile-user-section');
+  var mobileHeaderActions = document.getElementById('mobile-header-actions');
+
   if (user) {
     if (loginBtn)  loginBtn.style.display  = 'none';
-    if (signupBtn) signupBtn.textContent   = user.firstName || 'Account';
-    if (signupBtn) signupBtn.href          = 'pages/dashboard/buyer.html';
+    if (signupBtn) { signupBtn.textContent = user.firstName || 'Account'; signupBtn.href = 'pages/dashboard/buyer.html'; }
 
     if (msmUser) {
       msmUser.innerHTML =
@@ -117,152 +118,67 @@ function checkAuthState() {
           '</div>' +
         '</div>';
     }
-
     if (msmLogout) msmLogout.style.display = 'block';
-  } else {
-    if (msmLogout) msmLogout.style.display = 'none';
-  }
-}
 
-function logoutUser() {
-  if (typeof nexaLogout === 'function') {
-    nexaLogout().then(function() {
-      localStorage.removeItem('nexa_current_user');
-      checkAuthState();
-      closeMobileMenu();
-      showToast('👋 Logged out successfully');
-      setTimeout(function() { window.location.reload(); }, 800);
-    });
-  } else {
-    localStorage.removeItem('nexa_current_user');
-    checkAuthState();
-    closeMobileMenu();
-    showToast('👋 Logged out successfully');
-  }
-}
-
-function updateCartCount() {
-  var cart  = JSON.parse(localStorage.getItem('nexa_cart') || '[]');
-  var count = cart.reduce(function(s, i) { return s + (i.qty || 1); }, 0);
-  var badges = document.querySelectorAll('#nav-cart-count, #cart-count, .cart-count');
-  badges.forEach(function(b) { b.textContent = count; });
-}
-
-// Close dropdowns when clicking outside
-document.addEventListener('click', function(e) {
-  if (!e.target.closest('.section-nav-item') &&
-      !e.target.closest('.snav-arrow')) {
-    closeAllDropdowns();
-  }
-});
-
-document.addEventListener('DOMContentLoaded', function() {
-  updateCartCount();
-
-  if (typeof auth !== 'undefined') {
-    auth.onAuthStateChanged(function(firebaseUser) {
-      if (firebaseUser) {
-        firebaseUser.getIdToken().then(function() {
-          var stored = JSON.parse(localStorage.getItem('nexa_current_user') || 'null');
-          if (!stored) {
-            db.collection('users').doc(firebaseUser.uid).get()
-              .then(function(doc) {
-                if (doc.exists) {
-                  localStorage.setItem('nexa_current_user', JSON.stringify(doc.data()));
-                }
-                checkAuthState();
-              });
-          } else {
-            checkAuthState();
-          }
-        });
-      } else {
-        localStorage.removeItem('nexa_current_user');
-        checkAuthState();
-      }
-    });
-  } else {
-    checkAuthState();
-  }
-});
-
-  var navSearchInput = document.getElementById('nav-search-input');
-  if (navSearchInput) {
-    navSearchInput.addEventListener('keypress', function(e) {
-      if (e.key === 'Enter') navSearch();
-    });
-  }
-
-  loadHomepageProducts();
-});
-
-// ── AUTH STATE ────────────────────────────────
-function checkAuthState() {
-  var user = JSON.parse(localStorage.getItem('nexa_current_user') || 'null');
-  var guestEl = document.getElementById('nav-guest');
-  var userEl = document.getElementById('nav-user');
-  var mobileUserEl = document.getElementById('mobile-user-section');
-
-  if (user) {
     if (guestEl) guestEl.style.display = 'none';
-    if (userEl) userEl.style.display = 'flex';
+    if (userEl)  userEl.style.display  = 'flex';
     var nameEl = document.getElementById('nav-username');
     var avatarEl = document.getElementById('nav-avatar-circle');
     if (nameEl) nameEl.textContent = user.firstName || 'Account';
     if (avatarEl) avatarEl.textContent = (user.firstName || 'U')[0].toUpperCase();
-    
-    var mobileHeaderActions = document.getElementById('mobile-header-actions');
-if (user) {
-  if (mobileHeaderActions) mobileHeaderActions.style.display = 'flex';
-} else {
-  if (mobileHeaderActions) mobileHeaderActions.style.display = 'none';
-}
-    
+    if (mobileHeaderActions) mobileHeaderActions.style.display = 'flex';
+
     if (mobileUserEl) {
-  mobileUserEl.innerHTML =
-    '<div style="display:flex;align-items:center;gap:12px;padding:4px 0">' +
-      '<div style="width:42px;height:42px;border-radius:50%;background:var(--orange);color:white;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1.1em;flex-shrink:0">' +
-        (user.firstName || 'U')[0].toUpperCase() +
-      '</div>' +
-      '<div style="flex:1;min-width:0">' +
-        '<div style="color:white;font-weight:700;font-size:0.9em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + (user.fullName || user.firstName) + '</div>' +
-        '<div style="color:#aaa;font-size:0.72em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + user.email + '</div>' +
-      '</div>' +
-    '</div>';
-}
+      mobileUserEl.innerHTML =
+        '<div style="display:flex;align-items:center;gap:12px;padding:4px 0">' +
+          '<div style="width:42px;height:42px;border-radius:50%;background:var(--orange);color:white;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1.1em;flex-shrink:0">' +
+            (user.firstName || 'U')[0].toUpperCase() +
+          '</div>' +
+          '<div style="flex:1;min-width:0">' +
+            '<div style="color:white;font-weight:700;font-size:0.9em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + (user.fullName || user.firstName) + '</div>' +
+            '<div style="color:#aaa;font-size:0.72em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + user.email + '</div>' +
+          '</div>' +
+        '</div>';
+    }
   } else {
+    if (msmLogout) msmLogout.style.display = 'none';
     if (guestEl) guestEl.style.display = 'flex';
-    if (userEl) userEl.style.display = 'none';
+    if (userEl)  userEl.style.display  = 'none';
+    if (mobileHeaderActions) mobileHeaderActions.style.display = 'none';
   }
 }
 
+// ── LOGOUT ─────────────────────────────────────
 function logoutUser() {
   if (typeof nexaLogout === 'function') {
     nexaLogout().then(function() {
       localStorage.removeItem('nexa_current_user');
       checkAuthState();
-      showToast('👋 Logged out successfully');
       closeMobileMenu();
+      showToast('👋 Logged out successfully');
       setTimeout(function() { window.location.reload(); }, 800);
     }).catch(function() {
       localStorage.removeItem('nexa_current_user');
       checkAuthState();
-      showToast('👋 Logged out successfully');
       closeMobileMenu();
+      showToast('👋 Logged out successfully');
     });
   } else {
     localStorage.removeItem('nexa_current_user');
     checkAuthState();
-    showToast('👋 Logged out successfully');
     closeMobileMenu();
+    showToast('👋 Logged out successfully');
   }
 }
 
 // ── SEARCH ────────────────────────────────────
 function doSearch() {
-  var query = document.getElementById('search-input').value.trim();
+  var input = document.getElementById('search-input');
+  if (!input) return;
+  var query = input.value.trim();
   if (!query) return;
-  window.location.href = 'pages/search.html?q=' + encodeURIComponent(query);
+  var base = window.location.pathname.includes('/pages/') ? '' : 'pages/';
+  window.location.href = base + 'search.html?q=' + encodeURIComponent(query);
 }
 
 // ── COUNTDOWN TIMER ───────────────────────────
@@ -299,7 +215,7 @@ function startCountdown() {
   setInterval(tick, 1000);
 }
 
-// ── FEATURED PRODUCTS ─────────────────────────
+// ── FEATURED PRODUCTS (sample fallback, only used if #featured-products exists) ──
 var SAMPLE_PRODUCTS = [
   { id:1, name:'iPhone 15 Pro Max',    price:850000, oldPrice:950000, rating:4.8, reviews:234, location:'Lagos',         emoji:'📱' },
   { id:2, name:'Nike Air Force 1',     price:45000,  oldPrice:60000,  rating:4.7, reviews:189, location:'Abuja',         emoji:'👟' },
@@ -349,23 +265,6 @@ function getParam(name) {
   return url.get(name);
 }
 
-// ── INIT ──────────────────────────────────────
-document.addEventListener('DOMContentLoaded', function() {
-  loadHomepageProducts();
-  updateCartCount();
-  startCountdown();
-  loadFeaturedProducts();
-  checkAuthState();
-
-  var searchInput = document.getElementById('search-input');
-  if (searchInput) {
-    searchInput.addEventListener('keypress', function(e) {
-      if (e.key === 'Enter') doSearch();
-    });
-  }
-});
-
-
 function goToProviderDashboard(type) {
   var user = JSON.parse(localStorage.getItem('nexa_current_user') || 'null');
   if (user) {
@@ -375,3 +274,62 @@ function goToProviderDashboard(type) {
     window.location.href = 'pages/auth/register.html';
   }
 }
+
+// ── GLOBAL: close dropdowns when clicking outside ──
+document.addEventListener('click', function(e) {
+  if (!e.target.closest('.section-nav-item') &&
+      !e.target.closest('.snav-arrow')) {
+    closeAllDropdowns();
+  }
+});
+
+// ── SINGLE INIT (merged) ──────────────────────
+document.addEventListener('DOMContentLoaded', function() {
+  updateCartCount();
+  startCountdown();
+  loadFeaturedProducts();
+
+  if (typeof loadHomepageProducts === 'function') {
+    loadHomepageProducts();
+  }
+
+  if (typeof auth !== 'undefined') {
+    auth.onAuthStateChanged(function(firebaseUser) {
+      if (firebaseUser) {
+        firebaseUser.getIdToken().then(function() {
+          var stored = JSON.parse(localStorage.getItem('nexa_current_user') || 'null');
+          if (!stored) {
+            db.collection('users').doc(firebaseUser.uid).get()
+              .then(function(doc) {
+                if (doc.exists) {
+                  localStorage.setItem('nexa_current_user', JSON.stringify(doc.data()));
+                }
+                checkAuthState();
+              });
+          } else {
+            checkAuthState();
+          }
+        });
+      } else {
+        localStorage.removeItem('nexa_current_user');
+        checkAuthState();
+      }
+    });
+  } else {
+    checkAuthState();
+  }
+
+  var navSearchInput = document.getElementById('nav-search-input');
+  if (navSearchInput) {
+    navSearchInput.addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') navSearch();
+    });
+  }
+
+  var searchInput = document.getElementById('search-input');
+  if (searchInput) {
+    searchInput.addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') doSearch();
+    });
+  }
+});
