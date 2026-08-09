@@ -4,424 +4,850 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Seller Dashboard — Nexabay</title>
-  <link rel="stylesheet" href="../../css/main.css"/>
-  <link rel="stylesheet" href="../../css/dashboard.css"/>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
-</head>
-<body class="dashboard-body">
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{background:#f8f9fa;font-family:'Inter',sans-serif;padding-bottom:80px;}
 
-  <!-- NAVBAR -->
-  <nav class="navbar">
-    <div class="nav-inner">
-      <a href="../../index.html" class="logo">
-        <span class="logo-nexa">Nexa</span><span class="logo-bay">bay</span>
-      </a>
-      <div class="nav-actions">
-        <span class="nav-link" id="nav-seller-name">My Shop</span>
-        <div style="position:relative;cursor:pointer;" onclick="showTab('orders')">
-          <span style="font-size:1.4em;">🔔</span>
-          <span id="notif-bell-badge" style="display:none;position:absolute;top:-4px;right:-4px;background:#cc0000;color:white;border-radius:50%;width:16px;height:16px;font-size:0.65em;display:none;align-items:center;justify-content:center;font-weight:700;"></span>
+    /* ── TOP BAR ── */
+    .db-topbar{
+      background:#0a0f1e;
+      padding:0 16px;
+      display:flex;
+      align-items:center;
+      gap:0;
+      border-bottom:1px solid #1a2035;
+      overflow-x:auto;
+      scrollbar-width:none;
+      position:sticky;
+      top:0;
+      z-index:100;
+    }
+    .db-topbar::-webkit-scrollbar{display:none;}
+    .db-logo{
+      color:white;
+      font-weight:900;
+      font-size:1em;
+      text-decoration:none;
+      padding:14px 16px 14px 0;
+      white-space:nowrap;
+      flex-shrink:0;
+    }
+    .db-logo span{color:#ff6b00;}
+    .db-tab{
+      padding:14px 14px;
+      color:rgba(255,255,255,0.55);
+      font-size:0.78em;
+      font-weight:600;
+      cursor:pointer;
+      white-space:nowrap;
+      border-bottom:2px solid transparent;
+      border:none;
+      background:none;
+      font-family:'Inter',sans-serif;
+      flex-shrink:0;
+      transition:all 0.15s;
+      display:flex;
+      align-items:center;
+      gap:5px;
+    }
+    .db-tab:hover{color:rgba(255,255,255,0.8);}
+    .db-tab.active{
+      color:white;
+      border-bottom:2px solid #ff6b00;
+    }
+    .db-tab-badge{
+      background:#ff6b00;
+      color:white;
+      border-radius:10px;
+      padding:1px 6px;
+      font-size:0.7em;
+      font-weight:700;
+    }
+    .db-topbar-right{
+      margin-left:auto;
+      display:flex;
+      align-items:center;
+      gap:8px;
+      flex-shrink:0;
+      padding-left:12px;
+    }
+    .db-user-avatar{
+      width:30px;
+      height:30px;
+      border-radius:50%;
+      background:#ff6b00;
+      color:white;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-weight:700;
+      font-size:0.8em;
+      cursor:pointer;
+      flex-shrink:0;
+    }
+
+    /* ── CONTENT ── */
+    .db-content{padding:16px;max-width:900px;margin:0 auto;}
+    .db-tab-content{display:none;}
+    .db-tab-content.active{display:block;}
+
+    /* ── PAGE HEADER ── */
+    .db-page-header{
+      background:linear-gradient(135deg,#0a0f1e,#1a237e);
+      border-radius:16px;
+      padding:20px;
+      margin-bottom:16px;
+      color:white;
+    }
+    .db-page-header-inner{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+    }
+    .db-page-header h1{
+      font-size:1.2em;
+      font-weight:800;
+      margin-bottom:4px;
+    }
+    .db-page-header p{
+      font-size:0.82em;
+      color:rgba(255,255,255,0.65);
+    }
+    .db-header-btn{
+      background:#ff6b00;
+      color:white;
+      border:none;
+      padding:10px 18px;
+      border-radius:10px;
+      font-size:0.82em;
+      font-weight:700;
+      cursor:pointer;
+      font-family:'Inter',sans-serif;
+      white-space:nowrap;
+    }
+
+    /* ── STATS ── */
+    .db-stats{
+      display:grid;
+      grid-template-columns:repeat(2,1fr);
+      gap:10px;
+      margin-bottom:16px;
+    }
+    .db-stat{
+      background:white;
+      border-radius:12px;
+      padding:14px;
+      border:1px solid #e9ecef;
+      box-shadow:0 1px 4px rgba(0,0,0,0.04);
+    }
+    .db-stat-header{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      margin-bottom:8px;
+    }
+    .db-stat-label{
+      font-size:0.72em;
+      color:#6c757d;
+      font-weight:600;
+      text-transform:uppercase;
+      letter-spacing:0.4px;
+    }
+    .db-stat-icon{
+      width:28px;
+      height:28px;
+      border-radius:7px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:0.85em;
+    }
+    .db-stat-value{
+      font-size:1.4em;
+      font-weight:900;
+      color:#1a1a1a;
+      line-height:1;
+      margin-bottom:3px;
+    }
+    .db-stat-sub{font-size:0.72em;color:#6c757d;}
+
+    /* ── CARD ── */
+    .db-card{
+      background:white;
+      border-radius:14px;
+      border:1px solid #e9ecef;
+      box-shadow:0 1px 4px rgba(0,0,0,0.04);
+      overflow:hidden;
+      margin-bottom:14px;
+    }
+    .db-card-header{
+      padding:14px 16px;
+      border-bottom:1px solid #f0f0f0;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+    }
+    .db-card-title{
+      font-size:0.9em;
+      font-weight:700;
+      color:#1a1a1a;
+    }
+    .db-card-body{padding:16px;}
+
+    /* ── QUICK ACTIONS ── */
+    .db-quick-grid{
+      display:grid;
+      grid-template-columns:repeat(2,1fr);
+      gap:10px;
+    }
+    .db-quick-btn{
+      background:#f8f9fa;
+      border:1.5px solid #e9ecef;
+      border-radius:12px;
+      padding:14px 10px;
+      text-align:center;
+      cursor:pointer;
+      font-family:'Inter',sans-serif;
+      color:#333;
+      font-size:0.8em;
+      font-weight:600;
+      transition:all 0.15s;
+    }
+    .db-quick-btn:hover{
+      background:#fff3e0;
+      border-color:#ff6b00;
+      color:#ff6b00;
+    }
+    .db-quick-icon{font-size:1.5em;margin-bottom:5px;}
+
+    /* ── PRODUCTS LIST ── */
+    .db-product-row{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      padding:12px 16px;
+      border-bottom:1px solid #f8f8f8;
+      transition:background 0.1s;
+    }
+    .db-product-row:hover{background:#fafafa;}
+    .db-product-row:last-child{border-bottom:none;}
+    .db-product-img{
+      width:52px;
+      height:52px;
+      border-radius:8px;
+      background:#f5f5f5;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:1.5em;
+      flex-shrink:0;
+      overflow:hidden;
+    }
+    .db-product-img img{width:100%;height:100%;object-fit:cover;border-radius:8px;}
+    .db-product-info{flex:1;min-width:0;}
+    .db-product-name{
+      font-size:0.85em;
+      font-weight:700;
+      color:#1a1a1a;
+      margin-bottom:2px;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .db-product-cat{
+      font-size:0.72em;
+      color:#6c757d;
+      margin-bottom:3px;
+    }
+    .db-product-status{
+      display:inline-flex;
+      align-items:center;
+      gap:3px;
+      font-size:0.7em;
+      font-weight:700;
+      padding:2px 7px;
+      border-radius:4px;
+    }
+    .db-status-active{background:#d4edda;color:#155724;}
+    .db-status-pending{background:#fff3cd;color:#856404;}
+    .db-status-rejected{background:#f8d7da;color:#721c24;}
+    .db-product-price{
+      font-size:0.9em;
+      font-weight:800;
+      color:#ff6b00;
+      white-space:nowrap;
+    }
+    .db-product-actions{
+      display:flex;
+      gap:5px;
+      flex-shrink:0;
+    }
+    .db-action-btn{
+      width:30px;
+      height:30px;
+      border-radius:7px;
+      border:1px solid #e9ecef;
+      background:white;
+      cursor:pointer;
+      font-size:0.8em;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      transition:all 0.15s;
+    }
+    .db-action-btn:hover{background:#f5f5f5;}
+    .db-action-btn.danger{border-color:#f8d7da;color:#cc0000;}
+    .db-action-btn.danger:hover{background:#fff0f0;}
+
+    /* ── EMPTY STATE ── */
+    .db-empty{
+      text-align:center;
+      padding:40px 20px;
+    }
+    .db-empty-icon{font-size:3.5em;margin-bottom:12px;}
+    .db-empty h3{font-size:1em;color:#333;margin-bottom:6px;}
+    .db-empty p{font-size:0.82em;color:#6c757d;margin-bottom:16px;}
+    .db-empty-btn{
+      display:inline-block;
+      background:#ff6b00;
+      color:white;
+      padding:10px 20px;
+      border-radius:10px;
+      text-decoration:none;
+      font-weight:700;
+      font-size:0.85em;
+      border:none;
+      cursor:pointer;
+      font-family:'Inter',sans-serif;
+    }
+
+    /* ── ORDERS TABLE ── */
+    .db-orders-wrap{overflow-x:auto;}
+    .db-orders-table{width:100%;border-collapse:collapse;font-size:0.8em;}
+    .db-orders-table th{
+      background:#f8f9fa;
+      color:#6c757d;
+      padding:10px 12px;
+      text-align:left;
+      font-weight:700;
+      font-size:0.72em;
+      text-transform:uppercase;
+      letter-spacing:0.4px;
+      white-space:nowrap;
+    }
+    .db-orders-table td{
+      padding:10px 12px;
+      border-top:1px solid #f5f5f5;
+      color:#333;
+      vertical-align:middle;
+    }
+    .db-orders-table tr:hover td{background:#fafafa;}
+    .db-order-status{
+      padding:3px 8px;
+      border-radius:4px;
+      font-size:0.72em;
+      font-weight:700;
+    }
+
+    /* ── FORM ── */
+    .db-form{display:grid;gap:14px;}
+    .db-form-group label{
+      display:block;
+      font-size:0.78em;
+      font-weight:700;
+      color:#555;
+      margin-bottom:6px;
+      text-transform:uppercase;
+      letter-spacing:0.4px;
+    }
+    .db-form-group input,
+    .db-form-group select,
+    .db-form-group textarea{
+      width:100%;
+      padding:11px 13px;
+      border:1.5px solid #e9ecef;
+      border-radius:10px;
+      font-size:0.88em;
+      outline:none;
+      font-family:'Inter',sans-serif;
+      transition:border-color 0.2s;
+      background:white;
+    }
+    .db-form-group input:focus,
+    .db-form-group select:focus,
+    .db-form-group textarea:focus{border-color:#ff6b00;}
+    .db-form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+    .db-form-required{color:#ff6b00;}
+
+    .db-img-upload{
+      border:2px dashed #e9ecef;
+      border-radius:12px;
+      padding:24px;
+      text-align:center;
+      cursor:pointer;
+      transition:border-color 0.2s;
+    }
+    .db-img-upload:hover{border-color:#ff6b00;}
+    .db-img-upload input{display:none;}
+    .db-img-upload-icon{font-size:2em;margin-bottom:6px;}
+    .db-img-upload-text{font-size:0.8em;color:#6c757d;}
+    .db-img-preview{width:100%;max-height:150px;border-radius:8px;object-fit:cover;}
+
+    .db-emoji-grid{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      margin-top:8px;
+    }
+    .db-emoji-btn{
+      width:36px;
+      height:36px;
+      border-radius:8px;
+      border:1.5px solid #e9ecef;
+      background:white;
+      cursor:pointer;
+      font-size:1.1em;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      transition:all 0.15s;
+    }
+    .db-emoji-btn.selected{
+      border-color:#ff6b00;
+      background:#fff3e0;
+    }
+
+    .db-submit-btn{
+      width:100%;
+      padding:14px;
+      background:#ff6b00;
+      color:white;
+      border:none;
+      border-radius:12px;
+      font-size:1em;
+      font-weight:800;
+      cursor:pointer;
+      font-family:'Inter',sans-serif;
+      box-shadow:0 4px 16px rgba(255,107,0,0.25);
+    }
+    .db-submit-btn:disabled{background:#ccc;box-shadow:none;}
+
+    .db-error-msg{
+      background:#fff0f0;
+      border:1px solid #ffcccc;
+      color:#cc0000;
+      padding:10px 13px;
+      border-radius:8px;
+      font-size:0.82em;
+      display:none;
+    }
+    .db-success-msg{
+      background:#f0fff4;
+      border:1px solid #c3e6cb;
+      color:#155724;
+      padding:10px 13px;
+      border-radius:8px;
+      font-size:0.82em;
+      display:none;
+    }
+
+    /* ── EARNINGS ── */
+    .db-earnings-cards{
+      display:grid;
+      grid-template-columns:repeat(2,1fr);
+      gap:10px;
+      margin-bottom:16px;
+    }
+    .db-earning-card{
+      background:white;
+      border-radius:12px;
+      padding:16px;
+      border:1px solid #e9ecef;
+      text-align:center;
+    }
+    .db-earning-label{font-size:0.72em;color:#6c757d;font-weight:600;margin-bottom:6px;}
+    .db-earning-value{font-size:1.3em;font-weight:900;color:#1a1a1a;}
+    .db-earning-value.orange{color:#ff6b00;}
+    .db-earning-value.green{color:#00a651;}
+
+    /* ── WITHDRAW FORM ── */
+    .db-withdraw-card{
+      background:white;
+      border-radius:14px;
+      border:1px solid #e9ecef;
+      padding:20px;
+    }
+    .db-withdraw-title{
+      font-size:0.95em;
+      font-weight:700;
+      margin-bottom:14px;
+      padding-bottom:10px;
+      border-bottom:1px solid #f0f0f0;
+    }
+
+    /* ── FILTERS ── */
+    .db-filters{
+      display:flex;
+      gap:6px;
+      flex-wrap:wrap;
+      margin-bottom:12px;
+    }
+    .db-filter-btn{
+      padding:6px 14px;
+      border-radius:20px;
+      border:1.5px solid #e9ecef;
+      background:white;
+      font-size:0.78em;
+      font-weight:600;
+      cursor:pointer;
+      font-family:'Inter',sans-serif;
+      color:#555;
+      transition:all 0.15s;
+    }
+    .db-filter-btn.active{
+      background:#ff6b00;
+      border-color:#ff6b00;
+      color:white;
+    }
+
+    /* ── BOTTOM NAV ── */
+    .db-bottom-nav{
+      position:fixed;
+      bottom:0;left:0;right:0;
+      background:white;
+      border-top:1px solid #e9ecef;
+      display:flex;
+      z-index:200;
+      box-shadow:0 -2px 10px rgba(0,0,0,0.06);
+    }
+    .db-bottom-nav a{
+      flex:1;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      padding:9px 4px;
+      text-decoration:none;
+      color:#999;
+      font-size:0.62em;
+      font-weight:600;
+      gap:2px;
+    }
+    .db-bottom-nav a.active{color:#ff6b00;}
+    .db-bottom-nav a span:first-child{font-size:1.4em;}
+
+    /* ── SKELETON ── */
+    .db-skeleton-line{
+      height:12px;
+      border-radius:6px;
+      background:linear-gradient(90deg,#f0f0f0 25%,#e8e8e8 50%,#f0f0f0 75%);
+      background-size:200% 100%;
+      animation:shimmer 1.5s infinite;
+      margin-bottom:8px;
+    }
+    @keyframes shimmer{0%{background-position:200% 0;}100%{background-position:-200% 0;}}
+
+    /* ── TOAST ── */
+    .db-toast{
+      position:fixed;
+      bottom:70px;
+      left:50%;
+      transform:translateX(-50%);
+      background:#333;
+      color:white;
+      padding:10px 18px;
+      border-radius:10px;
+      font-size:0.82em;
+      font-weight:600;
+      z-index:9999;
+      white-space:nowrap;
+      display:none;
+      box-shadow:0 4px 16px rgba(0,0,0,0.2);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="db-toast" id="db-toast"></div>
+
+  <!-- TOP NAV TABS -->
+  <div class="db-topbar">
+    <a href="../../index.html" class="db-logo">Nexa<span>bay</span></a>
+    <button class="db-tab active" onclick="showTab('overview')">📊 Overview</button>
+    <button class="db-tab" onclick="showTab('products')">📦 My Products</button>
+    <button class="db-tab" onclick="showTab('add')">➕ Add Product</button>
+    <button class="db-tab" onclick="showTab('orders')">
+      🛒 Orders
+      <span class="db-tab-badge" id="orders-badge" style="display:none;">0</span>
+    </button>
+    <button class="db-tab" onclick="showTab('earnings')">💰 Earnings</button>
+    <div class="db-topbar-right">
+      <div class="db-user-avatar" id="user-avatar" onclick="showTab('settings')">S</div>
+    </div>
+  </div>
+
+  <div class="db-content">
+
+    <!-- ── OVERVIEW ── -->
+    <div class="db-tab-content active" id="content-overview">
+
+      <div class="db-page-header">
+        <div class="db-page-header-inner">
+          <div>
+            <h1>Welcome back! 👋</h1>
+            <p id="overview-subtitle">Here is your shop performance</p>
+          </div>
+          <button class="db-header-btn" onclick="showTab('add')">+ Add Product</button>
         </div>
-        <a href="../../index.html" class="nav-link">← Back to Site</a>
+      </div>
+
+      <div class="db-stats">
+        <div class="db-stat">
+          <div class="db-stat-header">
+            <div class="db-stat-label">Revenue</div>
+            <div class="db-stat-icon" style="background:#fff3e0;">💰</div>
+          </div>
+          <div class="db-stat-value" id="stat-revenue">₦0</div>
+          <div class="db-stat-sub">Total earned</div>
+        </div>
+        <div class="db-stat">
+          <div class="db-stat-header">
+            <div class="db-stat-label">Orders</div>
+            <div class="db-stat-icon" style="background:#e8f5e9;">📦</div>
+          </div>
+          <div class="db-stat-value" id="stat-orders">0</div>
+          <div class="db-stat-sub">Total orders</div>
+        </div>
+        <div class="db-stat">
+          <div class="db-stat-header">
+            <div class="db-stat-label">Products</div>
+            <div class="db-stat-icon" style="background:#e3f2fd;">🛍️</div>
+          </div>
+          <div class="db-stat-value" id="stat-products">0</div>
+          <div class="db-stat-sub">Active listings</div>
+        </div>
+        <div class="db-stat">
+          <div class="db-stat-header">
+            <div class="db-stat-label">Balance</div>
+            <div class="db-stat-icon" style="background:#f3e5f5;">💸</div>
+          </div>
+          <div class="db-stat-value" id="stat-balance">₦0</div>
+          <div class="db-stat-sub">Available</div>
+        </div>
+      </div>
+
+      <div class="db-card">
+        <div class="db-card-header">
+          <div class="db-card-title">⚡ Quick Actions</div>
+        </div>
+        <div class="db-card-body">
+          <div class="db-quick-grid">
+            <button class="db-quick-btn" onclick="showTab('add')">
+              <div class="db-quick-icon">➕</div>
+              Add New Product
+            </button>
+            <button class="db-quick-btn" onclick="showTab('orders')">
+              <div class="db-quick-icon">📦</div>
+              View Orders
+            </button>
+            <button class="db-quick-btn" onclick="showTab('earnings')">
+              <div class="db-quick-icon">💸</div>
+              Withdraw Earnings
+            </button>
+            <button class="db-quick-btn" onclick="showTab('products')">
+              <div class="db-quick-icon">🛍️</div>
+              Manage Products
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="db-card">
+        <div class="db-card-header">
+          <div class="db-card-title">🕒 Recent Orders</div>
+          <button onclick="showTab('orders')" style="background:none;border:none;color:#ff6b00;font-size:0.8em;font-weight:700;cursor:pointer;">See All →</button>
+        </div>
+        <div id="recent-orders-wrap">
+          <div style="padding:16px;">
+            <div class="db-skeleton-line" style="width:100%;"></div>
+            <div class="db-skeleton-line" style="width:80%;"></div>
+            <div class="db-skeleton-line" style="width:60%;"></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ── MY PRODUCTS ── -->
+    <div class="db-tab-content" id="content-products">
+      <div class="db-page-header">
+        <div class="db-page-header-inner">
+          <div>
+            <h1>My Products</h1>
+            <p>Manage your listings</p>
+          </div>
+          <button class="db-header-btn" onclick="showTab('add')">+ Add New</button>
+        </div>
+      </div>
+
+      <div class="db-card">
+        <div id="products-list">
+          <div class="db-empty">
+            <div class="db-empty-icon">⏳</div>
+            <h3>Loading products...</h3>
+          </div>
+        </div>
       </div>
     </div>
-  </nav>
 
-  <div class="dashboard-layout">
-
-    <!-- SIDEBAR -->
-    <aside class="dash-sidebar">
-      <div class="dash-profile">
-        <div class="dash-avatar" id="dash-avatar">S</div>
-        <div class="dash-name" id="dash-name">Seller</div>
-        <div class="dash-badge">⭐ Verified Seller</div>
+    <!-- ── ADD PRODUCT ── -->
+    <div class="db-tab-content" id="content-add">
+      <div class="db-page-header">
+        <div class="db-page-header-inner">
+          <div>
+            <h1 id="add-form-title">Add New Product</h1>
+            <p>Fill in details carefully — admin will review before publishing</p>
+          </div>
+        </div>
       </div>
 
-      <nav class="dash-nav">
-        <a href="#" class="dash-nav-item active" onclick="showTab('overview')">
-          📊 Overview
-        </a>
-        <a href="#" class="dash-nav-item" onclick="showTab('products')">
-          📦 My Products
-        </a>
-        <a href="#" class="dash-nav-item" onclick="showTab('add-product')">
-          ➕ Add Product
-        </a>
-        <a href="#" class="dash-nav-item" onclick="showTab('orders')">
-          🛒 Orders
-        </a>
-        <a href="#" class="dash-nav-item" onclick="showTab('earnings')">
-          💰 Earnings
-        </a>
-        <a href="#" class="dash-nav-item" onclick="showTab('analytics')">
-          📈 Analytics
-        </a>
-        <a href="#" class="dash-nav-item" onclick="showTab('settings')">
-          ⚙️ Settings
-        </a>
-        <a href="#" class="dash-nav-item logout" onclick="doSellerLogout()">
-          🚪 Logout
-        </a>
-      </nav>
-    </aside>
+      <div class="db-card">
+        <div class="db-card-body">
+          <div class="db-form">
 
-    <!-- MAIN CONTENT -->
-    <main class="dash-main">
+            <div class="db-form-group">
+              <label>Product Name <span class="db-form-required">*</span></label>
+              <input type="text" id="p-name" placeholder="e.g. Samsung Galaxy A55 128GB"/>
+            </div>
 
-      <!-- OVERVIEW TAB -->
-      <div class="dash-tab" id="tab-overview">
-        <div class="dash-header">
-          <h1>Welcome back! 👋</h1>
-          <p>Here is your shop performance today</p>
-        </div>
-
-        <!-- STATS -->
-        <div class="stats-grid">
-          <div class="stat-card">
-            <div class="stat-icon">💰</div>
-            <div class="stat-info">
-              <div class="stat-value" id="stat-revenue">₦0</div>
-              <div class="stat-label">Total Revenue</div>
-              <div class="stat-change positive">+12% this month</div>
-            </div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-icon">🛒</div>
-            <div class="stat-info">
-              <div class="stat-value" id="stat-orders">0</div>
-              <div class="stat-label">Total Orders</div>
-              <div class="stat-change positive">+8 today</div>
-            </div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-icon">📦</div>
-            <div class="stat-info">
-              <div class="stat-value" id="stat-products">0</div>
-              <div class="stat-label">Products Listed</div>
-              <div class="stat-change">Active listings</div>
-            </div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-icon">⭐</div>
-            <div class="stat-info">
-              <div class="stat-value">4.8</div>
-              <div class="stat-label">Shop Rating</div>
-              <div class="stat-change positive">234 reviews</div>
-            </div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-icon">👁️</div>
-            <div class="stat-info">
-              <div class="stat-value">1,240</div>
-              <div class="stat-label">Profile Views</div>
-              <div class="stat-change positive">+15% this week</div>
-            </div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-icon">💸</div>
-            <div class="stat-info">
-              <div class="stat-value" id="stat-balance">₦0</div>
-              <div class="stat-label">Available Balance</div>
-              <div class="stat-change">
-                <button onclick="showTab('earnings')" class="withdraw-quick-btn">Withdraw →</button>
+            <div class="db-form-row">
+              <div class="db-form-group">
+                <label>Category <span class="db-form-required">*</span></label>
+                <select id="p-category">
+                  <option value="">Select category</option>
+                  <option>Electronics</option>
+                  <option>Fashion & Clothing</option>
+                  <option>Phones & Accessories</option>
+                  <option>Home & Kitchen</option>
+                  <option>Health & Beauty</option>
+                  <option>Sports & Fitness</option>
+                  <option>Books & Education</option>
+                  <option>Baby & Kids</option>
+                  <option>Food & Drinks</option>
+                  <option>Automotive</option>
+                  <option>Agriculture</option>
+                  <option>Other</option>
+                </select>
+              </div>
+              <div class="db-form-group">
+                <label>Condition <span class="db-form-required">*</span></label>
+                <select id="p-condition">
+                  <option value="new">Brand New</option>
+                  <option value="used-like-new">Used — Like New</option>
+                  <option value="used-good">Used — Good</option>
+                  <option value="used-fair">Used — Fair</option>
+                </select>
               </div>
             </div>
-          </div>
-        </div>
 
-        <!-- RECENT ORDERS -->
-        <div class="dash-section">
-          <div class="sec-header">
-            <h2>Recent Orders</h2>
-            <button onclick="showTab('orders')" class="see-all">See All →</button>
-          </div>
-          <div class="orders-table-wrap">
-            <table class="orders-table">
-              <thead>
-                <tr>
-                  <th>Order ID</th>
-                  <th>Product</th>
-                  <th>Buyer</th>
-                  <th>Amount</th>
-                  <th>Status</th>
-                  <th>Date</th>
-                </tr>
-              </thead>
-              <tbody id="recent-orders-body">
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        <!-- QUICK ACTIONS -->
-        <div class="dash-section">
-          <h2>Quick Actions</h2>
-          <div class="quick-actions">
-            <button class="quick-btn" onclick="showTab('add-product')">
-              ➕ Add New Product
-            </button>
-            <button class="quick-btn" onclick="showTab('orders')">
-              📦 View All Orders
-            </button>
-            <button class="quick-btn" onclick="showTab('earnings')">
-              💸 Withdraw Earnings
-            </button>
-            <button class="quick-btn" onclick="showTab('analytics')">
-              📈 View Analytics
-            </button>
-          </div>
-        </div>
-
-      </div>
-
-      <!-- PRODUCTS TAB -->
-      <div class="dash-tab" id="tab-products" style="display:none;">
-        <div class="dash-header">
-          <h1>My Products</h1>
-          <button class="btn-primary" onclick="showTab('add-product')">
-            ➕ Add Product
-          </button>
-        </div>
-
-        <div class="products-toolbar">
-          <input
-            type="text"
-            id="product-search"
-            placeholder="Search products..."
-            oninput="filterMyProducts()"
-          />
-          <select id="product-filter" onchange="filterMyProducts()">
-            <option value="all">All Products</option>
-            <option value="active">Active</option>
-            <option value="inactive">Inactive</option>
-          </select>
-        </div>
-
-        <div id="my-products-list" class="my-products-list"></div>
-
-      </div>
-
-      <!-- ADD PRODUCT TAB -->
-      <div class="dash-tab" id="tab-add-product" style="display:none;">
-        <div class="dash-header">
-          <h1>Add New Product</h1>
-        </div>
-
-        <div class="add-product-form">
-
-          <div class="form-section">
-            <h3>Basic Information</h3>
-
-            <div class="form-group">
-              <label>Product Name *</label>
-              <input
-                type="text"
-                id="ap-name"
-                placeholder="Enter product name"
-                maxlength="100"
-              />
+            <div class="db-form-row">
+              <div class="db-form-group">
+                <label>Price (₦) <span class="db-form-required">*</span></label>
+                <input type="number" id="p-price" placeholder="e.g. 45000" min="0"/>
+              </div>
+              <div class="db-form-group">
+                <label>Old Price (₦) <span style="color:#999;font-weight:400;">(optional)</span></label>
+                <input type="number" id="p-old-price" placeholder="e.g. 55000" min="0"/>
+              </div>
             </div>
 
-            <div class="form-group">
-              <label>Category *</label>
-              <select id="ap-category">
-                <option value="">Select category</option>
-                <option>Electronics</option>
-                <option>Fashion</option>
-                <option>Home & Living</option>
-                <option>Beauty</option>
-                <option>Sports</option>
-                <option>Food & Drinks</option>
-                <option>Books</option>
-                <option>Toys & Games</option>
-                <option>Automotive</option>
-                <option>Health</option>
-                <option>Other</option>
+            <div class="db-form-group">
+              <label>Location <span class="db-form-required">*</span></label>
+              <select id="p-location">
+                <option value="">Select your state</option>
+                <option>Lagos</option><option>Abuja FCT</option>
+                <option>Rivers</option><option>Kano</option>
+                <option>Oyo</option><option>Enugu</option>
+                <option>Anambra</option><option>Delta</option>
+                <option>Edo</option><option>Imo</option>
+                <option>Kaduna</option><option>Ogun</option>
+                <option>Osun</option><option>Other</option>
               </select>
             </div>
 
-            <div class="form-group">
-              <label>Description *</label>
-              <textarea
-                id="ap-desc"
-                placeholder="Describe your product in detail..."
-                rows="4"
-              ></textarea>
+            <div class="db-form-group">
+              <label>Description <span class="db-form-required">*</span></label>
+              <textarea id="p-desc" rows="4" placeholder="Describe your product in detail — features, specifications, what's included..."></textarea>
             </div>
 
-            <div class="form-row-2">
-              <div class="form-group">
-                <label>Condition *</label>
-                <select id="ap-condition">
-                  <option value="new">New</option>
-                  <option value="used">Used - Like New</option>
-                  <option value="used-good">Used - Good</option>
-                  <option value="used-fair">Used - Fair</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label>Stock Quantity *</label>
-                <input
-                  type="number"
-                  id="ap-stock"
-                  placeholder="How many available?"
-                  min="1"
-                />
+            <div class="db-form-group">
+              <label>Product Image</label>
+              <div class="db-img-upload" onclick="document.getElementById('p-img-file').click()">
+                <input type="file" id="p-img-file" accept="image/*" onchange="previewProductImage(this)"/>
+                <div id="p-img-placeholder">
+                  <div class="db-img-upload-icon">📷</div>
+                  <div class="db-img-upload-text">Tap to upload product photo</div>
+                </div>
+                <img id="p-img-preview" class="db-img-preview" style="display:none;"/>
               </div>
             </div>
 
-          </div>
-
-          <div class="form-section">
-            <h3>Pricing</h3>
-            <div class="form-row-2">
-              <div class="form-group">
-                <label>Selling Price (₦) *</label>
-                <input
-                  type="number"
-                  id="ap-price"
-                  placeholder="0"
-                  min="0"
-                  oninput="calculateProfit()"
-                />
-              </div>
-              <div class="form-group">
-                <label>Original Price (₦) — for discount display</label>
-                <input
-                  type="number"
-                  id="ap-old-price"
-                  placeholder="0"
-                  min="0"
-                  oninput="calculateProfit()"
-                />
+            <div class="db-form-group">
+              <label>Or choose an emoji</label>
+              <div class="db-emoji-grid" id="emoji-grid">
+                <button class="db-emoji-btn selected" onclick="selectEmoji('📦',this)">📦</button>
+                <button class="db-emoji-btn" onclick="selectEmoji('📱',this)">📱</button>
+                <button class="db-emoji-btn" onclick="selectEmoji('👕',this)">👕</button>
+                <button class="db-emoji-btn" onclick="selectEmoji('👟',this)">👟</button>
+                <button class="db-emoji-btn" onclick="selectEmoji('💻',this)">💻</button>
+                <button class="db-emoji-btn" onclick="selectEmoji('🎮',this)">🎮</button>
+                <button class="db-emoji-btn" onclick="selectEmoji('🏠',this)">🏠</button>
+                <button class="db-emoji-btn" onclick="selectEmoji('🚗',this)">🚗</button>
+                <button class="db-emoji-btn" onclick="selectEmoji('💄',this)">💄</button>
+                <button class="db-emoji-btn" onclick="selectEmoji('⌚',this)">⌚</button>
+                <button class="db-emoji-btn" onclick="selectEmoji('📚',this)">📚</button>
+                <button class="db-emoji-btn" onclick="selectEmoji('🛒',this)">🛒</button>
               </div>
             </div>
 
-            <div class="profit-calc" id="profit-calc" style="display:none;">
-              <div class="profit-row">
-                <span>Selling Price</span>
-                <span id="pc-price">₦0</span>
-              </div>
-              <div class="profit-row">
-                <span>Nexabay Fee (5%)</span>
-                <span id="pc-fee" class="negative">-₦0</span>
-              </div>
-              <div class="profit-row total">
-                <span>You Receive</span>
-                <span id="pc-receive" class="positive">₦0</span>
-              </div>
-              <div class="profit-row">
-                <span>Discount Shown</span>
-                <span id="pc-discount" class="discount">0%</span>
-              </div>
-            </div>
-          </div>
+            <div class="db-error-msg" id="p-error"></div>
+            <div class="db-success-msg" id="p-success"></div>
 
-          <div class="form-section">
-            <h3>Product Image</h3>
-            <div class="image-upload" id="image-upload" onclick="triggerImageUpload()">
-              <div class="upload-placeholder" id="upload-placeholder">
-                <div class="upload-icon">📷</div>
-                <p>Click to add product image</p>
-                <small>JPG, PNG up to 5MB</small>
-              </div>
-              <div class="upload-preview" id="upload-preview" style="display:none;">
-                <span id="preview-emoji">📦</span>
-              </div>
-            </div>
-            <input type="file" id="image-file" style="display:none;" accept="image/*" onchange="previewImage()"/>
-
-            <div class="emoji-selector">
-              <p>Or pick an emoji icon:</p>
-              <div class="emoji-grid">
-                <span onclick="selectEmoji('📱')">📱</span>
-                <span onclick="selectEmoji('💻')">💻</span>
-                <span onclick="selectEmoji('📺')">📺</span>
-                <span onclick="selectEmoji('👟')">👟</span>
-                <span onclick="selectEmoji('👗')">👗</span>
-                <span onclick="selectEmoji('👜')">👜</span>
-                <span onclick="selectEmoji('🏠')">🏠</span>
-                <span onclick="selectEmoji('🍳')">🍳</span>
-                <span onclick="selectEmoji('💄')">💄</span>
-                <span onclick="selectEmoji('⚽')">⚽</span>
-                <span onclick="selectEmoji('🍔')">🍔</span>
-                <span onclick="selectEmoji('📚')">📚</span>
-                <span onclick="selectEmoji('🎮')">🎮</span>
-                <span onclick="selectEmoji('⌚')">⌚</span>
-                <span onclick="selectEmoji('🔊')">🔊</span>
-                <span onclick="selectEmoji('🧴')">🧴</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="form-section">
-            <h3>Shipping & Location</h3>
-            <div class="form-row-2">
-              <div class="form-group">
-                <label>Your Location *</label>
-                <select id="ap-location">
-                  <option value="">Select state</option>
-                  <option>Lagos</option>
-                  <option>Abuja FCT</option>
-                  <option>Rivers</option>
-                  <option>Kano</option>
-                  <option>Oyo</option>
-                  <option>Enugu</option>
-                  <option>Anambra</option>
-                  <option>Delta</option>
-                  <option>Edo</option>
-                  <option>Imo</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label>Ships To</label>
-                <select id="ap-ships-to">
-                  <option value="nationwide">Nationwide</option>
-                  <option value="local">My State Only</option>
-                  <option value="lagos">Lagos Only</option>
-                </select>
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label class="checkbox-label">
-                <input type="checkbox" id="ap-negotiable"/>
-                Price is negotiable (buyers can make offers)
-              </label>
-            </div>
-          </div>
-
-          <div id="ap-error" class="ap-error" style="display:none;"></div>
-          <div id="ap-success" class="ap-success" style="display:none;"></div>
-
-          <div class="form-actions">
-            <button class="btn-save-draft" onclick="saveDraft()">
-              💾 Save as Draft
+            <button class="db-submit-btn" id="p-submit-btn" onclick="publishProduct()">
+              🚀 Submit for Approval
             </button>
-            <button class="btn-publish" onclick="publishProduct()">
-              🚀 Publish Product
-            </button>
-          </div>
 
+            <div style="text-align:center;font-size:0.75em;color:#999;margin-top:8px;">
+              Your product will be reviewed by our admin team before going live
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── ORDERS ── -->
+    <div class="db-tab-content" id="content-orders">
+      <div class="db-page-header">
+        <div class="db-page-header-inner">
+          <div>
+            <h1>Orders</h1>
+            <p>Manage and fulfill customer orders</p>
+          </div>
         </div>
       </div>
 
-      <!-- ORDERS TAB -->
-      <div class="dash-tab" id="tab-orders" style="display:none;">
-        <div class="dash-header">
-          <h1>Orders</h1>
-        </div>
+      <div class="db-filters">
+        <button class="db-filter-btn active" onclick="filterOrders('all',this)">All</button>
+        <button class="db-filter-btn" onclick="filterOrders('confirmed',this)">Confirmed</button>
+        <button class="db-filter-btn" onclick="filterOrders('processing',this)">Processing</button>
+        <button class="db-filter-btn" onclick="filterOrders('shipped',this)">Shipped</button>
+        <button class="db-filter-btn" onclick="filterOrders('delivered',this)">Delivered</button>
+      </div>
 
-        <div class="orders-filter">
-          <button class="order-filter-btn active" onclick="filterOrders('all', this)">All</button>
-          <button class="order-filter-btn" onclick="filterOrders('pending', this)">Pending</button>
-          <button class="order-filter-btn" onclick="filterOrders('processing', this)">Processing</button>
-          <button class="order-filter-btn" onclick="filterOrders('shipped', this)">Shipped</button>
-          <button class="order-filter-btn" onclick="filterOrders('delivered', this)">Delivered</button>
-        </div>
-
-        <div class="orders-table-wrap">
-          <table class="orders-table">
+      <div class="db-card">
+        <div class="db-orders-wrap">
+          <table class="db-orders-table">
             <thead>
               <tr>
                 <th>Order ID</th>
@@ -433,685 +859,471 @@
                 <th>Action</th>
               </tr>
             </thead>
-            <tbody id="all-orders-body"></tbody>
+            <tbody id="orders-table-body">
+              <tr><td colspan="7" style="text-align:center;padding:20px;color:#999;">Loading orders...</td></tr>
+            </tbody>
           </table>
         </div>
       </div>
+    </div>
 
-      <!-- EARNINGS TAB -->
-      <div class="dash-tab" id="tab-earnings" style="display:none;">
-        <div class="dash-header">
-          <h1>Earnings & Withdrawals</h1>
-        </div>
-
-        <div class="earnings-cards">
-          <div class="earning-card">
-            <div class="ec-label">Total Earned</div>
-            <div class="ec-value" id="ec-total">₦0</div>
-          </div>
-          <div class="earning-card">
-            <div class="ec-label">Available Balance</div>
-            <div class="ec-value green" id="ec-available">₦0</div>
-          </div>
-          <div class="earning-card">
-            <div class="ec-label">Pending Clearance</div>
-            <div class="ec-value orange" id="ec-pending">₦0</div>
-          </div>
-          <div class="earning-card">
-            <div class="ec-label">Total Withdrawn</div>
-            <div class="ec-value" id="ec-withdrawn">₦0</div>
+    <!-- ── EARNINGS ── -->
+    <div class="db-tab-content" id="content-earnings">
+      <div class="db-page-header">
+        <div class="db-page-header-inner">
+          <div>
+            <h1>Earnings</h1>
+            <p>Track revenue and withdraw funds</p>
           </div>
         </div>
+      </div>
 
-        <div class="withdraw-section">
-          <h3>Withdraw Funds</h3>
-          <div class="withdraw-form">
-            <div class="form-group">
-              <label>Bank Name</label>
-              <select id="wd-bank">
-                <option>GTBank</option>
-                <option>Access Bank</option>
-                <option>First Bank</option>
-                <option>Zenith Bank</option>
-                <option>UBA</option>
-                <option>Fidelity Bank</option>
-                <option>Sterling Bank</option>
-                <option>Opay</option>
-                <option>Palmpay</option>
-                <option>Kuda Bank</option>
-              </select>
-            </div>
-            <div class="form-group">
+      <div class="db-earnings-cards">
+        <div class="db-earning-card">
+          <div class="db-earning-label">Total Revenue</div>
+          <div class="db-earning-value" id="ec-total">₦0</div>
+        </div>
+        <div class="db-earning-card">
+          <div class="db-earning-label">Available</div>
+          <div class="db-earning-value green" id="ec-available">₦0</div>
+        </div>
+        <div class="db-earning-card">
+          <div class="db-earning-label">Nexabay Fee (5%)</div>
+          <div class="db-earning-value orange" id="ec-fee">₦0</div>
+        </div>
+        <div class="db-earning-card">
+          <div class="db-earning-label">Total Orders</div>
+          <div class="db-earning-value" id="ec-orders">0</div>
+        </div>
+      </div>
+
+      <div class="db-withdraw-card">
+        <div class="db-withdraw-title">💸 Withdraw Funds</div>
+        <div class="db-form" style="gap:12px;">
+          <div class="db-form-group">
+            <label>Bank Name</label>
+            <select id="wd-bank">
+              <option>GTBank</option><option>Access Bank</option>
+              <option>First Bank</option><option>Zenith Bank</option>
+              <option>UBA</option><option>Opay</option>
+              <option>Palmpay</option><option>Kuda Bank</option>
+              <option>Moniepoint</option>
+            </select>
+          </div>
+          <div class="db-form-row">
+            <div class="db-form-group">
               <label>Account Number</label>
-              <input
-                type="text"
-                id="wd-account"
-                placeholder="10 digit account number"
-                maxlength="10"
-              />
+              <input type="text" id="wd-account" placeholder="10 digits" maxlength="10"/>
             </div>
-            <div class="form-group">
+            <div class="db-form-group">
               <label>Account Name</label>
-              <input
-                type="text"
-                id="wd-name"
-                placeholder="Account holder name"
-              />
-            </div>
-            <div class="form-group">
-              <label>Amount to Withdraw (₦)</label>
-              <input
-                type="number"
-                id="wd-amount"
-                placeholder="Minimum ₦1,000"
-                min="1000"
-              />
-            </div>
-            <div id="wd-error" style="color:#cc0000;font-size:0.85em;display:none;"></div>
-            <div id="wd-success" style="color:#006622;font-size:0.85em;display:none;"></div>
-            <button class="btn-withdraw" onclick="processWithdrawal()">
-              💸 Withdraw Now
-            </button>
-          </div>
-        </div>
-
-        <div class="withdrawal-history">
-          <h3>Withdrawal History</h3>
-          <div id="withdrawal-list" class="withdrawal-list">
-            <p style="color:var(--text2);font-size:0.88em;">No withdrawals yet</p>
-          </div>
-        </div>
-
-      </div>
-
-      <!-- ANALYTICS TAB -->
-      <div class="dash-tab" id="tab-analytics" style="display:none;">
-        <div class="dash-header">
-          <h1>Analytics</h1>
-        </div>
-
-        <div class="analytics-grid">
-          <div class="analytics-card">
-            <h3>Sales This Week</h3>
-            <div class="mini-chart" id="sales-chart">
-              <div class="chart-bars">
-                <div class="chart-bar" style="height:40%"><span>Mon</span></div>
-                <div class="chart-bar" style="height:65%"><span>Tue</span></div>
-                <div class="chart-bar" style="height:50%"><span>Wed</span></div>
-                <div class="chart-bar" style="height:80%"><span>Thu</span></div>
-                <div class="chart-bar" style="height:60%"><span>Fri</span></div>
-                <div class="chart-bar" style="height:90%"><span>Sat</span></div>
-                <div class="chart-bar active" style="height:70%"><span>Sun</span></div>
-              </div>
+              <input type="text" id="wd-acct-name" placeholder="Your name"/>
             </div>
           </div>
-
-          <div class="analytics-card">
-            <h3>Top Products</h3>
-            <div id="top-products-list" class="top-products-list"></div>
+          <div class="db-form-group">
+            <label>Amount (₦)</label>
+            <input type="number" id="wd-amount" placeholder="Minimum ₦1,000" min="1000"/>
           </div>
-
-          <div class="analytics-card">
-            <h3>Buyer Locations</h3>
-            <div class="location-stats">
-              <div class="loc-row">
-                <span>Lagos</span>
-                <div class="loc-bar"><div style="width:65%"></div></div>
-                <span>65%</span>
-              </div>
-              <div class="loc-row">
-                <span>Abuja</span>
-                <div class="loc-bar"><div style="width:20%"></div></div>
-                <span>20%</span>
-              </div>
-              <div class="loc-row">
-                <span>PH</span>
-                <div class="loc-bar"><div style="width:10%"></div></div>
-                <span>10%</span>
-              </div>
-              <div class="loc-row">
-                <span>Others</span>
-                <div class="loc-bar"><div style="width:5%"></div></div>
-                <span>5%</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="analytics-card">
-            <h3>Performance Summary</h3>
-            <div class="perf-stats">
-              <div class="perf-row">
-                <span>Conversion Rate</span>
-                <b>3.2%</b>
-              </div>
-              <div class="perf-row">
-                <span>Avg Order Value</span>
-                <b id="avg-order">₦0</b>
-              </div>
-              <div class="perf-row">
-                <span>Return Rate</span>
-                <b>0.8%</b>
-              </div>
-              <div class="perf-row">
-                <span>Response Rate</span>
-                <b>98%</b>
-              </div>
-            </div>
-          </div>
+          <div id="wd-error" style="color:#cc0000;font-size:0.82em;display:none;"></div>
+          <div id="wd-success" style="color:#00a651;font-size:0.82em;display:none;"></div>
+          <button class="db-submit-btn" onclick="processWithdrawal()">💸 Request Withdrawal</button>
         </div>
       </div>
+    </div>
 
-      <!-- SETTINGS TAB -->
-      <div class="dash-tab" id="tab-settings" style="display:none;">
-        <div class="dash-header">
-          <h1>Shop Settings</h1>
-        </div>
-
-        <div class="settings-sections">
-
-          <div class="settings-card">
-            <h3>Shop Profile</h3>
-            <div class="form-group">
-              <label>Shop Name</label>
-              <input type="text" id="shop-name" placeholder="Your shop name"/>
-            </div>
-            <div class="form-group">
-              <label>Shop Description</label>
-              <textarea id="shop-desc" rows="3" placeholder="Tell buyers about your shop..."></textarea>
-            </div>
-            <div class="form-group">
-              <label>WhatsApp Number</label>
-              <input type="tel" id="shop-whatsapp" placeholder="080xxxxxxxx"/>
-            </div>
-            <button class="btn-save" onclick="saveShopSettings()">Save Changes</button>
-          </div>
-
-          <div class="settings-card">
-            <h3>Notification Settings</h3>
-            <div class="toggle-setting">
-              <div>
-                <b>New Order Alert</b>
-                <p>Get notified when you receive an order</p>
-              </div>
-              <label class="toggle">
-                <input type="checkbox" checked/>
-                <span class="toggle-slider"></span>
-              </label>
-            </div>
-            <div class="toggle-setting">
-              <div>
-                <b>Payment Received</b>
-                <p>Alert when payment clears</p>
-              </div>
-              <label class="toggle">
-                <input type="checkbox" checked/>
-                <span class="toggle-slider"></span>
-              </label>
-            </div>
-            <div class="toggle-setting">
-              <div>
-                <b>New Review</b>
-                <p>When a buyer leaves a review</p>
-              </div>
-              <label class="toggle">
-                <input type="checkbox" checked/>
-                <span class="toggle-slider"></span>
-              </label>
-            </div>
-            <div class="toggle-setting">
-              <div>
-                <b>Promotions</b>
-                <p>Tips and offers from Nexabay</p>
-              </div>
-              <label class="toggle">
-                <input type="checkbox"/>
-                <span class="toggle-slider"></span>
-              </label>
-            </div>
-          </div>
-
-        </div>
-      </div>
-
-    </main>
   </div>
 
-<!-- CROP MODAL -->
-  <div id="crop-modal-overlay" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.75);z-index:950;"></div>
-  <div id="crop-modal" style="display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:white;border-radius:14px;max-width:420px;width:92%;z-index:951;padding:20px;">
-    <h3 style="margin-bottom:14px;">📐 Crop Your Photo</h3>
-    <div style="max-height:60vh;overflow:hidden;">
-      <img id="crop-image" style="max-width:100%;display:block;"/>
-    </div>
-    <div style="display:flex;gap:8px;margin-top:16px;">
-      <button onclick="confirmCrop()" class="btn-primary" style="flex:1;padding:12px;">✅ Use This Crop</button>
-      <button onclick="cancelCrop()" style="flex:1;padding:12px;background:var(--gray);border:none;border-radius:8px;cursor:pointer;font-weight:600;">Cancel</button>
-    </div>
-  </div>
-
-  <!-- PREVIEW MODAL -->
-  <div id="preview-modal-overlay" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);z-index:900;" onclick="closePreviewModal()"></div>
-  <div id="preview-modal" style="display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:white;border-radius:14px;max-width:380px;width:90%;max-height:85vh;overflow-y:auto;z-index:901;padding:20px;">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
-      <h3 style="font-size:1.1em;font-weight:700;">Product Preview</h3>
-      <button onclick="closePreviewModal()" style="background:var(--gray);border:none;width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:0.9em;">✕</button>
-    </div>
-    <div id="preview-modal-body"></div>
+  <!-- BOTTOM NAV -->
+  <div class="db-bottom-nav">
+    <a href="../../index.html"><span>🏠</span><span>Home</span></a>
+    <a href="../../pages/shop/browse.html"><span>🛍️</span><span>Shop</span></a>
+    <a href="#" onclick="showTab('add');return false;" class="active"><span>➕</span><span>Add</span></a>
+    <a href="#" onclick="showTab('orders');return false;"><span>📦</span><span>Orders</span></a>
+    <a href="buyer.html"><span>👤</span><span>Account</span></a>
   </div>
 
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-<script src="../../js/firebase/config.js"></script>
-<script src="../../js/firebase/auth.js"></script>
-<script src="../../js/firebase/products.js"></script>
-<script src="../../js/firebase/orders.js"></script>
-<script src="../../js/firebase/imgbb.js"></script>
-<link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css" rel="stylesheet"/>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js"></script>
-<script src="../../js/core/main.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="../../js/firebase/config.js"></script>
+  <script src="../../js/firebase/auth.js"></script>
+  <script src="../../js/firebase/products.js"></script>
+  <script src="../../js/firebase/imgbb.js"></script>
+  <script src="../../js/core/main.js"></script>
   <script>
 
-    var myProducts = JSON.parse(localStorage.getItem('seller_products') || '[]');
-    var myOrders = JSON.parse(localStorage.getItem('seller_orders') || '[]');
+    var myProducts = [];
+    var myOrders   = [];
     var selectedEmoji = '📦';
-    var editingProductId = null;
-    var earnings = JSON.parse(localStorage.getItem('seller_earnings') || '{"total":0,"available":0,"pending":0,"withdrawn":0}');
+    var selectedImageFile = null;
+    var editingProductId  = null;
+    var ordersListener    = null;
 
-    // Add sample orders if none
-    if (myOrders.length === 0) {
-      myOrders = [];
-      localStorage.setItem('seller_orders', JSON.stringify(myOrders));
-    }
-
+    /* ── INIT ── */
     function init() {
       var user = JSON.parse(localStorage.getItem('nexa_current_user') || 'null');
-      if (user) {
-        var nameEl = document.getElementById('dash-name');
-        var avatarEl = document.getElementById('dash-avatar');
-        var navEl = document.getElementById('nav-seller-name');
-        if (nameEl) nameEl.textContent = user.fullName || user.firstName || 'Seller';
-        if (avatarEl) avatarEl.textContent = (user.firstName || 'S')[0].toUpperCase();
-        if (navEl) navEl.textContent = user.firstName + '\'s Shop';
-      }
+      if (!user) { window.location.href = '../auth/login.html'; return; }
 
-      updateStats();
-      renderRecentOrders();
-      renderMyProducts();
-      renderAllOrders();
-      updateEarnings();
-      renderTopProducts();
-    }
-    // Load real products from Firebase
-if (typeof auth !== 'undefined') {
-  auth.onAuthStateChanged(function(user) {
-    if (user) {
-      loadSellerProducts();
-      loadSellerOrders();
-    }
-  });
-}
-
-    function updateStats() {
-      var revenue = myOrders.reduce(function(s, o) { return s + o.amount; }, 0);
-      earnings.total = revenue;
-      earnings.available = Math.round(revenue * 0.9);
-      earnings.pending = Math.round(revenue * 0.1);
-
-      var revEl = document.getElementById('stat-revenue');
-      var ordEl = document.getElementById('stat-orders');
-      var proEl = document.getElementById('stat-products');
-      var balEl = document.getElementById('stat-balance');
-
-      if (revEl) revEl.textContent = '₦' + revenue.toLocaleString();
-      if (ordEl) ordEl.textContent = myOrders.length;
-      if (proEl) proEl.textContent = myProducts.length;
-      if (balEl) balEl.textContent = '₦' + earnings.available.toLocaleString();
-
-      var avgEl = document.getElementById('avg-order');
-      if (avgEl && myOrders.length > 0) {
-        avgEl.textContent = '₦' + Math.round(revenue / myOrders.length).toLocaleString();
-      }
+      var avatarEl   = document.getElementById('user-avatar');
+      var subtitleEl = document.getElementById('overview-subtitle');
+      if (avatarEl)   avatarEl.textContent   = (user.firstName || 'S')[0].toUpperCase();
+      if (subtitleEl) subtitleEl.textContent = 'Welcome back, ' + (user.firstName || 'Seller') + '!';
     }
 
-    function showTab(tab) {
-  var tabs = document.querySelectorAll('.dash-tab');
-  tabs.forEach(function(t) { t.style.display = 'none'; });
-
-  var navItems = document.querySelectorAll('.dash-nav-item');
-  navItems.forEach(function(n) { n.classList.remove('active'); });
-
-  var target = document.getElementById('tab-' + tab);
-  if (target) target.style.display = 'block';
-
-  var navMap = {
-    'overview': 0, 'products': 1, 'add-product': 2,
-    'orders': 3, 'earnings': 4, 'analytics': 5, 'settings': 6
-  };
-  var index = navMap[tab];
-  if (index !== undefined && navItems[index]) {
-    navItems[index].classList.add('active');
-  }
-}
-
-    function renderRecentOrders() {
-      var body = document.getElementById('recent-orders-body');
-      if (!body) return;
-      var recent = myOrders.slice(-5).reverse();
-      body.innerHTML = recent.length === 0
-        ? '<tr><td colspan="6" style="text-align:center;color:var(--text2);padding:20px">No orders yet</td></tr>'
-        : recent.map(function(o) {
-            return '<tr>' +
-              '<td><b>' + o.id + '</b></td>' +
-              '<td>' + o.product + '</td>' +
-              '<td>' + o.buyer + '</td>' +
-              '<td>₦' + o.amount.toLocaleString() + '</td>' +
-              '<td><span class="status-badge status-' + o.status + '">' + o.status + '</span></td>' +
-              '<td>' + o.date + '</td>' +
-            '</tr>';
-          }).join('');
-    }
-
-    function loadSellerProducts() {
-  var user = auth.currentUser;
-  if (!user) { renderMyProducts([]); return; }
-
-  nexaGetSellerProducts(user.uid)
-    .then(function(products) {
-      myProducts = products;
-      renderMyProducts(products);
-      updateStats();
-    })
-    .catch(function(err) {
-      console.log('Error loading products:', err);
-      renderMyProducts([]);
-    });
-}
-
-function renderMyProducts(products) {
-  var list = document.getElementById('my-products-list');
-  if (!list) return;
-  if (!products || products.length === 0) {
-    list.innerHTML =
-      '<div class="empty-products">' +
-        '<div style="font-size:3em;margin-bottom:12px">📦</div>' +
-        '<h3>No products yet</h3>' +
-        '<p>Add your first product to start selling</p>' +
-        '<button class="btn-primary" onclick="showTab(\'add-product\')">➕ Add Product</button>' +
-      '</div>';
-    return;
-  }
-  list.innerHTML = products.map(function(p, i) {
-    return '<div class="my-product-row">' +
-      '<div class="mp-img">' + (p.imageUrl ? '<img src="' + p.imageUrl + '"/>' : (p.emoji || '📦')) + '</div>' +
-      '<div class="mp-info">' +
-        '<div class="mp-name">' + p.name + '</div>' +
-        '<div class="mp-cat">' + p.category + ' • ' + p.condition + '</div>' +
-        '<div class="mp-stock">Stock: ' + p.stock + '</div>' +
-      '</div>' +
-      '<div class="mp-price">₦' + parseInt(p.price).toLocaleString() + '</div>' +
-      '<div class="mp-actions">' +
-        '<button onclick="previewProduct(\'' + p.id + '\')" style="padding:6px 10px;background:white;border:1px solid var(--border);border-radius:6px;cursor:pointer;margin-right:4px;">👁️</button>' +
-        '<button onclick="editProduct(\'' + p.id + '\')" style="padding:6px 10px;background:white;border:1px solid var(--border);border-radius:6px;cursor:pointer;margin-right:4px;">✏️</button>' +
-        '<button onclick="deleteProduct(\'' + p.id + '\')" class="btn-delete">🗑️</button>' +
-      '</div>' +
-    '</div>';
-  }).join('');
-}
-
-    function filterMyProducts() {
-      renderMyProducts();
-    }
-
-function debugOrders() {
-  var user = auth.currentUser;
-  if (!user) { alert('Not logged in'); return; }
-  alert('Your seller UID is: ' + user.uid);
-
-  db.collection('orders').get()
-    .then(function(snap) {
-      var msg = 'Total orders in Firestore: ' + snap.size + '\n\n';
-      snap.forEach(function(doc) {
-        var order = doc.data();
-        msg += 'Order: ' + order.id + '\n';
-        msg += 'Buyer: ' + (order.buyerName || 'unknown') + '\n';
-        msg += 'Items: ' + JSON.stringify((order.items || []).map(function(i) {
-          return { name: i.name, sellerId: i.sellerId || 'NO SELLER ID' };
-        })) + '\n\n';
-      });
-      alert(msg);
-    });
-}
-function fixExistingOrders() {
-  var user = auth.currentUser;
-  if (!user) { alert('Not logged in'); return; }
-  
-  if (!confirm('This will update all Samsung galaxy A06 orders with your sellerId. Continue?')) return;
-
-  db.collection('orders').get()
-    .then(function(snap) {
-      var batch = db.batch();
-      var count = 0;
-      snap.forEach(function(doc) {
-        var order = doc.data();
-        var items = order.items || [];
-        var needsUpdate = false;
-        var updatedItems = items.map(function(item) {
-          if (!item.sellerId || item.sellerId === '') {
-            needsUpdate = true;
-            return Object.assign({}, item, { sellerId: user.uid });
-          }
-          return item;
-        });
-        if (needsUpdate) {
-          batch.update(doc.ref, { items: updatedItems, buyerName: order.buyerName || 'Customer' });
-          count++;
+    if (typeof auth !== 'undefined') {
+      auth.onAuthStateChanged(function(user) {
+        if (user) {
+          loadMyProducts();
+          loadSellerOrders();
+        } else {
+          window.location.href = '../auth/login.html';
         }
       });
-      return batch.commit().then(function() { return count; });
-    })
-    .then(function(count) {
-      alert('✅ Fixed ' + count + ' orders! Now tap Debug Orders to verify.');
-      loadSellerOrders();
-    })
-    .catch(function(err) {
-      alert('Error: ' + err.message);
-    });
-}
+    }
 
-  var ordersListener = null;
+    /* ── TABS ── */
+    function showTab(tab) {
+      document.querySelectorAll('.db-tab').forEach(function(t){ t.classList.remove('active'); });
+      document.querySelectorAll('.db-tab-content').forEach(function(c){ c.classList.remove('active'); });
 
+      var tabs = document.querySelectorAll('.db-tab');
+      var tabMap = { overview:0, products:1, add:2, orders:3, earnings:4 };
+      var idx = tabMap[tab];
+      if (idx !== undefined && tabs[idx]) tabs[idx].classList.add('active');
+
+      var content = document.getElementById('content-' + tab);
+      if (content) content.classList.add('active');
+
+      window.scrollTo({ top:0, behavior:'smooth' });
+    }
+
+    /* ── LOAD PRODUCTS ── */
+    function loadMyProducts() {
+      var user = auth.currentUser;
+      if (!user) return;
+      nexaGetSellerProducts(user.uid)
+        .then(function(products) {
+          myProducts = products;
+          renderProducts(products);
+          updateStats();
+        })
+        .catch(function(err) { console.log('Products error:', err); renderProducts([]); });
+    }
+
+    function renderProducts(products) {
+      var list = document.getElementById('products-list');
+      if (!list) return;
+
+      if (!products || products.length === 0) {
+        list.innerHTML =
+          '<div class="db-empty">' +
+            '<div class="db-empty-icon">🛍️</div>' +
+            '<h3>No products yet</h3>' +
+            '<p>Add your first product to start selling on Nexabay</p>' +
+            '<button class="db-empty-btn" onclick="showTab(\'add\')">+ Add Your First Product</button>' +
+          '</div>';
+        return;
+      }
+
+      list.innerHTML = products.map(function(p) {
+        var statusClass = { active:'db-status-active', pending:'db-status-pending', rejected:'db-status-rejected' }[p.status] || 'db-status-pending';
+        var statusLabel = { active:'✅ Live', pending:'⏳ Pending', rejected:'❌ Rejected' }[p.status] || '⏳ Pending';
+        var imgHtml = p.imageUrl
+          ? '<img src="' + p.imageUrl + '" style="width:100%;height:100%;object-fit:cover;border-radius:8px;"/>'
+          : p.emoji || '📦';
+
+        return '<div class="db-product-row">' +
+          '<div class="db-product-img">' + imgHtml + '</div>' +
+          '<div class="db-product-info">' +
+            '<div class="db-product-name">' + (p.name || 'Product') + '</div>' +
+            '<div class="db-product-cat">' + (p.category || '') + ' • ' + (p.condition || 'new') + '</div>' +
+            '<div class="db-product-status ' + statusClass + '">' + statusLabel + '</div>' +
+          '</div>' +
+          '<div class="db-product-price">₦' + parseInt(p.price||0).toLocaleString() + '</div>' +
+          '<div class="db-product-actions">' +
+            '<button class="db-action-btn" onclick="editProduct(\'' + p.id + '\')" title="Edit">✏️</button>' +
+            '<button class="db-action-btn danger" onclick="deleteProduct(\'' + p.id + '\')" title="Delete">🗑️</button>' +
+          '</div>' +
+        '</div>';
+      }).join('');
+    }
+
+    /* ── LOAD ORDERS ── */
     function loadSellerOrders() {
       var user = auth.currentUser;
       if (!user) return;
-
       if (ordersListener) ordersListener();
 
-      ordersListener = db.collection('orders')
-        .onSnapshot(function(snap) {
-          var sellerOrders = [];
-          snap.forEach(function(doc) {
-            var order = doc.data();
-            var sellerItems = (order.items || []).filter(function(item) {
-              return item.sellerId === user.uid;
-            });
-            if (sellerItems.length > 0) {
-              sellerOrders.push({
-                id:      order.id,
-                product: sellerItems.map(function(i) { return i.name; }).join(', '),
-                buyer:   order.buyerName || 'Customer',
-                amount:  sellerItems.reduce(function(s, i) {
-                  return s + (i.price || 0) * (i.qty || 1);
-                }, 0),
-                status:  order.status || 'confirmed',
-                date:    order.date ? new Date(order.date).toLocaleDateString() : 'Today',
-                phone:   order.buyerPhone || '',
-              });
-            }
+      ordersListener = db.collection('orders').onSnapshot(function(snap) {
+        var sellerOrders = [];
+        snap.forEach(function(doc) {
+          var order = doc.data();
+          var sellerItems = (order.items||[]).filter(function(item) {
+            return item.sellerId === user.uid;
           });
-
-          var previousCount = myOrders.length;
-          myOrders = sellerOrders;
-          renderAllOrders();
-          renderRecentOrders();
-          updateStats();
-
-          if (previousCount > 0 && sellerOrders.length > previousCount) {
-            var newCount = sellerOrders.length - previousCount;
-            showToast('🎉 ' + newCount + ' new order' + (newCount > 1 ? 's' : '') + ' received!');
-            playNotificationSound();
-            updateOrderBadge(sellerOrders.filter(function(o) {
-              return o.status === 'confirmed' || o.status === 'pending';
-            }).length);
+          if (sellerItems.length > 0) {
+            sellerOrders.push({
+              id:      order.id,
+              product: sellerItems.map(function(i){ return i.name; }).join(', '),
+              buyer:   order.buyerName || 'Customer',
+              phone:   order.buyerPhone || '',
+              amount:  sellerItems.reduce(function(s,i){ return s + (i.price||0)*(i.qty||1); }, 0),
+              status:  order.status || 'confirmed',
+              date:    order.date ? new Date(order.date).toLocaleDateString() : 'Today',
+            });
           }
-        }, function(err) {
-          console.log('Orders listener error:', err);
         });
+        myOrders = sellerOrders;
+        renderOrders(myOrders);
+        renderRecentOrders(myOrders.slice(0,5));
+        updateStats();
+
+        var badge = document.getElementById('orders-badge');
+        var newOrders = sellerOrders.filter(function(o){ return o.status === 'confirmed'; }).length;
+        if (badge && newOrders > 0) { badge.textContent = newOrders; badge.style.display = 'inline'; }
+      }, function(err) { console.log('Orders listener error:', err); });
     }
 
-    function playNotificationSound() {
-      try {
-        var ctx = new (window.AudioContext || window.webkitAudioContext)();
-        var oscillator = ctx.createOscillator();
-        var gainNode = ctx.createGain();
-        oscillator.connect(gainNode);
-        gainNode.connect(ctx.destination);
-        oscillator.frequency.setValueAtTime(880, ctx.currentTime);
-        oscillator.frequency.setValueAtTime(1100, ctx.currentTime + 0.1);
-        gainNode.gain.setValueAtTime(0.3, ctx.currentTime);
-        gainNode.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.3);
-        oscillator.start(ctx.currentTime);
-        oscillator.stop(ctx.currentTime + 0.3);
-      } catch(e) {}
-    }
-
-    function updateOrderBadge(count) {
-      var navItem = document.querySelector('.dash-nav-item[onclick="showTab(\'orders\')"]');
-      if (!navItem) return;
-      var badge = navItem.querySelector('.order-badge');
-      if (!badge) {
-        badge = document.createElement('span');
-        badge.className = 'order-badge';
-        badge.style.cssText = 'background:#cc0000;color:white;border-radius:10px;padding:1px 7px;font-size:0.75em;margin-left:4px;';
-        navItem.appendChild(badge);
-      }
-      if (count > 0) {
-        badge.textContent = count;
-        badge.style.display = 'inline';
-      } else {
-        badge.style.display = 'none';
-      }
-    }
-          var sellerOrders = [];
-          snap.forEach(function(doc) {
-            var order = doc.data();
-            var sellerItems = (order.items || []).filter(function(item) {
-              return item.sellerId === user.uid;
-            });
-            if (sellerItems.length > 0) {
-              sellerOrders.push({
-                id:      order.id,
-                product: sellerItems.map(function(i) { return i.name; }).join(', '),
-                buyer:   order.buyerName || 'Customer',
-                amount:  sellerItems.reduce(function(s, i) {
-                  return s + (i.price || 0) * (i.qty || 1);
-                }, 0),
-                status:  order.status || 'confirmed',
-                date:    order.date ? new Date(order.date).toLocaleDateString() : 'Today',
-              });
-            }
-          });
-          myOrders = sellerOrders;
-          renderAllOrders();
-          renderRecentOrders();
-          updateStats();
-        })
-        .catch(function(err) {
-          console.log('Error loading orders:', err);
-        });
-    }
-
-    function renderAllOrders() {
-      var body = document.getElementById('all-orders-body');
+    function renderOrders(orders) {
+      var body = document.getElementById('orders-table-body');
       if (!body) return;
-      body.innerHTML = myOrders.length === 0
-        ? '<tr><td colspan="7" style="text-align:center;color:var(--text2);padding:20px">No orders yet</td></tr>'
-        : myOrders.map(function(o) {
-            return '<tr>' +
-              '<td><b>' + o.id + '</b></td>' +
-              '<td>' + o.product + '</td>' +
-              '<td>' + o.buyer + '</td>' +
-              '<td>₦' + o.amount.toLocaleString() + '</td>' +
-              '<td><span class="status-badge status-' + o.status + '">' + o.status + '</span></td>' +
-              '<td>' + o.date + '</td>' +
-              '<td><button class="btn-update-status" onclick="updateOrderStatus(\'' + o.id + '\')">Update</button></td>' +
-            '</tr>';
-          }).join('');
+      if (!orders || orders.length === 0) {
+        body.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:20px;color:#999;">No orders yet — share your products to get started!</td></tr>';
+        return;
+      }
+      body.innerHTML = orders.map(function(o) {
+        var statusColors = {
+          confirmed: 'background:#d4edda;color:#155724;',
+          processing: 'background:#cce5ff;color:#004085;',
+          shipped: 'background:#fff3cd;color:#856404;',
+          delivered: 'background:#d4edda;color:#155724;',
+        };
+        var sc = statusColors[o.status] || 'background:#f5f5f5;color:#666;';
+        return '<tr>' +
+          '<td><strong style="color:#ff6b00;">' + (o.id||'').slice(-8) + '</strong></td>' +
+          '<td style="max-width:100px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + (o.product||'') + '</td>' +
+          '<td>' + (o.buyer||'Customer') + '</td>' +
+          '<td style="font-weight:700;">₦' + (o.amount||0).toLocaleString() + '</td>' +
+          '<td><span class="db-order-status" style="' + sc + '">' + (o.status||'confirmed') + '</span></td>' +
+          '<td style="color:#999;font-size:0.85em;">' + (o.date||'') + '</td>' +
+          '<td>' +
+            (o.status !== 'delivered'
+              ? '<button onclick="updateOrderStatus(\'' + o.id + '\',\'' + o.status + '\')" style="background:#ff6b00;color:white;border:none;padding:5px 10px;border-radius:6px;font-size:0.75em;cursor:pointer;font-weight:700;">Update →</button>'
+              : '<span style="color:#00a651;font-size:0.8em;font-weight:700;">✅ Done</span>') +
+          '</td>' +
+        '</tr>';
+      }).join('');
     }
 
     function filterOrders(status, btn) {
-      var btns = document.querySelectorAll('.order-filter-btn');
-      btns.forEach(function(b) { b.classList.remove('active'); });
+      document.querySelectorAll('.db-filters .db-filter-btn').forEach(function(b){ b.classList.remove('active'); });
       btn.classList.add('active');
-
-      var body = document.getElementById('all-orders-body');
-      var filtered = status === 'all' ? myOrders : myOrders.filter(function(o) { return o.status === status; });
-      body.innerHTML = filtered.length === 0
-        ? '<tr><td colspan="7" style="text-align:center;color:var(--text2);padding:20px">No ' + status + ' orders</td></tr>'
-        : filtered.map(function(o) {
-            return '<tr>' +
-              '<td><b>' + o.id + '</b></td>' +
-              '<td>' + o.product + '</td>' +
-              '<td>' + o.buyer + '</td>' +
-              '<td>₦' + o.amount.toLocaleString() + '</td>' +
-              '<td><span class="status-badge status-' + o.status + '">' + o.status + '</span></td>' +
-              '<td>' + o.date + '</td>' +
-              '<td><button class="btn-update-status" onclick="updateOrderStatus(\'' + o.id + '\')">Update</button></td>' +
-            '</tr>';
-          }).join('');
+      var filtered = status === 'all' ? myOrders : myOrders.filter(function(o){ return o.status === status; });
+      renderOrders(filtered);
     }
 
-    function updateOrderStatus(orderId) {
-      var statuses = ['pending', 'processing', 'shipped', 'delivered'];
-      var order = myOrders.find(function(o) { return o.id === orderId; });
-      if (!order) return;
-      var current = statuses.indexOf(order.status);
-      var next = statuses[current + 1];
+    function renderRecentOrders(orders) {
+      var wrap = document.getElementById('recent-orders-wrap');
+      if (!wrap) return;
+      if (!orders || orders.length === 0) {
+        wrap.innerHTML = '<div class="db-empty" style="padding:20px;"><div class="db-empty-icon" style="font-size:2em;">📦</div><h3>No orders yet</h3><p>Share your products to get your first order!</p></div>';
+        return;
+      }
+      wrap.innerHTML = '<div class="db-orders-wrap"><table class="db-orders-table"><thead><tr><th>Order</th><th>Product</th><th>Buyer</th><th>Amount</th><th>Status</th></tr></thead><tbody>' +
+        orders.map(function(o) {
+          return '<tr>' +
+            '<td><strong style="color:#ff6b00;">' + (o.id||'').slice(-8) + '</strong></td>' +
+            '<td style="max-width:80px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:0.85em;">' + (o.product||'') + '</td>' +
+            '<td style="font-size:0.85em;">' + (o.buyer||'Customer') + '</td>' +
+            '<td style="font-weight:700;color:#ff6b00;">₦' + (o.amount||0).toLocaleString() + '</td>' +
+            '<td><span class="db-order-status" style="background:#d4edda;color:#155724;padding:3px 7px;border-radius:4px;font-size:0.7em;">' + (o.status||'confirmed') + '</span></td>' +
+          '</tr>';
+        }).join('') +
+      '</tbody></table></div>';
+    }
+
+    function updateOrderStatus(orderId, currentStatus) {
+      var statuses = ['confirmed','processing','shipped','delivered'];
+      var next = statuses[statuses.indexOf(currentStatus) + 1];
       if (!next) { showToast('Order already delivered ✅'); return; }
-
       db.collection('orders').doc(orderId).update({ status: next })
+        .then(function() { showToast('✅ Order updated to: ' + next); })
+        .catch(function(err) { showToast('Error: ' + err.message); });
+    }
+
+    /* ── STATS ── */
+    function updateStats() {
+      var revenue  = myOrders.reduce(function(s,o){ return s + (o.amount||0); }, 0);
+      var balance  = Math.round(revenue * 0.95);
+      var fee      = Math.round(revenue * 0.05);
+
+      document.getElementById('stat-revenue').textContent  = '₦' + revenue.toLocaleString();
+      document.getElementById('stat-orders').textContent   = myOrders.length;
+      document.getElementById('stat-products').textContent = myProducts.filter(function(p){ return p.status === 'active'; }).length;
+      document.getElementById('stat-balance').textContent  = '₦' + balance.toLocaleString();
+
+      document.getElementById('ec-total').textContent     = '₦' + revenue.toLocaleString();
+      document.getElementById('ec-available').textContent = '₦' + balance.toLocaleString();
+      document.getElementById('ec-fee').textContent       = '₦' + fee.toLocaleString();
+      document.getElementById('ec-orders').textContent    = myOrders.length;
+    }
+
+    /* ── ADD PRODUCT ── */
+    function previewProductImage(input) {
+      var file = input.files[0];
+      if (!file) return;
+      selectedImageFile = file;
+      var reader = new FileReader();
+      reader.onload = function(e) {
+        document.getElementById('p-img-placeholder').style.display = 'none';
+        var preview = document.getElementById('p-img-preview');
+        preview.src = e.target.result;
+        preview.style.display = 'block';
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function selectEmoji(emoji, btn) {
+      selectedEmoji = emoji;
+      document.querySelectorAll('.db-emoji-btn').forEach(function(b){ b.classList.remove('selected'); });
+      btn.classList.add('selected');
+    }
+
+    function publishProduct() {
+      var name      = document.getElementById('p-name').value.trim();
+      var category  = document.getElementById('p-category').value;
+      var condition = document.getElementById('p-condition').value;
+      var price     = document.getElementById('p-price').value;
+      var oldPrice  = document.getElementById('p-old-price').value;
+      var location  = document.getElementById('p-location').value;
+      var desc      = document.getElementById('p-desc').value.trim();
+      var errEl     = document.getElementById('p-error');
+      var sucEl     = document.getElementById('p-success');
+      var btn       = document.getElementById('p-submit-btn');
+
+      errEl.style.display = 'none';
+      sucEl.style.display = 'none';
+
+      if (!name)     { errEl.textContent = 'Enter product name';    errEl.style.display = 'block'; return; }
+      if (!category) { errEl.textContent = 'Select a category';     errEl.style.display = 'block'; return; }
+      if (!price)    { errEl.textContent = 'Enter price';           errEl.style.display = 'block'; return; }
+      if (!location) { errEl.textContent = 'Select your location';  errEl.style.display = 'block'; return; }
+      if (!desc)     { errEl.textContent = 'Enter a description';   errEl.style.display = 'block'; return; }
+
+      var user = auth.currentUser;
+      if (!user) { errEl.textContent = 'Please login first'; errEl.style.display = 'block'; return; }
+
+      btn.textContent = 'Submitting...';
+      btn.disabled    = true;
+
+      var userData = JSON.parse(localStorage.getItem('nexa_current_user') || '{}');
+
+      var uploadPromise = selectedImageFile
+        ? uploadImageToImgBB(selectedImageFile)
+        : Promise.resolve('');
+
+      uploadPromise.then(function(imageUrl) {
+        var productData = {
+          sellerId:    user.uid,
+          sellerName:  userData.fullName || userData.firstName || 'Seller',
+          name:        name,
+          category:    category,
+          condition:   condition,
+          price:       parseFloat(price),
+          oldPrice:    oldPrice ? parseFloat(oldPrice) : 0,
+          location:    location,
+          description: desc,
+          imageUrl:    imageUrl,
+          emoji:       selectedEmoji,
+          status:      'pending',
+          rating:      0,
+          reviews:     0,
+          sold:        0,
+          createdAt:   firebase.firestore.FieldValue.serverTimestamp(),
+        };
+
+        if (editingProductId) {
+          return db.collection('products').doc(editingProductId).update(productData);
+        } else {
+          var ref = db.collection('products').doc();
+          productData.id = ref.id;
+          return ref.set(productData);
+        }
+      })
+      .then(function() {
+        sucEl.textContent = editingProductId
+          ? '✅ Product updated! Admin will review changes.'
+          : '🎉 Product submitted! Admin will review and publish within 24 hours.';
+        sucEl.style.display = 'block';
+        btn.textContent = '🚀 Submit for Approval';
+        btn.disabled = false;
+
+        document.getElementById('p-name').value = '';
+        document.getElementById('p-category').value = '';
+        document.getElementById('p-price').value = '';
+        document.getElementById('p-old-price').value = '';
+        document.getElementById('p-location').value = '';
+        document.getElementById('p-desc').value = '';
+        document.getElementById('p-img-preview').style.display = 'none';
+        document.getElementById('p-img-placeholder').style.display = 'block';
+        document.getElementById('p-img-file').value = '';
+        selectedEmoji = '📦';
+        selectedImageFile = null;
+        editingProductId  = null;
+        document.getElementById('add-form-title').textContent = 'Add New Product';
+
+        loadMyProducts();
+        setTimeout(function(){ showTab('products'); }, 2000);
+      })
+      .catch(function(err) {
+        errEl.textContent = '❌ Error: ' + err.message;
+        errEl.style.display = 'block';
+        btn.textContent = '🚀 Submit for Approval';
+        btn.disabled = false;
+      });
+    }
+
+    function editProduct(productId) {
+      var product = myProducts.find(function(p){ return p.id === productId; });
+      if (!product) return;
+
+      editingProductId = productId;
+      document.getElementById('add-form-title').textContent = 'Edit Product';
+      document.getElementById('p-name').value     = product.name || '';
+      document.getElementById('p-category').value = product.category || '';
+      document.getElementById('p-condition').value = product.condition || 'new';
+      document.getElementById('p-price').value    = product.price || '';
+      document.getElementById('p-old-price').value = product.oldPrice || '';
+      document.getElementById('p-location').value = product.location || '';
+      document.getElementById('p-desc').value     = product.description || '';
+
+      if (product.imageUrl) {
+        document.getElementById('p-img-preview').src = product.imageUrl;
+        document.getElementById('p-img-preview').style.display = 'block';
+        document.getElementById('p-img-placeholder').style.display = 'none';
+      }
+
+      showTab('add');
+      window.scrollTo({ top:0, behavior:'smooth' });
+    }
+
+    function deleteProduct(productId) {
+      if (!confirm('Delete this product? This cannot be undone.')) return;
+      db.collection('products').doc(productId).update({ status: 'deleted' })
         .then(function() {
-          order.status = next;
-          renderAllOrders();
-          renderRecentOrders();
-          showToast('✅ Order updated to: ' + next);
+          showToast('🗑️ Product deleted');
+          myProducts = myProducts.filter(function(p){ return p.id !== productId; });
+          renderProducts(myProducts);
+          updateStats();
         })
-        .catch(function(err) {
-          showToast('Error: ' + err.message);
-        });
+        .catch(function(err) { showToast('Error: ' + err.message); });
     }
 
-    function updateEarnings() {
-      var total = myOrders.reduce(function(s, o) { return s + o.amount; }, 0);
-      var available = Math.round(total * 0.9);
-      var pending = Math.round(total * 0.1);
-      var withdrawn = parseInt(localStorage.getItem('seller_withdrawn') || '0');
-
-      var ecTotal = document.getElementById('ec-total');
-      var ecAvail = document.getElementById('ec-available');
-      var ecPend  = document.getElementById('ec-pending');
-      var ecWith  = document.getElementById('ec-withdrawn');
-
-      if (ecTotal) ecTotal.textContent = '₦' + total.toLocaleString();
-      if (ecAvail) ecAvail.textContent = '₦' + Math.max(0, available - withdrawn).toLocaleString();
-      if (ecPend)  ecPend.textContent  = '₦' + pending.toLocaleString();
-      if (ecWith)  ecWith.textContent  = '₦' + withdrawn.toLocaleString();
-    }
-
+    /* ── WITHDRAW ── */
     function processWithdrawal() {
       var bank    = document.getElementById('wd-bank').value;
       var account = document.getElementById('wd-account').value.trim();
-      var name    = document.getElementById('wd-name').value.trim();
+      var name    = document.getElementById('wd-acct-name').value.trim();
       var amount  = parseInt(document.getElementById('wd-amount').value);
       var errEl   = document.getElementById('wd-error');
       var sucEl   = document.getElementById('wd-success');
@@ -1119,354 +1331,44 @@ function fixExistingOrders() {
       errEl.style.display = 'none';
       sucEl.style.display = 'none';
 
-      if (!account || account.length !== 10) { errEl.textContent = 'Enter valid 10-digit account number'; errEl.style.display = 'block'; return; }
-      if (!name)   { errEl.textContent = 'Enter account name'; errEl.style.display = 'block'; return; }
+      if (!account || account.length < 10) { errEl.textContent = 'Enter valid 10-digit account number'; errEl.style.display = 'block'; return; }
+      if (!name)   { errEl.textContent = 'Enter account name';  errEl.style.display = 'block'; return; }
       if (!amount || amount < 1000) { errEl.textContent = 'Minimum withdrawal is ₦1,000'; errEl.style.display = 'block'; return; }
 
-      var withdrawn = parseInt(localStorage.getItem('seller_withdrawn') || '0');
-      localStorage.setItem('seller_withdrawn', withdrawn + amount);
+      var user = auth.currentUser;
+      if (!user) return;
 
-      var history = JSON.parse(localStorage.getItem('seller_withdrawal_history') || '[]');
-      history.push({ bank: bank, account: account, name: name, amount: amount, date: new Date().toLocaleDateString(), status: 'processing' });
-      localStorage.setItem('seller_withdrawal_history', JSON.stringify(history));
-
-      sucEl.textContent = '✅ Withdrawal of ₦' + amount.toLocaleString() + ' to ' + bank + ' is being processed. 1-2 business days.';
-      sucEl.style.display = 'block';
-
-      document.getElementById('wd-amount').value = '';
-      updateEarnings();
-      renderWithdrawalHistory();
-    }
-
-    function renderWithdrawalHistory() {
-      var list = document.getElementById('withdrawal-list');
-      if (!list) return;
-      var history = JSON.parse(localStorage.getItem('seller_withdrawal_history') || '[]');
-      if (history.length === 0) {
-        list.innerHTML = '<p style="color:var(--text2);font-size:0.88em;">No withdrawals yet</p>';
-        return;
-      }
-      list.innerHTML = history.reverse().map(function(h) {
-        return '<div class="wd-history-row">' +
-          '<div>' +
-            '<b>₦' + h.amount.toLocaleString() + '</b>' +
-            '<span> → ' + h.bank + ' ' + h.account + '</span>' +
-          '</div>' +
-          '<div>' +
-            '<span class="status-badge status-processing">' + h.status + '</span>' +
-            '<small style="color:var(--text2);margin-left:8px">' + h.date + '</small>' +
-          '</div>' +
-        '</div>';
-      }).join('');
-    }
-
-    function calculateProfit() {
-      var price = parseFloat(document.getElementById('ap-price').value) || 0;
-      var oldPrice = parseFloat(document.getElementById('ap-old-price').value) || 0;
-      var calc = document.getElementById('profit-calc');
-
-      if (price > 0) {
-        calc.style.display = 'block';
-        var fee = price * 0.05;
-        var receive = price - fee;
-        var discount = oldPrice > price ? Math.round((1 - price / oldPrice) * 100) : 0;
-
-        document.getElementById('pc-price').textContent = '₦' + price.toLocaleString();
-        document.getElementById('pc-fee').textContent = '-₦' + fee.toLocaleString();
-        document.getElementById('pc-receive').textContent = '₦' + receive.toLocaleString();
-        document.getElementById('pc-discount').textContent = discount + '% OFF shown to buyers';
-      } else {
-        calc.style.display = 'none';
-      }
-    }
-
-    function selectEmoji(emoji) {
-      selectedEmoji = emoji;
-      var preview = document.getElementById('preview-emoji');
-      var placeholder = document.getElementById('upload-placeholder');
-      var previewEl = document.getElementById('upload-preview');
-
-      if (preview) preview.textContent = emoji;
-      if (placeholder) placeholder.style.display = 'none';
-      if (previewEl) previewEl.style.display = 'flex';
-
-      document.querySelectorAll('.emoji-grid span').forEach(function(s) {
-        s.classList.remove('selected');
+      db.collection('withdrawalRequests').add({
+        userId:    user.uid,
+        userType:  'seller',
+        bank:      bank,
+        account:   account,
+        name:      name,
+        amount:    amount,
+        status:    'pending',
+        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+      }).then(function() {
+        sucEl.textContent = '✅ Withdrawal request submitted! We will process within 1-2 business days.';
+        sucEl.style.display = 'block';
+        document.getElementById('wd-amount').value = '';
+      }).catch(function(err) {
+        errEl.textContent = 'Error: ' + err.message;
+        errEl.style.display = 'block';
       });
-      event.target.classList.add('selected');
     }
 
-    function triggerImageUpload() {
-      document.getElementById('image-file').click();
-    }
-
-    var selectedImageFile = null;
-    var cropperInstance = null;
-
-    function previewImage() {
-      var file = document.getElementById('image-file').files[0];
-      if (!file) return;
-
-      var reader = new FileReader();
-      reader.onload = function(e) {
-        var cropImg = document.getElementById('crop-image');
-        cropImg.src = e.target.result;
-
-        document.getElementById('crop-modal-overlay').style.display = 'block';
-        document.getElementById('crop-modal').style.display = 'block';
-
-        if (cropperInstance) cropperInstance.destroy();
-        cropperInstance = new Cropper(cropImg, {
-          aspectRatio: 1,
-          viewMode: 1,
-          autoCropArea: 1,
-          background: false,
-        });
-      };
-      reader.readAsDataURL(file);
-    }
-
-    function confirmCrop() {
-      if (!cropperInstance) return;
-
-      cropperInstance.getCroppedCanvas({ width: 800, height: 800 }).toBlob(function(blob) {
-        selectedImageFile = blob;
-
-        var previewUrl = URL.createObjectURL(blob);
-        document.getElementById('upload-placeholder').style.display = 'none';
-        var previewEl = document.getElementById('upload-preview');
-        previewEl.style.display = 'flex';
-        previewEl.innerHTML = '<img src="' + previewUrl + '" style="max-width:100%;max-height:150px;border-radius:8px;"/>';
-
-        cropperInstance.destroy();
-        cropperInstance = null;
-        document.getElementById('crop-modal-overlay').style.display = 'none';
-        document.getElementById('crop-modal').style.display = 'none';
-      }, 'image/jpeg', 0.9);
-    }
-
-    function cancelCrop() {
-      if (cropperInstance) { cropperInstance.destroy(); cropperInstance = null; }
-      document.getElementById('crop-modal-overlay').style.display = 'none';
-      document.getElementById('crop-modal').style.display = 'none';
-      document.getElementById('image-file').value = '';
-    }
-
-    function publishProduct() {
-  var name      = document.getElementById('ap-name').value.trim();
-  var category  = document.getElementById('ap-category').value;
-  var desc      = document.getElementById('ap-desc').value.trim();
-  var price     = document.getElementById('ap-price').value;
-  var oldPrice  = document.getElementById('ap-old-price').value;
-  var stock     = document.getElementById('ap-stock').value;
-  var location  = document.getElementById('ap-location').value;
-  var condition = document.getElementById('ap-condition').value;
-  var errEl     = document.getElementById('ap-error');
-  var sucEl     = document.getElementById('ap-success');
-
-  errEl.style.display = 'none';
-  sucEl.style.display = 'none';
-
-  if (!name)     { errEl.textContent = 'Enter product name';    errEl.style.display = 'block'; return; }
-  if (!category) { errEl.textContent = 'Select a category';     errEl.style.display = 'block'; return; }
-  if (!desc)     { errEl.textContent = 'Enter description';     errEl.style.display = 'block'; return; }
-  if (!price)    { errEl.textContent = 'Enter selling price';   errEl.style.display = 'block'; return; }
-  if (!stock)    { errEl.textContent = 'Enter stock quantity';  errEl.style.display = 'block'; return; }
-  if (!location) { errEl.textContent = 'Select your location';  errEl.style.display = 'block'; return; }
-
-  var user = auth.currentUser;
-  if (!user) {
-    errEl.textContent = 'Please login first';
-    errEl.style.display = 'block';
-    return;
-  }
-
-  var publishBtn = document.querySelector('.btn-publish');
-  if (publishBtn) { publishBtn.textContent = 'Publishing...'; publishBtn.disabled = true; }
-
-  var userData = JSON.parse(localStorage.getItem('nexa_current_user') || '{}');
-
-  var uploadPromise = selectedImageFile
-    ? uploadImageToImgBB(selectedImageFile)
-    : Promise.resolve('');
-
-  uploadPromise.then(function(imageUrl) {
-    var productPayload = {
-      name:       name,
-      category:   category,
-      description: desc,
-      price:      price,
-      oldPrice:   oldPrice || price,
-      stock:      stock,
-      location:   location,
-      condition:  condition,
-      emoji:      selectedEmoji || '📦',
-      sellerName: userData.fullName || userData.firstName || 'Seller',
-    };
-
-    if (editingProductId) {
-      var updateData = {
-        name: name, category: category, description: desc,
-        price: parseFloat(price), oldPrice: parseFloat(oldPrice || price),
-        stock: parseInt(stock), location: location, condition: condition,
-        emoji: selectedEmoji || '📦',
-      };
-      if (imageUrl) updateData.imageUrl = imageUrl;
-      return db.collection('products').doc(editingProductId).update(updateData)
-        .then(function() { return editingProductId; });
-    } else {
-      return nexaAddProduct(productPayload, imageUrl);
-    }
-  })
-  .then(function(productId) {
-    sucEl.textContent = editingProductId
-      ? '🎉 Product updated successfully!'
-      : '🎉 Product published! ID: ' + productId;
-    sucEl.style.display = 'block';
-
-    document.getElementById('ap-name').value = '';
-    document.getElementById('ap-category').value = '';
-    document.getElementById('ap-desc').value = '';
-    document.getElementById('ap-price').value = '';
-    document.getElementById('ap-old-price').value = '';
-    document.getElementById('ap-stock').value = '';
-    document.getElementById('ap-location').value = '';
-    document.getElementById('profit-calc').style.display = 'none';
-    document.getElementById('upload-placeholder').style.display = 'block';
-    document.getElementById('upload-preview').style.display = 'none';
-    selectedEmoji = '📦';
-    selectedImageFile = null;
-    editingProductId = null;
-
-    if (publishBtn) { publishBtn.textContent = '🚀 Publish Product'; publishBtn.disabled = false; }
-
-    loadSellerProducts();
-  })
-  .catch(function(err) {
-    errEl.textContent = '❌ Error: ' + (err.message || err.toString());
-    errEl.style.display = 'block';
-    alert('PUBLISH ERROR: ' + (err.message || err.toString()) + '\n\nCode: ' + (err.code || 'none'));
-    if (publishBtn) { publishBtn.textContent = editingProductId ? '💾 Update Product' : '🚀 Publish Product'; publishBtn.disabled = false; }
-  });
-}
-    function saveDraft() {
-      showToast('💾 Draft saved!');
-    }
-
-    function editProduct(productId) {
-      var product = myProducts.find(function(p) { return p.id === productId; });
-      if (!product) { showToast('Product not found'); return; }
-
-      editingProductId = productId;
-
-      document.getElementById('ap-name').value = product.name || '';
-      document.getElementById('ap-category').value = product.category || '';
-      document.getElementById('ap-desc').value = product.description || '';
-      document.getElementById('ap-condition').value = product.condition || 'new';
-      document.getElementById('ap-stock').value = product.stock || '';
-      document.getElementById('ap-price').value = product.price || '';
-      document.getElementById('ap-old-price').value = product.oldPrice || '';
-      document.getElementById('ap-location').value = product.location || '';
-      document.getElementById('ap-ships-to').value = product.shipsTo || 'nationwide';
-      document.getElementById('ap-negotiable').checked = !!product.negotiable;
-
-      selectedEmoji = product.emoji || '📦';
-      document.getElementById('preview-emoji').textContent = selectedEmoji;
-      document.getElementById('upload-placeholder').style.display = 'none';
-      document.getElementById('upload-preview').style.display = 'flex';
-
-      var publishBtn = document.querySelector('.btn-publish');
-      if (publishBtn) publishBtn.textContent = '💾 Update Product';
-
-      calculateProfit();
-      showTab('add-product');
-      showToast('✏️ Editing "' + product.name + '" — make changes and tap Update');
-    }
-    
-    function previewProduct(productId) {
-      var product = myProducts.find(function(p) { return p.id === productId; });
-      if (!product) { showToast('Product not found'); return; }
-
-      var imgHtml = product.imageUrl
-        ? '<img src="' + product.imageUrl + '" style="width:100%;border-radius:10px;margin-bottom:14px;"/>'
-        : '<div style="font-size:4em;text-align:center;background:var(--gray);border-radius:10px;padding:30px 0;margin-bottom:14px;">' + (product.emoji || '📦') + '</div>';
-
-      var body = document.getElementById('preview-modal-body');
-      body.innerHTML =
-        imgHtml +
-        '<h2 style="font-size:1.2em;margin-bottom:6px;">' + product.name + '</h2>' +
-        '<div style="color:var(--orange);font-size:1.4em;font-weight:800;margin-bottom:10px;">₦' + parseInt(product.price).toLocaleString() + '</div>' +
-        '<div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;">' +
-          '<span style="background:var(--gray);padding:4px 10px;border-radius:6px;font-size:0.8em;">' + product.category + '</span>' +
-          '<span style="background:var(--gray);padding:4px 10px;border-radius:6px;font-size:0.8em;">Stock: ' + product.stock + '</span>' +
-          '<span style="background:var(--gray);padding:4px 10px;border-radius:6px;font-size:0.8em;">📍 ' + product.location + '</span>' +
-        '</div>' +
-        '<p style="font-size:0.9em;color:var(--text2);line-height:1.6;">' + (product.description || 'No description') + '</p>';
-
-      document.getElementById('preview-modal-overlay').style.display = 'block';
-      document.getElementById('preview-modal').style.display = 'block';
-    }
-
-    function closePreviewModal() {
-      document.getElementById('preview-modal-overlay').style.display = 'none';
-      document.getElementById('preview-modal').style.display = 'none';
-    }
-
-    function deleteProduct(productId) {
-      if (confirm('Delete this product?')) {
-        nexaDeleteProduct(productId)
-          .then(function() {
-            showToast('🗑️ Product deleted');
-            myProducts = myProducts.filter(function(p) { return p.id !== productId; });
-            renderMyProducts(myProducts);
-            updateStats();
-            renderTopProducts();
-            setTimeout(function() { loadSellerProducts(); }, 800);
-          })
-          .catch(function(err) {
-            showToast('Error: ' + err.message);
-            alert('DELETE ERROR: ' + err.message);
-          });
-      }
-    }
-    function renderTopProducts() {
-      var list = document.getElementById('top-products-list');
-      if (!list) return;
-      if (myProducts.length === 0) {
-        list.innerHTML = '<p style="color:var(--text2);font-size:0.85em;">No products yet</p>';
-        return;
-      }
-      list.innerHTML = myProducts.slice(0, 5).map(function(p, i) {
-        return '<div class="top-product-row">' +
-          '<span class="tp-rank">' + (i+1) + '</span>' +
-          '<span class="tp-emoji">' + (p.emoji || '📦') + '</span>' +
-          '<span class="tp-name">' + p.name + '</span>' +
-          '<span class="tp-sales">₦' + p.price.toLocaleString() + '</span>' +
-        '</div>';
-      }).join('');
-    }
-
-    function saveShopSettings() {
-      showToast('✅ Settings saved!');
-    }
-
-    function doSellerLogout() {
-      if (typeof nexaLogout === 'function') {
-        nexaLogout().then(function() {
-          localStorage.removeItem('nexa_current_user');
-          window.location.href = '../../index.html';
-        });
-      } else {
-        localStorage.removeItem('nexa_current_user');
-        window.location.href = '../../index.html';
-      }
+    /* ── TOAST ── */
+    function showToast(msg) {
+      var t = document.getElementById('db-toast');
+      if (!t) return;
+      t.textContent = msg;
+      t.style.display = 'block';
+      setTimeout(function(){ t.style.display = 'none'; }, 2500);
     }
 
     document.addEventListener('DOMContentLoaded', function() {
       init();
-      renderWithdrawalHistory();
     });
-    
 
   </script>
 
