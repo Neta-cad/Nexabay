@@ -968,6 +968,7 @@
       var subtitleEl = document.getElementById('overview-subtitle');
       if (avatarEl)   avatarEl.textContent   = (user.firstName || 'S')[0].toUpperCase();
       if (subtitleEl) subtitleEl.textContent = 'Welcome back, ' + (user.firstName || 'Seller') + '!';
+      showTab('overview');
     }
 
     if (typeof auth !== 'undefined') {
@@ -1368,6 +1369,7 @@
 
     document.addEventListener('DOMContentLoaded', function() {
       init();
+      showTab('overview');
     });
 
   </script>
