@@ -1,252 +1,235 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <link rel="stylesheet" href="css/chat-widget.css">
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Nexabay — Africa's Everything Platform</title>
   <link rel="stylesheet" href="css/main.css"/>
   <link rel="stylesheet" href="css/home.css"/>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700;900&display=swap" rel="stylesheet"/>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="css/chat-widget.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@600;700;800&display=swap" rel="stylesheet"/>
   <link rel="manifest" href="/manifest.json"/>
-<meta name="theme-color" content="#ff6b00"/>
-<meta name="apple-mobile-web-app-capable" content="yes"/>
+  <meta name="theme-color" content="#1a0533"/>
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
 </head>
 <body>
 
-<!-- NAVBAR -->
+  <!-- NAVBAR -->
   <nav class="navbar" id="main-navbar">
-  <div class="nav-inner">
-
-    <!-- LOGO -->
-    <a href="index.html" class="logo">
-      <span class="logo-nexa">Nexa</span><span class="logo-bay">bay</span>
-    </a>
-
-    <!-- SEARCH BAR -->
-    <div class="nav-search">
-      <input type="text" id="nav-search-input" placeholder="Search anything..."/>
-      <button onclick="navSearch()">🔍</button>
-    </div>
-
-    <!-- RIGHT ACTIONS -->
-    <div class="nav-right">
-      <a href="pages/shop/cart.html" class="nav-cart-btn" id="nav-cart-btn">
-        🛒
-        <span class="nav-cart-badge" id="nav-cart-count">0</span>
+    <div class="nav-inner">
+      <a href="index.html" class="logo">
+        <span class="logo-nexa">Nexa</span><span class="logo-bay">bay</span>
       </a>
-      <div class="nav-account-wrap" id="nav-account-wrap">
-        <a href="pages/auth/login.html" class="nav-link" id="nav-login-btn">Login</a>
-        <a href="pages/auth/register.html" class="nav-btn" id="nav-signup-btn">Sign Up</a>
+
+      <div class="nav-search">
+        <input type="text" id="nav-search-input" placeholder="Search anything..."/>
+        <button onclick="navSearch()">🔍</button>
       </div>
-      <button class="hamburger" onclick="toggleMobileMenu()" id="hamburger-btn">☰</button>
+
+      <div class="nav-right">
+        <a href="pages/shop/cart.html" class="nav-cart-btn" id="nav-cart-btn">
+          🛒
+          <span class="nav-cart-badge" id="nav-cart-count">0</span>
+        </a>
+        <div class="nav-account-wrap" id="nav-account-wrap">
+          <a href="pages/auth/login.html" class="nav-link" id="nav-login-btn">Login</a>
+          <a href="pages/auth/register.html" class="nav-btn" id="nav-signup-btn">Sign Up</a>
+        </div>
+        <button class="hamburger" onclick="toggleMobileMenu()" id="hamburger-btn">☰</button>
+      </div>
     </div>
 
-  </div>
-
-  <!-- SECTION NAV BAR -->
-  <div class="section-nav" id="section-nav">
-
-    <div class="section-nav-item" id="snav-shop">
-      <a href="pages/shop/browse.html" class="snav-link">🛍️ Shop</a>
-      <button class="snav-arrow" onclick="toggleDropdown('shop')">▾</button>
-      <div class="snav-dropdown" id="dropdown-shop">
-        <div class="snav-dropdown-inner">
-          <div class="snav-dropdown-section">
-            <div class="snav-dropdown-title">Browse</div>
-            <a href="pages/shop/browse.html" class="snav-dropdown-link">🛍️ All Products</a>
-            <a href="pages/shop/cart.html" class="snav-dropdown-link">🛒 My Cart</a>
-            <a href="pages/dashboard/buyer.html" class="snav-dropdown-link">📦 Track Orders</a>
+    <!-- SECTION NAV BAR -->
+    <div class="section-nav" id="section-nav">
+      <div class="section-nav-item" id="snav-shop">
+        <a href="pages/shop/browse.html" class="snav-link">🛍️ Shop</a>
+        <button class="snav-arrow" onclick="toggleDropdown('shop')">▾</button>
+        <div class="snav-dropdown" id="dropdown-shop">
+          <div class="snav-dropdown-inner">
+            <div class="snav-dropdown-section">
+              <div class="snav-dropdown-title">Browse</div>
+              <a href="pages/shop/browse.html" class="snav-dropdown-link">🛍️ All Products</a>
+              <a href="pages/shop/cart.html" class="snav-dropdown-link">🛒 My Cart</a>
+              <a href="pages/dashboard/buyer.html" class="snav-dropdown-link">📦 Track Orders</a>
+            </div>
+            <div class="snav-dropdown-divider"></div>
+            <div class="snav-dropdown-section">
+              <div class="snav-dropdown-title">For Sellers</div>
+              <a href="pages/dashboard/seller.html" class="snav-dropdown-link snav-provider-link">🟣 Become a Seller</a>
+              <a href="pages/dashboard/seller.html" class="snav-dropdown-link">📊 Seller Dashboard</a>
+            </div>
           </div>
-          <div class="snav-dropdown-divider"></div>
-          <div class="snav-dropdown-section">
-            <div class="snav-dropdown-title">For Sellers</div>
-            <a href="pages/dashboard/seller.html" class="snav-dropdown-link snav-provider-link">🟠 Become a Seller</a>
-            <a href="pages/dashboard/seller.html" class="snav-dropdown-link">📊 Seller Dashboard</a>
+        </div>
+      </div>
+
+      <div class="section-nav-item" id="snav-services">
+        <a href="pages/services/browse.html" class="snav-link">🛠️ Services</a>
+        <button class="snav-arrow" onclick="toggleDropdown('services')">▾</button>
+        <div class="snav-dropdown" id="dropdown-services">
+          <div class="snav-dropdown-inner">
+            <div class="snav-dropdown-section">
+              <div class="snav-dropdown-title">Browse</div>
+              <a href="pages/services/browse.html" class="snav-dropdown-link">🛠️ All Services</a>
+              <a href="pages/dashboard/buyer.html" class="snav-dropdown-link">📋 My Bookings</a>
+            </div>
+            <div class="snav-dropdown-divider"></div>
+            <div class="snav-dropdown-section">
+              <div class="snav-dropdown-title">For Providers</div>
+              <a href="pages/dashboard/services-provider.html" class="snav-dropdown-link snav-provider-link">🟣 Become a Provider</a>
+              <a href="pages/dashboard/services-provider.html" class="snav-dropdown-link">📊 Provider Dashboard</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-nav-item" id="snav-rent">
+        <a href="pages/rentals/browse.html" class="snav-link">🏠 Rent</a>
+        <button class="snav-arrow" onclick="toggleDropdown('rent')">▾</button>
+        <div class="snav-dropdown" id="dropdown-rent">
+          <div class="snav-dropdown-inner">
+            <div class="snav-dropdown-section">
+              <div class="snav-dropdown-title">Browse</div>
+              <a href="pages/rentals/browse.html" class="snav-dropdown-link">🏠 All Listings</a>
+            </div>
+            <div class="snav-dropdown-divider"></div>
+            <div class="snav-dropdown-section">
+              <div class="snav-dropdown-title">For Owners</div>
+              <a href="pages/dashboard/rentals-owner.html" class="snav-dropdown-link snav-provider-link">🟣 List Your Property</a>
+              <a href="pages/dashboard/rentals-owner.html" class="snav-dropdown-link">📊 Owner Dashboard</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-nav-item" id="snav-jobs">
+        <a href="pages/jobs/browse.html" class="snav-link">💼 Jobs</a>
+        <button class="snav-arrow" onclick="toggleDropdown('jobs')">▾</button>
+        <div class="snav-dropdown" id="dropdown-jobs">
+          <div class="snav-dropdown-inner">
+            <div class="snav-dropdown-section">
+              <div class="snav-dropdown-title">Browse</div>
+              <a href="pages/jobs/browse.html" class="snav-dropdown-link">💼 All Jobs</a>
+            </div>
+            <div class="snav-dropdown-divider"></div>
+            <div class="snav-dropdown-section">
+              <div class="snav-dropdown-title">For Employers</div>
+              <a href="pages/dashboard/jobs-employer.html" class="snav-dropdown-link snav-provider-link">🟣 Post a Job</a>
+              <a href="pages/dashboard/jobs-employer.html" class="snav-dropdown-link">📊 Employer Dashboard</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-nav-item" id="snav-learn">
+        <a href="pages/learn/browse.html" class="snav-link">🎓 Learn</a>
+        <button class="snav-arrow" onclick="toggleDropdown('learn')">▾</button>
+        <div class="snav-dropdown" id="dropdown-learn">
+          <div class="snav-dropdown-inner">
+            <div class="snav-dropdown-section">
+              <div class="snav-dropdown-title">Browse</div>
+              <a href="pages/learn/browse.html" class="snav-dropdown-link">🎓 All Courses</a>
+            </div>
+            <div class="snav-dropdown-divider"></div>
+            <div class="snav-dropdown-section">
+              <div class="snav-dropdown-title">For Instructors</div>
+              <a href="pages/dashboard/learn-instructor.html" class="snav-dropdown-link snav-provider-link">🟣 Become an Instructor</a>
+              <a href="pages/dashboard/learn-instructor.html" class="snav-dropdown-link">📊 Instructor Dashboard</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-nav-item" id="snav-food">
+        <a href="pages/food/browse.html" class="snav-link">🍔 Food</a>
+        <button class="snav-arrow" onclick="toggleDropdown('food')">▾</button>
+        <div class="snav-dropdown" id="dropdown-food">
+          <div class="snav-dropdown-inner">
+            <div class="snav-dropdown-section">
+              <div class="snav-dropdown-title">Browse</div>
+              <a href="pages/food/browse.html" class="snav-dropdown-link">🍔 Order Food</a>
+            </div>
+            <div class="snav-dropdown-divider"></div>
+            <div class="snav-dropdown-section">
+              <div class="snav-dropdown-title">For Restaurants</div>
+              <a href="pages/dashboard/food-restaurant.html" class="snav-dropdown-link snav-provider-link">🟣 Register Restaurant</a>
+              <a href="pages/dashboard/food-restaurant.html" class="snav-dropdown-link">📊 Restaurant Dashboard</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-nav-item" id="snav-more">
+        <span class="snav-link" style="cursor:pointer;" onclick="toggleDropdown('more')">More ▾</span>
+        <div class="snav-dropdown" id="dropdown-more" style="min-width:260px;">
+          <div class="snav-dropdown-inner">
+            <a href="pages/health/browse.html" class="snav-dropdown-link">🏥 Health</a>
+            <a href="pages/dashboard/health-provider.html" class="snav-dropdown-link snav-provider-link">🟣 List Health Service</a>
+            <div class="snav-dropdown-divider"></div>
+            <a href="pages/events/browse.html" class="snav-dropdown-link">🎉 Events</a>
+            <a href="pages/dashboard/events-organizer.html" class="snav-dropdown-link snav-provider-link">🟣 Create an Event</a>
+            <div class="snav-dropdown-divider"></div>
+            <a href="pages/travel/browse.html" class="snav-dropdown-link">✈️ Travel</a>
+            <a href="pages/dashboard/travel-agent.html" class="snav-dropdown-link snav-provider-link">🟣 List Travel Package</a>
+            <div class="snav-dropdown-divider"></div>
+            <a href="pages/ride/index.html" class="snav-dropdown-link">🚗 Ride</a>
+            <a href="pages/dashboard/ride-driver.html" class="snav-dropdown-link snav-provider-link">🟣 Become a Driver</a>
+            <div class="snav-dropdown-divider"></div>
+            <a href="pages/community/index.html" class="snav-dropdown-link">👥 Community</a>
+            <a href="pages/pay/index.html" class="snav-dropdown-link">💳 NexaPay</a>
           </div>
         </div>
       </div>
     </div>
-
-    <div class="section-nav-item" id="snav-services">
-      <a href="pages/services/browse.html" class="snav-link">🛠️ Services</a>
-      <button class="snav-arrow" onclick="toggleDropdown('services')">▾</button>
-      <div class="snav-dropdown" id="dropdown-services">
-        <div class="snav-dropdown-inner">
-          <div class="snav-dropdown-section">
-            <div class="snav-dropdown-title">Browse</div>
-            <a href="pages/services/browse.html" class="snav-dropdown-link">🛠️ All Services</a>
-            <a href="pages/dashboard/buyer.html" class="snav-dropdown-link">📋 My Bookings</a>
-          </div>
-          <div class="snav-dropdown-divider"></div>
-          <div class="snav-dropdown-section">
-            <div class="snav-dropdown-title">For Providers</div>
-            <a href="pages/dashboard/services-provider.html" class="snav-dropdown-link snav-provider-link">🟠 Become a Provider</a>
-            <a href="pages/dashboard/services-provider.html" class="snav-dropdown-link">📊 Provider Dashboard</a>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="section-nav-item" id="snav-rent">
-      <a href="pages/rentals/browse.html" class="snav-link">🏠 Rent</a>
-      <button class="snav-arrow" onclick="toggleDropdown('rent')">▾</button>
-      <div class="snav-dropdown" id="dropdown-rent">
-        <div class="snav-dropdown-inner">
-          <div class="snav-dropdown-section">
-            <div class="snav-dropdown-title">Browse</div>
-            <a href="pages/rentals/browse.html" class="snav-dropdown-link">🏠 All Listings</a>
-          </div>
-          <div class="snav-dropdown-divider"></div>
-          <div class="snav-dropdown-section">
-            <div class="snav-dropdown-title">For Owners</div>
-            <a href="pages/dashboard/rentals-owner.html" class="snav-dropdown-link snav-provider-link">🟠 List Your Property</a>
-            <a href="pages/dashboard/rentals-owner.html" class="snav-dropdown-link">📊 Owner Dashboard</a>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="section-nav-item" id="snav-jobs">
-      <a href="pages/jobs/browse.html" class="snav-link">💼 Jobs</a>
-      <button class="snav-arrow" onclick="toggleDropdown('jobs')">▾</button>
-      <div class="snav-dropdown" id="dropdown-jobs">
-        <div class="snav-dropdown-inner">
-          <div class="snav-dropdown-section">
-            <div class="snav-dropdown-title">Browse</div>
-            <a href="pages/jobs/browse.html" class="snav-dropdown-link">💼 All Jobs</a>
-          </div>
-          <div class="snav-dropdown-divider"></div>
-          <div class="snav-dropdown-section">
-            <div class="snav-dropdown-title">For Employers</div>
-            <a href="pages/dashboard/jobs-employer.html" class="snav-dropdown-link snav-provider-link">🟠 Post a Job</a>
-            <a href="pages/dashboard/jobs-employer.html" class="snav-dropdown-link">📊 Employer Dashboard</a>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="section-nav-item" id="snav-learn">
-      <a href="pages/learn/browse.html" class="snav-link">🎓 Learn</a>
-      <button class="snav-arrow" onclick="toggleDropdown('learn')">▾</button>
-      <div class="snav-dropdown" id="dropdown-learn">
-        <div class="snav-dropdown-inner">
-          <div class="snav-dropdown-section">
-            <div class="snav-dropdown-title">Browse</div>
-            <a href="pages/learn/browse.html" class="snav-dropdown-link">🎓 All Courses</a>
-          </div>
-          <div class="snav-dropdown-divider"></div>
-          <div class="snav-dropdown-section">
-            <div class="snav-dropdown-title">For Instructors</div>
-            <a href="pages/dashboard/learn-instructor.html" class="snav-dropdown-link snav-provider-link">🟠 Become an Instructor</a>
-            <a href="pages/dashboard/learn-instructor.html" class="snav-dropdown-link">📊 Instructor Dashboard</a>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="section-nav-item" id="snav-food">
-      <a href="pages/food/browse.html" class="snav-link">🍔 Food</a>
-      <button class="snav-arrow" onclick="toggleDropdown('food')">▾</button>
-      <div class="snav-dropdown" id="dropdown-food">
-        <div class="snav-dropdown-inner">
-          <div class="snav-dropdown-section">
-            <div class="snav-dropdown-title">Browse</div>
-            <a href="pages/food/browse.html" class="snav-dropdown-link">🍔 Order Food</a>
-          </div>
-          <div class="snav-dropdown-divider"></div>
-          <div class="snav-dropdown-section">
-            <div class="snav-dropdown-title">For Restaurants</div>
-            <a href="pages/dashboard/food-restaurant.html" class="snav-dropdown-link snav-provider-link">🟠 Register Restaurant</a>
-            <a href="pages/dashboard/food-restaurant.html" class="snav-dropdown-link">📊 Restaurant Dashboard</a>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="section-nav-item" id="snav-more">
-      <span class="snav-link" style="cursor:pointer;" onclick="toggleDropdown('more')">More ▾</span>
-      <div class="snav-dropdown" id="dropdown-more" style="min-width:260px;">
-        <div class="snav-dropdown-inner">
-          <a href="pages/health/browse.html" class="snav-dropdown-link">🏥 Health</a>
-          <a href="pages/dashboard/health-provider.html" class="snav-dropdown-link snav-provider-link">🟠 List Health Service</a>
-          <div class="snav-dropdown-divider"></div>
-          <a href="pages/events/browse.html" class="snav-dropdown-link">🎉 Events</a>
-          <a href="pages/dashboard/events-organizer.html" class="snav-dropdown-link snav-provider-link">🟠 Create an Event</a>
-          <div class="snav-dropdown-divider"></div>
-          <a href="pages/travel/browse.html" class="snav-dropdown-link">✈️ Travel</a>
-          <a href="pages/dashboard/travel-agent.html" class="snav-dropdown-link snav-provider-link">🟠 List Travel Package</a>
-          <div class="snav-dropdown-divider"></div>
-          <a href="pages/ride/index.html" class="snav-dropdown-link">🚗 Ride</a>
-          <a href="pages/dashboard/ride-driver.html" class="snav-dropdown-link snav-provider-link">🟠 Become a Driver</a>
-          <div class="snav-dropdown-divider"></div>
-          <a href="pages/community/index.html" class="snav-dropdown-link">👥 Community</a>
-          <a href="pages/pay/index.html" class="snav-dropdown-link">💳 NexaPay</a>
-        </div>
-      </div>
-    </div>
-
-  </div>
-
-</nav>
-
-<!-- MOBILE MENU OVERLAY -->
-<div class="mobile-menu-overlay" id="mobile-overlay" onclick="closeMobileMenu()"></div>
-
-<!-- MOBILE SIDE MENU -->
-<div class="mobile-side-menu" id="mobile-side-menu">
-  <div class="msm-header">
-    <div class="msm-logo">Nexa<span>bay</span></div>
-    <button class="msm-close" onclick="closeMobileMenu()">✕</button>
-  </div>
-
-  <div class="msm-user" id="msm-user">
-    <a href="pages/auth/login.html" class="msm-login-btn">Login / Sign Up</a>
-  </div>
-
-  <div class="msm-links">
-    <div class="msm-section-title">Shop & Services</div>
-    <a href="pages/shop/browse.html" class="msm-link">🛍️ NexaShop</a>
-    <a href="pages/services/browse.html" class="msm-link">🛠️ NexaServices</a>
-    <a href="pages/rentals/browse.html" class="msm-link">🏠 NexaRent</a>
-    <a href="pages/jobs/browse.html" class="msm-link">💼 NexaJobs</a>
-    <a href="pages/learn/browse.html" class="msm-link">🎓 NexaLearn</a>
-    <a href="pages/food/browse.html" class="msm-link">🍔 NexaFood</a>
-    <a href="pages/health/browse.html" class="msm-link">🏥 NexaHealth</a>
-    <a href="pages/events/browse.html" class="msm-link">🎉 NexaEvents</a>
-    <a href="pages/travel/browse.html" class="msm-link">✈️ NexaTravel</a>
-    <a href="pages/ride/index.html" class="msm-link">🚗 NexaRide</a>
-    <a href="pages/pay/index.html" class="msm-link">💳 NexaPay</a>
-    <a href="pages/community/index.html" class="msm-link">👥 Community</a>
-
-    <div class="msm-section-title" style="margin-top:16px;">Become a Provider</div>
-    <a href="pages/dashboard/seller.html" class="msm-link msm-provider">🟠 Sell on Nexabay</a>
-    <a href="pages/dashboard/services-provider.html" class="msm-link msm-provider">🟠 Offer a Service</a>
-    <a href="pages/dashboard/rentals-owner.html" class="msm-link msm-provider">🟠 List Property</a>
-    <a href="pages/dashboard/jobs-employer.html" class="msm-link msm-provider">🟠 Post a Job</a>
-    <a href="pages/dashboard/learn-instructor.html" class="msm-link msm-provider">🟠 Teach a Course</a>
-    <a href="pages/dashboard/food-restaurant.html" class="msm-link msm-provider">🟠 Register Restaurant</a>
-    <a href="pages/dashboard/ride-driver.html" class="msm-link msm-provider">🟠 Drive with Nexabay</a>
-
-    <div class="msm-section-title" style="margin-top:16px;">Account</div>
-    <a href="pages/dashboard/buyer.html" class="msm-link">👤 My Account</a>
-    <a href="pages/shop/cart.html" class="msm-link">🛒 My Cart</a>
-    <a href="pages/search.html" class="msm-link">🔍 Search</a>
-    <a href="pages/help.html" class="msm-link">❓ Help Center</a>
-    <a href="pages/contact.html" class="msm-link">💬 Contact Us</a>
-    <a href="#" class="msm-link" id="msm-logout" style="display:none;" onclick="logoutUser()">🚪 Logout</a>
-  </div>
-</div>
   </nav>
 
-  <!-- FLOATING CART (mobile only) -->
-  <a href="pages/shop/cart.html" class="floating-cart" id="floating-cart">
-    🛒
-    <span class="floating-cart-count" id="floating-cart-count">0</span>
-  </a>
-  
+  <!-- MOBILE MENU OVERLAY -->
+  <div class="mobile-menu-overlay" id="mobile-overlay" onclick="closeMobileMenu()"></div>
+
+  <!-- MOBILE SIDE MENU -->
+  <div class="mobile-side-menu" id="mobile-side-menu">
+    <div class="msm-header">
+      <div class="msm-logo">Nexa<span>bay</span></div>
+      <button class="msm-close" onclick="closeMobileMenu()">✕</button>
+    </div>
+
+    <div class="msm-user" id="msm-user">
+      <a href="pages/auth/login.html" class="msm-login-btn">Login / Sign Up</a>
+    </div>
+
+    <div class="msm-links">
+      <div class="msm-section-title">Shop & Services</div>
+      <a href="pages/shop/browse.html" class="msm-link">🛍️ NexaShop</a>
+      <a href="pages/services/browse.html" class="msm-link">🛠️ NexaServices</a>
+      <a href="pages/rentals/browse.html" class="msm-link">🏠 NexaRent</a>
+      <a href="pages/jobs/browse.html" class="msm-link">💼 NexaJobs</a>
+      <a href="pages/learn/browse.html" class="msm-link">🎓 NexaLearn</a>
+      <a href="pages/food/browse.html" class="msm-link">🍔 NexaFood</a>
+      <a href="pages/health/browse.html" class="msm-link">🏥 NexaHealth</a>
+      <a href="pages/events/browse.html" class="msm-link">🎉 NexaEvents</a>
+      <a href="pages/travel/browse.html" class="msm-link">✈️ NexaTravel</a>
+      <a href="pages/ride/index.html" class="msm-link">🚗 NexaRide</a>
+      <a href="pages/pay/index.html" class="msm-link">💳 NexaPay</a>
+      <a href="pages/community/index.html" class="msm-link">👥 Community</a>
+
+      <div class="msm-section-title" style="margin-top:16px;">Become a Provider</div>
+      <a href="pages/dashboard/seller.html" class="msm-link msm-provider">🟣 Sell on Nexabay</a>
+      <a href="pages/dashboard/services-provider.html" class="msm-link msm-provider">🟣 Offer a Service</a>
+      <a href="pages/dashboard/rentals-owner.html" class="msm-link msm-provider">🟣 List Property</a>
+      <a href="pages/dashboard/jobs-employer.html" class="msm-link msm-provider">🟣 Post a Job</a>
+      <a href="pages/dashboard/learn-instructor.html" class="msm-link msm-provider">🟣 Teach a Course</a>
+      <a href="pages/dashboard/food-restaurant.html" class="msm-link msm-provider">🟣 Register Restaurant</a>
+      <a href="pages/dashboard/ride-driver.html" class="msm-link msm-provider">🟣 Drive with Nexabay</a>
+
+      <div class="msm-section-title" style="margin-top:16px;">Account</div>
+      <a href="pages/dashboard/buyer.html" class="msm-link">👤 My Account</a>
+      <a href="pages/shop/cart.html" class="msm-link">🛒 My Cart</a>
+      <a href="pages/search.html" class="msm-link">🔍 Search</a>
+      <a href="pages/help.html" class="msm-link">❓ Help Center</a>
+      <a href="pages/contact.html" class="msm-link">💬 Contact Us</a>
+      <a href="#" class="msm-link" id="msm-logout" style="display:none;" onclick="logoutUser()">🚪 Logout</a>
+    </div>
+  </div>
+
   <!-- CATEGORY BAR -->
   <div class="cat-bar">
     <div class="cat-inner">
@@ -267,31 +250,24 @@
   <section class="hero">
     <div class="hero-inner">
       <div class="hero-text">
-        <div class="hero-badge">🌍 Africa's #1 Everything Platform</div>
+        <div class="hero-badge">🇳🇬 Built for Nigeria</div>
         <h1>Buy. Sell. Rent.<br/>Learn. Earn.</h1>
-        <p>Shop products, hire services, rent property, learn skills and find jobs — all in one place.</p>
+        <p>Shop products, hire services, rent property, learn skills and find jobs — all in one place, all secured by escrow.</p>
         <div class="hero-btns">
           <a href="pages/shop/browse.html" class="btn-primary">Start Shopping</a>
           <a href="pages/auth/become-provider.html" class="btn-outline">Become a Seller</a>
         </div>
-        <div class="hero-stats">
-          <div class="hstat"><span>50K+</span>Products</div>
-          <div class="hstat"><span>10K+</span>Sellers</div>
-          <div class="hstat"><span>200K+</span>Users</div>
-          <div class="hstat"><span>36</span>States</div>
-        </div>
       </div>
       <div class="hero-image">
-        <div class="float-card fc1">📦 Order Delivered!</div>
-        <div class="float-card fc2">⭐ 4.9 Rating</div>
-        <div class="float-card fc3">🔒 Secure Payment</div>
+        <div class="float-card fc1">🔒 Escrow Protected</div>
+        <div class="float-card fc2">✅ Verified Sellers</div>
         <div class="hero-phone">
           <div class="phone-screen">
             <div class="ps-logo">Nexabay</div>
-           <div class="ps-item">🛍️ Shop anything in Nigeria</div>
-                <div class="ps-item">🚗 Book a ride near you</div>
-                <div class="ps-item">🎓 Learn a new skill today</div>
-                <div class="ps-item">🏥 Book a doctor instantly</div>
+            <div class="ps-item">🛍️ Shop anything in Nigeria</div>
+            <div class="ps-item">🚗 Book a ride near you</div>
+            <div class="ps-item">🎓 Learn a new skill today</div>
+            <div class="ps-item">🏥 Book a doctor instantly</div>
             <div class="ps-btn">Browse All →</div>
           </div>
         </div>
@@ -299,125 +275,137 @@
     </div>
   </section>
 
-
-
-  <!-- SECTIONS -->
+  <!-- SERVICES GRID -->
   <section class="sections-area">
     <div class="container">
       <h2 class="section-title">Everything You Need, One Platform</h2>
       <div class="sections-grid">
-        <a href="pages/shop/browse.html" class="sec-card" style="--c:#1a73e8">
+        <a href="pages/shop/browse.html" class="sec-card">
           <div class="sec-icon">🛍️</div>
           <div class="sec-name">NexaShop</div>
           <div class="sec-desc">Buy & sell products</div>
-          <div class="sec-count">50,000+ items</div>
         </a>
-        <a href="pages/services/browse.html" class="sec-card" style="--c:#ff6b00">
+        <a href="pages/services/browse.html" class="sec-card">
           <div class="sec-icon">🔧</div>
           <div class="sec-name">NexaServices</div>
           <div class="sec-desc">Hire professionals</div>
-          <div class="sec-count">5,000+ providers</div>
         </a>
-        <a href="pages/rentals/browse.html" class="sec-card" style="--c:#00c851">
+        <a href="pages/rentals/browse.html" class="sec-card">
           <div class="sec-icon">🏠</div>
           <div class="sec-name">NexaRent</div>
           <div class="sec-desc">Rent property & items</div>
-          <div class="sec-count">8,000+ listings</div>
         </a>
-        <a href="pages/learn/browse.html" class="sec-card" style="--c:#9c27b0">
+        <a href="pages/learn/browse.html" class="sec-card">
           <div class="sec-icon">🎓</div>
           <div class="sec-name">NexaLearn</div>
           <div class="sec-desc">Courses & tutors</div>
-          <div class="sec-count">2,000+ courses</div>
         </a>
-        <a href="pages/jobs/browse.html" class="sec-card" style="--c:#e91e63">
+        <a href="pages/jobs/browse.html" class="sec-card">
           <div class="sec-icon">💼</div>
           <div class="sec-name">NexaJobs</div>
           <div class="sec-desc">Find work or hire</div>
-          <div class="sec-count">12,000+ jobs</div>
         </a>
-        <a href="pages/food/browse.html" class="sec-card" style="--c:#ff5722">
+        <a href="pages/food/browse.html" class="sec-card">
           <div class="sec-icon">🍔</div>
           <div class="sec-name">NexaFood</div>
           <div class="sec-desc">Order food & groceries</div>
-          <div class="sec-count">1,000+ restaurants</div>
         </a>
-        <a href="pages/health/browse.html" class="sec-card" style="--c:#009688">
+        <a href="pages/health/browse.html" class="sec-card">
           <div class="sec-icon">🏥</div>
           <div class="sec-name">NexaHealth</div>
           <div class="sec-desc">Book doctors & labs</div>
-          <div class="sec-count">3,000+ providers</div>
         </a>
-        <a href="pages/events/browse.html" class="sec-card" style="--c:#ffc107">
+        <a href="pages/events/browse.html" class="sec-card">
           <div class="sec-icon">🎉</div>
           <div class="sec-name">NexaEvents</div>
           <div class="sec-desc">Tickets & entertainment</div>
-          <div class="sec-count">500+ events</div>
         </a>
-        <a href="pages/travel/browse.html" class="sec-card" style="--c:#2196f3">
+        <a href="pages/travel/browse.html" class="sec-card">
           <div class="sec-icon">✈️</div>
           <div class="sec-name">NexaTravel</div>
           <div class="sec-desc">Hotels & flights</div>
-          <div class="sec-count">10,000+ options</div>
         </a>
-        <a href="pages/pay/index.html" class="sec-card" style="--c:#4caf50">
+        <a href="pages/pay/index.html" class="sec-card">
           <div class="sec-icon">🏦</div>
           <div class="sec-name">NexaPay</div>
           <div class="sec-desc">Send money & pay bills</div>
-          <div class="sec-count">Instant transfers</div>
         </a>
-       <a href="pages/ride/index.html" class="sec-card" style="--c:#607d8b">
+        <a href="pages/ride/index.html" class="sec-card">
           <div class="sec-icon">🚗</div>
           <div class="sec-name">NexaRide</div>
           <div class="sec-desc">Book rides & delivery</div>
-          <div class="sec-count">Available 24/7</div>
         </a>
-       <a href="pages/community/index.html" class="sec-card" style="--c:#795548">
+        <a href="pages/community/index.html" class="sec-card">
           <div class="sec-icon">🤝</div>
           <div class="sec-name">NexaCommunity</div>
           <div class="sec-desc">Network & forums</div>
-          <div class="sec-count">50,000+ members</div>
         </a>
       </div>
     </div>
   </section>
 
+  <!-- HOW IT WORKS -->
+  <section class="how-section">
+    <div class="container">
+      <h2 class="section-title">How Nexabay Works</h2>
+      <div class="how-grid">
+        <div class="how-card">
+          <div class="how-num">1</div>
+          <h3>Browse & Choose</h3>
+          <p>Explore products, services, rentals, jobs and more from sellers across Nigeria.</p>
+        </div>
+        <div class="how-card">
+          <div class="how-num">2</div>
+          <h3>Pay Securely</h3>
+          <p>Your payment is held safely in escrow — sellers only get paid after you confirm delivery.</p>
+        </div>
+        <div class="how-card">
+          <div class="how-num">3</div>
+          <h3>Receive & Enjoy</h3>
+          <p>Track your order, receive your item or service, and rate your experience.</p>
+        </div>
+      </div>
+    </div>
+  </section>
 
-  <!-- WHY NEXABAY -->
-  <section class="why-section">
+  <!-- TRUST BADGES -->
+  <section class="trust-section">
     <div class="container">
       <h2 class="section-title">Why Choose Nexabay?</h2>
-      <div class="why-grid">
-        <div class="why-card">
-          <div class="why-icon">🔒</div>
+      <div class="trust-grid">
+        <div class="trust-card">
+          <div class="trust-icon">🔒</div>
           <h3>Secure Escrow Payment</h3>
-          <p>Your money is held safely until you confirm delivery. Never lose money to fraud again.</p>
+          <p>Your money is held safely until you confirm delivery.</p>
         </div>
-        <div class="why-card">
-          <div class="why-icon">✅</div>
+        <div class="trust-card">
+          <div class="trust-icon">✅</div>
           <h3>Verified Sellers</h3>
-          <p>Every seller goes through ID verification. Shop with confidence from trusted vendors.</p>
+          <p>Every seller is reviewed by our admin team before going live.</p>
         </div>
-        <div class="why-card">
-          <div class="why-icon">💬</div>
-          <h3>Live Chat</h3>
-          <p>Chat directly with sellers before you buy. No middlemen, no stress.</p>
+        <div class="trust-card">
+          <div class="trust-icon">💬</div>
+          <h3>Direct Chat</h3>
+          <p>Message sellers directly before you buy — no middlemen.</p>
         </div>
-        <div class="why-card">
-          <div class="why-icon">🚀</div>
-          <h3>Fast Delivery</h3>
-          <p>Same day delivery in major cities. Track your order live every step.</p>
+        <div class="trust-card">
+          <div class="trust-icon">📱</div>
+          <h3>Everything In One App</h3>
+          <p>Shop, rent, learn, find jobs and order food — without leaving Nexabay.</p>
         </div>
-        <div class="why-card">
-          <div class="why-icon">💰</div>
-          <h3>Best Prices</h3>
-          <p>Compare prices from multiple sellers. Negotiate directly and get the best deal.</p>
-        </div>
-        <div class="why-card">
-          <div class="why-icon">📱</div>
-          <h3>Everything In One</h3>
-          <p>Shop, rent, learn, find jobs, order food — without leaving Nexabay.</p>
-        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LATEST PRODUCTS (real data) -->
+  <section class="latest-section">
+    <div class="container">
+      <div class="sec-header">
+        <h2 class="section-title">Latest on Nexabay</h2>
+        <a href="pages/shop/browse.html" class="see-all">See All →</a>
+      </div>
+      <div class="products-grid" id="featured-products">
+        <div class="latest-loading">Loading latest products...</div>
       </div>
     </div>
   </section>
@@ -428,73 +416,14 @@
       <div class="seller-cta-inner">
         <div class="scta-text">
           <h2>Start Selling on Nexabay Today</h2>
-          <p>Join 10,000+ sellers making money daily. Set up your shop in 5 minutes — completely free.</p>
+          <p>Set up your shop in minutes — completely free. Reach buyers across Nigeria and get paid directly to your bank.</p>
           <ul class="scta-list">
             <li>✅ Free shop setup</li>
-            <li>✅ Reach millions of buyers</li>
-            <li>✅ Get paid directly to your bank</li>
             <li>✅ Sell products, services or courses</li>
+            <li>✅ Get paid directly to your bank</li>
+            <li>✅ Protected by Nexabay Escrow</li>
           </ul>
           <a href="#" class="btn-primary" onclick="goToProviderDashboard('pages/dashboard/seller.html'); return false;">Open Your Shop Free →</a>
-        </div>
-        <div class="scta-stats">
-          <div class="scta-stat"><span>₦2.5M</span>Avg seller monthly earnings</div>
-          <div class="scta-stat"><span>10K+</span>Active sellers</div>
-          <div class="scta-stat"><span>5 min</span>To set up your shop</div>
-          <div class="scta-stat"><span>Free</span>To get started</div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- TESTIMONIALS -->
-  <section class="testimonials">
-    <div class="container">
-      <h2 class="section-title">What People Are Saying</h2>
-      <div class="testi-grid">
-        <div class="testi-card">
-          <div class="testi-stars">⭐⭐⭐⭐⭐</div>
-          <p>"I sold my first product within 24 hours of joining Nexabay. The platform is amazing!"</p>
-          <div class="testi-author">
-            <div class="testi-avatar">AO</div>
-            <div><b>Adewale Okon</b><br/><small>Seller, Lagos</small></div>
-          </div>
-        </div>
-        <div class="testi-card">
-          <div class="testi-stars">⭐⭐⭐⭐⭐</div>
-          <p>"Found a plumber, ordered food and paid my NEPA bill all on one app. Life changing!"</p>
-          <div class="testi-author">
-            <div class="testi-avatar">FK</div>
-            <div><b>Fatima Kabir</b><br/><small>Buyer, Abuja</small></div>
-          </div>
-        </div>
-        <div class="testi-card">
-          <div class="testi-stars">⭐⭐⭐⭐⭐</div>
-          <p>"I teach coding on NexaLearn and now earn more than my 9-5 job. Best decision ever."</p>
-          <div class="testi-author">
-            <div class="testi-avatar">CE</div>
-            <div><b>Chidi Eze</b><br/><small>Tutor, Port Harcourt</small></div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- APP DOWNLOAD -->
-  <section class="app-section">
-    <div class="container">
-      <div class="app-text">
-        <h2>Get the Nexabay App</h2>
-        <p>Shop, sell and manage everything from your phone.</p>
-        <div class="app-btns">
-          <a href="#" class="app-btn">
-            <span class="app-btn-icon">▶</span>
-            <div><small>Get it on</small><br/><b>Google Play</b></div>
-          </a>
-          <a href="#" class="app-btn">
-            <span class="app-btn-icon">🍎</span>
-            <div><small>Download on</small><br/><b>App Store</b></div>
-          </a>
         </div>
       </div>
     </div>
@@ -511,7 +440,6 @@
             <a href="https://www.fb.com/l/6lp1kJRRR">📘 Facebook</a>
             <a href="https://x.com/NexaBay">🐦 Twitter</a>
             <a href="https://www.instagram.com/nexabay_?igsh=Y2l5OTgzajExaGdu">📸 Instagram</a>
-            <a href="#">▶ YouTube</a>
           </div>
         </div>
         <div class="footer-col">
@@ -546,7 +474,7 @@
         </div>
       </div>
       <div class="footer-bottom">
-        <p>© 2025 Nexabay. All rights reserved. Made with ❤️ in Africa.</p>
+        <p>© 2026 Nexabay. All rights reserved. Made in Nigeria.</p>
         <div class="payment-icons">
           <span>💳 Paystack</span>
           <span>🏦 Bank Transfer</span>
@@ -555,23 +483,23 @@
       </div>
     </div>
   </footer>
-  
+
   <script>
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('/sw.js')
-      .then(function() { console.log('Nexabay SW registered'); })
-      .catch(function(err) { console.log('SW error:', err); });
-  }
-</script>
-  
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-<script src="js/firebase/config.js"></script>
-<script src="js/firebase/auth.js"></script>
-<script src="js/firebase/products.js"></script>
-<script src="js/firebase/community.js"></script>
-<script src="js/firebase/orders.js"></script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/sw.js')
+        .then(function() { console.log('Nexabay SW registered'); })
+        .catch(function(err) { console.log('SW error:', err); });
+    }
+  </script>
+
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="js/firebase/config.js"></script>
+  <script src="js/firebase/auth.js"></script>
+  <script src="js/firebase/products.js"></script>
+  <script src="js/firebase/community.js"></script>
+  <script src="js/firebase/orders.js"></script>
   <script src="js/core/main.js"></script>
   <script src="js/core/chat-widget.js"></script>
   <script src="js/firebase/support.js"></script>
