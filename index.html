@@ -1,580 +1,1464 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <link rel="stylesheet" href="css/chat-widget.css">
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="Nexabay — Nigeria's super app. Shop, hire services, rent property, learn skills, find jobs, order food, book doctors and more. All in one place."/>
   <title>Nexabay — Africa's Everything Platform</title>
-  <link rel="stylesheet" href="css/main.css"/>
-  <link rel="stylesheet" href="css/home.css"/>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700;900&display=swap" rel="stylesheet"/>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet"/>
-  <link rel="manifest" href="/manifest.json"/>
-<meta name="theme-color" content="#ff6b00"/>
-<meta name="apple-mobile-web-app-capable" content="yes"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,700&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --brand:    #7c3aed;
+      --brand2:   #6d28d9;
+      --accent:   #f97316;
+      --accent2:  #ea580c;
+      --dark:     #09090b;
+      --dark2:    #18181b;
+      --dark3:    #27272a;
+      --muted:    #71717a;
+      --border:   #3f3f46;
+      --light:    #fafafa;
+      --white:    #ffffff;
+      --success:  #22c55e;
+    }
+    *{box-sizing:border-box;margin:0;padding:0;}
+    html{scroll-behavior:smooth;}
+    body{
+      background:var(--dark);
+      color:var(--white);
+      font-family:'Inter',sans-serif;
+      -webkit-font-smoothing:antialiased;
+      overflow-x:hidden;
+    }
+
+    /* ── NAVBAR ── */
+    .nav{
+      position:fixed;top:0;left:0;right:0;
+      z-index:500;
+      background:rgba(9,9,11,0.85);
+      backdrop-filter:blur(20px);
+      -webkit-backdrop-filter:blur(20px);
+      border-bottom:1px solid rgba(255,255,255,0.06);
+      transition:background 0.3s;
+    }
+    .nav-row{
+      max-width:1100px;
+      margin:0 auto;
+      padding:0 20px;
+      height:62px;
+      display:flex;
+      align-items:center;
+      gap:12px;
+    }
+    .nav-logo{
+      font-weight:900;
+      font-size:1.3em;
+      text-decoration:none;
+      color:var(--white);
+      flex-shrink:0;
+    }
+    .nav-logo em{color:var(--accent);font-style:normal;}
+    .nav-search{
+      flex:1;
+      max-width:380px;
+      display:flex;
+      background:rgba(255,255,255,0.07);
+      border:1px solid rgba(255,255,255,0.1);
+      border-radius:10px;
+      overflow:hidden;
+      transition:border-color 0.2s;
+    }
+    .nav-search:focus-within{border-color:rgba(124,58,237,0.5);}
+    .nav-search input{
+      flex:1;
+      background:transparent;
+      border:none;
+      outline:none;
+      padding:10px 14px;
+      color:var(--white);
+      font-size:0.85em;
+      font-family:'Inter',sans-serif;
+    }
+    .nav-search input::placeholder{color:rgba(255,255,255,0.35);}
+    .nav-search button{
+      background:var(--accent);
+      border:none;
+      padding:10px 14px;
+      cursor:pointer;
+      font-size:0.9em;
+      flex-shrink:0;
+    }
+    .nav-right{
+      margin-left:auto;
+      display:flex;
+      align-items:center;
+      gap:10px;
+      flex-shrink:0;
+    }
+    .nav-cart{
+      position:relative;
+      color:var(--white);
+      font-size:1.2em;
+      text-decoration:none;
+    }
+    .nav-cart-badge{
+      position:absolute;
+      top:-6px;right:-6px;
+      background:var(--accent);
+      color:white;
+      border-radius:50%;
+      width:16px;height:16px;
+      font-size:0.58em;
+      display:flex;align-items:center;justify-content:center;
+      font-weight:700;
+    }
+    .nav-login{
+      color:rgba(255,255,255,0.7);
+      text-decoration:none;
+      font-size:0.85em;
+      font-weight:600;
+      display:none;
+    }
+    .nav-signup{
+      background:var(--brand);
+      color:white;
+      padding:8px 16px;
+      border-radius:8px;
+      text-decoration:none;
+      font-size:0.82em;
+      font-weight:700;
+      white-space:nowrap;
+    }
+    .nav-hamburger{
+      background:none;
+      border:none;
+      color:white;
+      font-size:1.3em;
+      cursor:pointer;
+      padding:4px;
+    }
+
+    /* ── SECTION NAV ── */
+    .section-nav{
+      background:rgba(9,9,11,0.9);
+      border-bottom:1px solid rgba(255,255,255,0.06);
+      overflow-x:auto;
+      scrollbar-width:none;
+    }
+    .section-nav::-webkit-scrollbar{display:none;}
+    .section-nav-inner{
+      max-width:1100px;
+      margin:0 auto;
+      padding:0 20px;
+      display:flex;
+      gap:0;
+    }
+    .snav-item{
+      display:flex;
+      align-items:center;
+      gap:4px;
+      padding:11px 14px;
+      color:rgba(255,255,255,0.55);
+      text-decoration:none;
+      font-size:0.8em;
+      font-weight:600;
+      white-space:nowrap;
+      border-bottom:2px solid transparent;
+      transition:all 0.15s;
+      flex-shrink:0;
+    }
+    .snav-item:hover{
+      color:white;
+      border-bottom-color:var(--accent);
+    }
+
+    /* ── MOBILE MENU ── */
+    .mobile-overlay{
+      display:none;
+      position:fixed;top:0;left:0;width:100%;height:100%;
+      background:rgba(0,0,0,0.6);
+      z-index:700;
+    }
+    .mobile-overlay.open{display:block;}
+    .mobile-menu{
+      position:fixed;
+      top:0;right:-300px;
+      width:280px;height:100%;
+      background:var(--dark2);
+      z-index:800;
+      transition:right 0.3s ease;
+      overflow-y:auto;
+      border-left:1px solid var(--border);
+    }
+    .mobile-menu.open{right:0;}
+    .mm-head{
+      background:var(--dark);
+      padding:16px 20px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      border-bottom:1px solid var(--border);
+    }
+    .mm-logo{font-weight:900;font-size:1.1em;}
+    .mm-logo em{color:var(--accent);font-style:normal;}
+    .mm-close{background:none;border:none;color:white;font-size:1.2em;cursor:pointer;}
+    .mm-section{padding:8px 0;}
+    .mm-label{
+      padding:10px 20px 4px;
+      font-size:0.68em;
+      font-weight:800;
+      color:var(--muted);
+      text-transform:uppercase;
+      letter-spacing:0.8px;
+    }
+    .mm-link{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      padding:11px 20px;
+      color:rgba(255,255,255,0.8);
+      text-decoration:none;
+      font-size:0.88em;
+      font-weight:500;
+      border-bottom:1px solid rgba(255,255,255,0.04);
+      transition:background 0.1s;
+    }
+    .mm-link:hover{background:rgba(255,255,255,0.05);}
+    .mm-link.provider{color:var(--accent);font-weight:700;}
+    .mm-cta{
+      margin:16px 20px;
+      display:block;
+      background:var(--brand);
+      color:white;
+      text-align:center;
+      padding:12px;
+      border-radius:10px;
+      text-decoration:none;
+      font-weight:700;
+      font-size:0.9em;
+    }
+
+    /* ── HERO ── */
+    .hero{
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      position:relative;
+      overflow:hidden;
+      padding-top:110px;
+    }
+    .hero-bg{
+      position:absolute;
+      inset:0;
+      background:
+        radial-gradient(ellipse 80% 60% at 50% 0%, rgba(124,58,237,0.25) 0%, transparent 60%),
+        radial-gradient(ellipse 50% 50% at 80% 50%, rgba(249,115,22,0.12) 0%, transparent 50%),
+        var(--dark);
+    }
+    .hero-grid-overlay{
+      position:absolute;
+      inset:0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+      background-size:40px 40px;
+      mask-image:radial-gradient(ellipse 80% 80% at 50% 50%, black 30%, transparent 100%);
+    }
+    .hero-inner{
+      max-width:1100px;
+      margin:0 auto;
+      padding:40px 20px 80px;
+      position:relative;
+      z-index:1;
+      display:grid;
+      grid-template-columns:1fr;
+      gap:40px;
+      text-align:center;
+    }
+    .hero-badge{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      background:rgba(124,58,237,0.15);
+      border:1px solid rgba(124,58,237,0.3);
+      color:rgba(255,255,255,0.85);
+      padding:8px 16px;
+      border-radius:100px;
+      font-size:0.8em;
+      font-weight:600;
+      margin-bottom:20px;
+    }
+    .hero-badge span{
+      width:6px;height:6px;
+      border-radius:50%;
+      background:var(--success);
+      animation:pulse 2s infinite;
+    }
+    @keyframes pulse{
+      0%,100%{opacity:1;}
+      50%{opacity:0.4;}
+    }
+    .hero h1{
+      font-size:clamp(2.2em,8vw,4em);
+      font-weight:900;
+      line-height:1.1;
+      letter-spacing:-0.02em;
+      margin-bottom:20px;
+    }
+    .hero h1 .grad{
+      background:linear-gradient(135deg,#a78bfa,#f97316);
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+      background-clip:text;
+    }
+    .hero-sub{
+      font-size:clamp(1em,3vw,1.15em);
+      color:rgba(255,255,255,0.6);
+      line-height:1.7;
+      max-width:520px;
+      margin:0 auto 32px;
+    }
+    .hero-actions{
+      display:flex;
+      gap:12px;
+      justify-content:center;
+      flex-wrap:wrap;
+    }
+    .btn-primary{
+      background:linear-gradient(135deg,var(--brand),var(--accent));
+      color:white;
+      padding:14px 28px;
+      border-radius:12px;
+      text-decoration:none;
+      font-weight:700;
+      font-size:0.95em;
+      border:none;
+      cursor:pointer;
+      font-family:'Inter',sans-serif;
+      display:inline-block;
+      box-shadow:0 8px 32px rgba(124,58,237,0.3);
+      transition:transform 0.2s,box-shadow 0.2s;
+    }
+    .btn-primary:hover{transform:translateY(-2px);box-shadow:0 12px 40px rgba(124,58,237,0.4);}
+    .btn-outline{
+      background:transparent;
+      color:white;
+      padding:14px 28px;
+      border-radius:12px;
+      text-decoration:none;
+      font-weight:700;
+      font-size:0.95em;
+      border:1.5px solid rgba(255,255,255,0.2);
+      cursor:pointer;
+      font-family:'Inter',sans-serif;
+      display:inline-block;
+      transition:border-color 0.2s,background 0.2s;
+    }
+    .btn-outline:hover{border-color:rgba(255,255,255,0.4);background:rgba(255,255,255,0.05);}
+    .hero-trust{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:20px;
+      flex-wrap:wrap;
+      margin-top:8px;
+    }
+    .hero-trust-item{
+      display:flex;
+      align-items:center;
+      gap:6px;
+      font-size:0.8em;
+      color:rgba(255,255,255,0.5);
+    }
+    .hero-trust-item strong{color:rgba(255,255,255,0.8);}
+
+    /* ── LAUNCH BANNER ── */
+    .launch-banner{
+      background:linear-gradient(135deg,rgba(124,58,237,0.2),rgba(249,115,22,0.2));
+      border:1px solid rgba(124,58,237,0.3);
+      border-radius:16px;
+      padding:20px 24px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:16px;
+      flex-wrap:wrap;
+      margin:0 20px;
+    }
+    .launch-banner-left h3{
+      font-size:1.1em;
+      font-weight:800;
+      margin-bottom:4px;
+    }
+    .launch-banner-left p{
+      font-size:0.82em;
+      color:rgba(255,255,255,0.65);
+    }
+    .launch-date{
+      background:var(--accent);
+      color:white;
+      padding:10px 20px;
+      border-radius:10px;
+      font-weight:800;
+      font-size:0.9em;
+      white-space:nowrap;
+      text-align:center;
+    }
+
+    /* ── SECTION WRAPPER ── */
+    .section{
+      max-width:1100px;
+      margin:0 auto;
+      padding:60px 20px;
+    }
+    .section-eyebrow{
+      font-size:0.75em;
+      font-weight:700;
+      text-transform:uppercase;
+      letter-spacing:1.5px;
+      color:var(--accent);
+      margin-bottom:10px;
+    }
+    .section-title{
+      font-size:clamp(1.5em,5vw,2.2em);
+      font-weight:900;
+      line-height:1.2;
+      letter-spacing:-0.02em;
+      margin-bottom:12px;
+    }
+    .section-sub{
+      font-size:0.92em;
+      color:rgba(255,255,255,0.55);
+      line-height:1.7;
+      max-width:480px;
+    }
+    .section-header{
+      margin-bottom:36px;
+    }
+
+    /* ── SERVICES GRID ── */
+    .services-grid{
+      display:grid;
+      grid-template-columns:repeat(2,1fr);
+      gap:10px;
+    }
+    .service-card{
+      background:var(--dark2);
+      border:1px solid var(--border);
+      border-radius:16px;
+      padding:20px 16px;
+      text-decoration:none;
+      color:var(--white);
+      transition:all 0.2s;
+      display:block;
+      position:relative;
+      overflow:hidden;
+    }
+    .service-card::before{
+      content:'';
+      position:absolute;
+      inset:0;
+      background:linear-gradient(135deg,var(--card-color, rgba(124,58,237,0.08)),transparent);
+      opacity:0;
+      transition:opacity 0.2s;
+    }
+    .service-card:hover{
+      border-color:rgba(255,255,255,0.15);
+      transform:translateY(-3px);
+      box-shadow:0 8px 32px rgba(0,0,0,0.3);
+    }
+    .service-card:hover::before{opacity:1;}
+    .service-card.featured{
+      grid-column:span 2;
+      background:linear-gradient(135deg,rgba(124,58,237,0.2),rgba(124,58,237,0.05));
+      border-color:rgba(124,58,237,0.3);
+      display:flex;
+      align-items:center;
+      gap:20px;
+      padding:24px 20px;
+    }
+    .service-icon{
+      width:48px;height:48px;
+      border-radius:12px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:1.4em;
+      margin-bottom:12px;
+      flex-shrink:0;
+    }
+    .service-card.featured .service-icon{
+      width:60px;height:60px;
+      border-radius:16px;
+      font-size:1.8em;
+      margin-bottom:0;
+    }
+    .service-name{
+      font-weight:700;
+      font-size:0.9em;
+      margin-bottom:4px;
+    }
+    .service-desc{
+      font-size:0.75em;
+      color:rgba(255,255,255,0.5);
+      line-height:1.4;
+    }
+    .service-badge{
+      display:inline-block;
+      background:rgba(249,115,22,0.15);
+      color:var(--accent);
+      border:1px solid rgba(249,115,22,0.2);
+      padding:2px 8px;
+      border-radius:4px;
+      font-size:0.65em;
+      font-weight:700;
+      margin-top:6px;
+    }
+
+    /* ── PRODUCTS SECTION ── */
+    .products-wrap{
+      background:var(--dark);
+      border-top:1px solid var(--border);
+      border-bottom:1px solid var(--border);
+    }
+    .products-grid{
+      display:grid;
+      grid-template-columns:repeat(2,1fr);
+      gap:10px;
+    }
+    .product-card{
+      background:var(--dark2);
+      border:1px solid var(--border);
+      border-radius:14px;
+      overflow:hidden;
+      cursor:pointer;
+      transition:all 0.2s;
+    }
+    .product-card:hover{
+      border-color:rgba(255,255,255,0.15);
+      transform:translateY(-2px);
+      box-shadow:0 6px 24px rgba(0,0,0,0.3);
+    }
+    .product-img{
+      width:100%;
+      aspect-ratio:1;
+      background:var(--dark3);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:3em;
+      position:relative;
+      overflow:hidden;
+    }
+    .product-img img{width:100%;height:100%;object-fit:cover;}
+    .product-discount{
+      position:absolute;
+      top:8px;left:8px;
+      background:#ef4444;
+      color:white;
+      padding:2px 7px;
+      border-radius:4px;
+      font-size:0.65em;
+      font-weight:800;
+    }
+    .product-body{padding:10px 12px 12px;}
+    .product-name{
+      font-size:0.82em;
+      font-weight:600;
+      color:var(--white);
+      margin-bottom:4px;
+      display:-webkit-box;
+      -webkit-line-clamp:2;
+      -webkit-box-orient:vertical;
+      overflow:hidden;
+      line-height:1.4;
+    }
+    .product-price{
+      font-size:0.95em;
+      font-weight:800;
+      color:var(--accent);
+    }
+    .product-old{
+      font-size:0.72em;
+      color:var(--muted);
+      text-decoration:line-through;
+      margin-left:4px;
+    }
+    .product-loc{
+      font-size:0.7em;
+      color:var(--muted);
+      margin-top:3px;
+    }
+
+    /* ── HOW IT WORKS ── */
+    .how-bg{
+      background:linear-gradient(135deg,rgba(124,58,237,0.08),rgba(9,9,11,0));
+      border-top:1px solid var(--border);
+    }
+    .steps-grid{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:16px;
+    }
+    .step-card{
+      background:var(--dark2);
+      border:1px solid var(--border);
+      border-radius:16px;
+      padding:24px 20px;
+      display:flex;
+      gap:16px;
+      align-items:flex-start;
+      transition:border-color 0.2s;
+    }
+    .step-card:hover{border-color:rgba(124,58,237,0.4);}
+    .step-num{
+      width:40px;height:40px;
+      border-radius:10px;
+      background:linear-gradient(135deg,var(--brand),var(--accent));
+      color:white;
+      display:flex;align-items:center;justify-content:center;
+      font-weight:900;
+      font-size:1em;
+      flex-shrink:0;
+    }
+    .step-title{
+      font-weight:700;
+      font-size:0.95em;
+      margin-bottom:6px;
+    }
+    .step-desc{
+      font-size:0.82em;
+      color:rgba(255,255,255,0.5);
+      line-height:1.6;
+    }
+
+    /* ── TRUST SECTION ── */
+    .trust-grid{
+      display:grid;
+      grid-template-columns:repeat(2,1fr);
+      gap:10px;
+    }
+    .trust-card{
+      background:var(--dark2);
+      border:1px solid var(--border);
+      border-radius:14px;
+      padding:20px 16px;
+      text-align:center;
+    }
+    .trust-icon{font-size:2em;margin-bottom:10px;}
+    .trust-title{
+      font-weight:700;
+      font-size:0.88em;
+      margin-bottom:5px;
+    }
+    .trust-desc{
+      font-size:0.75em;
+      color:rgba(255,255,255,0.5);
+      line-height:1.5;
+    }
+
+    /* ── CATEGORIES ── */
+    .cats-grid{
+      display:flex;
+      gap:8px;
+      overflow-x:auto;
+      padding-bottom:4px;
+      scrollbar-width:none;
+    }
+    .cats-grid::-webkit-scrollbar{display:none;}
+    .cat-pill{
+      background:var(--dark2);
+      border:1px solid var(--border);
+      border-radius:100px;
+      padding:8px 16px;
+      color:rgba(255,255,255,0.7);
+      font-size:0.8em;
+      font-weight:600;
+      white-space:nowrap;
+      cursor:pointer;
+      text-decoration:none;
+      flex-shrink:0;
+      transition:all 0.15s;
+    }
+    .cat-pill:hover,.cat-pill.active{
+      background:var(--brand);
+      border-color:var(--brand);
+      color:white;
+    }
+
+    /* ── CTA SECTION ── */
+    .cta-wrap{
+      background:linear-gradient(135deg,var(--brand2),#4c1d95);
+      border-radius:20px;
+      padding:40px 24px;
+      text-align:center;
+      position:relative;
+      overflow:hidden;
+      margin:0 20px 60px;
+    }
+    .cta-wrap::before{
+      content:'';
+      position:absolute;
+      top:-50%;right:-20%;
+      width:300px;height:300px;
+      border-radius:50%;
+      background:rgba(249,115,22,0.15);
+      pointer-events:none;
+    }
+    .cta-wrap h2{
+      font-size:clamp(1.4em,5vw,2em);
+      font-weight:900;
+      margin-bottom:10px;
+      position:relative;
+    }
+    .cta-wrap p{
+      font-size:0.9em;
+      color:rgba(255,255,255,0.7);
+      margin-bottom:24px;
+      position:relative;
+    }
+    .cta-btns{
+      display:flex;
+      gap:12px;
+      justify-content:center;
+      flex-wrap:wrap;
+      position:relative;
+    }
+    .cta-btn-white{
+      background:white;
+      color:var(--brand2);
+      padding:13px 24px;
+      border-radius:10px;
+      font-weight:800;
+      font-size:0.9em;
+      text-decoration:none;
+      display:inline-block;
+    }
+    .cta-btn-ghost{
+      background:rgba(255,255,255,0.15);
+      color:white;
+      padding:13px 24px;
+      border-radius:10px;
+      font-weight:700;
+      font-size:0.9em;
+      text-decoration:none;
+      display:inline-block;
+      border:1.5px solid rgba(255,255,255,0.2);
+    }
+
+    /* ── FOOTER ── */
+    .footer{
+      background:var(--dark2);
+      border-top:1px solid var(--border);
+    }
+    .footer-inner{
+      max-width:1100px;
+      margin:0 auto;
+      padding:40px 20px 20px;
+    }
+    .footer-top{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:24px;
+      margin-bottom:32px;
+    }
+    .footer-brand-col .footer-logo{
+      font-weight:900;
+      font-size:1.2em;
+      margin-bottom:8px;
+    }
+    .footer-brand-col .footer-logo em{color:var(--accent);font-style:normal;}
+    .footer-brand-col p{
+      font-size:0.8em;
+      color:var(--muted);
+      line-height:1.6;
+      margin-bottom:12px;
+    }
+    .footer-contact{
+      font-size:0.78em;
+      color:rgba(255,255,255,0.5);
+      line-height:1.8;
+    }
+    .footer-contact a{color:var(--accent);text-decoration:none;}
+    .footer-col-title{
+      font-size:0.72em;
+      font-weight:800;
+      text-transform:uppercase;
+      letter-spacing:0.8px;
+      color:var(--muted);
+      margin-bottom:12px;
+    }
+    .footer-link{
+      display:block;
+      font-size:0.82em;
+      color:rgba(255,255,255,0.55);
+      text-decoration:none;
+      margin-bottom:8px;
+      transition:color 0.15s;
+    }
+    .footer-link:hover{color:white;}
+    .footer-divider{
+      border:none;
+      border-top:1px solid var(--border);
+      margin:20px 0;
+    }
+    .footer-bottom{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      flex-wrap:wrap;
+      gap:12px;
+      padding-bottom:20px;
+    }
+    .footer-copy{
+      font-size:0.78em;
+      color:var(--muted);
+    }
+    .footer-payments{
+      display:flex;
+      gap:8px;
+      align-items:center;
+    }
+    .payment-tag{
+      background:var(--dark3);
+      border:1px solid var(--border);
+      padding:4px 10px;
+      border-radius:6px;
+      font-size:0.72em;
+      color:rgba(255,255,255,0.5);
+      font-weight:600;
+    }
+
+    /* ── DIVIDER ── */
+    .section-divider{
+      border:none;
+      border-top:1px solid var(--border);
+    }
+
+    /* ── SCROLL REVEAL ── */
+    .reveal{
+      opacity:0;
+      transform:translateY(20px);
+      transition:opacity 0.5s ease,transform 0.5s ease;
+    }
+    .reveal.visible{
+      opacity:1;
+      transform:translateY(0);
+    }
+
+    /* ── RESPONSIVE ── */
+    @media(min-width:600px){
+      .services-grid{grid-template-columns:repeat(3,1fr);}
+      .service-card.featured{grid-column:span 1;}
+      .products-grid{grid-template-columns:repeat(3,1fr);}
+      .steps-grid{grid-template-columns:repeat(3,1fr);}
+      .trust-grid{grid-template-columns:repeat(4,1fr);}
+      .footer-top{grid-template-columns:1.5fr 1fr 1fr;}
+      .nav-login{display:block;}
+    }
+    @media(min-width:900px){
+      .services-grid{grid-template-columns:repeat(4,1fr);}
+      .products-grid{grid-template-columns:repeat(4,1fr);}
+    }
+  </style>
 </head>
 <body>
 
-<!-- NAVBAR -->
-  <nav class="navbar" id="main-navbar">
-  <div class="nav-inner">
-
-    <!-- LOGO -->
-    <a href="index.html" class="logo">
-      <span class="logo-nexa">Nexa</span><span class="logo-bay">bay</span>
-    </a>
-
-    <!-- SEARCH BAR -->
-    <div class="nav-search">
-      <input type="text" id="nav-search-input" placeholder="Search anything..."/>
-      <button onclick="navSearch()">🔍</button>
-    </div>
-
-    <!-- RIGHT ACTIONS -->
-    <div class="nav-right">
-      <a href="pages/shop/cart.html" class="nav-cart-btn" id="nav-cart-btn">
-        🛒
-        <span class="nav-cart-badge" id="nav-cart-count">0</span>
-      </a>
-      <div class="nav-account-wrap" id="nav-account-wrap">
-        <a href="pages/auth/login.html" class="nav-link" id="nav-login-btn">Login</a>
-        <a href="pages/auth/register.html" class="nav-btn" id="nav-signup-btn">Sign Up</a>
+  <!-- ── NAVBAR ── -->
+  <nav class="nav" id="main-nav">
+    <div class="nav-row">
+      <a href="index.html" class="nav-logo">Nexa<em>bay</em></a>
+      <div class="nav-search">
+        <input type="text" id="nav-search-input" placeholder="Search anything on Nexabay..."/>
+        <button onclick="navSearch()">🔍</button>
       </div>
-      <button class="hamburger" onclick="toggleMobileMenu()" id="hamburger-btn">☰</button>
-    </div>
-
-  </div>
-
-  <!-- SECTION NAV BAR -->
-  <div class="section-nav" id="section-nav">
-
-    <div class="section-nav-item" id="snav-shop">
-      <a href="pages/shop/browse.html" class="snav-link">🛍️ Shop</a>
-      <button class="snav-arrow" onclick="toggleDropdown('shop')">▾</button>
-      <div class="snav-dropdown" id="dropdown-shop">
-        <div class="snav-dropdown-inner">
-          <div class="snav-dropdown-section">
-            <div class="snav-dropdown-title">Browse</div>
-            <a href="pages/shop/browse.html" class="snav-dropdown-link">🛍️ All Products</a>
-            <a href="pages/shop/cart.html" class="snav-dropdown-link">🛒 My Cart</a>
-            <a href="pages/dashboard/buyer.html" class="snav-dropdown-link">📦 Track Orders</a>
-          </div>
-          <div class="snav-dropdown-divider"></div>
-          <div class="snav-dropdown-section">
-            <div class="snav-dropdown-title">For Sellers</div>
-            <a href="pages/dashboard/seller.html" class="snav-dropdown-link snav-provider-link">🟠 Become a Seller</a>
-            <a href="pages/dashboard/seller.html" class="snav-dropdown-link">📊 Seller Dashboard</a>
-          </div>
-        </div>
+      <div class="nav-right">
+        <a href="pages/shop/cart.html" class="nav-cart" aria-label="Cart">
+          🛒
+          <span class="nav-cart-badge" id="nav-cart-count">0</span>
+        </a>
+        <a href="pages/auth/login.html" class="nav-login" id="nav-login-btn">Login</a>
+        <a href="pages/auth/register.html" class="nav-signup" id="nav-signup-btn">Sign Up</a>
+        <button class="nav-hamburger" onclick="toggleMobileMenu()" aria-label="Menu">☰</button>
       </div>
     </div>
 
-    <div class="section-nav-item" id="snav-services">
-      <a href="pages/services/browse.html" class="snav-link">🛠️ Services</a>
-      <button class="snav-arrow" onclick="toggleDropdown('services')">▾</button>
-      <div class="snav-dropdown" id="dropdown-services">
-        <div class="snav-dropdown-inner">
-          <div class="snav-dropdown-section">
-            <div class="snav-dropdown-title">Browse</div>
-            <a href="pages/services/browse.html" class="snav-dropdown-link">🛠️ All Services</a>
-            <a href="pages/dashboard/buyer.html" class="snav-dropdown-link">📋 My Bookings</a>
-          </div>
-          <div class="snav-dropdown-divider"></div>
-          <div class="snav-dropdown-section">
-            <div class="snav-dropdown-title">For Providers</div>
-            <a href="pages/dashboard/services-provider.html" class="snav-dropdown-link snav-provider-link">🟠 Become a Provider</a>
-            <a href="pages/dashboard/services-provider.html" class="snav-dropdown-link">📊 Provider Dashboard</a>
-          </div>
-        </div>
+    <!-- SECTION NAV -->
+    <div class="section-nav" id="section-nav">
+      <div class="section-nav-inner">
+        <a href="pages/shop/browse.html" class="snav-item">🛍️ Shop</a>
+        <a href="pages/services/browse.html" class="snav-item">🛠️ Services</a>
+        <a href="pages/rentals/browse.html" class="snav-item">🏠 Rent</a>
+        <a href="pages/jobs/browse.html" class="snav-item">💼 Jobs</a>
+        <a href="pages/learn/browse.html" class="snav-item">🎓 Learn</a>
+        <a href="pages/food/browse.html" class="snav-item">🍔 Food</a>
+        <a href="pages/health/browse.html" class="snav-item">🏥 Health</a>
+        <a href="pages/events/browse.html" class="snav-item">🎉 Events</a>
+        <a href="pages/travel/browse.html" class="snav-item">✈️ Travel</a>
+        <a href="pages/ride/index.html" class="snav-item">🚗 Ride</a>
       </div>
     </div>
-
-    <div class="section-nav-item" id="snav-rent">
-      <a href="pages/rentals/browse.html" class="snav-link">🏠 Rent</a>
-      <button class="snav-arrow" onclick="toggleDropdown('rent')">▾</button>
-      <div class="snav-dropdown" id="dropdown-rent">
-        <div class="snav-dropdown-inner">
-          <div class="snav-dropdown-section">
-            <div class="snav-dropdown-title">Browse</div>
-            <a href="pages/rentals/browse.html" class="snav-dropdown-link">🏠 All Listings</a>
-          </div>
-          <div class="snav-dropdown-divider"></div>
-          <div class="snav-dropdown-section">
-            <div class="snav-dropdown-title">For Owners</div>
-            <a href="pages/dashboard/rentals-owner.html" class="snav-dropdown-link snav-provider-link">🟠 List Your Property</a>
-            <a href="pages/dashboard/rentals-owner.html" class="snav-dropdown-link">📊 Owner Dashboard</a>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="section-nav-item" id="snav-jobs">
-      <a href="pages/jobs/browse.html" class="snav-link">💼 Jobs</a>
-      <button class="snav-arrow" onclick="toggleDropdown('jobs')">▾</button>
-      <div class="snav-dropdown" id="dropdown-jobs">
-        <div class="snav-dropdown-inner">
-          <div class="snav-dropdown-section">
-            <div class="snav-dropdown-title">Browse</div>
-            <a href="pages/jobs/browse.html" class="snav-dropdown-link">💼 All Jobs</a>
-          </div>
-          <div class="snav-dropdown-divider"></div>
-          <div class="snav-dropdown-section">
-            <div class="snav-dropdown-title">For Employers</div>
-            <a href="pages/dashboard/jobs-employer.html" class="snav-dropdown-link snav-provider-link">🟠 Post a Job</a>
-            <a href="pages/dashboard/jobs-employer.html" class="snav-dropdown-link">📊 Employer Dashboard</a>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="section-nav-item" id="snav-learn">
-      <a href="pages/learn/browse.html" class="snav-link">🎓 Learn</a>
-      <button class="snav-arrow" onclick="toggleDropdown('learn')">▾</button>
-      <div class="snav-dropdown" id="dropdown-learn">
-        <div class="snav-dropdown-inner">
-          <div class="snav-dropdown-section">
-            <div class="snav-dropdown-title">Browse</div>
-            <a href="pages/learn/browse.html" class="snav-dropdown-link">🎓 All Courses</a>
-          </div>
-          <div class="snav-dropdown-divider"></div>
-          <div class="snav-dropdown-section">
-            <div class="snav-dropdown-title">For Instructors</div>
-            <a href="pages/dashboard/learn-instructor.html" class="snav-dropdown-link snav-provider-link">🟠 Become an Instructor</a>
-            <a href="pages/dashboard/learn-instructor.html" class="snav-dropdown-link">📊 Instructor Dashboard</a>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="section-nav-item" id="snav-food">
-      <a href="pages/food/browse.html" class="snav-link">🍔 Food</a>
-      <button class="snav-arrow" onclick="toggleDropdown('food')">▾</button>
-      <div class="snav-dropdown" id="dropdown-food">
-        <div class="snav-dropdown-inner">
-          <div class="snav-dropdown-section">
-            <div class="snav-dropdown-title">Browse</div>
-            <a href="pages/food/browse.html" class="snav-dropdown-link">🍔 Order Food</a>
-          </div>
-          <div class="snav-dropdown-divider"></div>
-          <div class="snav-dropdown-section">
-            <div class="snav-dropdown-title">For Restaurants</div>
-            <a href="pages/dashboard/food-restaurant.html" class="snav-dropdown-link snav-provider-link">🟠 Register Restaurant</a>
-            <a href="pages/dashboard/food-restaurant.html" class="snav-dropdown-link">📊 Restaurant Dashboard</a>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="section-nav-item" id="snav-more">
-      <span class="snav-link" style="cursor:pointer;" onclick="toggleDropdown('more')">More ▾</span>
-      <div class="snav-dropdown" id="dropdown-more" style="min-width:260px;">
-        <div class="snav-dropdown-inner">
-          <a href="pages/health/browse.html" class="snav-dropdown-link">🏥 Health</a>
-          <a href="pages/dashboard/health-provider.html" class="snav-dropdown-link snav-provider-link">🟠 List Health Service</a>
-          <div class="snav-dropdown-divider"></div>
-          <a href="pages/events/browse.html" class="snav-dropdown-link">🎉 Events</a>
-          <a href="pages/dashboard/events-organizer.html" class="snav-dropdown-link snav-provider-link">🟠 Create an Event</a>
-          <div class="snav-dropdown-divider"></div>
-          <a href="pages/travel/browse.html" class="snav-dropdown-link">✈️ Travel</a>
-          <a href="pages/dashboard/travel-agent.html" class="snav-dropdown-link snav-provider-link">🟠 List Travel Package</a>
-          <div class="snav-dropdown-divider"></div>
-          <a href="pages/ride/index.html" class="snav-dropdown-link">🚗 Ride</a>
-          <a href="pages/dashboard/ride-driver.html" class="snav-dropdown-link snav-provider-link">🟠 Become a Driver</a>
-          <div class="snav-dropdown-divider"></div>
-          <a href="pages/community/index.html" class="snav-dropdown-link">👥 Community</a>
-          <a href="pages/pay/index.html" class="snav-dropdown-link">💳 NexaPay</a>
-        </div>
-      </div>
-    </div>
-
-  </div>
-
-</nav>
-
-<!-- MOBILE MENU OVERLAY -->
-<div class="mobile-menu-overlay" id="mobile-overlay" onclick="closeMobileMenu()"></div>
-
-<!-- MOBILE SIDE MENU -->
-<div class="mobile-side-menu" id="mobile-side-menu">
-  <div class="msm-header">
-    <div class="msm-logo">Nexa<span>bay</span></div>
-    <button class="msm-close" onclick="closeMobileMenu()">✕</button>
-  </div>
-
-  <div class="msm-user" id="msm-user">
-    <a href="pages/auth/login.html" class="msm-login-btn">Login / Sign Up</a>
-  </div>
-
-  <div class="msm-links">
-    <div class="msm-section-title">Shop & Services</div>
-    <a href="pages/shop/browse.html" class="msm-link">🛍️ NexaShop</a>
-    <a href="pages/services/browse.html" class="msm-link">🛠️ NexaServices</a>
-    <a href="pages/rentals/browse.html" class="msm-link">🏠 NexaRent</a>
-    <a href="pages/jobs/browse.html" class="msm-link">💼 NexaJobs</a>
-    <a href="pages/learn/browse.html" class="msm-link">🎓 NexaLearn</a>
-    <a href="pages/food/browse.html" class="msm-link">🍔 NexaFood</a>
-    <a href="pages/health/browse.html" class="msm-link">🏥 NexaHealth</a>
-    <a href="pages/events/browse.html" class="msm-link">🎉 NexaEvents</a>
-    <a href="pages/travel/browse.html" class="msm-link">✈️ NexaTravel</a>
-    <a href="pages/ride/index.html" class="msm-link">🚗 NexaRide</a>
-    <a href="pages/pay/index.html" class="msm-link">💳 NexaPay</a>
-    <a href="pages/community/index.html" class="msm-link">👥 Community</a>
-
-    <div class="msm-section-title" style="margin-top:16px;">Become a Provider</div>
-    <a href="pages/dashboard/seller.html" class="msm-link msm-provider">🟠 Sell on Nexabay</a>
-    <a href="pages/dashboard/services-provider.html" class="msm-link msm-provider">🟠 Offer a Service</a>
-    <a href="pages/dashboard/rentals-owner.html" class="msm-link msm-provider">🟠 List Property</a>
-    <a href="pages/dashboard/jobs-employer.html" class="msm-link msm-provider">🟠 Post a Job</a>
-    <a href="pages/dashboard/learn-instructor.html" class="msm-link msm-provider">🟠 Teach a Course</a>
-    <a href="pages/dashboard/food-restaurant.html" class="msm-link msm-provider">🟠 Register Restaurant</a>
-    <a href="pages/dashboard/ride-driver.html" class="msm-link msm-provider">🟠 Drive with Nexabay</a>
-
-    <div class="msm-section-title" style="margin-top:16px;">Account</div>
-    <a href="pages/dashboard/buyer.html" class="msm-link">👤 My Account</a>
-    <a href="pages/shop/cart.html" class="msm-link">🛒 My Cart</a>
-    <a href="pages/search.html" class="msm-link">🔍 Search</a>
-    <a href="pages/help.html" class="msm-link">❓ Help Center</a>
-    <a href="pages/contact.html" class="msm-link">💬 Contact Us</a>
-    <a href="#" class="msm-link" id="msm-logout" style="display:none;" onclick="logoutUser()">🚪 Logout</a>
-  </div>
-</div>
   </nav>
 
-  <!-- FLOATING CART (mobile only) -->
-  <a href="pages/shop/cart.html" class="floating-cart" id="floating-cart">
-    🛒
-    <span class="floating-cart-count" id="floating-cart-count">0</span>
-  </a>
-  
-  <!-- CATEGORY BAR -->
-  <div class="cat-bar">
-    <div class="cat-inner">
-      <a href="pages/shop/browse.html" class="cat-item">🛍️ Shop</a>
-      <a href="pages/services/browse.html" class="cat-item">🔧 Services</a>
-      <a href="pages/rentals/browse.html" class="cat-item">🏠 Rentals</a>
-      <a href="pages/learn/browse.html" class="cat-item">🎓 Learn</a>
-      <a href="pages/jobs/browse.html" class="cat-item">💼 Jobs</a>
-      <a href="pages/food/browse.html" class="cat-item">🍔 Food</a>
-      <a href="pages/health/browse.html" class="cat-item">🏥 Health</a>
-      <a href="pages/events/browse.html" class="cat-item">🎉 Events</a>
-      <a href="pages/travel/browse.html" class="cat-item">✈️ Travel</a>
-      <a href="pages/pay/index.html" class="cat-item">🏦 NexaPay</a>
+  <!-- ── MOBILE MENU ── -->
+  <div class="mobile-overlay" id="mobile-overlay" onclick="closeMobileMenu()"></div>
+  <div class="mobile-menu" id="mobile-menu">
+    <div class="mm-head">
+      <div class="mm-logo">Nexa<em>bay</em></div>
+      <button class="mm-close" onclick="closeMobileMenu()">✕</button>
+    </div>
+    <div id="mm-user-section" style="padding:16px 20px;border-bottom:1px solid rgba(255,255,255,0.06);">
+      <a href="pages/auth/login.html" style="display:block;background:var(--brand);color:white;text-align:center;padding:11px;border-radius:10px;text-decoration:none;font-weight:700;font-size:0.9em;">Login / Sign Up</a>
+    </div>
+    <div class="mm-section">
+      <div class="mm-label">Browse</div>
+      <a href="pages/shop/browse.html" class="mm-link">🛍️ NexaShop</a>
+      <a href="pages/services/browse.html" class="mm-link">🛠️ NexaServices</a>
+      <a href="pages/rentals/browse.html" class="mm-link">🏠 NexaRent</a>
+      <a href="pages/jobs/browse.html" class="mm-link">💼 NexaJobs</a>
+      <a href="pages/learn/browse.html" class="mm-link">🎓 NexaLearn</a>
+      <a href="pages/food/browse.html" class="mm-link">🍔 NexaFood</a>
+      <a href="pages/health/browse.html" class="mm-link">🏥 NexaHealth</a>
+      <a href="pages/events/browse.html" class="mm-link">🎉 NexaEvents</a>
+      <a href="pages/travel/browse.html" class="mm-link">✈️ NexaTravel</a>
+      <a href="pages/ride/index.html" class="mm-link">🚗 NexaRide</a>
+    </div>
+    <div class="mm-section">
+      <div class="mm-label">Earn on Nexabay</div>
+      <a href="pages/auth/become-provider.html?type=seller" class="mm-link provider">🟠 Sell Products</a>
+      <a href="pages/auth/become-provider.html?type=service" class="mm-link provider">🟠 Offer Services</a>
+      <a href="pages/auth/become-provider.html?type=driver" class="mm-link provider">🟠 Drive with Nexabay</a>
+      <a href="pages/auth/become-provider.html?type=restaurant" class="mm-link provider">🟠 List Your Restaurant</a>
+      <a href="pages/auth/become-provider.html?type=instructor" class="mm-link provider">🟠 Teach a Course</a>
+    </div>
+    <div class="mm-section">
+      <div class="mm-label">Account</div>
+      <a href="pages/dashboard/buyer.html" class="mm-link">👤 My Account</a>
+      <a href="pages/shop/cart.html" class="mm-link">🛒 My Cart</a>
+      <a href="pages/search.html" class="mm-link">🔍 Search</a>
+      <a href="pages/help.html" class="mm-link">❓ Help Center</a>
+      <a href="pages/contact.html" class="mm-link">💬 Contact Us</a>
+      <a href="#" class="mm-link" id="mm-logout-btn" onclick="logoutUser();return false;" style="display:none;color:#f87171;">🚪 Logout</a>
     </div>
   </div>
 
-  <!-- HERO -->
+  <!-- ── HERO ── -->
   <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-grid-overlay"></div>
     <div class="hero-inner">
-      <div class="hero-text">
-        <div class="hero-badge">🌍 Africa's #1 Everything Platform</div>
-        <h1>Buy. Sell. Rent.<br/>Learn. Earn.</h1>
-        <p>Shop products, hire services, rent property, learn skills and find jobs — all in one place.</p>
-        <div class="hero-btns">
-          <a href="pages/shop/browse.html" class="btn-primary">Start Shopping</a>
-          <a href="pages/auth/become-provider.html" class="btn-outline">Become a Seller</a>
+      <div>
+        <div class="hero-badge">
+          <span></span>
+          Now live in Nigeria 🇳🇬
         </div>
-        <div class="hero-stats">
-          <div class="hstat"><span>50K+</span>Products</div>
-          <div class="hstat"><span>10K+</span>Sellers</div>
-          <div class="hstat"><span>200K+</span>Users</div>
-          <div class="hstat"><span>36</span>States</div>
+        <h1>
+          Everything you need.<br/>
+          <span class="grad">One Nigerian app.</span>
+        </h1>
+        <p class="hero-sub">
+          Shop products, hire professionals, rent property, learn skills, find jobs, order food, book doctors and more — all with one account and one secure payment.
+        </p>
+        <div class="hero-actions">
+          <a href="pages/shop/browse.html" class="btn-primary">Start Shopping →</a>
+          <a href="pages/auth/become-provider.html" class="btn-outline">Start Earning</a>
+        </div>
+        <div class="hero-trust">
+          <div class="hero-trust-item">✅ <strong>Secure</strong> Paystack payments</div>
+          <div class="hero-trust-item">🛡️ <strong>50%</strong> buyer protection</div>
+          <div class="hero-trust-item">🇳🇬 <strong>All 36</strong> states covered</div>
         </div>
       </div>
-      <div class="hero-image">
-        <div class="float-card fc1">📦 Order Delivered!</div>
-        <div class="float-card fc2">⭐ 4.9 Rating</div>
-        <div class="float-card fc3">🔒 Secure Payment</div>
-        <div class="hero-phone">
-          <div class="phone-screen">
-            <div class="ps-logo">Nexabay</div>
-           <div class="ps-item">🛍️ Shop anything in Nigeria</div>
-                <div class="ps-item">🚗 Book a ride near you</div>
-                <div class="ps-item">🎓 Learn a new skill today</div>
-                <div class="ps-item">🏥 Book a doctor instantly</div>
-            <div class="ps-btn">Browse All →</div>
+    </div>
+  </section>
+
+  <!-- ── LAUNCH BANNER ── -->
+  <div style="background:var(--dark);padding:0 0 32px;">
+    <div class="launch-banner reveal">
+      <div class="launch-banner-left">
+        <h3>🚀 We're live and growing</h3>
+        <p>Join thousands of Nigerians already on the platform. New listings added every day.</p>
+      </div>
+      <div>
+        <a href="pages/auth/register.html" class="btn-primary" style="font-size:0.85em;padding:11px 20px;">Create Free Account →</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SERVICES ── -->
+  <div style="background:var(--dark);">
+    <div class="section reveal">
+      <div class="section-header">
+        <div class="section-eyebrow">What we offer</div>
+        <div class="section-title">12 services.<br/>One platform.</div>
+        <p class="section-sub">Every service you need in Nigeria, accessible from your phone in seconds.</p>
+      </div>
+
+      <div class="services-grid">
+        <a href="pages/shop/browse.html" class="service-card" style="--card-color:rgba(249,115,22,0.1);">
+          <div class="service-icon" style="background:rgba(249,115,22,0.15);">🛍️</div>
+          <div class="service-name">NexaShop</div>
+          <div class="service-desc">Buy & sell products across Nigeria</div>
+          <div class="service-badge">FREE LISTING</div>
+        </a>
+        <a href="pages/services/browse.html" class="service-card" style="--card-color:rgba(124,58,237,0.1);">
+          <div class="service-icon" style="background:rgba(124,58,237,0.15);">🛠️</div>
+          <div class="service-name">NexaServices</div>
+          <div class="service-desc">Hire skilled Nigerian professionals</div>
+        </a>
+        <a href="pages/rentals/browse.html" class="service-card" style="--card-color:rgba(34,197,94,0.1);">
+          <div class="service-icon" style="background:rgba(34,197,94,0.15);">🏠</div>
+          <div class="service-name">NexaRent</div>
+          <div class="service-desc">Find property & rental items</div>
+        </a>
+        <a href="pages/learn/browse.html" class="service-card" style="--card-color:rgba(59,130,246,0.1);">
+          <div class="service-icon" style="background:rgba(59,130,246,0.15);">🎓</div>
+          <div class="service-name">NexaLearn</div>
+          <div class="service-desc">Learn skills from Nigerian instructors</div>
+        </a>
+        <a href="pages/jobs/browse.html" class="service-card" style="--card-color:rgba(236,72,153,0.1);">
+          <div class="service-icon" style="background:rgba(236,72,153,0.15);">💼</div>
+          <div class="service-name">NexaJobs</div>
+          <div class="service-desc">Find jobs or hire talent</div>
+        </a>
+        <a href="pages/food/browse.html" class="service-card" style="--card-color:rgba(234,179,8,0.1);">
+          <div class="service-icon" style="background:rgba(234,179,8,0.15);">🍔</div>
+          <div class="service-name">NexaFood</div>
+          <div class="service-desc">Order from local restaurants</div>
+        </a>
+        <a href="pages/health/browse.html" class="service-card" style="--card-color:rgba(239,68,68,0.1);">
+          <div class="service-icon" style="background:rgba(239,68,68,0.15);">🏥</div>
+          <div class="service-name">NexaHealth</div>
+          <div class="service-desc">Book doctors, labs & pharmacies</div>
+        </a>
+        <a href="pages/events/browse.html" class="service-card" style="--card-color:rgba(168,85,247,0.1);">
+          <div class="service-icon" style="background:rgba(168,85,247,0.15);">🎉</div>
+          <div class="service-name">NexaEvents</div>
+          <div class="service-desc">Buy tickets for events near you</div>
+        </a>
+        <a href="pages/travel/browse.html" class="service-card" style="--card-color:rgba(20,184,166,0.1);">
+          <div class="service-icon" style="background:rgba(20,184,166,0.15);">✈️</div>
+          <div class="service-name">NexaTravel</div>
+          <div class="service-desc">Hotels, flights & tour packages</div>
+        </a>
+        <a href="pages/ride/index.html" class="service-card" style="--card-color:rgba(249,115,22,0.1);">
+          <div class="service-icon" style="background:rgba(249,115,22,0.15);">🚗</div>
+          <div class="service-name">NexaRide</div>
+          <div class="service-desc">Book rides & delivery services</div>
+        </a>
+        <a href="pages/pay/index.html" class="service-card" style="--card-color:rgba(124,58,237,0.1);">
+          <div class="service-icon" style="background:rgba(124,58,237,0.15);">💳</div>
+          <div class="service-name">NexaPay</div>
+          <div class="service-desc">Secure wallet & payments</div>
+        </a>
+        <a href="pages/community/index.html" class="service-card" style="--card-color:rgba(34,197,94,0.1);">
+          <div class="service-icon" style="background:rgba(34,197,94,0.15);">👥</div>
+          <div class="service-name">Community</div>
+          <div class="service-desc">Connect with Nigerians nationwide</div>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── LATEST PRODUCTS ── -->
+  <div class="products-wrap">
+    <div class="section reveal">
+      <div class="section-header" style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:20px;">
+        <div>
+          <div class="section-eyebrow">Fresh listings</div>
+          <div class="section-title" style="font-size:1.5em;">Latest Products</div>
+        </div>
+        <a href="pages/shop/browse.html" style="color:var(--accent);font-size:0.85em;font-weight:700;text-decoration:none;white-space:nowrap;">See All →</a>
+      </div>
+
+      <!-- CATEGORY PILLS -->
+      <div class="cats-grid" style="margin-bottom:20px;">
+        <a href="pages/shop/browse.html" class="cat-pill active">All</a>
+        <a href="pages/shop/browse.html?cat=Electronics" class="cat-pill">Electronics</a>
+        <a href="pages/shop/browse.html?cat=Fashion" class="cat-pill">Fashion</a>
+        <a href="pages/shop/browse.html?cat=Phones" class="cat-pill">Phones</a>
+        <a href="pages/shop/browse.html?cat=Home" class="cat-pill">Home</a>
+        <a href="pages/shop/browse.html?cat=Beauty" class="cat-pill">Beauty</a>
+      </div>
+
+      <div class="products-grid" id="homepage-products">
+        <!-- skeleton -->
+        <div class="product-card">
+          <div class="product-img" style="background:var(--dark3);"></div>
+          <div class="product-body">
+            <div style="height:10px;background:var(--dark3);border-radius:4px;margin-bottom:6px;"></div>
+            <div style="height:10px;background:var(--dark3);border-radius:4px;width:60%;"></div>
+          </div>
+        </div>
+        <div class="product-card">
+          <div class="product-img" style="background:var(--dark3);"></div>
+          <div class="product-body">
+            <div style="height:10px;background:var(--dark3);border-radius:4px;margin-bottom:6px;"></div>
+            <div style="height:10px;background:var(--dark3);border-radius:4px;width:60%;"></div>
+          </div>
+        </div>
+        <div class="product-card">
+          <div class="product-img" style="background:var(--dark3);"></div>
+          <div class="product-body">
+            <div style="height:10px;background:var(--dark3);border-radius:4px;margin-bottom:6px;"></div>
+            <div style="height:10px;background:var(--dark3);border-radius:4px;width:60%;"></div>
+          </div>
+        </div>
+        <div class="product-card">
+          <div class="product-img" style="background:var(--dark3);"></div>
+          <div class="product-body">
+            <div style="height:10px;background:var(--dark3);border-radius:4px;margin-bottom:6px;"></div>
+            <div style="height:10px;background:var(--dark3);border-radius:4px;width:60%;"></div>
           </div>
         </div>
       </div>
     </div>
-  </section>
+  </div>
 
+  <hr class="section-divider"/>
 
-
-  <!-- SECTIONS -->
-  <section class="sections-area">
-    <div class="container">
-      <h2 class="section-title">Everything You Need, One Platform</h2>
-      <div class="sections-grid">
-        <a href="pages/shop/browse.html" class="sec-card" style="--c:#1a73e8">
-          <div class="sec-icon">🛍️</div>
-          <div class="sec-name">NexaShop</div>
-          <div class="sec-desc">Buy & sell products</div>
-          <div class="sec-count">50,000+ items</div>
-        </a>
-        <a href="pages/services/browse.html" class="sec-card" style="--c:#ff6b00">
-          <div class="sec-icon">🔧</div>
-          <div class="sec-name">NexaServices</div>
-          <div class="sec-desc">Hire professionals</div>
-          <div class="sec-count">5,000+ providers</div>
-        </a>
-        <a href="pages/rentals/browse.html" class="sec-card" style="--c:#00c851">
-          <div class="sec-icon">🏠</div>
-          <div class="sec-name">NexaRent</div>
-          <div class="sec-desc">Rent property & items</div>
-          <div class="sec-count">8,000+ listings</div>
-        </a>
-        <a href="pages/learn/browse.html" class="sec-card" style="--c:#9c27b0">
-          <div class="sec-icon">🎓</div>
-          <div class="sec-name">NexaLearn</div>
-          <div class="sec-desc">Courses & tutors</div>
-          <div class="sec-count">2,000+ courses</div>
-        </a>
-        <a href="pages/jobs/browse.html" class="sec-card" style="--c:#e91e63">
-          <div class="sec-icon">💼</div>
-          <div class="sec-name">NexaJobs</div>
-          <div class="sec-desc">Find work or hire</div>
-          <div class="sec-count">12,000+ jobs</div>
-        </a>
-        <a href="pages/food/browse.html" class="sec-card" style="--c:#ff5722">
-          <div class="sec-icon">🍔</div>
-          <div class="sec-name">NexaFood</div>
-          <div class="sec-desc">Order food & groceries</div>
-          <div class="sec-count">1,000+ restaurants</div>
-        </a>
-        <a href="pages/health/browse.html" class="sec-card" style="--c:#009688">
-          <div class="sec-icon">🏥</div>
-          <div class="sec-name">NexaHealth</div>
-          <div class="sec-desc">Book doctors & labs</div>
-          <div class="sec-count">3,000+ providers</div>
-        </a>
-        <a href="pages/events/browse.html" class="sec-card" style="--c:#ffc107">
-          <div class="sec-icon">🎉</div>
-          <div class="sec-name">NexaEvents</div>
-          <div class="sec-desc">Tickets & entertainment</div>
-          <div class="sec-count">500+ events</div>
-        </a>
-        <a href="pages/travel/browse.html" class="sec-card" style="--c:#2196f3">
-          <div class="sec-icon">✈️</div>
-          <div class="sec-name">NexaTravel</div>
-          <div class="sec-desc">Hotels & flights</div>
-          <div class="sec-count">10,000+ options</div>
-        </a>
-        <a href="pages/pay/index.html" class="sec-card" style="--c:#4caf50">
-          <div class="sec-icon">🏦</div>
-          <div class="sec-name">NexaPay</div>
-          <div class="sec-desc">Send money & pay bills</div>
-          <div class="sec-count">Instant transfers</div>
-        </a>
-       <a href="pages/ride/index.html" class="sec-card" style="--c:#607d8b">
-          <div class="sec-icon">🚗</div>
-          <div class="sec-name">NexaRide</div>
-          <div class="sec-desc">Book rides & delivery</div>
-          <div class="sec-count">Available 24/7</div>
-        </a>
-       <a href="pages/community/index.html" class="sec-card" style="--c:#795548">
-          <div class="sec-icon">🤝</div>
-          <div class="sec-name">NexaCommunity</div>
-          <div class="sec-desc">Network & forums</div>
-          <div class="sec-count">50,000+ members</div>
-        </a>
+  <!-- ── HOW IT WORKS ── -->
+  <div class="how-bg">
+    <div class="section reveal">
+      <div class="section-header">
+        <div class="section-eyebrow">Simple process</div>
+        <div class="section-title">Up and running<br/>in 3 steps</div>
       </div>
-    </div>
-  </section>
-
-
-  <!-- WHY NEXABAY -->
-  <section class="why-section">
-    <div class="container">
-      <h2 class="section-title">Why Choose Nexabay?</h2>
-      <div class="why-grid">
-        <div class="why-card">
-          <div class="why-icon">🔒</div>
-          <h3>Secure Escrow Payment</h3>
-          <p>Your money is held safely until you confirm delivery. Never lose money to fraud again.</p>
-        </div>
-        <div class="why-card">
-          <div class="why-icon">✅</div>
-          <h3>Verified Sellers</h3>
-          <p>Every seller goes through ID verification. Shop with confidence from trusted vendors.</p>
-        </div>
-        <div class="why-card">
-          <div class="why-icon">💬</div>
-          <h3>Live Chat</h3>
-          <p>Chat directly with sellers before you buy. No middlemen, no stress.</p>
-        </div>
-        <div class="why-card">
-          <div class="why-icon">🚀</div>
-          <h3>Fast Delivery</h3>
-          <p>Same day delivery in major cities. Track your order live every step.</p>
-        </div>
-        <div class="why-card">
-          <div class="why-icon">💰</div>
-          <h3>Best Prices</h3>
-          <p>Compare prices from multiple sellers. Negotiate directly and get the best deal.</p>
-        </div>
-        <div class="why-card">
-          <div class="why-icon">📱</div>
-          <h3>Everything In One</h3>
-          <p>Shop, rent, learn, find jobs, order food — without leaving Nexabay.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- SELLER CTA -->
-  <section class="seller-cta">
-    <div class="container">
-      <div class="seller-cta-inner">
-        <div class="scta-text">
-          <h2>Start Selling on Nexabay Today</h2>
-          <p>Join 10,000+ sellers making money daily. Set up your shop in 5 minutes — completely free.</p>
-          <ul class="scta-list">
-            <li>✅ Free shop setup</li>
-            <li>✅ Reach millions of buyers</li>
-            <li>✅ Get paid directly to your bank</li>
-            <li>✅ Sell products, services or courses</li>
-          </ul>
-          <a href="#" class="btn-primary" onclick="goToProviderDashboard('pages/dashboard/seller.html'); return false;">Open Your Shop Free →</a>
-        </div>
-        <div class="scta-stats">
-          <div class="scta-stat"><span>₦2.5M</span>Avg seller monthly earnings</div>
-          <div class="scta-stat"><span>10K+</span>Active sellers</div>
-          <div class="scta-stat"><span>5 min</span>To set up your shop</div>
-          <div class="scta-stat"><span>Free</span>To get started</div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- TESTIMONIALS -->
-  <section class="testimonials">
-    <div class="container">
-      <h2 class="section-title">What People Are Saying</h2>
-      <div class="testi-grid">
-        <div class="testi-card">
-          <div class="testi-stars">⭐⭐⭐⭐⭐</div>
-          <p>"I sold my first product within 24 hours of joining Nexabay. The platform is amazing!"</p>
-          <div class="testi-author">
-            <div class="testi-avatar">AO</div>
-            <div><b>Adewale Okon</b><br/><small>Seller, Lagos</small></div>
+      <div class="steps-grid">
+        <div class="step-card">
+          <div class="step-num">1</div>
+          <div>
+            <div class="step-title">Create your free account</div>
+            <div class="step-desc">Register in 30 seconds with your name, email and phone number. One account gives you access to all 12 services.</div>
           </div>
         </div>
-        <div class="testi-card">
-          <div class="testi-stars">⭐⭐⭐⭐⭐</div>
-          <p>"Found a plumber, ordered food and paid my NEPA bill all on one app. Life changing!"</p>
-          <div class="testi-author">
-            <div class="testi-avatar">FK</div>
-            <div><b>Fatima Kabir</b><br/><small>Buyer, Abuja</small></div>
+        <div class="step-card">
+          <div class="step-num">2</div>
+          <div>
+            <div class="step-title">Browse and choose</div>
+            <div class="step-desc">Search for products, services, jobs, food or anything else. Every listing is reviewed by our admin team before going live.</div>
           </div>
         </div>
-        <div class="testi-card">
-          <div class="testi-stars">⭐⭐⭐⭐⭐</div>
-          <p>"I teach coding on NexaLearn and now earn more than my 9-5 job. Best decision ever."</p>
-          <div class="testi-author">
-            <div class="testi-avatar">CE</div>
-            <div><b>Chidi Eze</b><br/><small>Tutor, Port Harcourt</small></div>
+        <div class="step-card">
+          <div class="step-num">3</div>
+          <div>
+            <div class="step-title">Pay safely and enjoy</div>
+            <div class="step-desc">Pay with your Nigerian debit card, bank transfer or USSD. Your money is held in escrow until you confirm delivery.</div>
           </div>
         </div>
       </div>
     </div>
-  </section>
+  </div>
 
-  <!-- APP DOWNLOAD -->
-  <section class="app-section">
-    <div class="container">
-      <div class="app-text">
-        <h2>Get the Nexabay App</h2>
-        <p>Shop, sell and manage everything from your phone.</p>
-        <div class="app-btns">
-          <a href="#" class="app-btn">
-            <span class="app-btn-icon">▶</span>
-            <div><small>Get it on</small><br/><b>Google Play</b></div>
-          </a>
-          <a href="#" class="app-btn">
-            <span class="app-btn-icon">🍎</span>
-            <div><small>Download on</small><br/><b>App Store</b></div>
-          </a>
+  <hr class="section-divider"/>
+
+  <!-- ── TRUST ── -->
+  <div style="background:var(--dark);">
+    <div class="section reveal">
+      <div class="section-header" style="text-align:center;max-width:500px;margin:0 auto 36px;">
+        <div class="section-eyebrow">Why Nigerians trust us</div>
+        <div class="section-title">Built for Nigeria.<br/>Built to last.</div>
+      </div>
+      <div class="trust-grid">
+        <div class="trust-card">
+          <div class="trust-icon">🔒</div>
+          <div class="trust-title">Escrow Payments</div>
+          <div class="trust-desc">Your money is held safely until you confirm you received what you ordered</div>
+        </div>
+        <div class="trust-card">
+          <div class="trust-icon">✅</div>
+          <div class="trust-title">Verified Sellers</div>
+          <div class="trust-desc">Every seller and provider is reviewed and approved by our admin team</div>
+        </div>
+        <div class="trust-card">
+          <div class="trust-icon">🛡️</div>
+          <div class="trust-title">Buyer Protection</div>
+          <div class="trust-desc">Minimum 50% refund guarantee on all genuine disputes filed within 7 days</div>
+        </div>
+        <div class="trust-card">
+          <div class="trust-icon">📱</div>
+          <div class="trust-title">Works on Any Phone</div>
+          <div class="trust-desc">Fully optimised for Android phones — no heavy app download needed</div>
         </div>
       </div>
     </div>
-  </section>
+  </div>
 
-  <!-- FOOTER -->
+  <hr class="section-divider"/>
+
+  <!-- ── EARN SECTION ── -->
+  <div style="background:var(--dark2);">
+    <div class="section reveal">
+      <div style="display:grid;gap:24px;">
+        <div>
+          <div class="section-eyebrow">For providers</div>
+          <div class="section-title">Turn your skill<br/>into income.</div>
+          <p style="font-size:0.9em;color:rgba(255,255,255,0.55);line-height:1.7;margin:14px 0 24px;">
+            Whether you sell products, offer services, teach courses, drive passengers or run a restaurant — Nexabay connects you with paying customers across all 36 Nigerian states. Listing is completely free. You only pay a small commission when you earn.
+          </p>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:24px;">
+            <div style="background:var(--dark);border:1px solid var(--border);border-radius:12px;padding:14px;text-align:center;">
+              <div style="font-size:1.4em;font-weight:900;color:var(--accent);">Free</div>
+              <div style="font-size:0.72em;color:var(--muted);">to list & join</div>
+            </div>
+            <div style="background:var(--dark);border:1px solid var(--border);border-radius:12px;padding:14px;text-align:center;">
+              <div style="font-size:1.4em;font-weight:900;color:var(--accent);">5–20%</div>
+              <div style="font-size:0.72em;color:var(--muted);">commission only on sales</div>
+            </div>
+            <div style="background:var(--dark);border:1px solid var(--border);border-radius:12px;padding:14px;text-align:center;">
+              <div style="font-size:1.4em;font-weight:900;color:var(--accent);">36</div>
+              <div style="font-size:0.72em;color:var(--muted);">Nigerian states reached</div>
+            </div>
+            <div style="background:var(--dark);border:1px solid var(--border);border-radius:12px;padding:14px;text-align:center;">
+              <div style="font-size:1.4em;font-weight:900;color:var(--accent);">24hrs</div>
+              <div style="font-size:0.72em;color:var(--muted);">listing approval time</div>
+            </div>
+          </div>
+          <a href="pages/auth/become-provider.html" class="btn-primary" style="display:inline-block;">Start Earning Free →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── CTA ── -->
+  <div style="background:var(--dark);padding:0 0 0;">
+    <div class="cta-wrap reveal">
+      <h2>Ready to experience<br/>everything Nigeria has to offer?</h2>
+      <p>Join Nexabay today. It takes 30 seconds to sign up — completely free.</p>
+      <div class="cta-btns">
+        <a href="pages/auth/register.html" class="cta-btn-white">Create Free Account</a>
+        <a href="pages/shop/browse.html" class="cta-btn-ghost">Browse Products</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── FOOTER ── -->
   <footer class="footer">
-    <div class="container">
-      <div class="footer-grid">
-        <div class="footer-brand">
-          <div class="logo"><span class="logo-nexa">Nexa</span><span class="logo-bay">bay</span></div>
-          <p>Africa's Everything Platform. Buy, sell, rent, learn and earn — all in one place.</p>
-          <div class="social-links">
-            <a href="https://www.fb.com/l/6lp1kJRRR">📘 Facebook</a>
-            <a href="https://x.com/NexaBay">🐦 Twitter</a>
-            <a href="https://www.instagram.com/nexabay_?igsh=Y2l5OTgzajExaGdu">📸 Instagram</a>
-            <a href="#">▶ YouTube</a>
+    <div class="footer-inner">
+      <div class="footer-top">
+        <div class="footer-brand-col">
+          <div class="footer-logo">Nexa<em>bay</em></div>
+          <p>Africa's Everything Platform. One account for shopping, services, jobs, learning, food, health and more — built in Nigeria for Nigeria.</p>
+          <div class="footer-contact">
+            📧 <a href="mailto:nexabay7@gmail.com">nexabay7@gmail.com</a><br/>
+            📱 <a href="https://wa.me/2349076519852">+234 907 651 9852</a><br/>
+            📍 Lagos, Nigeria 🇳🇬
           </div>
         </div>
-        <div class="footer-col">
-          <h4>Marketplace</h4>
-          <a href="pages/shop/browse.html">Shop</a>
-          <a href="pages/services/browse.html">Services</a>
-          <a href="pages/rentals/browse.html">Rentals</a>
-          <a href="pages/learn/browse.html">Learn</a>
-          <a href="pages/jobs/browse.html">Jobs</a>
+        <div>
+          <div class="footer-col-title">Services</div>
+          <a href="pages/shop/browse.html" class="footer-link">🛍️ NexaShop</a>
+          <a href="pages/services/browse.html" class="footer-link">🛠️ NexaServices</a>
+          <a href="pages/rentals/browse.html" class="footer-link">🏠 NexaRent</a>
+          <a href="pages/jobs/browse.html" class="footer-link">💼 NexaJobs</a>
+          <a href="pages/learn/browse.html" class="footer-link">🎓 NexaLearn</a>
+          <a href="pages/food/browse.html" class="footer-link">🍔 NexaFood</a>
+          <a href="pages/health/browse.html" class="footer-link">🏥 NexaHealth</a>
+          <a href="pages/ride/index.html" class="footer-link">🚗 NexaRide</a>
         </div>
-        <div class="footer-col">
-          <h4>More</h4>
-          <a href="pages/food/browse.html">Food</a>
-          <a href="pages/health/browse.html">Health</a>
-          <a href="pages/events/browse.html">Events</a>
-          <a href="pages/travel/browse.html">Travel</a>
-          <a href="pages/pay/index.html">NexaPay</a>
-        </div>
-        <div class="footer-col">
-          <h4>Support</h4>
-          <a href="pages/help.html">Help Center</a>
-          <a href="pages/contact.html">Contact Us</a>
-          <a href="pages/refund.html">Buyer Protection</a>
-          <a href="pages/contact.html?subject=report">Report a Problem</a>
-        </div>
-        <div class="footer-col">
-          <h4>Company</h4>
-          <a href="pages/about.html">About Nexabay</a>
-          <a href="pages/careers.html">Careers</a>
-          <a href="pages/privacy.html">Privacy Policy</a>
-          <a href="pages/terms.html">Terms of Service</a>
+        <div>
+          <div class="footer-col-title">Company</div>
+          <a href="pages/about.html" class="footer-link">About Nexabay</a>
+          <a href="pages/careers.html" class="footer-link">Careers</a>
+          <a href="pages/contact.html" class="footer-link">Contact Us</a>
+          <a href="pages/help.html" class="footer-link">Help Center</a>
+          <a href="pages/privacy.html" class="footer-link">Privacy Policy</a>
+          <a href="pages/terms.html" class="footer-link">Terms of Service</a>
+          <a href="pages/refund.html" class="footer-link">Buyer Protection</a>
+          <a href="pages/auth/become-provider.html" class="footer-link" style="color:var(--accent);font-weight:700;">🟠 Become a Provider</a>
         </div>
       </div>
+
+      <hr class="footer-divider"/>
+
       <div class="footer-bottom">
-        <p>© 2025 Nexabay. All rights reserved. Made with ❤️ in Africa.</p>
-        <div class="payment-icons">
-          <span>💳 Paystack</span>
-          <span>🏦 Bank Transfer</span>
-          <span>📱 USSD</span>
+        <div class="footer-copy">© 2025 Nexabay Ltd. All rights reserved. Made with ❤️ in Nigeria 🇳🇬</div>
+        <div class="footer-payments">
+          <span class="payment-tag">💳 Paystack</span>
+          <span class="payment-tag">🏦 Bank Transfer</span>
+          <span class="payment-tag">📱 USSD</span>
         </div>
       </div>
     </div>
   </footer>
-  
-  <script>
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('/sw.js')
-      .then(function() { console.log('Nexabay SW registered'); })
-      .catch(function(err) { console.log('SW error:', err); });
-  }
-</script>
-  
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-<script src="js/firebase/config.js"></script>
-<script src="js/firebase/auth.js"></script>
-<script src="js/firebase/products.js"></script>
-<script src="js/firebase/community.js"></script>
-<script src="js/firebase/orders.js"></script>
+
+  <!-- SCRIPTS -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="js/firebase/config.js"></script>
+  <script src="js/firebase/auth.js"></script>
+  <script src="js/firebase/products.js"></script>
   <script src="js/core/main.js"></script>
-  <script src="js/core/chat-widget.js"></script>
-  <script src="js/firebase/support.js"></script>
+  <script>
+
+    /* ── NAV ── */
+    function toggleMobileMenu() {
+      document.getElementById('mobile-menu').classList.toggle('open');
+      document.getElementById('mobile-overlay').classList.toggle('open');
+      document.body.style.overflow = document.getElementById('mobile-menu').classList.contains('open') ? 'hidden' : '';
+    }
+    function closeMobileMenu() {
+      document.getElementById('mobile-menu').classList.remove('open');
+      document.getElementById('mobile-overlay').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+    function navSearch() {
+      var q = document.getElementById('nav-search-input').value.trim();
+      if (q) window.location.href = 'pages/search.html?q=' + encodeURIComponent(q);
+    }
+    document.getElementById('nav-search-input').addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') navSearch();
+    });
+
+    /* ── AUTH STATE ── */
+    function checkAuthState() {
+      var user = JSON.parse(localStorage.getItem('nexa_current_user') || 'null');
+      var loginBtn  = document.getElementById('nav-login-btn');
+      var signupBtn = document.getElementById('nav-signup-btn');
+      var mmUser    = document.getElementById('mm-user-section');
+      var mmLogout  = document.getElementById('mm-logout-btn');
+
+      if (user) {
+        if (loginBtn)  loginBtn.style.display  = 'none';
+        if (signupBtn) {
+          signupBtn.textContent = user.firstName || 'Account';
+          signupBtn.href        = 'pages/dashboard/buyer.html';
+        }
+        if (mmUser) {
+          mmUser.innerHTML =
+            '<div style="display:flex;align-items:center;gap:10px;">' +
+              '<div style="width:38px;height:38px;border-radius:50%;background:var(--brand);color:white;display:flex;align-items:center;justify-content:center;font-weight:700;">' +
+                (user.firstName||'U')[0].toUpperCase() +
+              '</div>' +
+              '<div>' +
+                '<div style="font-weight:700;font-size:0.88em;">' + (user.fullName||user.firstName||'User') + '</div>' +
+                '<div style="font-size:0.75em;color:rgba(255,255,255,0.5);">' + (user.email||'') + '</div>' +
+              '</div>' +
+              '<a href="pages/dashboard/buyer.html" style="margin-left:auto;background:var(--brand);color:white;padding:7px 12px;border-radius:8px;text-decoration:none;font-size:0.78em;font-weight:700;">Dashboard</a>' +
+            '</div>';
+        }
+        if (mmLogout) mmLogout.style.display = 'flex';
+      }
+    }
+
+    function logoutUser() {
+      if (typeof nexaLogout === 'function') {
+        nexaLogout().then(function() {
+          localStorage.removeItem('nexa_current_user');
+          closeMobileMenu();
+          window.location.reload();
+        });
+      } else {
+        localStorage.removeItem('nexa_current_user');
+        closeMobileMenu();
+        window.location.reload();
+      }
+    }
+
+    /* ── CART COUNT ── */
+    function updateCartDisplay() {
+      var cart  = JSON.parse(localStorage.getItem('nexa_cart') || '[]');
+      var count = cart.reduce(function(s,i){ return s+(i.qty||1); }, 0);
+      var badge = document.getElementById('nav-cart-count');
+      if (badge) badge.textContent = count;
+    }
+
+    /* ── PRODUCTS ── */
+    function loadHomepageProducts() {
+      if (typeof db === 'undefined') return;
+      var grid = document.getElementById('homepage-products');
+      if (!grid) return;
+
+      db.collection('products')
+        .where('status', '==', 'active')
+        .limit(8)
+        .get()
+        .then(function(snap) {
+          var products = [];
+          snap.forEach(function(doc) { products.push(doc.data()); });
+
+          if (products.length === 0) {
+            grid.innerHTML =
+              '<div style="grid-column:1/-1;text-align:center;padding:40px 20px;">' +
+                '<div style="font-size:3em;margin-bottom:12px;">🛍️</div>' +
+                '<p style="color:var(--muted);margin-bottom:14px;">No products listed yet.</p>' +
+                '<a href="pages/auth/become-provider.html?type=seller" class="btn-primary" style="font-size:0.85em;padding:10px 20px;">Be the first seller →</a>' +
+              '</div>';
+            return;
+          }
+
+          grid.innerHTML = products.map(function(p) {
+            var discount = p.oldPrice && p.oldPrice > p.price
+              ? Math.round((1 - p.price / p.oldPrice) * 100) : 0;
+            var imgHtml = p.imageUrl
+              ? '<img src="' + p.imageUrl + '" alt="' + (p.name||'') + '" loading="lazy"/>'
+              : '<span style="font-size:3em;">' + (p.emoji||'📦') + '</span>';
+            return '<div class="product-card" onclick="window.location.href=\'pages/shop/product.html?id=' + p.id + '\'">' +
+              '<div class="product-img">' +
+                imgHtml +
+                (discount > 0 ? '<div class="product-discount">-' + discount + '%</div>' : '') +
+              '</div>' +
+              '<div class="product-body">' +
+                '<div class="product-name">' + (p.name||'Product') + '</div>' +
+                '<div>' +
+                  '<span class="product-price">₦' + parseInt(p.price||0).toLocaleString() + '</span>' +
+                  (p.oldPrice && p.oldPrice > p.price ? '<span class="product-old">₦' + parseInt(p.oldPrice).toLocaleString() + '</span>' : '') +
+                '</div>' +
+                '<div class="product-loc">📍 ' + (p.location||'Nigeria') + '</div>' +
+              '</div>' +
+            '</div>';
+          }).join('');
+        })
+        .catch(function(err) {
+          console.log('Products error:', err);
+          grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--muted);">Unable to load products right now.</div>';
+        });
+    }
+
+    /* ── SCROLL REVEAL ── */
+    function initReveal() {
+      var els = document.querySelectorAll('.reveal');
+      var observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.1 });
+      els.forEach(function(el) { observer.observe(el); });
+    }
+
+    /* ── INIT ── */
+    document.addEventListener('DOMContentLoaded', function() {
+      checkAuthState();
+      updateCartDisplay();
+      loadHomepageProducts();
+      initReveal();
+
+      if (typeof auth !== 'undefined') {
+        auth.onAuthStateChanged(function(firebaseUser) {
+          if (firebaseUser) {
+            var stored = JSON.parse(localStorage.getItem('nexa_current_user') || 'null');
+            if (!stored && typeof db !== 'undefined') {
+              db.collection('users').doc(firebaseUser.uid).get()
+                .then(function(doc) {
+                  if (doc.exists) {
+                    localStorage.setItem('nexa_current_user', JSON.stringify(doc.data()));
+                    checkAuthState();
+                  }
+                });
+            }
+          } else {
+            localStorage.removeItem('nexa_current_user');
+            checkAuthState();
+          }
+        });
+      }
+    });
+
+  </script>
 
 </body>
 </html>
