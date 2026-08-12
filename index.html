@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <meta name="description" content="Nexabay — Nigeria's super app. Shop, hire services, rent property, learn skills, find jobs, order food, book doctors and more."/>
+  <meta name="description" content="Nexabay — Nigeria's everything platform. Shop, hire services, rent property, learn skills, find jobs, order food, access healthcare and more."/>
   <title>Nexabay — Africa's Everything Platform</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
   <style>
@@ -69,18 +69,15 @@
     .mm-link.earn{color:var(--accent);font-weight:700;}
     .mm-link.danger{color:#f87171;}
 
-    /* HERO */
-    .hero{min-height:100vh;display:flex;align-items:center;position:relative;overflow:hidden;padding-top:100px;}
+    /* HERO — tightened, no forced full viewport height */
+    .hero{padding-top:88px;position:relative;overflow:hidden;}
     .hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(124,58,237,0.22) 0%,transparent 65%),radial-gradient(ellipse 50% 50% at 80% 60%,rgba(249,115,22,0.1) 0%,transparent 50%),var(--dark);}
     .hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.025) 1px,transparent 1px);background-size:44px 44px;mask-image:radial-gradient(ellipse 80% 80% at 50% 50%,black 20%,transparent 100%);}
-    .hero-inner{max-width:640px;margin:0 auto;padding:32px 20px 60px;position:relative;z-index:1;text-align:center;}
-    .hero-badge{display:inline-flex;align-items:center;gap:7px;background:rgba(124,58,237,0.12);border:1px solid rgba(124,58,237,0.25);color:rgba(255,255,255,0.8);padding:6px 14px;border-radius:100px;font-size:0.78em;font-weight:600;margin-bottom:18px;}
-    .hero-badge-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:blink 2s infinite;}
-    @keyframes blink{0%,100%{opacity:1;}50%{opacity:0.3;}}
+    .hero-inner{max-width:640px;margin:0 auto;padding:28px 20px 40px;position:relative;z-index:1;text-align:center;}
     .hero h1{font-size:clamp(2em,9vw,3.6em);font-weight:900;line-height:1.1;letter-spacing:-0.025em;margin-bottom:16px;}
     .hero h1 .g{background:linear-gradient(135deg,#a78bfa,#f97316);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-    .hero-sub{font-size:clamp(0.9em,2.5vw,1.05em);color:rgba(255,255,255,0.55);line-height:1.7;margin-bottom:28px;}
-    .hero-btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:24px;}
+    .hero-sub{font-size:clamp(0.9em,2.5vw,1.05em);color:rgba(255,255,255,0.55);line-height:1.7;margin-bottom:26px;}
+    .hero-btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:22px;}
     .btn-p{background:linear-gradient(135deg,var(--brand),var(--accent));color:white;padding:13px 26px;border-radius:11px;text-decoration:none;font-weight:700;font-size:0.92em;display:inline-block;box-shadow:0 6px 28px rgba(124,58,237,0.28);transition:transform 0.18s;}
     .btn-p:hover{transform:translateY(-2px);}
     .btn-o{background:rgba(255,255,255,0.07);color:white;padding:13px 26px;border-radius:11px;text-decoration:none;font-weight:700;font-size:0.92em;display:inline-block;border:1.5px solid rgba(255,255,255,0.15);transition:border-color 0.18s;}
@@ -90,19 +87,21 @@
     .hero-trust-i strong{color:rgba(255,255,255,0.7);}
 
     /* ANNOUNCE BAR */
-    .announce{background:linear-gradient(135deg,rgba(124,58,237,0.18),rgba(249,115,22,0.15));border:1px solid rgba(124,58,237,0.2);border-radius:14px;padding:16px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:0 16px 32px;}
+    .announce{background:linear-gradient(135deg,rgba(124,58,237,0.18),rgba(249,115,22,0.15));border:1px solid rgba(124,58,237,0.2);border-radius:14px;padding:16px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:0 16px 28px;}
     .announce h3{font-size:0.95em;font-weight:800;margin-bottom:3px;}
     .announce p{font-size:0.78em;color:rgba(255,255,255,0.55);}
     .announce-btn{background:var(--accent);color:white;padding:9px 18px;border-radius:9px;text-decoration:none;font-weight:700;font-size:0.82em;white-space:nowrap;flex-shrink:0;}
 
-    /* SECTION */
-    .sec{max-width:1100px;margin:0 auto;padding:36px 16px;}
+    /* SECTION — tightened padding */
+    .sec{max-width:1100px;margin:0 auto;padding:28px 16px;}
     .sec-eye{font-size:0.72em;font-weight:700;text-transform:uppercase;letter-spacing:1.4px;color:var(--accent);margin-bottom:8px;}
     .sec-title{font-size:clamp(1.4em,5vw,2em);font-weight:900;letter-spacing:-0.02em;line-height:1.2;margin-bottom:10px;}
     .sec-sub{font-size:0.88em;color:rgba(255,255,255,0.5);line-height:1.65;max-width:440px;}
 
-    /* SERVICES GRID */
-    .srv-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:24px;}
+    /* SERVICES GRID + GROUP LABELS */
+    .srv-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:16px;}
+    .srv-group-label{grid-column:1/-1;font-size:0.68em;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-top:14px;margin-bottom:2px;}
+    .srv-group-label:first-child{margin-top:0;}
     .srv-card{background:var(--dark2);border:1px solid var(--border);border-radius:14px;padding:16px 14px;text-decoration:none;color:var(--white);transition:all 0.2s;display:block;}
     .srv-card:hover{border-color:rgba(255,255,255,0.14);transform:translateY(-2px);box-shadow:0 6px 24px rgba(0,0,0,0.25);}
     .srv-ico{width:44px;height:44px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:1.3em;margin-bottom:10px;}
@@ -128,14 +127,14 @@
 
     /* HOW IT WORKS */
     .how-bg{background:rgba(124,58,237,0.04);border-top:1px solid var(--border);border-bottom:1px solid var(--border);}
-    .steps{display:grid;gap:10px;margin-top:24px;}
+    .steps{display:grid;gap:10px;margin-top:20px;}
     .step{background:var(--dark2);border:1px solid var(--border);border-radius:14px;padding:18px 16px;display:flex;gap:14px;align-items:flex-start;}
     .step-n{width:36px;height:36px;border-radius:9px;background:linear-gradient(135deg,var(--brand),var(--accent));color:white;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:0.9em;flex-shrink:0;}
     .step-t{font-weight:700;font-size:0.88em;margin-bottom:4px;}
     .step-d{font-size:0.78em;color:rgba(255,255,255,0.45);line-height:1.6;}
 
     /* TRUST */
-    .trust-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:24px;}
+    .trust-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:20px;}
     .trust-card{background:var(--dark2);border:1px solid var(--border);border-radius:13px;padding:18px 14px;text-align:center;}
     .trust-ico{font-size:1.8em;margin-bottom:8px;}
     .trust-t{font-weight:700;font-size:0.84em;margin-bottom:4px;}
@@ -143,10 +142,11 @@
 
     /* EARN */
     .earn-bg{background:var(--dark2);border-top:1px solid var(--border);}
-    .earn-stats{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin:16px 0 20px;}
+    .earn-stats{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin:16px 0 8px;}
     .earn-stat{background:var(--dark);border:1px solid var(--border);border-radius:11px;padding:14px;text-align:center;}
     .earn-val{font-size:1.3em;font-weight:900;color:var(--accent);}
     .earn-lbl{font-size:0.7em;color:var(--muted);margin-top:2px;}
+    .earn-note{font-size:0.73em;color:var(--muted);margin-bottom:18px;}
 
     /* CTA */
     .cta-box{background:linear-gradient(135deg,var(--brand2),#4c1d95);border-radius:18px;padding:32px 20px;text-align:center;margin:0 16px 36px;position:relative;overflow:hidden;}
@@ -190,6 +190,7 @@
     @media(min-width:860px){
       .srv-grid{grid-template-columns:repeat(4,1fr);}
       .prod-grid{grid-template-columns:repeat(4,1fr);}
+      .srv-group-label{grid-column:span 4;}
     }
   </style>
 </head>
@@ -277,32 +278,28 @@
   <div class="hero-bg"></div>
   <div class="hero-grid"></div>
   <div class="hero-inner">
-    <div class="hero-badge">
-      <span class="hero-badge-dot"></span>
-      Now live in Nigeria 🇳🇬
-    </div>
-    <h1>Everything you need.<br/><span class="g">One Nigerian app.</span></h1>
-    <p class="hero-sub">Shop products, hire professionals, rent property, learn skills, find jobs, order food, book doctors and more — all with one account and one secure payment.</p>
+    <h1>Everything you need.<br/><span class="g">One Nigerian platform.</span></h1>
+    <p class="hero-sub">Shop products, hire professionals, rent property, learn skills, find jobs, order food, access healthcare and more — all with one account and secure payments.</p>
     <div class="hero-btns">
-      <a href="pages/shop/browse.html" class="btn-p">Start Shopping →</a>
+      <a href="pages/shop/browse.html" class="btn-p">Explore Nexabay</a>
       <a href="pages/auth/become-provider.html" class="btn-o">Start Earning</a>
     </div>
     <div class="hero-trust">
       <div class="hero-trust-i">✅ <strong>Secure</strong> Paystack payments</div>
       <div class="hero-trust-i">🛡️ <strong>Buyer</strong> protection policy</div>
-      <div class="hero-trust-i">🇳🇬 <strong>All 36</strong> states covered</div>
+      <div class="hero-trust-i">🇳🇬 <strong>Built for</strong> all 36 states</div>
     </div>
   </div>
 </section>
 
 <!-- ANNOUNCE -->
-<div style="background:var(--dark);padding:0 0 24px;">
+<div style="background:var(--dark);padding:0 0 20px;">
   <div class="announce rv">
     <div>
       <h3>🚀 We're live and accepting listings</h3>
       <p>New sellers, providers and services joining daily. Be early.</p>
     </div>
-    <a href="pages/auth/register.html" class="announce-btn">Join Free →</a>
+    <a href="pages/auth/register.html" class="announce-btn">Join Free</a>
   </div>
 </div>
 
@@ -313,6 +310,8 @@
     <div class="sec-title">12 services.<br/>One platform.</div>
     <p class="sec-sub">Every service you need in Nigeria — accessible from your phone in seconds.</p>
     <div class="srv-grid">
+
+      <div class="srv-group-label">Marketplace</div>
       <a href="pages/shop/browse.html" class="srv-card">
         <div class="srv-ico" style="background:rgba(249,115,22,0.12);">🛍️</div>
         <div class="srv-name">NexaShop</div>
@@ -329,16 +328,20 @@
         <div class="srv-name">NexaRent</div>
         <div class="srv-desc">Find property & rental items</div>
       </a>
-      <a href="pages/learn/browse.html" class="srv-card">
-        <div class="srv-ico" style="background:rgba(59,130,246,0.12);">🎓</div>
-        <div class="srv-name">NexaLearn</div>
-        <div class="srv-desc">Learn skills from Nigerian instructors</div>
-      </a>
+
+      <div class="srv-group-label">Work &amp; Learning</div>
       <a href="pages/jobs/browse.html" class="srv-card">
         <div class="srv-ico" style="background:rgba(236,72,153,0.12);">💼</div>
         <div class="srv-name">NexaJobs</div>
         <div class="srv-desc">Find jobs or hire talent</div>
       </a>
+      <a href="pages/learn/browse.html" class="srv-card">
+        <div class="srv-ico" style="background:rgba(59,130,246,0.12);">🎓</div>
+        <div class="srv-name">NexaLearn</div>
+        <div class="srv-desc">Learn skills from Nigerian instructors</div>
+      </a>
+
+      <div class="srv-group-label">Lifestyle</div>
       <a href="pages/food/browse.html" class="srv-card">
         <div class="srv-ico" style="background:rgba(234,179,8,0.12);">🍔</div>
         <div class="srv-name">NexaFood</div>
@@ -364,6 +367,8 @@
         <div class="srv-name">NexaRide</div>
         <div class="srv-desc">Book rides & delivery services</div>
       </a>
+
+      <div class="srv-group-label">Money &amp; Community</div>
       <a href="pages/pay/index.html" class="srv-card">
         <div class="srv-ico" style="background:rgba(124,58,237,0.12);">💳</div>
         <div class="srv-name">NexaPay</div>
@@ -383,12 +388,12 @@
 <!-- PRODUCTS -->
 <div style="background:var(--dark);">
   <div class="sec rv">
-    <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:18px;">
+    <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:16px;">
       <div>
         <div class="sec-eye">Fresh listings</div>
         <div class="sec-title" style="font-size:1.4em;">Latest Products</div>
       </div>
-      <a href="pages/shop/browse.html" style="color:var(--accent);font-size:0.82em;font-weight:700;text-decoration:none;white-space:nowrap;">See All →</a>
+      <a href="pages/shop/browse.html" style="color:var(--accent);font-size:0.82em;font-weight:700;text-decoration:none;white-space:nowrap;">See All</a>
     </div>
     <div class="prod-grid" id="homepage-products">
       <div class="prod-card"><div class="prod-img" style="background:var(--dark3);"></div><div class="prod-body"><div style="height:9px;background:var(--dark3);border-radius:4px;margin-bottom:5px;"></div><div style="height:9px;background:var(--dark3);border-radius:4px;width:55%;"></div></div></div>
@@ -409,7 +414,7 @@
     <div class="steps">
       <div class="step">
         <div class="step-n">1</div>
-        <div><div class="step-t">Create your free account</div><div class="step-d">Register in 30 seconds. One account unlocks all 12 services on Nexabay.</div></div>
+        <div><div class="step-t">Create your free account</div><div class="step-d">Register in minutes. One account unlocks all 12 services on Nexabay.</div></div>
       </div>
       <div class="step">
         <div class="step-n">2</div>
@@ -428,15 +433,15 @@
 <!-- TRUST -->
 <div style="background:var(--dark);">
   <div class="sec rv">
-    <div style="text-align:center;max-width:420px;margin:0 auto 24px;">
-      <div class="sec-eye">Why Nigerians trust us</div>
+    <div style="text-align:center;max-width:420px;margin:0 auto 20px;">
+      <div class="sec-eye">Why choose Nexabay</div>
       <div class="sec-title">Built for Nigeria.<br/>Built to last.</div>
     </div>
     <div class="trust-grid">
       <div class="trust-card"><div class="trust-ico">🔒</div><div class="trust-t">Escrow Payments</div><div class="trust-d">Money held safely until you confirm receipt</div></div>
       <div class="trust-card"><div class="trust-ico">✅</div><div class="trust-t">Verified Sellers</div><div class="trust-d">Every provider reviewed and approved by our team</div></div>
-      <div class="trust-card"><div class="trust-ico">🛡️</div><div class="trust-t">Buyer Protection</div><div class="trust-d">Minimum 50% refund guarantee on genuine disputes</div></div>
-      <div class="trust-card"><div class="trust-ico">📱</div><div class="trust-t">Works on Any Phone</div><div class="trust-d">Fully optimised for Android — no heavy app needed</div></div>
+      <div class="trust-card"><div class="trust-ico">🛡️</div><div class="trust-t">Buyer Protection</div><div class="trust-d">Eligible buyers get a minimum 50% refund when a genuine dispute is approved within 7 days</div></div>
+      <div class="trust-card"><div class="trust-ico">📱</div><div class="trust-t">Works on Any Phone</div><div class="trust-d">Fully optimised for Android — no heavy download needed</div></div>
     </div>
   </div>
 </div>
@@ -453,17 +458,18 @@
       <div class="earn-stat"><div class="earn-val">Free</div><div class="earn-lbl">to list & join</div></div>
       <div class="earn-stat"><div class="earn-val">5–20%</div><div class="earn-lbl">commission on sales only</div></div>
       <div class="earn-stat"><div class="earn-val">36</div><div class="earn-lbl">Nigerian states</div></div>
-      <div class="earn-stat"><div class="earn-val">24hrs</div><div class="earn-lbl">listing approval</div></div>
+      <div class="earn-stat"><div class="earn-val">24hrs</div><div class="earn-lbl">listings reviewed within</div></div>
     </div>
-    <a href="pages/auth/become-provider.html" class="btn-p" style="display:inline-block;font-size:0.88em;padding:12px 22px;">Start Earning Free →</a>
+    <p class="earn-note">Commission varies by service and category.</p>
+    <a href="pages/auth/become-provider.html" class="btn-p" style="display:inline-block;font-size:0.88em;padding:12px 22px;">Start Earning Free</a>
   </div>
 </div>
 
-<!-- CTA -->
-<div style="background:var(--dark);padding:24px 0 0;">
+<!-- FINAL CTA (hidden when logged in) -->
+<div id="final-cta-wrap" style="background:var(--dark);padding:24px 0 0;">
   <div class="cta-box rv">
-    <h2>Ready to experience everything Nigeria has to offer?</h2>
-    <p>Join Nexabay today. It takes 30 seconds — completely free.</p>
+    <h2>Ready to experience Nexabay?</h2>
+    <p>Join Nigerians already exploring a smarter way to shop, work and access services.</p>
     <div class="cta-btns">
       <a href="pages/auth/register.html" class="cta-w">Create Free Account</a>
       <a href="pages/shop/browse.html" class="cta-g">Browse Products</a>
@@ -509,7 +515,7 @@
     </div>
     <hr class="footer-hr"/>
     <div class="footer-bottom">
-      <div class="footer-copy">© 2025 Nexabay Ltd. All rights reserved. Made with ❤️ in Nigeria 🇳🇬</div>
+      <div class="footer-copy">© 2026 Nexabay Ltd. All rights reserved. Made in Nigeria 🇳🇬</div>
       <div class="footer-pays">
         <span class="pay-tag">💳 Paystack</span>
         <span class="pay-tag">🏦 Bank Transfer</span>
@@ -552,11 +558,12 @@
   /* AUTH */
   function checkAuth() {
     var user = JSON.parse(localStorage.getItem('nexa_current_user') || 'null');
-    var loginBtn   = document.getElementById('nav-login');
-    var signupBtn  = document.getElementById('nav-signup');
-    var accountBtn = document.getElementById('nav-account');
-    var mmUser     = document.getElementById('mm-user');
-    var mmLogout   = document.getElementById('mm-logout');
+    var loginBtn    = document.getElementById('nav-login');
+    var signupBtn   = document.getElementById('nav-signup');
+    var accountBtn  = document.getElementById('nav-account');
+    var mmUser      = document.getElementById('mm-user');
+    var mmLogout    = document.getElementById('mm-logout');
+    var finalCtaWrap = document.getElementById('final-cta-wrap');
 
     if (user) {
       if (loginBtn)   loginBtn.style.display   = 'none';
@@ -577,11 +584,13 @@
           '</div>';
       }
       if (mmLogout) mmLogout.style.display = 'flex';
+      if (finalCtaWrap) finalCtaWrap.style.display = 'none';
     } else {
       if (loginBtn)   loginBtn.style.display   = 'block';
       if (signupBtn)  signupBtn.style.display  = 'inline-block';
       if (accountBtn) accountBtn.style.display = 'none';
       if (mmLogout)   mmLogout.style.display   = 'none';
+      if (finalCtaWrap) finalCtaWrap.style.display = 'block';
     }
   }
 
@@ -624,7 +633,7 @@
             '<div style="grid-column:1/-1;text-align:center;padding:32px 16px;">' +
               '<div style="font-size:2.5em;margin-bottom:10px;">🛍️</div>' +
               '<p style="color:var(--muted);font-size:0.85em;margin-bottom:14px;">No products listed yet.</p>' +
-              '<a href="pages/auth/become-provider.html?type=seller" class="btn-p" style="font-size:0.82em;padding:10px 18px;">Be the first seller →</a>' +
+              '<a href="pages/auth/become-provider.html?type=seller" class="btn-p" style="font-size:0.82em;padding:10px 18px;">Be the first seller</a>' +
             '</div>';
           return;
         }
