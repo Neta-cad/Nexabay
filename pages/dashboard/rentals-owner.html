@@ -1,485 +1,689 @@
-<!-- BOOKINGS TAB -->
-      <div class="dash-tab" id="tab-bookings" style="display:none;">
-        <div class="dash-header">
-          <h1>Bookings</h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Rentals Dashboard — Nexabay</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="../../css/dashboard.css"/>
+</head>
+<body>
+
+<div class="db-toast" id="db-toast"></div>
+
+<div class="db-topbar">
+  <a href="../../index.html" class="db-logo">Nexa<span>bay</span></a>
+  <button class="db-tab active" onclick="showTab('overview')">📊 Overview</button>
+  <button class="db-tab" onclick="showTab('listings')">🏠 My Listings</button>
+  <button class="db-tab" onclick="showTab('add')">➕ Add Listing</button>
+  <button class="db-tab" onclick="showTab('bookings')">📋 Bookings</button>
+  <button class="db-tab" onclick="showTab('earnings')">💰 Earnings</button>
+  <div class="db-topbar-right">
+    <div class="db-user-avatar" id="user-avatar">R</div>
+  </div>
+</div>
+
+<div class="db-content">
+
+  <!-- OVERVIEW -->
+  <div class="db-tab-content active" id="content-overview">
+    <div class="db-page-header">
+      <div class="db-page-header-inner">
+        <div>
+          <h1>Welcome back! 👋</h1>
+          <p id="overview-sub">Here is your rental performance</p>
         </div>
-        <div class="orders-table-wrap">
-          <table class="orders-table">
-            <thead>
-              <tr>
-                <th>Booking ID</th>
-                <th>Listing</th>
-                <th>Renter</th>
-                <th>Amount</th>
-                <th>Status</th>
-                <th>Date</th>
-              </tr>
-            </thead>
-            <tbody id="bookings-body">
-              <tr><td colspan="6" style="text-align:center;color:var(--text2);padding:20px">No bookings yet</td></tr>
-            </tbody>
-          </table>
+        <button class="db-header-btn" onclick="showTab('add')">+ Add Listing</button>
+      </div>
+    </div>
+    <div class="db-stats">
+      <div class="db-stat">
+        <div class="db-stat-header"><div class="db-stat-label">Revenue</div><div class="db-stat-icon" style="background:#fff3e0;">💰</div></div>
+        <div class="db-stat-value" id="stat-revenue">₦0</div>
+        <div class="db-stat-sub">Total earned</div>
+      </div>
+      <div class="db-stat">
+        <div class="db-stat-header"><div class="db-stat-label">Bookings</div><div class="db-stat-icon" style="background:#e8f5e9;">📋</div></div>
+        <div class="db-stat-value" id="stat-bookings">0</div>
+        <div class="db-stat-sub">Total bookings</div>
+      </div>
+      <div class="db-stat">
+        <div class="db-stat-header"><div class="db-stat-label">Listings</div><div class="db-stat-icon" style="background:#e3f2fd;">🏠</div></div>
+        <div class="db-stat-value" id="stat-listings">0</div>
+        <div class="db-stat-sub">Active listings</div>
+      </div>
+      <div class="db-stat">
+        <div class="db-stat-header"><div class="db-stat-label">Balance</div><div class="db-stat-icon" style="background:#f3e5f5;">💸</div></div>
+        <div class="db-stat-value" id="stat-balance">₦0</div>
+        <div class="db-stat-sub">Available</div>
+      </div>
+    </div>
+    <div class="db-card">
+      <div class="db-card-header"><div class="db-card-title">⚡ Quick Actions</div></div>
+      <div class="db-card-body">
+        <div class="db-quick-grid">
+          <button class="db-quick-btn" onclick="showTab('add')"><div class="db-quick-icon">➕</div>Add Listing</button>
+          <button class="db-quick-btn" onclick="showTab('bookings')"><div class="db-quick-icon">📋</div>View Bookings</button>
+          <button class="db-quick-btn" onclick="showTab('earnings')"><div class="db-quick-icon">💸</div>Withdraw</button>
+          <button class="db-quick-btn" onclick="showTab('listings')"><div class="db-quick-icon">🏠</div>My Listings</button>
         </div>
       </div>
-
-      <!-- EARNINGS TAB -->
-      <div class="dash-tab" id="tab-earnings" style="display:none;">
-        <div class="dash-header">
-          <h1>Earnings & Withdrawals</h1>
+    </div>
+    <div class="db-card">
+      <div class="db-card-header">
+        <div class="db-card-title">🕒 Recent Bookings</div>
+        <button onclick="showTab('bookings')" style="background:none;border:none;color:#ff6b00;font-size:0.8em;font-weight:700;cursor:pointer;">See All →</button>
+      </div>
+      <div id="recent-bookings-wrap">
+        <div style="padding:16px;">
+          <div class="db-skeleton" style="width:100%;"></div>
+          <div class="db-skeleton" style="width:75%;"></div>
         </div>
+      </div>
+    </div>
+  </div>
 
-        <div class="earnings-cards">
-          <div class="earning-card">
-            <div class="ec-label">Total Earned</div>
-            <div class="ec-value" id="ec-total">₦0</div>
-          </div>
-          <div class="earning-card">
-            <div class="ec-label">Available Balance</div>
-            <div class="ec-value green" id="ec-available">₦0</div>
-          </div>
-        </div>
+  <!-- MY LISTINGS -->
+  <div class="db-tab-content" id="content-listings">
+    <div class="db-page-header">
+      <div class="db-page-header-inner">
+        <div><h1>My Listings</h1><p>Manage your rental listings</p></div>
+        <button class="db-header-btn" onclick="showTab('add')">+ Add New</button>
+      </div>
+    </div>
+    <div class="db-card">
+      <div id="listings-list">
+        <div class="db-empty"><div class="db-empty-icon">⏳</div><h3>Loading listings...</h3></div>
+      </div>
+    </div>
+  </div>
 
-        <div class="withdraw-section">
-          <h3>Withdraw Funds</h3>
-          <div class="withdraw-form">
-            <div class="form-group">
-              <label>Bank Name</label>
-              <select id="wd-bank">
-                <option>GTBank</option>
-                <option>Access Bank</option>
-                <option>First Bank</option>
-                <option>Zenith Bank</option>
-                <option>UBA</option>
-                <option>Opay</option>
-                <option>Palmpay</option>
-                <option>Kuda Bank</option>
+  <!-- ADD LISTING -->
+  <div class="db-tab-content" id="content-add">
+    <div class="db-page-header">
+      <div class="db-page-header-inner">
+        <div><h1 id="add-form-title">Add New Listing</h1><p>Fill details carefully — admin reviews before publishing</p></div>
+      </div>
+    </div>
+    <div class="db-card">
+      <div class="db-card-body">
+        <div class="db-form">
+
+          <div class="db-form-group">
+            <label>Listing Type *</label>
+            <select id="r-type">
+              <option value="">Select type</option>
+              <option value="apartment">Apartment</option>
+              <option value="house">House / Duplex</option>
+              <option value="self-contain">Self Contain</option>
+              <option value="room">Single Room</option>
+              <option value="office">Office Space</option>
+              <option value="shop">Shop / Store</option>
+              <option value="land">Land</option>
+              <option value="event-hall">Event Hall</option>
+              <option value="car">Car Rental</option>
+              <option value="equipment">Equipment / Item Rental</option>
+            </select>
+          </div>
+
+          <div class="db-form-group">
+            <label>Title *</label>
+            <input type="text" id="r-title" placeholder="e.g. Spacious 2-Bedroom Apartment in Lekki"/>
+          </div>
+
+          <div class="db-form-row">
+            <div class="db-form-group">
+              <label>Price (₦) *</label>
+              <input type="number" id="r-price" placeholder="e.g. 250000" min="0"/>
+            </div>
+            <div class="db-form-group">
+              <label>Price Period *</label>
+              <select id="r-period">
+                <option value="per year">Per Year</option>
+                <option value="per month">Per Month</option>
+                <option value="per week">Per Week</option>
+                <option value="per day">Per Day</option>
+                <option value="per night">Per Night</option>
+                <option value="per hour">Per Hour</option>
               </select>
             </div>
-            <div class="form-group">
-              <label>Account Number</label>
-              <input type="text" id="wd-account" placeholder="10 digit account number" maxlength="10"/>
-            </div>
-            <div class="form-group">
-              <label>Account Name</label>
-              <input type="text" id="wd-name" placeholder="Account holder name"/>
-            </div>
-            <div class="form-group">
-              <label>Amount to Withdraw (₦)</label>
-              <input type="number" id="wd-amount" placeholder="Minimum ₦1,000" min="1000"/>
-            </div>
-            <div id="wd-error" style="color:#cc0000;font-size:0.85em;display:none;"></div>
-            <div id="wd-success" style="color:#006622;font-size:0.85em;display:none;"></div>
-            <button class="btn-withdraw" onclick="processWithdrawal()">
-              💸 Withdraw Now
-            </button>
           </div>
+
+          <div class="db-form-row">
+            <div class="db-form-group">
+              <label>State *</label>
+              <select id="r-state">
+                <option value="">Select state</option>
+                <option>Lagos</option><option>Abuja FCT</option>
+                <option>Rivers</option><option>Kano</option>
+                <option>Oyo</option><option>Enugu</option>
+                <option>Anambra</option><option>Delta</option>
+                <option>Edo</option><option>Imo</option>
+                <option>Kaduna</option><option>Ogun</option>
+                <option>Osun</option><option>Other</option>
+              </select>
+            </div>
+            <div class="db-form-group">
+              <label>Area / City *</label>
+              <input type="text" id="r-area" placeholder="e.g. Lekki Phase 1"/>
+            </div>
+          </div>
+
+          <div class="db-form-group">
+            <label>Description *</label>
+            <textarea id="r-desc" rows="4" placeholder="Describe the property — size, features, nearby landmarks, condition, what's included..."></textarea>
+          </div>
+
+          <!-- Property specific -->
+          <div id="property-fields">
+            <div class="db-form-row">
+              <div class="db-form-group">
+                <label>Bedrooms</label>
+                <select id="r-bedrooms">
+                  <option value="0">Studio / Self-contain</option>
+                  <option value="1">1 Bedroom</option>
+                  <option value="2">2 Bedrooms</option>
+                  <option value="3">3 Bedrooms</option>
+                  <option value="4">4 Bedrooms</option>
+                  <option value="5+">5+ Bedrooms</option>
+                </select>
+              </div>
+              <div class="db-form-group">
+                <label>Bathrooms</label>
+                <select id="r-bathrooms">
+                  <option value="1">1 Bathroom</option>
+                  <option value="2">2 Bathrooms</option>
+                  <option value="3">3 Bathrooms</option>
+                  <option value="4+">4+ Bathrooms</option>
+                </select>
+              </div>
+            </div>
+            <div class="db-form-group">
+              <label>Amenities</label>
+              <div class="cb-group">
+                <label class="cb-label"><input type="checkbox" class="amenity" value="Water"/> 💧 Water</label>
+                <label class="cb-label"><input type="checkbox" class="amenity" value="Light (PHCN)"/> 💡 Light</label>
+                <label class="cb-label"><input type="checkbox" class="amenity" value="Generator"/> ⚡ Generator</label>
+                <label class="cb-label"><input type="checkbox" class="amenity" value="Security"/> 🔒 Security</label>
+                <label class="cb-label"><input type="checkbox" class="amenity" value="Parking"/> 🅿️ Parking</label>
+                <label class="cb-label"><input type="checkbox" class="amenity" value="Borehole"/> 🚿 Borehole</label>
+                <label class="cb-label"><input type="checkbox" class="amenity" value="AC"/> ❄️ AC</label>
+                <label class="cb-label"><input type="checkbox" class="amenity" value="Furnished"/> 🛋️ Furnished</label>
+                <label class="cb-label"><input type="checkbox" class="amenity" value="Tiled"/> 🪟 Tiled</label>
+                <label class="cb-label"><input type="checkbox" class="amenity" value="CCTV"/> 📹 CCTV</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="db-form-group">
+            <label>Contact Phone *</label>
+            <input type="tel" id="r-phone" placeholder="e.g. 08012345678"/>
+          </div>
+
+          <div class="db-form-group">
+            <label>Listing Image</label>
+            <div class="db-img-upload" onclick="document.getElementById('r-img-file').click()">
+              <input type="file" id="r-img-file" accept="image/*" onchange="previewImg(this)"/>
+              <div id="r-img-placeholder">
+                <div class="db-img-upload-icon">📷</div>
+                <div class="db-img-upload-text">Tap to upload a photo of the property</div>
+              </div>
+              <img id="r-img-preview" class="db-img-preview" style="display:none;"/>
+            </div>
+          </div>
+
+          <div class="db-form-group">
+            <label>Or choose an emoji</label>
+            <div class="db-emoji-grid">
+              <button class="db-emoji-btn selected" onclick="selEmoji('🏠',this)">🏠</button>
+              <button class="db-emoji-btn" onclick="selEmoji('🏢',this)">🏢</button>
+              <button class="db-emoji-btn" onclick="selEmoji('🏡',this)">🏡</button>
+              <button class="db-emoji-btn" onclick="selEmoji('🏗️',this)">🏗️</button>
+              <button class="db-emoji-btn" onclick="selEmoji('🏬',this)">🏬</button>
+              <button class="db-emoji-btn" onclick="selEmoji('🚗',this)">🚗</button>
+              <button class="db-emoji-btn" onclick="selEmoji('🛏️',this)">🛏️</button>
+              <button class="db-emoji-btn" onclick="selEmoji('🏖️',this)">🏖️</button>
+            </div>
+          </div>
+
+          <div class="db-error-msg" id="r-error"></div>
+          <div class="db-success-msg" id="r-success"></div>
+          <button class="db-submit-btn" id="r-submit-btn" onclick="publishListing()">🚀 Submit for Approval</button>
+          <div style="text-align:center;font-size:0.75em;color:#999;margin-top:8px;">Admin will review and publish within 24 hours</div>
         </div>
       </div>
-
-      <!-- SETTINGS TAB -->
-      <div class="dash-tab" id="tab-settings" style="display:none;">
-        <div class="dash-header">
-          <h1>Owner Settings</h1>
-        </div>
-
-        <div class="settings-card">
-          <h3>Owner Profile</h3>
-          <div class="form-group">
-            <label>Display Name</label>
-            <input type="text" id="owner-name" placeholder="Your name or business name"/>
-          </div>
-          <div class="form-group">
-            <label>WhatsApp Number</label>
-            <input type="tel" id="owner-whatsapp" placeholder="080xxxxxxxx"/>
-          </div>
-          <button class="btn-save" onclick="saveOwnerSettings()">Save Changes</button>
-        </div>
-      </div>
-
-    </main>
-  </div>
-
-  <!-- PREVIEW MODAL -->
-  <div id="preview-modal-overlay" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);z-index:900;" onclick="closePreviewModal()"></div>
-  <div id="preview-modal" style="display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:white;border-radius:14px;max-width:380px;width:90%;max-height:85vh;overflow-y:auto;z-index:901;padding:20px;">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
-      <h3 style="font-size:1.1em;font-weight:700;">Listing Preview</h3>
-      <button onclick="closePreviewModal()" style="background:var(--gray);border:none;width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:0.9em;">✕</button>
     </div>
-    <div id="preview-modal-body"></div>
   </div>
 
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-  <script src="../../js/firebase/config.js"></script>
-  <script src="../../js/firebase/auth.js"></script>
-  <script src="../../js/firebase/rentals.js"></script>
-  <script src="../../js/firebase/imgbb.js"></script>
-  <script src="../../js/core/main.js"></script>
-  <script>
+  <!-- BOOKINGS -->
+  <div class="db-tab-content" id="content-bookings">
+    <div class="db-page-header">
+      <div class="db-page-header-inner">
+        <div><h1>Bookings</h1><p>Manage rental inquiries and bookings</p></div>
+      </div>
+    </div>
+    <div class="db-card">
+      <div class="db-table-wrap">
+        <table class="db-table">
+          <thead>
+            <tr>
+              <th>ID</th><th>Property</th><th>Tenant</th>
+              <th>Amount</th><th>Date</th><th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="bookings-body">
+            <tr><td colspan="6" style="text-align:center;padding:20px;color:#999;">No bookings yet</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
 
-    var myListings = [];
-    var selectedEmoji = '🏠';
-    var editingListingId = null;
-    var selectedImageFile = null;
-    var currentListingType = 'property';
+  <!-- EARNINGS -->
+  <div class="db-tab-content" id="content-earnings">
+    <div class="db-page-header">
+      <div class="db-page-header-inner">
+        <div><h1>Earnings</h1><p>Track revenue and withdraw funds</p></div>
+      </div>
+    </div>
+    <div class="db-earnings-cards">
+      <div class="db-earning-card"><div class="db-earning-label">Total Revenue</div><div class="db-earning-value" id="ec-total">₦0</div></div>
+      <div class="db-earning-card"><div class="db-earning-label">Available</div><div class="db-earning-value green" id="ec-avail">₦0</div></div>
+      <div class="db-earning-card"><div class="db-earning-label">Nexabay Fee (5%)</div><div class="db-earning-value orange" id="ec-fee">₦0</div></div>
+      <div class="db-earning-card"><div class="db-earning-label">Total Bookings</div><div class="db-earning-value" id="ec-bk">0</div></div>
+    </div>
+    <div class="db-withdraw-card">
+      <div class="db-withdraw-title">💸 Withdraw Funds</div>
+      <div class="db-form" style="gap:12px;">
+        <div class="db-form-group">
+          <label>Bank Name</label>
+          <select id="wd-bank">
+            <option>GTBank</option><option>Access Bank</option>
+            <option>First Bank</option><option>Zenith Bank</option>
+            <option>UBA</option><option>Opay</option>
+            <option>Palmpay</option><option>Kuda Bank</option>
+            <option>Moniepoint</option>
+          </select>
+        </div>
+        <div class="db-form-row">
+          <div class="db-form-group">
+            <label>Account Number</label>
+            <input type="text" id="wd-acct" placeholder="10 digits" maxlength="10"/>
+          </div>
+          <div class="db-form-group">
+            <label>Account Name</label>
+            <input type="text" id="wd-name" placeholder="Your name"/>
+          </div>
+        </div>
+        <div class="db-form-group">
+          <label>Amount (₦)</label>
+          <input type="number" id="wd-amount" placeholder="Minimum ₦1,000" min="1000"/>
+        </div>
+        <div id="wd-error" style="color:#cc0000;font-size:0.82em;display:none;"></div>
+        <div id="wd-success" style="color:#00a651;font-size:0.82em;display:none;"></div>
+        <button class="db-submit-btn" onclick="doWithdraw()">💸 Request Withdrawal</button>
+      </div>
+    </div>
+  </div>
 
-    function init() {
-      var user = JSON.parse(localStorage.getItem('nexa_current_user') || 'null');
-      if (user) {
-        var nameEl = document.getElementById('dash-name');
-        var avatarEl = document.getElementById('dash-avatar');
-        var navEl = document.getElementById('nav-owner-name');
-        if (nameEl) nameEl.textContent = user.fullName || user.firstName || 'Owner';
-        if (avatarEl) avatarEl.textContent = (user.firstName || 'O')[0].toUpperCase();
-        if (navEl) navEl.textContent = user.firstName + '\'s Rentals';
-      }
-    }
+</div>
 
-    if (typeof auth !== 'undefined') {
-      auth.onAuthStateChanged(function(user) {
-        if (user) loadMyListings();
-      });
-    }
+<!-- BOTTOM NAV -->
+<div class="db-bottom-nav">
+  <a href="../../index.html"><span>🏠</span><span>Home</span></a>
+  <a href="../../pages/rentals/browse.html"><span>🏘️</span><span>Browse</span></a>
+  <a href="#" onclick="showTab('add');return false;" class="active"><span>➕</span><span>Add</span></a>
+  <a href="#" onclick="showTab('bookings');return false;"><span>📋</span><span>Bookings</span></a>
+  <a href="buyer.html"><span>👤</span><span>Account</span></a>
+</div>
 
-    function showTab(tab) {
-      var tabs = document.querySelectorAll('.dash-tab');
-      tabs.forEach(function(t) { t.style.display = 'none'; });
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="../../js/firebase/config.js"></script>
+<script src="../../js/firebase/auth.js"></script>
+<script src="../../js/firebase/rentals.js"></script>
+<script src="../../js/firebase/imgbb.js"></script>
+<script src="../../js/core/main.js"></script>
+<script>
 
-      var navItems = document.querySelectorAll('.dash-nav-item');
-      navItems.forEach(function(n) { n.classList.remove('active'); });
+  var myListings = [], myBookings = [];
+  var selEmoji_val = '🏠', selImgFile = null, editId = null;
 
-      var target = document.getElementById('tab-' + tab);
-      if (target) target.style.display = 'block';
+  function init() {
+    var user = JSON.parse(localStorage.getItem('nexa_current_user') || 'null');
+    if (!user) { window.location.href = '../auth/login.html'; return; }
+    var av = document.getElementById('user-avatar');
+    var sb = document.getElementById('overview-sub');
+    if (av) av.textContent = (user.firstName || 'R')[0].toUpperCase();
+    if (sb) sb.textContent = 'Welcome back, ' + (user.firstName || 'Owner') + '!';
+    showTab('overview');
+  }
 
-      var navMap = {
-        'overview': 0, 'listings': 1, 'add-listing': 2,
-        'bookings': 3, 'earnings': 4, 'settings': 5
-      };
-      var index = navMap[tab];
-      if (index !== undefined && navItems[index]) {
-        navItems[index].classList.add('active');
-      }
-    }
-
-    function setListingType(type) {
-      currentListingType = type;
-      document.getElementById('btn-property').classList.toggle('active', type === 'property');
-      document.getElementById('btn-item').classList.toggle('active', type === 'item');
-
-      document.getElementById('property-category-group').style.display = type === 'property' ? 'block' : 'none';
-      document.getElementById('item-category-group').style.display = type === 'item' ? 'block' : 'none';
-      document.getElementById('property-fields').style.display = type === 'property' ? 'flex' : 'none';
-      document.getElementById('item-condition-group').style.display = type === 'item' ? 'block' : 'none';
-      document.getElementById('amenities-section').style.display = type === 'property' ? 'block' : 'none';
-    }
-
-    function loadMyListings() {
-      var user = auth.currentUser;
-      if (!user) { renderMyListings([]); return; }
-
-      nexaGetOwnerRentals(user.uid)
-        .then(function(listings) {
-          myListings = listings;
-          renderMyListings(listings);
-          updateStats();
-        })
-        .catch(function(err) {
-          console.log('Error loading listings:', err);
-          renderMyListings([]);
-        });
-    }
-
-    function updateStats() {
-      var el = document.getElementById('stat-listings');
-      if (el) el.textContent = myListings.length;
-    }
-
-    function renderMyListings(listings) {
-      var list = document.getElementById('my-listings-list');
-      if (!list) return;
-      if (!listings || listings.length === 0) {
-        list.innerHTML =
-          '<div class="empty-products">' +
-            '<div style="font-size:3em;margin-bottom:12px">🏠</div>' +
-            '<h3>No listings yet</h3>' +
-            '<p>Add your first rental to start earning</p>' +
-            '<button class="btn-primary" onclick="showTab(\'add-listing\')">➕ Add Listing</button>' +
-          '</div>';
-        return;
-      }
-      list.innerHTML = listings.map(function(r) {
-        var periodLabel = { daily: '/day', weekly: '/week', monthly: '/month', yearly: '/year' }[r.rentalPeriod] || '';
-        return '<div class="my-product-row">' +
-          '<div class="mp-img">' + (r.emoji || '🏠') + '</div>' +
-          '<div class="mp-info">' +
-            '<div class="mp-name">' + r.title + '</div>' +
-            '<div class="mp-cat">' + (r.category || r.listingType) + '</div>' +
-            '<div class="mp-stock">📍 ' + r.location + '</div>' +
-          '</div>' +
-          '<div class="mp-price">₦' + parseInt(r.price).toLocaleString() + periodLabel + '</div>' +
-          '<div class="mp-actions">' +
-            '<button onclick="previewListing(\'' + r.id + '\')" style="padding:6px 10px;background:white;border:1px solid var(--border);border-radius:6px;cursor:pointer;margin-right:4px;">👁️</button>' +
-            '<button onclick="editListing(\'' + r.id + '\')" style="padding:6px 10px;background:white;border:1px solid var(--border);border-radius:6px;cursor:pointer;margin-right:4px;">✏️</button>' +
-            '<button onclick="deleteListing(\'' + r.id + '\')" class="btn-delete">🗑️</button>' +
-          '</div>' +
-        '</div>';
-      }).join('');
-    }
-
-    function selectEmoji(emoji) {
-      selectedEmoji = emoji;
-      var preview = document.getElementById('preview-emoji');
-      var placeholder = document.getElementById('upload-placeholder');
-      var previewEl = document.getElementById('upload-preview');
-
-      if (preview) preview.textContent = emoji;
-      if (placeholder) placeholder.style.display = 'none';
-      if (previewEl) previewEl.style.display = 'flex';
-
-      document.querySelectorAll('.emoji-grid span').forEach(function(s) {
-        s.classList.remove('selected');
-      });
-      event.target.classList.add('selected');
-    }
-
-    function triggerImageUpload() {
-      document.getElementById('image-file').click();
-    }
-
-    function previewImage() {
-      var file = document.getElementById('image-file').files[0];
-      if (!file) return;
-      selectedImageFile = file;
-
-      var reader = new FileReader();
-      reader.onload = function(e) {
-        document.getElementById('upload-placeholder').style.display = 'none';
-        var previewEl = document.getElementById('upload-preview');
-        previewEl.style.display = 'flex';
-        previewEl.innerHTML = '<img src="' + e.target.result + '" style="max-width:100%;max-height:150px;border-radius:8px;"/>';
-      };
-      reader.readAsDataURL(file);
-    }
-
-    function getAmenities() {
-      var checked = document.querySelectorAll('.amenity-cb:checked');
-      var result = [];
-      checked.forEach(function(cb) { result.push(cb.value); });
-      return result;
-    }
-
-    function publishRental() {
-      var title    = document.getElementById('al-title').value.trim();
-      var category = currentListingType === 'property'
-        ? document.getElementById('al-category-property').value
-        : document.getElementById('al-category-item').value;
-      var desc     = document.getElementById('al-desc').value.trim();
-      var price    = document.getElementById('al-price').value;
-      var period   = document.getElementById('al-period').value;
-      var location = document.getElementById('al-location').value;
-      var bedrooms = document.getElementById('al-bedrooms').value;
-      var bathrooms = document.getElementById('al-bathrooms').value;
-      var condition = document.getElementById('al-condition').value;
-      var errEl    = document.getElementById('al-error');
-      var sucEl    = document.getElementById('al-success');
-
-      errEl.style.display = 'none';
-      sucEl.style.display = 'none';
-
-      if (!title)    { errEl.textContent = 'Enter a title';        errEl.style.display = 'block'; return; }
-      if (!category) { errEl.textContent = 'Select a category';    errEl.style.display = 'block'; return; }
-      if (!desc)     { errEl.textContent = 'Enter description';    errEl.style.display = 'block'; return; }
-      if (!price)    { errEl.textContent = 'Enter price';          errEl.style.display = 'block'; return; }
-      if (!location) { errEl.textContent = 'Select your location'; errEl.style.display = 'block'; return; }
-
-      var user = auth.currentUser;
-      if (!user) {
-        errEl.textContent = 'Please login first';
-        errEl.style.display = 'block';
-        return;
-      }
-
-      var publishBtn = document.querySelector('.btn-publish');
-      if (publishBtn) { publishBtn.textContent = 'Publishing...'; publishBtn.disabled = true; }
-
-      var userData = JSON.parse(localStorage.getItem('nexa_current_user') || '{}');
-
-      var uploadPromise = selectedImageFile
-        ? uploadImageToImgBB(selectedImageFile)
-        : Promise.resolve('');
-
-      uploadPromise.then(function(imageUrl) {
-        var payload = {
-          title: title, listingType: currentListingType, category: category,
-          description: desc, price: price, rentalPeriod: period, location: location,
-          bedrooms: currentListingType === 'property' ? bedrooms : null,
-          bathrooms: currentListingType === 'property' ? bathrooms : null,
-          amenities: currentListingType === 'property' ? getAmenities() : [],
-          condition: currentListingType === 'item' ? condition : '',
-          emoji: selectedEmoji || '🏠',
-          ownerName: userData.fullName || userData.firstName || 'Owner',
-        };
-
-        if (editingListingId) {
-          var updateData = {
-            title: title, listingType: currentListingType, category: category,
-            description: desc, price: parseFloat(price), rentalPeriod: period, location: location,
-            bedrooms: currentListingType === 'property' ? (bedrooms || null) : null,
-            bathrooms: currentListingType === 'property' ? (bathrooms || null) : null,
-            amenities: currentListingType === 'property' ? getAmenities() : [],
-            condition: currentListingType === 'item' ? condition : '',
-            emoji: selectedEmoji || '🏠',
-          };
-          if (imageUrl) updateData.imageUrl = imageUrl;
-          return db.collection('rentals').doc(editingListingId).update(updateData)
-            .then(function() { return editingListingId; });
-        } else {
-          return nexaAddRental(payload, imageUrl);
-        }
-      })
-      .then(function(listingId) {
-        sucEl.textContent = editingListingId
-          ? '🎉 Listing updated successfully!'
-          : '🎉 Listing published! ID: ' + listingId;
-        sucEl.style.display = 'block';
-
-        document.getElementById('al-title').value = '';
-        document.getElementById('al-desc').value = '';
-        document.getElementById('al-price').value = '';
-        document.getElementById('al-location').value = '';
-        document.getElementById('al-bedrooms').value = '';
-        document.getElementById('al-bathrooms').value = '';
-        document.getElementById('upload-placeholder').style.display = 'block';
-        document.getElementById('upload-preview').style.display = 'none';
-        document.querySelectorAll('.amenity-cb').forEach(function(cb) { cb.checked = false; });
-        selectedEmoji = '🏠';
-        selectedImageFile = null;
-        editingListingId = null;
-
-        if (publishBtn) { publishBtn.textContent = '🚀 Publish Listing'; publishBtn.disabled = false; }
-
-        loadMyListings();
-      })
-      .catch(function(err) {
-        errEl.textContent = '❌ Error: ' + (err.message || err.toString());
-        errEl.style.display = 'block';
-        if (publishBtn) { publishBtn.textContent = editingListingId ? '💾 Update Listing' : '🚀 Publish Listing'; publishBtn.disabled = false; }
-      });
-    }
-
-    function editListing(listingId) {
-      var listing = myListings.find(function(r) { return r.id === listingId; });
-      if (!listing) { showToast('Listing not found'); return; }
-
-      editingListingId = listingId;
-      setListingType(listing.listingType || 'property');
-
-      document.getElementById('al-title').value = listing.title || '';
-      document.getElementById('al-desc').value = listing.description || '';
-      document.getElementById('al-price').value = listing.price || '';
-      document.getElementById('al-period').value = listing.rentalPeriod || 'monthly';
-      document.getElementById('al-location').value = listing.location || '';
-
-      if (listing.listingType === 'property') {
-        document.getElementById('al-category-property').value = listing.category || '';
-        document.getElementById('al-bedrooms').value = listing.bedrooms || '';
-        document.getElementById('al-bathrooms').value = listing.bathrooms || '';
-        (listing.amenities || []).forEach(function(a) {
-          var cb = document.querySelector('.amenity-cb[value="' + a + '"]');
-          if (cb) cb.checked = true;
-        });
-      } else {
-        document.getElementById('al-category-item').value = listing.category || '';
-        document.getElementById('al-condition').value = listing.condition || 'new';
-      }
-
-      selectedEmoji = listing.emoji || '🏠';
-      document.getElementById('preview-emoji').textContent = selectedEmoji;
-      document.getElementById('upload-placeholder').style.display = 'none';
-      document.getElementById('upload-preview').style.display = 'flex';
-
-      var publishBtn = document.querySelector('.btn-publish');
-      if (publishBtn) publishBtn.textContent = '💾 Update Listing';
-
-      showTab('add-listing');
-      showToast('✏️ Editing "' + listing.title + '" — make changes and tap Update');
-    }
-
-    function previewListing(listingId) {
-      var listing = myListings.find(function(r) { return r.id === listingId; });
-      if (!listing) { showToast('Listing not found'); return; }
-
-      var periodLabel = { daily: '/day', weekly: '/week', monthly: '/month', yearly: '/year' }[listing.rentalPeriod] || '';
-      var imgHtml = listing.imageUrl
-        ? '<img src="' + listing.imageUrl + '" style="width:100%;border-radius:10px;margin-bottom:14px;"/>'
-        : '<div style="font-size:4em;text-align:center;background:var(--gray);border-radius:10px;padding:30px 0;margin-bottom:14px;">' + (listing.emoji || '🏠') + '</div>';
-
-      var extraInfo = '';
-      if (listing.listingType === 'property') {
-        extraInfo = '<span style="background:var(--gray);padding:4px 10px;border-radius:6px;font-size:0.8em;">🛏️ ' + (listing.bedrooms || 0) + ' bed</span>' +
-          '<span style="background:var(--gray);padding:4px 10px;border-radius:6px;font-size:0.8em;">🚿 ' + (listing.bathrooms || 0) + ' bath</span>';
-      }
-
-      var body = document.getElementById('preview-modal-body');
-      body.innerHTML =
-        imgHtml +
-        '<h2 style="font-size:1.2em;margin-bottom:6px;">' + listing.title + '</h2>' +
-        '<div style="color:var(--orange);font-size:1.4em;font-weight:800;margin-bottom:10px;">₦' + parseInt(listing.price).toLocaleString() + periodLabel + '</div>' +
-        '<div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;">' +
-          '<span style="background:var(--gray);padding:4px 10px;border-radius:6px;font-size:0.8em;">' + listing.category + '</span>' +
-          extraInfo +
-          '<span style="background:var(--gray);padding:4px 10px;border-radius:6px;font-size:0.8em;">📍 ' + listing.location + '</span>' +
-        '</div>' +
-        '<p style="font-size:0.9em;color:var(--text2);line-height:1.6;">' + (listing.description || 'No description') + '</p>';
-
-      document.getElementById('preview-modal-overlay').style.display = 'block';
-      document.getElementById('preview-modal').style.display = 'block';
-    }
-
-    function closePreviewModal() {
-      document.getElementById('preview-modal-overlay').style.display = 'none';
-      document.getElementById('preview-modal').style.display = 'none';
-    }
-
-    function deleteListing(listingId) {
-      if (confirm('Delete this listing?')) {
-        nexaDeleteRental(listingId)
-          .then(function() {
-            showToast('🗑️ Listing deleted');
-            myListings = myListings.filter(function(r) { return r.id !== listingId; });
-            renderMyListings(myListings);
-            updateStats();
-            setTimeout(function() { loadMyListings(); }, 800);
-          })
-          .catch(function(err) {
-            showToast('Error: ' + err.message);
-          });
-      }
-    }
-
-    function saveOwnerSettings() {
-      showToast('✅ Settings saved!');
-    }
-
-    function doOwnerLogout() {
-      if (typeof nexaLogout === 'function') {
-        nexaLogout().then(function() {
-          localStorage.removeItem('nexa_current_user');
-          window.location.href = '../../index.html';
-        });
-      } else {
-        localStorage.removeItem('nexa_current_user');
-        window.location.href = '../../index.html';
-      }
-    }
-
-    document.addEventListener('DOMContentLoaded', function() {
-      init();
+  if (typeof auth !== 'undefined') {
+    auth.onAuthStateChanged(function(u) {
+      if (u) { loadListings(); loadBookings(); }
+      else { window.location.href = '../auth/login.html'; }
     });
+  }
 
-  </script>
+  function showTab(tab) {
+    document.querySelectorAll('.db-tab').forEach(function(t){ t.classList.remove('active'); });
+    document.querySelectorAll('.db-tab-content').forEach(function(c){ c.classList.remove('active'); });
+    var map = { overview:0, listings:1, add:2, bookings:3, earnings:4 };
+    var tabs = document.querySelectorAll('.db-tab');
+    if (map[tab] !== undefined && tabs[map[tab]]) tabs[map[tab]].classList.add('active');
+    var c = document.getElementById('content-' + tab);
+    if (c) c.classList.add('active');
+    window.scrollTo({ top:0, behavior:'smooth' });
+  }
 
+  function loadListings() {
+    var user = auth.currentUser;
+    if (!user) return;
+    nexaGetOwnerListings(user.uid)
+      .then(function(data) {
+        myListings = data.filter(function(r){ return r.status !== 'deleted'; });
+        renderListings(myListings);
+        updateStats();
+      })
+      .catch(function(){ renderListings([]); });
+  }
+
+  function loadBookings() {
+    var user = auth.currentUser;
+    if (!user) return;
+    db.collection('rentalBookings')
+      .where('ownerId', '==', user.uid)
+      .get()
+      .then(function(snap) {
+        myBookings = [];
+        snap.forEach(function(doc){ myBookings.push(Object.assign({ id: doc.id }, doc.data())); });
+        myBookings.sort(function(a,b){
+          return (b.createdAt?b.createdAt.toMillis():0)-(a.createdAt?a.createdAt.toMillis():0);
+        });
+        renderBookings(myBookings);
+        renderRecentBookings(myBookings.slice(0,5));
+        updateStats();
+      })
+      .catch(function(err){ console.log('Bookings error:', err); });
+  }
+
+  function renderListings(items) {
+    var list = document.getElementById('listings-list');
+    if (!list) return;
+    if (!items || items.length === 0) {
+      list.innerHTML = '<div class="db-empty"><div class="db-empty-icon">🏠</div><h3>No listings yet</h3><p>Add your first property or rental item to start getting bookings</p><button class="db-empty-btn" onclick="showTab(\'add\')">+ Add Your First Listing</button></div>';
+      return;
+    }
+    list.innerHTML = items.map(function(r) {
+      var sc = { active:'status-active', pending:'status-pending', rejected:'status-rejected' }[r.status] || 'status-pending';
+      var sl = { active:'✅ Live', pending:'⏳ Pending', rejected:'❌ Rejected' }[r.status] || '⏳ Pending';
+      var img = r.imageUrl ? '<img src="' + r.imageUrl + '"/>' : (r.emoji || '🏠');
+      return '<div class="db-row">' +
+        '<div class="db-row-img">' + img + '</div>' +
+        '<div class="db-row-info">' +
+          '<div class="db-row-name">' + (r.title || 'Listing') + '</div>' +
+          '<div class="db-row-meta">' + (r.type || '') + ' • ' + (r.state || '') + (r.area ? ', ' + r.area : '') + '</div>' +
+          '<div class="db-row-status ' + sc + '">' + sl + '</div>' +
+        '</div>' +
+        '<div class="db-row-price">₦' + parseInt(r.price||0).toLocaleString() + '<small style="font-size:0.65em;color:#999;"> /' + (r.period||'yr') + '</small></div>' +
+        '<div class="db-row-actions">' +
+          '<button class="db-action-btn" onclick="editListing(\'' + r.id + '\')">✏️</button>' +
+          '<button class="db-action-btn danger" onclick="deleteListing(\'' + r.id + '\')">🗑️</button>' +
+        '</div>' +
+      '</div>';
+    }).join('');
+  }
+
+  function renderBookings(bks) {
+    var body = document.getElementById('bookings-body');
+    if (!body) return;
+    if (!bks || bks.length === 0) {
+      body.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:20px;color:#999;">No bookings yet</td></tr>';
+      return;
+    }
+    body.innerHTML = bks.map(function(b) {
+      return '<tr>' +
+        '<td><strong style="color:#ff6b00;">' + (b.id||'').slice(-6) + '</strong></td>' +
+        '<td style="font-size:0.85em;max-width:100px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + (b.listingTitle||'') + '</td>' +
+        '<td>' + (b.customerName||'Tenant') + '</td>' +
+        '<td style="font-weight:700;color:#ff6b00;">₦' + (b.totalPrice||0).toLocaleString() + '</td>' +
+        '<td style="font-size:0.82em;color:#999;">' + (b.createdAt ? new Date(b.createdAt.toMillis()).toLocaleDateString() : '') + '</td>' +
+        '<td><span style="background:#d4edda;color:#155724;padding:3px 8px;border-radius:4px;font-size:0.72em;font-weight:700;">' + (b.status||'confirmed') + '</span></td>' +
+      '</tr>';
+    }).join('');
+  }
+
+  function renderRecentBookings(bks) {
+    var wrap = document.getElementById('recent-bookings-wrap');
+    if (!wrap) return;
+    if (!bks || bks.length === 0) {
+      wrap.innerHTML = '<div class="db-empty" style="padding:20px;"><div class="db-empty-icon" style="font-size:2em;">📋</div><h3>No bookings yet</h3><p>List your property to start receiving bookings</p></div>';
+      return;
+    }
+    wrap.innerHTML = '<div class="db-table-wrap"><table class="db-table"><thead><tr><th>Tenant</th><th>Property</th><th>Amount</th><th>Status</th></tr></thead><tbody>' +
+      bks.map(function(b) {
+        return '<tr>' +
+          '<td>' + (b.customerName||'Tenant') + '</td>' +
+          '<td style="font-size:0.85em;max-width:90px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + (b.listingTitle||'') + '</td>' +
+          '<td style="font-weight:700;color:#ff6b00;">₦' + (b.totalPrice||0).toLocaleString() + '</td>' +
+          '<td><span style="background:#d4edda;color:#155724;padding:3px 7px;border-radius:4px;font-size:0.7em;font-weight:700;">' + (b.status||'confirmed') + '</span></td>' +
+        '</tr>';
+      }).join('') +
+    '</tbody></table></div>';
+  }
+
+  function updateStats() {
+    var revenue = myBookings.reduce(function(s,b){ return s+(b.totalPrice||0); }, 0);
+    var balance = Math.round(revenue * 0.95);
+    document.getElementById('stat-revenue').textContent  = '₦' + revenue.toLocaleString();
+    document.getElementById('stat-bookings').textContent = myBookings.length;
+    document.getElementById('stat-listings').textContent = myListings.filter(function(r){ return r.status==='active'; }).length;
+    document.getElementById('stat-balance').textContent  = '₦' + balance.toLocaleString();
+    document.getElementById('ec-total').textContent      = '₦' + revenue.toLocaleString();
+    document.getElementById('ec-avail').textContent      = '₦' + balance.toLocaleString();
+    document.getElementById('ec-fee').textContent        = '₦' + Math.round(revenue*0.05).toLocaleString();
+    document.getElementById('ec-bk').textContent         = myBookings.length;
+  }
+
+  function previewImg(input) {
+    var file = input.files[0];
+    if (!file) return;
+    selImgFile = file;
+    var reader = new FileReader();
+    reader.onload = function(e) {
+      document.getElementById('r-img-placeholder').style.display = 'none';
+      var p = document.getElementById('r-img-preview');
+      p.src = e.target.result;
+      p.style.display = 'block';
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function selEmoji(emoji, btn) {
+    selEmoji_val = emoji;
+    document.querySelectorAll('.db-emoji-btn').forEach(function(b){ b.classList.remove('selected'); });
+    btn.classList.add('selected');
+  }
+
+  function getAmenities() {
+    var checked = [];
+    document.querySelectorAll('.amenity:checked').forEach(function(cb){ checked.push(cb.value); });
+    return checked;
+  }
+
+  function publishListing() {
+    var type    = document.getElementById('r-type').value;
+    var title   = document.getElementById('r-title').value.trim();
+    var price   = document.getElementById('r-price').value;
+    var period  = document.getElementById('r-period').value;
+    var state   = document.getElementById('r-state').value;
+    var area    = document.getElementById('r-area').value.trim();
+    var desc    = document.getElementById('r-desc').value.trim();
+    var phone   = document.getElementById('r-phone').value.trim();
+    var errEl   = document.getElementById('r-error');
+    var sucEl   = document.getElementById('r-success');
+    var btn     = document.getElementById('r-submit-btn');
+
+    errEl.style.display = 'none';
+    sucEl.style.display = 'none';
+
+    if (!type)   { errEl.textContent = 'Select listing type';   errEl.style.display='block'; return; }
+    if (!title)  { errEl.textContent = 'Enter a title';         errEl.style.display='block'; return; }
+    if (!price)  { errEl.textContent = 'Enter price';           errEl.style.display='block'; return; }
+    if (!state)  { errEl.textContent = 'Select your state';     errEl.style.display='block'; return; }
+    if (!area)   { errEl.textContent = 'Enter area or city';    errEl.style.display='block'; return; }
+    if (!desc)   { errEl.textContent = 'Enter a description';   errEl.style.display='block'; return; }
+    if (!phone)  { errEl.textContent = 'Enter contact phone';   errEl.style.display='block'; return; }
+
+    var user = auth.currentUser;
+    if (!user) { errEl.textContent='Please login first'; errEl.style.display='block'; return; }
+
+    btn.textContent = 'Submitting...';
+    btn.disabled    = true;
+
+    var userData = JSON.parse(localStorage.getItem('nexa_current_user') || '{}');
+    var upload   = selImgFile ? uploadImageToImgBB(selImgFile) : Promise.resolve('');
+
+    upload.then(function(imageUrl) {
+      var data = {
+        ownerId:    user.uid,
+        ownerName:  userData.fullName || userData.firstName || 'Owner',
+        type:       type,
+        title:      title,
+        price:      parseFloat(price),
+        period:     period,
+        state:      state,
+        area:       area,
+        description: desc,
+        phone:      phone,
+        bedrooms:   document.getElementById('r-bedrooms').value,
+        bathrooms:  document.getElementById('r-bathrooms').value,
+        amenities:  getAmenities(),
+        imageUrl:   imageUrl,
+        emoji:      selEmoji_val,
+        status:     'pending',
+        createdAt:  firebase.firestore.FieldValue.serverTimestamp(),
+      };
+
+      if (editId) {
+        return db.collection('rentals').doc(editId).update(data);
+      } else {
+        var ref = db.collection('rentals').doc();
+        data.id = ref.id;
+        return ref.set(data);
+      }
+    })
+    .then(function() {
+      sucEl.textContent = editId
+        ? '✅ Listing updated! Admin will review changes.'
+        : '🎉 Listing submitted! Admin will review and publish within 24 hours.';
+      sucEl.style.display = 'block';
+      btn.textContent = '🚀 Submit for Approval';
+      btn.disabled    = false;
+
+      document.getElementById('r-type').value  = '';
+      document.getElementById('r-title').value = '';
+      document.getElementById('r-price').value = '';
+      document.getElementById('r-area').value  = '';
+      document.getElementById('r-desc').value  = '';
+      document.getElementById('r-phone').value = '';
+      document.getElementById('r-img-preview').style.display     = 'none';
+      document.getElementById('r-img-placeholder').style.display = 'block';
+      document.querySelectorAll('.amenity').forEach(function(cb){ cb.checked=false; });
+      selImgFile = null;
+      editId     = null;
+      document.getElementById('add-form-title').textContent = 'Add New Listing';
+
+      loadListings();
+      setTimeout(function(){ showTab('listings'); }, 2000);
+    })
+    .catch(function(err) {
+      errEl.textContent = '❌ Error: ' + err.message;
+      errEl.style.display = 'block';
+      btn.textContent = '🚀 Submit for Approval';
+      btn.disabled    = false;
+    });
+  }
+
+  function editListing(id) {
+    var r = myListings.find(function(l){ return l.id === id; });
+    if (!r) return;
+    editId = id;
+    document.getElementById('add-form-title').textContent = 'Edit Listing';
+    document.getElementById('r-type').value  = r.type || '';
+    document.getElementById('r-title').value = r.title || '';
+    document.getElementById('r-price').value = r.price || '';
+    document.getElementById('r-period').value = r.period || 'per year';
+    document.getElementById('r-state').value = r.state || '';
+    document.getElementById('r-area').value  = r.area || '';
+    document.getElementById('r-desc').value  = r.description || '';
+    document.getElementById('r-phone').value = r.phone || '';
+    if (r.bedrooms) document.getElementById('r-bedrooms').value = r.bedrooms;
+    if (r.bathrooms) document.getElementById('r-bathrooms').value = r.bathrooms;
+    if (r.amenities) {
+      document.querySelectorAll('.amenity').forEach(function(cb){
+        cb.checked = r.amenities.indexOf(cb.value) > -1;
+      });
+    }
+    if (r.imageUrl) {
+      document.getElementById('r-img-preview').src = r.imageUrl;
+      document.getElementById('r-img-preview').style.display = 'block';
+      document.getElementById('r-img-placeholder').style.display = 'none';
+    }
+    showTab('add');
+    window.scrollTo({ top:0, behavior:'smooth' });
+  }
+
+  function deleteListing(id) {
+    if (!confirm('Delete this listing?')) return;
+    db.collection('rentals').doc(id).update({ status: 'deleted' })
+      .then(function() {
+        showToast('🗑️ Listing deleted');
+        myListings = myListings.filter(function(r){ return r.id !== id; });
+        renderListings(myListings);
+        updateStats();
+      })
+      .catch(function(err){ showToast('Error: ' + err.message); });
+  }
+
+  function doWithdraw() {
+    var bank   = document.getElementById('wd-bank').value;
+    var acct   = document.getElementById('wd-acct').value.trim();
+    var name   = document.getElementById('wd-name').value.trim();
+    var amount = parseInt(document.getElementById('wd-amount').value);
+    var errEl  = document.getElementById('wd-error');
+    var sucEl  = document.getElementById('wd-success');
+    errEl.style.display = 'none';
+    sucEl.style.display = 'none';
+    if (!acct || acct.length < 10) { errEl.textContent='Enter valid 10-digit account number'; errEl.style.display='block'; return; }
+    if (!name)   { errEl.textContent='Enter account name'; errEl.style.display='block'; return; }
+    if (!amount || amount < 1000) { errEl.textContent='Minimum withdrawal is ₦1,000'; errEl.style.display='block'; return; }
+    var user = auth.currentUser;
+    if (!user) return;
+    db.collection('withdrawalRequests').add({
+      userId: user.uid, userType: 'rental-owner',
+      bank: bank, account: acct, name: name,
+      amount: amount, status: 'pending',
+      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+    }).then(function() {
+      sucEl.textContent = '✅ Withdrawal request submitted! We will process within 1-2 business days.';
+      sucEl.style.display = 'block';
+      document.getElementById('wd-amount').value = '';
+    }).catch(function(err){ errEl.textContent='Error: ' + err.message; errEl.style.display='block'; });
+  }
+
+  function showToast(msg) {
+    var t = document.getElementById('db-toast');
+    if (!t) return;
+    t.textContent = msg;
+    t.style.display = 'block';
+    setTimeout(function(){ t.style.display='none'; }, 2500);
+  }
+
+  document.addEventListener('DOMContentLoaded', function(){ init(); });
+
+</script>
 </body>
 </html>
