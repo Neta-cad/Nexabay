@@ -4,574 +4,747 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Jobs Dashboard — Nexabay</title>
-  <link rel="stylesheet" href="../../css/main.css"/>
-  <link rel="stylesheet" href="../../css/dashboard.css"/>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="../../css/dashboard.css"/>
 </head>
-<body class="dashboard-body">
+<body>
 
-  <!-- NAVBAR -->
-  <nav class="navbar">
-    <div class="nav-inner">
-      <a href="../../index.html" class="logo">
-        <span class="logo-nexa">Nexa</span><span class="logo-bay">bay</span>
-      </a>
-      <div class="nav-actions">
-        <span class="nav-link" id="nav-employer-name">My Jobs</span>
-        <a href="../../index.html" class="nav-link">← Back to Site</a>
+<div class="db-toast" id="db-toast"></div>
+
+<div class="db-topbar">
+  <a href="../../index.html" class="db-logo">Nexa<span>bay</span></a>
+  <button class="db-tab active" onclick="showTab('overview')">📊 Overview</button>
+  <button class="db-tab" onclick="showTab('jobs')">💼 My Jobs</button>
+  <button class="db-tab" onclick="showTab('add')">➕ Post Job</button>
+  <button class="db-tab" onclick="showTab('applicants')">
+    👥 Applicants
+    <span class="db-tab-badge" id="app-badge" style="display:none;">0</span>
+  </button>
+  <button class="db-tab" onclick="showTab('settings')">⚙️ Settings</button>
+  <div class="db-topbar-right">
+    <div class="db-user-avatar" id="user-avatar">E</div>
+  </div>
+</div>
+
+<div class="db-content">
+
+  <!-- OVERVIEW -->
+  <div class="db-tab-content active" id="content-overview">
+    <div class="db-page-header">
+      <div class="db-page-header-inner">
+        <div>
+          <h1>Welcome back! 👋</h1>
+          <p id="overview-sub">Manage your job postings and applicants</p>
+        </div>
+        <button class="db-header-btn" onclick="showTab('add')">+ Post a Job</button>
       </div>
     </div>
-  </nav>
 
-  <div class="dashboard-layout">
-
-    <!-- SIDEBAR -->
-    <aside class="dash-sidebar">
-      <div class="dash-profile">
-        <div class="dash-avatar" id="dash-avatar">E</div>
-        <div class="dash-name" id="dash-name">Employer</div>
-        <div class="dash-badge">💼 Employer</div>
+    <div class="db-stats">
+      <div class="db-stat">
+        <div class="db-stat-header"><div class="db-stat-label">Active Jobs</div><div class="db-stat-icon" style="background:#e3f2fd;">💼</div></div>
+        <div class="db-stat-value" id="stat-active">0</div>
+        <div class="db-stat-sub">Live postings</div>
       </div>
+      <div class="db-stat">
+        <div class="db-stat-header"><div class="db-stat-label">Applicants</div><div class="db-stat-icon" style="background:#e8f5e9;">👥</div></div>
+        <div class="db-stat-value" id="stat-applicants">0</div>
+        <div class="db-stat-sub">Total received</div>
+      </div>
+      <div class="db-stat">
+        <div class="db-stat-header"><div class="db-stat-label">Shortlisted</div><div class="db-stat-icon" style="background:#fff3e0;">✅</div></div>
+        <div class="db-stat-value" id="stat-shortlisted">0</div>
+        <div class="db-stat-sub">Ready to hire</div>
+      </div>
+      <div class="db-stat">
+        <div class="db-stat-header"><div class="db-stat-label">Total Jobs</div><div class="db-stat-icon" style="background:#f3e5f5;">📋</div></div>
+        <div class="db-stat-value" id="stat-total">0</div>
+        <div class="db-stat-sub">All postings</div>
+      </div>
+    </div>
 
-      <nav class="dash-nav">
-        <a href="#" class="dash-nav-item active" onclick="showTab('overview')">
-          📊 Overview
-        </a>
-        <a href="#" class="dash-nav-item" onclick="showTab('jobs')">
-          💼 My Job Posts
-        </a>
-        <a href="#" class="dash-nav-item" onclick="showTab('add-job')">
-          ➕ Post a Job
-        </a>
-        <a href="#" class="dash-nav-item" onclick="showTab('applicants')">
-          📋 Applicants
-        </a>
-        <a href="#" class="dash-nav-item" onclick="showTab('settings')">
-          ⚙️ Settings
-        </a>
-        <a href="buyer.html" class="dash-nav-item">
-          👤 My Account
-        </a>
-        <a href="#" class="dash-nav-item logout" onclick="doEmployerLogout()">
-          🚪 Logout
-        </a>
-      </nav>
-    </aside>
-
-    <!-- MAIN CONTENT -->
-    <main class="dash-main">
-
-      <!-- OVERVIEW TAB -->
-      <div class="dash-tab" id="tab-overview">
-        <div class="dash-header">
-          <h1>Welcome back! 👋</h1>
-          <p>Here is your hiring activity today</p>
-        </div>
-
-        <div class="stats-grid">
-          <div class="stat-card">
-            <div class="stat-icon">💼</div>
-            <div class="stat-info">
-              <div class="stat-value" id="stat-jobs">0</div>
-              <div class="stat-label">Active Job Posts</div>
-            </div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-icon">📋</div>
-            <div class="stat-info">
-              <div class="stat-value" id="stat-applicants">0</div>
-              <div class="stat-label">Total Applicants</div>
-            </div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-icon">⏳</div>
-            <div class="stat-info">
-              <div class="stat-value" id="stat-pending">0</div>
-              <div class="stat-label">Pending Review</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="dash-section">
-          <h2>Quick Actions</h2>
-          <div class="quick-actions">
-            <button class="quick-btn" onclick="showTab('add-job')">
-              ➕ Post New Job
-            </button>
-            <button class="quick-btn" onclick="showTab('applicants')">
-              📋 Review Applicants
-            </button>
-          </div>
+    <div class="db-card">
+      <div class="db-card-header"><div class="db-card-title">⚡ Quick Actions</div></div>
+      <div class="db-card-body">
+        <div class="db-quick-grid">
+          <button class="db-quick-btn" onclick="showTab('add')"><div class="db-quick-icon">➕</div>Post New Job</button>
+          <button class="db-quick-btn" onclick="showTab('applicants')"><div class="db-quick-icon">👥</div>View Applicants</button>
+          <button class="db-quick-btn" onclick="showTab('jobs')"><div class="db-quick-icon">💼</div>My Job Posts</button>
+          <button class="db-quick-btn" onclick="filterApplicants('shortlisted');showTab('applicants');"><div class="db-quick-icon">✅</div>Shortlisted</button>
         </div>
       </div>
+    </div>
 
-      <!-- MY JOBS TAB -->
-      <div class="dash-tab" id="tab-jobs" style="display:none;">
-        <div class="dash-header">
-          <h1>My Job Posts</h1>
-          <button class="btn-primary" onclick="showTab('add-job')">
-            ➕ Post a Job
-          </button>
-        </div>
-
-        <div id="my-jobs-list" class="my-products-list"></div>
+    <div class="db-card">
+      <div class="db-card-header">
+        <div class="db-card-title">🕒 Recent Applicants</div>
+        <button onclick="showTab('applicants')" style="background:none;border:none;color:#ff6b00;font-size:0.8em;font-weight:700;cursor:pointer;">See All →</button>
       </div>
-      <!-- ADD JOB TAB -->
-      <div class="dash-tab" id="tab-add-job" style="display:none;">
-        <div class="dash-header">
-          <h1>Post a New Job</h1>
+      <div id="recent-apps-wrap">
+        <div style="padding:16px;">
+          <div class="db-skeleton" style="width:100%;"></div>
+          <div class="db-skeleton" style="width:75%;"></div>
         </div>
+      </div>
+    </div>
+  </div>
 
-        <div class="add-product-form">
+  <!-- MY JOBS -->
+  <div class="db-tab-content" id="content-jobs">
+    <div class="db-page-header">
+      <div class="db-page-header-inner">
+        <div><h1>My Job Posts</h1><p>Manage your active and pending job listings</p></div>
+        <button class="db-header-btn" onclick="showTab('add')">+ Post New</button>
+      </div>
+    </div>
+    <div class="db-card">
+      <div id="jobs-list">
+        <div class="db-empty"><div class="db-empty-icon">⏳</div><h3>Loading jobs...</h3></div>
+      </div>
+    </div>
+  </div>
 
-          <div class="form-section">
-            <h3>Job Details</h3>
+  <!-- POST JOB -->
+  <div class="db-tab-content" id="content-add">
+    <div class="db-page-header">
+      <div class="db-page-header-inner">
+        <div><h1 id="add-form-title">Post a Job</h1><p>Fill details carefully — admin reviews before publishing</p></div>
+      </div>
+    </div>
+    <div class="db-card">
+      <div class="db-card-body">
+        <div class="db-form">
 
-            <div class="form-group">
-              <label>Job Title *</label>
-              <input type="text" id="aj-title" placeholder="e.g. Frontend Developer" maxlength="100"/>
-            </div>
+          <div class="db-form-group">
+            <label>Job Title *</label>
+            <input type="text" id="j-title" placeholder="e.g. Senior Frontend Developer"/>
+          </div>
 
-            <div class="form-group">
-              <label>Company Name *</label>
-              <input type="text" id="aj-company" placeholder="Your company name"/>
-            </div>
-
-            <div class="form-group">
+          <div class="db-form-row">
+            <div class="db-form-group">
               <label>Category *</label>
-              <select id="aj-category">
+              <select id="j-category">
                 <option value="">Select category</option>
                 <option>Technology & IT</option>
-                <option>Sales & Marketing</option>
-                <option>Customer Service</option>
+                <option>Marketing & Sales</option>
                 <option>Finance & Accounting</option>
+                <option>Human Resources</option>
+                <option>Customer Service</option>
                 <option>Engineering</option>
                 <option>Healthcare</option>
-                <option>Education</option>
+                <option>Education & Training</option>
+                <option>Design & Creative</option>
+                <option>Operations & Logistics</option>
+                <option>Legal</option>
                 <option>Administration</option>
-                <option>Logistics & Driving</option>
-                <option>Creative & Design</option>
+                <option>Hospitality</option>
+                <option>Construction & Real Estate</option>
+                <option>Agriculture</option>
+                <option>Media & Communications</option>
                 <option>Other</option>
               </select>
             </div>
-
-            <div class="form-group">
+            <div class="db-form-group">
               <label>Job Type *</label>
-              <select id="aj-type">
+              <select id="j-type">
                 <option value="Full-time">Full-time</option>
                 <option value="Part-time">Part-time</option>
                 <option value="Contract">Contract</option>
+                <option value="Freelance">Freelance</option>
                 <option value="Internship">Internship</option>
                 <option value="Remote">Remote</option>
+                <option value="Hybrid">Hybrid</option>
               </select>
             </div>
-
-            <div class="form-group">
-              <label>Job Description *</label>
-              <textarea id="aj-desc" placeholder="Describe the role, responsibilities..." rows="4"></textarea>
-            </div>
-
-            <div class="form-group">
-              <label>Requirements</label>
-              <textarea id="aj-requirements" placeholder="Qualifications, experience needed..." rows="3"></textarea>
-            </div>
           </div>
 
-          <div class="form-section">
-            <h3>Salary Range (₦/month)</h3>
-            <div class="form-row-2">
-              <div class="form-group">
-                <label>Minimum</label>
-                <input type="number" id="aj-salary-min" placeholder="0" min="0"/>
-              </div>
-              <div class="form-group">
-                <label>Maximum</label>
-                <input type="number" id="aj-salary-max" placeholder="0" min="0"/>
-              </div>
-            </div>
+          <div class="db-form-group">
+            <label>Company Name *</label>
+            <input type="text" id="j-company" placeholder="e.g. Nexabay Ltd"/>
           </div>
 
-          <div class="form-section">
-            <h3>Location</h3>
-            <div class="form-group">
-              <label>State *</label>
-              <select id="aj-location">
+          <div class="db-form-row">
+            <div class="db-form-group">
+              <label>State / Location *</label>
+              <select id="j-location">
                 <option value="">Select state</option>
-                <option>Lagos</option>
-                <option>Abuja FCT</option>
-                <option>Rivers</option>
-                <option>Kano</option>
-                <option>Oyo</option>
-                <option>Enugu</option>
-                <option>Anambra</option>
-                <option>Delta</option>
-                <option>Edo</option>
-                <option>Imo</option>
+                <option>Lagos</option><option>Abuja FCT</option>
+                <option>Rivers</option><option>Kano</option>
+                <option>Oyo</option><option>Enugu</option>
+                <option>Anambra</option><option>Delta</option>
+                <option>Edo</option><option>Kaduna</option>
+                <option>Remote (Work from Home)</option>
+                <option>Multiple Locations</option>
               </select>
             </div>
-            <div class="form-group">
-              <label class="checkbox-label">
-                <input type="checkbox" id="aj-remote"/>
-                This job can be done remotely
-              </label>
+            <div class="db-form-group">
+              <label>Experience Level *</label>
+              <select id="j-experience">
+                <option value="Entry Level">Entry Level (0-2 years)</option>
+                <option value="Mid Level">Mid Level (2-5 years)</option>
+                <option value="Senior Level">Senior Level (5+ years)</option>
+                <option value="Manager">Manager / Team Lead</option>
+                <option value="Executive">Executive / Director</option>
+                <option value="Any">Any Level</option>
+              </select>
             </div>
           </div>
 
-          <div id="aj-error" class="ap-error" style="display:none;"></div>
-          <div id="aj-success" class="ap-success" style="display:none;"></div>
-
-          <div class="form-actions">
-            <button class="btn-publish" onclick="publishJob()">
-              🚀 Post Job
-            </button>
+          <div class="db-form-row">
+            <div class="db-form-group">
+              <label>Min Salary (₦/month)</label>
+              <input type="number" id="j-salary-min" placeholder="e.g. 150000"/>
+            </div>
+            <div class="db-form-group">
+              <label>Max Salary (₦/month)</label>
+              <input type="number" id="j-salary-max" placeholder="e.g. 300000"/>
+            </div>
           </div>
 
+          <div class="db-form-group">
+            <label>Job Description *</label>
+            <textarea id="j-desc" rows="5" placeholder="Describe the role, responsibilities, what a typical day looks like, team structure, company culture..."></textarea>
+          </div>
+
+          <div class="db-form-group">
+            <label>Requirements *</label>
+            <textarea id="j-requirements" rows="4" placeholder="List the skills, qualifications and experience required. e.g. — Bachelor's degree in Computer Science&#10;— 3+ years React experience&#10;— Strong communication skills"></textarea>
+          </div>
+
+          <div class="db-form-group">
+            <label>Benefits</label>
+            <div class="cb-group">
+              <label class="cb-label"><input type="checkbox" class="benefit" value="Health Insurance"/> 🏥 Health Insurance</label>
+              <label class="cb-label"><input type="checkbox" class="benefit" value="Pension"/> 💰 Pension</label>
+              <label class="cb-label"><input type="checkbox" class="benefit" value="Remote Work"/> 🏠 Remote Work</label>
+              <label class="cb-label"><input type="checkbox" class="benefit" value="Annual Bonus"/> 🎁 Annual Bonus</label>
+              <label class="cb-label"><input type="checkbox" class="benefit" value="Training Budget"/> 📚 Training Budget</label>
+              <label class="cb-label"><input type="checkbox" class="benefit" value="Transport Allowance"/> 🚗 Transport</label>
+              <label class="cb-label"><input type="checkbox" class="benefit" value="Meal Allowance"/> 🍔 Meal Allowance</label>
+              <label class="cb-label"><input type="checkbox" class="benefit" value="13th Month Salary"/> 💵 13th Month</label>
+            </div>
+          </div>
+
+          <div class="db-form-group">
+            <label>Application Deadline</label>
+            <input type="date" id="j-deadline"/>
+          </div>
+
+          <div class="db-form-group">
+            <label>Contact Email for Applications *</label>
+            <input type="email" id="j-email" placeholder="hr@yourcompany.com"/>
+          </div>
+
+          <div class="db-error-msg" id="j-error"></div>
+          <div class="db-success-msg" id="j-success"></div>
+
+          <button class="db-submit-btn" id="j-submit-btn" onclick="publishJob()">
+            🚀 Submit Job for Approval
+          </button>
+          <div style="text-align:center;font-size:0.75em;color:#999;margin-top:8px;">
+            Job posts cost ₦5,000 flat fee after admin approval • Admin reviews within 24 hours
+          </div>
         </div>
       </div>
-      <!-- APPLICANTS TAB -->
-      <div class="dash-tab" id="tab-applicants" style="display:none;">
-        <div class="dash-header">
-          <h1>Applicants</h1>
-        </div>
-
-        <div class="form-group">
-          <label>Select a job to view applicants</label>
-          <select id="applicant-job-select" onchange="loadApplicantsForJob()">
-            <option value="">Select a job post...</option>
-          </select>
-        </div>
-
-        <div id="applicants-list" style="margin-top:16px;"></div>
-      </div>
-
-      <!-- SETTINGS TAB -->
-      <div class="dash-tab" id="tab-settings" style="display:none;">
-        <div class="dash-header">
-          <h1>Employer Settings</h1>
-        </div>
-
-        <div class="settings-card">
-          <h3>Company Profile</h3>
-          <div class="form-group">
-            <label>Company Name</label>
-            <input type="text" id="employer-company" placeholder="Your company name"/>
-          </div>
-          <div class="form-group">
-            <label>Company Description</label>
-            <textarea id="employer-desc" rows="3" placeholder="Tell candidates about your company..."></textarea>
-          </div>
-          <div class="form-group">
-            <label>Contact Email</label>
-            <input type="email" id="employer-email" placeholder="hr@company.com"/>
-          </div>
-          <button class="btn-save" onclick="saveEmployerSettings()">Save Changes</button>
-        </div>
-      </div>
-
-    </main>
-  </div>
-
-  <!-- APPLICANT DETAIL MODAL -->
-  <div id="preview-modal-overlay" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);z-index:900;" onclick="closePreviewModal()"></div>
-  <div id="preview-modal" style="display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:white;border-radius:14px;max-width:380px;width:90%;max-height:85vh;overflow-y:auto;z-index:901;padding:20px;">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
-      <h3 style="font-size:1.1em;font-weight:700;">Applicant Details</h3>
-      <button onclick="closePreviewModal()" style="background:var(--gray);border:none;width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:0.9em;">✕</button>
     </div>
-    <div id="preview-modal-body"></div>
   </div>
 
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-  <script src="../../js/firebase/config.js"></script>
-  <script src="../../js/firebase/auth.js"></script>
-  <script src="../../js/firebase/jobs.js"></script>
-  <script src="../../js/core/main.js"></script>
-  <script>
+  <!-- APPLICANTS -->
+  <div class="db-tab-content" id="content-applicants">
+    <div class="db-page-header">
+      <div class="db-page-header-inner">
+        <div><h1>Applicants</h1><p>Review and manage job applications</p></div>
+      </div>
+    </div>
 
-    var myJobs = [];
-    var editingJobId = null;
-    var currentApplicants = [];
+    <div class="db-form-group" style="margin-bottom:12px;">
+      <select id="job-filter-select" onchange="loadApplicantsForJob()" style="width:100%;padding:11px 13px;border:1.5px solid #e9ecef;border-radius:10px;font-size:0.88em;outline:none;font-family:'Inter',sans-serif;background:white;">
+        <option value="">— Select a job to view applicants —</option>
+      </select>
+    </div>
 
-    function init() {
-      var user = JSON.parse(localStorage.getItem('nexa_current_user') || 'null');
-      if (user) {
-        var nameEl = document.getElementById('dash-name');
-        var avatarEl = document.getElementById('dash-avatar');
-        var navEl = document.getElementById('nav-employer-name');
-        if (nameEl) nameEl.textContent = user.fullName || user.firstName || 'Employer';
-        if (avatarEl) avatarEl.textContent = (user.firstName || 'E')[0].toUpperCase();
-        if (navEl) navEl.textContent = user.firstName + '\'s Jobs';
-      }
-    }
+    <div class="db-filters">
+      <button class="db-filter-btn active" onclick="filterApplicants('all',this)">All</button>
+      <button class="db-filter-btn" onclick="filterApplicants('new',this)">🆕 New</button>
+      <button class="db-filter-btn" onclick="filterApplicants('shortlisted',this)">✅ Shortlisted</button>
+      <button class="db-filter-btn" onclick="filterApplicants('rejected',this)">❌ Rejected</button>
+    </div>
 
-    if (typeof auth !== 'undefined') {
-      auth.onAuthStateChanged(function(user) {
-        if (user) loadMyJobs();
-      });
-    }
+    <div id="applicants-list">
+      <div class="db-empty">
+        <div class="db-empty-icon">👥</div>
+        <h3>Select a job above</h3>
+        <p>Choose a job posting to see its applicants</p>
+      </div>
+    </div>
+  </div>
 
-    function showTab(tab) {
-      var tabs = document.querySelectorAll('.dash-tab');
-      tabs.forEach(function(t) { t.style.display = 'none'; });
+  <!-- SETTINGS -->
+  <div class="db-tab-content" id="content-settings">
+    <div class="db-page-header">
+      <div class="db-page-header-inner">
+        <div><h1>Settings</h1><p>Manage your employer account</p></div>
+      </div>
+    </div>
+    <div class="db-card">
+      <div class="db-card-header"><div class="db-card-title">🏢 Company Profile</div></div>
+      <div class="db-card-body">
+        <div class="db-form">
+          <div class="db-form-group">
+            <label>Company Name</label>
+            <input type="text" id="set-company" placeholder="Your company name"/>
+          </div>
+          <div class="db-form-group">
+            <label>Industry</label>
+            <input type="text" id="set-industry" placeholder="e.g. Technology, Finance, Healthcare"/>
+          </div>
+          <div class="db-form-group">
+            <label>Company Size</label>
+            <select id="set-size">
+              <option>1-10 employees</option>
+              <option>11-50 employees</option>
+              <option>51-200 employees</option>
+              <option>201-500 employees</option>
+              <option>500+ employees</option>
+            </select>
+          </div>
+          <div class="db-form-group">
+            <label>Website</label>
+            <input type="text" id="set-website" placeholder="https://yourcompany.com"/>
+          </div>
+          <div class="db-form-group">
+            <label>About the Company</label>
+            <textarea id="set-about" rows="3" placeholder="Brief description of your company..."></textarea>
+          </div>
+          <button class="db-submit-btn" onclick="saveSettings()">💾 Save Settings</button>
+        </div>
+      </div>
+    </div>
 
-      var navItems = document.querySelectorAll('.dash-nav-item');
-      navItems.forEach(function(n) { n.classList.remove('active'); });
+    <div class="db-card" style="margin-top:14px;">
+      <div class="db-card-header"><div class="db-card-title">🚪 Account</div></div>
+      <div class="db-card-body">
+        <button onclick="doLogout()" style="width:100%;padding:12px;background:#fff0f0;border:1.5px solid #ffcccc;border-radius:10px;color:#cc0000;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;font-size:0.88em;">
+          🚪 Logout from Nexabay
+        </button>
+      </div>
+    </div>
+  </div>
 
-      var target = document.getElementById('tab-' + tab);
-      if (target) target.style.display = 'block';
+</div>
 
-      var navMap = {
-        'overview': 0, 'jobs': 1, 'add-job': 2,
-        'applicants': 3, 'settings': 4
-      };
-      var index = navMap[tab];
-      if (index !== undefined && navItems[index]) {
-        navItems[index].classList.add('active');
-      }
-    }
+<!-- BOTTOM NAV -->
+<div class="db-bottom-nav">
+  <a href="../../index.html"><span>🏠</span><span>Home</span></a>
+  <a href="../../pages/jobs/browse.html"><span>💼</span><span>Browse</span></a>
+  <a href="#" onclick="showTab('add');return false;" class="active"><span>➕</span><span>Post Job</span></a>
+  <a href="#" onclick="showTab('applicants');return false;"><span>👥</span><span>Applicants</span></a>
+  <a href="buyer.html"><span>👤</span><span>Account</span></a>
+</div>
 
-    function loadMyJobs() {
-      var user = auth.currentUser;
-      if (!user) { renderMyJobs([]); return; }
+<!-- APPLICANT DETAIL MODAL -->
+<div id="app-modal-overlay" onclick="closeAppModal()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:900;"></div>
+<div id="app-modal" style="display:none;position:fixed;bottom:0;left:0;right:0;background:white;border-radius:20px 20px 0 0;max-height:88vh;overflow-y:auto;z-index:901;padding:20px;">
+  <div style="width:40px;height:4px;background:#e0e0e0;border-radius:2px;margin:0 auto 16px;"></div>
+  <div id="app-modal-body"></div>
+</div>
 
-      nexaGetEmployerJobs(user.uid)
-        .then(function(jobs) {
-          myJobs = jobs;
-          renderMyJobs(jobs);
-          updateStats();
-          populateApplicantJobSelect();
-        })
-        .catch(function(err) {
-          console.log('Error loading jobs:', err);
-          renderMyJobs([]);
-        });
-    }
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="../../js/firebase/config.js"></script>
+<script src="../../js/firebase/auth.js"></script>
+<script src="../../js/firebase/jobs.js"></script>
+<script src="../../js/core/main.js"></script>
+<script>
 
-    function updateStats() {
-      var jobsEl = document.getElementById('stat-jobs');
-      var applicantsEl = document.getElementById('stat-applicants');
-      if (jobsEl) jobsEl.textContent = myJobs.length;
-      var totalApplicants = myJobs.reduce(function(s, j) { return s + (j.applicantCount || 0); }, 0);
-      if (applicantsEl) applicantsEl.textContent = totalApplicants;
-    }
+  var myJobs = [], allApplicants = [], filteredApplicants = [];
+  var editId = null;
 
-    function renderMyJobs(jobs) {
-      var list = document.getElementById('my-jobs-list');
-      if (!list) return;
-      if (!jobs || jobs.length === 0) {
-        list.innerHTML =
-          '<div class="empty-products">' +
-            '<div style="font-size:3em;margin-bottom:12px">💼</div>' +
-            '<h3>No job posts yet</h3>' +
-            '<p>Post your first job to start hiring</p>' +
-            '<button class="btn-primary" onclick="showTab(\'add-job\')">➕ Post a Job</button>' +
-          '</div>';
-        return;
-      }
-      list.innerHTML = jobs.map(function(j) {
-        return '<div class="my-product-row">' +
-          '<div class="mp-img">💼</div>' +
-          '<div class="mp-info">' +
-            '<div class="mp-name">' + j.title + '</div>' +
-            '<div class="mp-cat">' + j.jobType + ' • ' + j.category + '</div>' +
-            '<div class="mp-stock">📍 ' + j.location + ' • ' + (j.applicantCount || 0) + ' applicant(s)</div>' +
-          '</div>' +
-          '<div class="mp-actions">' +
-            '<button onclick="deleteJob(\'' + j.id + '\')" class="btn-delete">🗑️</button>' +
-          '</div>' +
-        '</div>';
-      }).join('');
-    }
+  function init() {
+    var user = JSON.parse(localStorage.getItem('nexa_current_user') || 'null');
+    if (!user) { window.location.href = '../auth/login.html'; return; }
+    var av = document.getElementById('user-avatar');
+    var sb = document.getElementById('overview-sub');
+    if (av) av.textContent = (user.firstName || 'E')[0].toUpperCase();
+    if (sb) sb.textContent = 'Welcome back, ' + (user.firstName || 'Employer') + '!';
+    showTab('overview');
+  }
 
-    function publishJob() {
-      var title    = document.getElementById('aj-title').value.trim();
-      var company  = document.getElementById('aj-company').value.trim();
-      var category = document.getElementById('aj-category').value;
-      var jobType  = document.getElementById('aj-type').value;
-      var desc     = document.getElementById('aj-desc').value.trim();
-      var requirements = document.getElementById('aj-requirements').value.trim();
-      var salaryMin = document.getElementById('aj-salary-min').value;
-      var salaryMax = document.getElementById('aj-salary-max').value;
-      var location = document.getElementById('aj-location').value;
-      var remote   = document.getElementById('aj-remote').checked;
-      var errEl    = document.getElementById('aj-error');
-      var sucEl    = document.getElementById('aj-success');
+  if (typeof auth !== 'undefined') {
+    auth.onAuthStateChanged(function(u) {
+      if (u) { loadJobs(); }
+      else { window.location.href = '../auth/login.html'; }
+    });
+  }
 
-      errEl.style.display = 'none';
-      sucEl.style.display = 'none';
+  function showTab(tab) {
+    document.querySelectorAll('.db-tab').forEach(function(t){ t.classList.remove('active'); });
+    document.querySelectorAll('.db-tab-content').forEach(function(c){ c.classList.remove('active'); });
+    var map = { overview:0, jobs:1, add:2, applicants:3, settings:4 };
+    var tabs = document.querySelectorAll('.db-tab');
+    if (map[tab] !== undefined && tabs[map[tab]]) tabs[map[tab]].classList.add('active');
+    var c = document.getElementById('content-' + tab);
+    if (c) c.classList.add('active');
+    window.scrollTo({ top:0, behavior:'smooth' });
+  }
 
-      if (!title)    { errEl.textContent = 'Enter job title';      errEl.style.display = 'block'; return; }
-      if (!company)  { errEl.textContent = 'Enter company name';   errEl.style.display = 'block'; return; }
-      if (!category) { errEl.textContent = 'Select a category';    errEl.style.display = 'block'; return; }
-      if (!desc)     { errEl.textContent = 'Enter job description'; errEl.style.display = 'block'; return; }
-      if (!location) { errEl.textContent = 'Select location';      errEl.style.display = 'block'; return; }
-
-      var user = auth.currentUser;
-      if (!user) {
-        errEl.textContent = 'Please login first';
-        errEl.style.display = 'block';
-        return;
-      }
-
-      var publishBtn = document.querySelector('.btn-publish');
-      if (publishBtn) { publishBtn.textContent = 'Posting...'; publishBtn.disabled = true; }
-
-      var userData = JSON.parse(localStorage.getItem('nexa_current_user') || '{}');
-
-      nexaAddJob({
-        title: title, companyName: company, category: category, jobType: jobType,
-        description: desc, requirements: requirements,
-        salaryMin: salaryMin, salaryMax: salaryMax,
-        location: location, remote: remote,
-        employerName: userData.fullName || userData.firstName || 'Employer',
+  function loadJobs() {
+    var user = auth.currentUser;
+    if (!user) return;
+    nexaGetEmployerJobs(user.uid)
+      .then(function(jobs) {
+        myJobs = jobs.filter(function(j){ return j.status !== 'deleted'; });
+        renderJobs(myJobs);
+        updateStats();
+        populateJobFilter();
+        loadAllApplicants();
       })
-      .then(function(jobId) {
-        sucEl.textContent = '🎉 Job posted successfully! ID: ' + jobId;
+      .catch(function(){ renderJobs([]); });
+  }
+
+  function loadAllApplicants() {
+    var user = auth.currentUser;
+    if (!user) return;
+    db.collection('jobApplications')
+      .where('employerId', '==', user.uid)
+      .get()
+      .then(function(snap) {
+        allApplicants = [];
+        snap.forEach(function(doc){ allApplicants.push(Object.assign({ id: doc.id }, doc.data())); });
+        allApplicants.sort(function(a,b){
+          return (b.createdAt?b.createdAt.toMillis():0)-(a.createdAt?a.createdAt.toMillis():0);
+        });
+        filteredApplicants = allApplicants.slice();
+        updateStats();
+        renderRecentApplicants(allApplicants.slice(0,5));
+        renderApplicants(filteredApplicants);
+      })
+      .catch(function(err){ console.log('Applicants error:', err); });
+  }
+
+  function populateJobFilter() {
+    var sel = document.getElementById('job-filter-select');
+    if (!sel) return;
+    sel.innerHTML = '<option value="">— Select a job to view applicants —</option>' +
+      myJobs.map(function(j) {
+        return '<option value="' + j.id + '">' + (j.title || 'Job') + ' (' + (j.type || '') + ')</option>';
+      }).join('');
+  }
+
+  function loadApplicantsForJob() {
+    var jobId = document.getElementById('job-filter-select').value;
+    if (!jobId) {
+      filteredApplicants = allApplicants.slice();
+    } else {
+      filteredApplicants = allApplicants.filter(function(a){ return a.jobId === jobId; });
+    }
+    renderApplicants(filteredApplicants);
+  }
+
+  function filterApplicants(status, btn) {
+    if (btn) {
+      document.querySelectorAll('#content-applicants .db-filter-btn').forEach(function(b){ b.classList.remove('active'); });
+      btn.classList.add('active');
+    }
+    var base = document.getElementById('job-filter-select').value
+      ? allApplicants.filter(function(a){ return a.jobId === document.getElementById('job-filter-select').value; })
+      : allApplicants.slice();
+    filteredApplicants = status === 'all' ? base : base.filter(function(a){ return (a.status||'new') === status; });
+    renderApplicants(filteredApplicants);
+  }
+
+  function renderJobs(jobs) {
+    var list = document.getElementById('jobs-list');
+    if (!list) return;
+    if (!jobs || jobs.length === 0) {
+      list.innerHTML = '<div class="db-empty"><div class="db-empty-icon">💼</div><h3>No jobs posted yet</h3><p>Post your first job to start receiving applications</p><button class="db-empty-btn" onclick="showTab(\'add\')">+ Post Your First Job</button></div>';
+      return;
+    }
+    list.innerHTML = jobs.map(function(j) {
+      var sc = { active:'status-active', pending:'status-pending', rejected:'status-rejected' }[j.status] || 'status-pending';
+      var sl = { active:'✅ Live', pending:'⏳ Pending', rejected:'❌ Rejected' }[j.status] || '⏳ Pending';
+      var appCount = allApplicants.filter(function(a){ return a.jobId === j.id; }).length;
+      return '<div class="db-row">' +
+        '<div class="db-row-img" style="font-size:1.8em;">💼</div>' +
+        '<div class="db-row-info">' +
+          '<div class="db-row-name">' + (j.title || 'Job') + '</div>' +
+          '<div class="db-row-meta">' + (j.company || '') + ' • ' + (j.location || '') + ' • ' + (j.type || '') + '</div>' +
+          '<div style="display:flex;gap:6px;align-items:center;margin-top:3px;">' +
+            '<div class="db-row-status ' + sc + '">' + sl + '</div>' +
+            '<div style="font-size:0.72em;color:#6c757d;">👥 ' + appCount + ' applicant' + (appCount !== 1 ? 's' : '') + '</div>' +
+          '</div>' +
+        '</div>' +
+        '<div class="db-row-actions">' +
+          '<button class="db-action-btn" onclick="editJob(\'' + j.id + '\')">✏️</button>' +
+          '<button class="db-action-btn danger" onclick="deleteJob(\'' + j.id + '\')">🗑️</button>' +
+        '</div>' +
+      '</div>';
+    }).join('');
+  }
+
+  function renderApplicants(apps) {
+    var list = document.getElementById('applicants-list');
+    if (!list) return;
+    if (!apps || apps.length === 0) {
+      list.innerHTML = '<div class="db-empty"><div class="db-empty-icon">👥</div><h3>No applicants found</h3><p>Applications will appear here once people apply for your jobs</p></div>';
+      return;
+    }
+    list.innerHTML = apps.map(function(a) {
+      var sc = { new:'status-pending', shortlisted:'status-active', rejected:'status-rejected' }[a.status||'new'] || 'status-pending';
+      var sl = { new:'🆕 New', shortlisted:'✅ Shortlisted', rejected:'❌ Rejected' }[a.status||'new'] || '🆕 New';
+      return '<div class="db-row" style="cursor:pointer;" onclick="viewApplicant(\'' + a.id + '\')">' +
+        '<div class="db-row-img" style="background:#e3f2fd;font-size:1.2em;font-weight:700;color:#1565c0;">' + (a.applicantName||'?')[0].toUpperCase() + '</div>' +
+        '<div class="db-row-info">' +
+          '<div class="db-row-name">' + (a.applicantName || 'Applicant') + '</div>' +
+          '<div class="db-row-meta">📧 ' + (a.applicantEmail || '') + ' • 💼 ' + (a.jobTitle || '') + '</div>' +
+          '<div class="db-row-status ' + sc + '" style="margin-top:3px;">' + sl + '</div>' +
+        '</div>' +
+        '<div style="color:#ff6b00;font-size:1.1em;">›</div>' +
+      '</div>';
+    }).join('');
+  }
+
+  function renderRecentApplicants(apps) {
+    var wrap = document.getElementById('recent-apps-wrap');
+    if (!wrap) return;
+    if (!apps || apps.length === 0) {
+      wrap.innerHTML = '<div class="db-empty" style="padding:20px;"><div class="db-empty-icon" style="font-size:2em;">👥</div><h3>No applicants yet</h3><p>Post jobs to start receiving applications</p></div>';
+      return;
+    }
+    wrap.innerHTML = apps.map(function(a) {
+      return '<div class="db-row">' +
+        '<div class="db-row-img" style="background:#e3f2fd;font-size:1.1em;font-weight:700;color:#1565c0;">' + (a.applicantName||'?')[0].toUpperCase() + '</div>' +
+        '<div class="db-row-info">' +
+          '<div class="db-row-name">' + (a.applicantName || 'Applicant') + '</div>' +
+          '<div class="db-row-meta">💼 ' + (a.jobTitle || 'Unknown Job') + '</div>' +
+        '</div>' +
+        '<div class="db-row-status ' + ({ new:'status-pending', shortlisted:'status-active', rejected:'status-rejected' }[a.status||'new'] || 'status-pending') + '">' +
+          ({ new:'New', shortlisted:'Shortlisted', rejected:'Rejected' }[a.status||'new'] || 'New') +
+        '</div>' +
+      '</div>';
+    }).join('');
+  }
+
+  function updateStats() {
+    var active      = myJobs.filter(function(j){ return j.status === 'active'; }).length;
+    var shortlisted = allApplicants.filter(function(a){ return a.status === 'shortlisted'; }).length;
+    document.getElementById('stat-active').textContent     = active;
+    document.getElementById('stat-applicants').textContent = allApplicants.length;
+    document.getElementById('stat-shortlisted').textContent = shortlisted;
+    document.getElementById('stat-total').textContent      = myJobs.length;
+
+    var badge = document.getElementById('app-badge');
+    var newApps = allApplicants.filter(function(a){ return (a.status||'new') === 'new'; }).length;
+    if (badge && newApps > 0) { badge.textContent = newApps; badge.style.display = 'inline'; }
+  }
+
+  function viewApplicant(appId) {
+    var a = allApplicants.find(function(x){ return x.id === appId; });
+    if (!a) return;
+    var body = document.getElementById('app-modal-body');
+    body.innerHTML =
+      '<div style="width:56px;height:56px;border-radius:50%;background:#ff6b00;color:white;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:1.4em;margin-bottom:14px;">' + (a.applicantName||'?')[0].toUpperCase() + '</div>' +
+      '<h2 style="font-size:1.1em;font-weight:800;margin-bottom:4px;">' + (a.applicantName||'Applicant') + '</h2>' +
+      '<p style="font-size:0.82em;color:#6c757d;margin-bottom:2px;">📧 ' + (a.applicantEmail||'') + '</p>' +
+      '<p style="font-size:0.82em;color:#6c757d;margin-bottom:12px;">📱 ' + (a.applicantPhone||'Not provided') + '</p>' +
+      '<div style="background:#f8f9fa;border-radius:8px;padding:10px;margin-bottom:12px;font-size:0.82em;color:#555;">💼 Applied for: <strong>' + (a.jobTitle||'Unknown Job') + '</strong></div>' +
+      '<div style="font-weight:700;font-size:0.85em;margin-bottom:6px;">Cover Letter</div>' +
+      '<div style="background:#f8f9fa;border-radius:8px;padding:12px;font-size:0.82em;color:#555;line-height:1.7;margin-bottom:14px;">' + (a.coverLetter||'No cover letter provided') + '</div>' +
+      (a.resumeUrl ? '<a href="' + a.resumeUrl + '" target="_blank" style="display:block;margin-bottom:14px;background:#1565c0;color:white;text-align:center;padding:10px;border-radius:8px;text-decoration:none;font-weight:700;font-size:0.85em;">📄 View Resume / CV</a>' : '') +
+      '<div style="display:flex;gap:8px;">' +
+        '<button onclick="updateStatus(\'' + a.id + '\',\'shortlisted\')" style="flex:1;padding:11px;background:#00a651;color:white;border:none;border-radius:9px;font-weight:700;cursor:pointer;font-family:\'Inter\',sans-serif;">✅ Shortlist</button>' +
+        '<button onclick="updateStatus(\'' + a.id + '\',\'rejected\')" style="flex:1;padding:11px;background:#cc0000;color:white;border:none;border-radius:9px;font-weight:700;cursor:pointer;font-family:\'Inter\',sans-serif;">❌ Reject</button>' +
+      '</div>' +
+      '<button onclick="closeAppModal()" style="width:100%;margin-top:10px;padding:10px;background:#f8f9fa;border:1.5px solid #e9ecef;border-radius:9px;font-weight:600;cursor:pointer;font-family:\'Inter\',sans-serif;font-size:0.85em;">Close</button>';
+    document.getElementById('app-modal-overlay').style.display = 'block';
+    document.getElementById('app-modal').style.display = 'block';
+  }
+
+  function closeAppModal() {
+    document.getElementById('app-modal-overlay').style.display = 'none';
+    document.getElementById('app-modal').style.display = 'none';
+  }
+
+  function updateStatus(appId, status) {
+    db.collection('jobApplications').doc(appId).update({ status: status })
+      .then(function() {
+        showToast(status === 'shortlisted' ? '✅ Applicant shortlisted!' : '❌ Applicant rejected');
+        closeAppModal();
+        loadAllApplicants();
+      })
+      .catch(function(err){ showToast('Error: ' + err.message); });
+  }
+
+  function getBenefits() {
+    var checked = [];
+    document.querySelectorAll('.benefit:checked').forEach(function(cb){ checked.push(cb.value); });
+    return checked;
+  }
+
+  function publishJob() {
+    var title    = document.getElementById('j-title').value.trim();
+    var category = document.getElementById('j-category').value;
+    var type     = document.getElementById('j-type').value;
+    var company  = document.getElementById('j-company').value.trim();
+    var location = document.getElementById('j-location').value;
+    var exp      = document.getElementById('j-experience').value;
+    var salMin   = document.getElementById('j-salary-min').value;
+    var salMax   = document.getElementById('j-salary-max').value;
+    var desc     = document.getElementById('j-desc').value.trim();
+    var reqs     = document.getElementById('j-requirements').value.trim();
+    var deadline = document.getElementById('j-deadline').value;
+    var email    = document.getElementById('j-email').value.trim();
+    var errEl    = document.getElementById('j-error');
+    var sucEl    = document.getElementById('j-success');
+    var btn      = document.getElementById('j-submit-btn');
+
+    errEl.style.display = 'none';
+    sucEl.style.display = 'none';
+
+    if (!title)    { errEl.textContent='Enter job title';        errEl.style.display='block'; return; }
+    if (!category) { errEl.textContent='Select a category';      errEl.style.display='block'; return; }
+    if (!company)  { errEl.textContent='Enter company name';     errEl.style.display='block'; return; }
+    if (!location) { errEl.textContent='Select location';        errEl.style.display='block'; return; }
+    if (!desc)     { errEl.textContent='Enter job description';  errEl.style.display='block'; return; }
+    if (!reqs)     { errEl.textContent='Enter job requirements'; errEl.style.display='block'; return; }
+    if (!email)    { errEl.textContent='Enter contact email';    errEl.style.display='block'; return; }
+
+    var user = auth.currentUser;
+    if (!user) { errEl.textContent='Please login first'; errEl.style.display='block'; return; }
+
+    btn.textContent = 'Submitting...';
+    btn.disabled    = true;
+
+    var userData = JSON.parse(localStorage.getItem('nexa_current_user') || '{}');
+    var jobData  = {
+      employerId:    user.uid,
+      employerName:  userData.fullName || userData.firstName || 'Employer',
+      title:         title,
+      category:      category,
+      type:          type,
+      company:       company,
+      location:      location,
+      experience:    exp,
+      salaryMin:     salMin ? parseInt(salMin) : 0,
+      salaryMax:     salMax ? parseInt(salMax) : 0,
+      description:   desc,
+      requirements:  reqs,
+      benefits:      getBenefits(),
+      deadline:      deadline,
+      contactEmail:  email,
+      status:        'pending',
+      applicants:    0,
+      createdAt:     firebase.firestore.FieldValue.serverTimestamp(),
+    };
+
+    var promise;
+    if (editId) {
+      promise = db.collection('jobs').doc(editId).update(jobData);
+    } else {
+      var ref = db.collection('jobs').doc();
+      jobData.id = ref.id;
+      promise = ref.set(jobData);
+    }
+
+    promise
+      .then(function() {
+        sucEl.textContent = editId
+          ? '✅ Job updated! Admin will review changes.'
+          : '🎉 Job submitted! Admin will review and publish within 24 hours. A ₦5,000 fee applies after approval.';
         sucEl.style.display = 'block';
+        btn.textContent = '🚀 Submit Job for Approval';
+        btn.disabled    = false;
 
-        document.getElementById('aj-title').value = '';
-        document.getElementById('aj-company').value = '';
-        document.getElementById('aj-category').value = '';
-        document.getElementById('aj-desc').value = '';
-        document.getElementById('aj-requirements').value = '';
-        document.getElementById('aj-salary-min').value = '';
-        document.getElementById('aj-salary-max').value = '';
-        document.getElementById('aj-location').value = '';
-        document.getElementById('aj-remote').checked = false;
+        document.getElementById('j-title').value = '';
+        document.getElementById('j-category').value = '';
+        document.getElementById('j-company').value = '';
+        document.getElementById('j-location').value = '';
+        document.getElementById('j-desc').value = '';
+        document.getElementById('j-requirements').value = '';
+        document.getElementById('j-email').value = '';
+        document.getElementById('j-salary-min').value = '';
+        document.getElementById('j-salary-max').value = '';
+        document.getElementById('j-deadline').value = '';
+        document.querySelectorAll('.benefit').forEach(function(cb){ cb.checked=false; });
+        editId = null;
+        document.getElementById('add-form-title').textContent = 'Post a Job';
 
-        if (publishBtn) { publishBtn.textContent = '🚀 Post Job'; publishBtn.disabled = false; }
-
-        loadMyJobs();
+        loadJobs();
+        setTimeout(function(){ showTab('jobs'); }, 2000);
       })
       .catch(function(err) {
-        errEl.textContent = '❌ Error: ' + (err.message || err.toString());
+        errEl.textContent = '❌ Error: ' + err.message;
         errEl.style.display = 'block';
-        if (publishBtn) { publishBtn.textContent = '🚀 Post Job'; publishBtn.disabled = false; }
+        btn.textContent = '🚀 Submit Job for Approval';
+        btn.disabled    = false;
+      });
+  }
+
+  function editJob(id) {
+    var j = myJobs.find(function(x){ return x.id === id; });
+    if (!j) return;
+    editId = id;
+    document.getElementById('add-form-title').textContent = 'Edit Job';
+    document.getElementById('j-title').value      = j.title || '';
+    document.getElementById('j-category').value   = j.category || '';
+    document.getElementById('j-type').value       = j.type || 'Full-time';
+    document.getElementById('j-company').value    = j.company || '';
+    document.getElementById('j-location').value   = j.location || '';
+    document.getElementById('j-experience').value = j.experience || 'Entry Level';
+    document.getElementById('j-salary-min').value = j.salaryMin || '';
+    document.getElementById('j-salary-max').value = j.salaryMax || '';
+    document.getElementById('j-desc').value       = j.description || '';
+    document.getElementById('j-requirements').value = j.requirements || '';
+    document.getElementById('j-email').value      = j.contactEmail || '';
+    if (j.deadline) document.getElementById('j-deadline').value = j.deadline;
+    if (j.benefits) {
+      document.querySelectorAll('.benefit').forEach(function(cb){
+        cb.checked = j.benefits.indexOf(cb.value) > -1;
       });
     }
+    showTab('add');
+    window.scrollTo({ top:0, behavior:'smooth' });
+  }
 
-    function deleteJob(jobId) {
-      if (confirm('Delete this job post?')) {
-        nexaDeleteJob(jobId)
-          .then(function() {
-            showToast('🗑️ Job post deleted');
-            myJobs = myJobs.filter(function(j) { return j.id !== jobId; });
-            renderMyJobs(myJobs);
-            updateStats();
-            populateApplicantJobSelect();
-            setTimeout(function() { loadMyJobs(); }, 800);
-          })
-          .catch(function(err) {
-            showToast('Error: ' + err.message);
-          });
-      }
-    }
+  function deleteJob(id) {
+    if (!confirm('Delete this job posting?')) return;
+    db.collection('jobs').doc(id).update({ status: 'deleted' })
+      .then(function() {
+        showToast('🗑️ Job deleted');
+        myJobs = myJobs.filter(function(j){ return j.id !== id; });
+        renderJobs(myJobs);
+        updateStats();
+      })
+      .catch(function(err){ showToast('Error: ' + err.message); });
+  }
 
-    function populateApplicantJobSelect() {
-      var select = document.getElementById('applicant-job-select');
-      if (!select) return;
-      select.innerHTML = '<option value="">Select a job post...</option>' +
-        myJobs.map(function(j) {
-          return '<option value="' + j.id + '">' + j.title + ' (' + (j.applicantCount || 0) + ' applicants)</option>';
-        }).join('');
-    }
+  function saveSettings() {
+    showToast('✅ Settings saved!');
+  }
 
-    function loadApplicantsForJob() {
-      var jobId = document.getElementById('applicant-job-select').value;
-      var list = document.getElementById('applicants-list');
-      if (!jobId) { list.innerHTML = ''; return; }
-
-      list.innerHTML = '<p style="color:var(--text2);font-size:0.88em;">Loading applicants...</p>';
-
-      nexaGetJobApplications(jobId)
-        .then(function(apps) {
-          currentApplicants = apps;
-          if (apps.length === 0) {
-            list.innerHTML = '<div class="empty-products"><div style="font-size:3em;margin-bottom:12px">📋</div><h3>No applicants yet</h3></div>';
-            return;
-          }
-          list.innerHTML = apps.map(function(a) {
-            return '<div class="my-product-row">' +
-              '<div class="mp-img">' + a.applicantName[0].toUpperCase() + '</div>' +
-              '<div class="mp-info">' +
-                '<div class="mp-name">' + a.applicantName + '</div>' +
-                '<div class="mp-cat">' + a.applicantEmail + '</div>' +
-                '<div class="mp-stock"><span class="status-badge status-' + a.status + '">' + a.status + '</span></div>' +
-              '</div>' +
-              '<div class="mp-actions">' +
-                '<button onclick="viewApplicant(\'' + a.id + '\')" style="padding:6px 10px;background:white;border:1px solid var(--border);border-radius:6px;cursor:pointer;">👁️ View</button>' +
-              '</div>' +
-            '</div>';
-          }).join('');
-        })
-        .catch(function(err) {
-          list.innerHTML = '<p style="color:#cc0000;">Error loading applicants: ' + err.message + '</p>';
-        });
-    }
-
-    function viewApplicant(appId) {
-      var app = currentApplicants.find(function(a) { return a.id === appId; });
-      if (!app) return;
-
-      var body = document.getElementById('preview-modal-body');
-      body.innerHTML =
-        '<div style="width:60px;height:60px;border-radius:50%;background:var(--orange);color:white;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1.4em;margin-bottom:14px;">' + app.applicantName[0].toUpperCase() + '</div>' +
-        '<h2 style="font-size:1.2em;margin-bottom:6px;">' + app.applicantName + '</h2>' +
-        '<p style="color:var(--text2);font-size:0.9em;margin-bottom:4px;">📧 ' + app.applicantEmail + '</p>' +
-        '<p style="color:var(--text2);font-size:0.9em;margin-bottom:14px;">📱 ' + (app.applicantPhone || 'Not provided') + '</p>' +
-        '<div class="pd-divider"></div>' +
-        '<h3 style="font-size:1em;margin:10px 0 6px;">Cover Letter</h3>' +
-        '<p style="font-size:0.9em;color:var(--text2);line-height:1.6;">' + (app.coverLetter || 'No cover letter provided') + '</p>' +
-        (app.resumeUrl ? '<a href="' + app.resumeUrl + '" target="_blank" style="display:block;margin-top:14px;background:var(--blue);color:white;text-align:center;padding:10px;border-radius:8px;text-decoration:none;">📄 View Resume</a>' : '') +
-        '<div style="display:flex;gap:8px;margin-top:16px;">' +
-          '<button onclick="updateAppStatus(\'' + app.id + '\', \'shortlisted\')" style="flex:1;padding:10px;background:var(--green);color:white;border:none;border-radius:8px;">✅ Shortlist</button>' +
-          '<button onclick="updateAppStatus(\'' + app.id + '\', \'rejected\')" style="flex:1;padding:10px;background:#cc0000;color:white;border:none;border-radius:8px;">❌ Reject</button>' +
-        '</div>';
-
-      document.getElementById('preview-modal-overlay').style.display = 'block';
-      document.getElementById('preview-modal').style.display = 'block';
-    }
-
-    function updateAppStatus(appId, status) {
-      nexaUpdateApplicationStatus(appId, status)
-        .then(function() {
-          showToast('✅ Applicant marked as ' + status);
-          closePreviewModal();
-          loadApplicantsForJob();
-        })
-        .catch(function(err) {
-          showToast('Error: ' + err.message);
-        });
-    }
-
-    function closePreviewModal() {
-      document.getElementById('preview-modal-overlay').style.display = 'none';
-      document.getElementById('preview-modal').style.display = 'none';
-    }
-
-    function saveEmployerSettings() {
-      showToast('✅ Settings saved!');
-    }
-
-    function doEmployerLogout() {
-      if (typeof nexaLogout === 'function') {
-        nexaLogout().then(function() {
-          localStorage.removeItem('nexa_current_user');
-          window.location.href = '../../index.html';
-        });
-      } else {
+  function doLogout() {
+    if (typeof nexaLogout === 'function') {
+      nexaLogout().then(function() {
         localStorage.removeItem('nexa_current_user');
         window.location.href = '../../index.html';
-      }
+      });
+    } else {
+      localStorage.removeItem('nexa_current_user');
+      window.location.href = '../../index.html';
     }
+  }
 
-    document.addEventListener('DOMContentLoaded', function() {
-      init();
-    });
+  function showToast(msg) {
+    var t = document.getElementById('db-toast');
+    if (!t) return;
+    t.textContent = msg;
+    t.style.display = 'block';
+    setTimeout(function(){ t.style.display='none'; }, 2500);
+  }
 
-  </script>
+  document.addEventListener('DOMContentLoaded', function(){ init(); });
 
+</script>
 </body>
 </html>

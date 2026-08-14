@@ -1502,6 +1502,7 @@
             '</div>' +
             '<div class="ad-user-email">' + (u.email || '') + '</div>' +
             '<div class="ad-user-meta">📍 ' + (u.state || 'N/A') + ' • 📱 ' + (u.phone || 'N/A') + '</div>' +
+'<div style="font-size:0.68em;color:#8b949e;margin-top:2px;font-family:monospace;">UID: ' + (u.uid || '') + '</div>' +
           '</div>' +
           '<div>' +
             (!u.suspended
@@ -1859,15 +1860,39 @@
 
     /* ── GRANT ADMIN ── */
     function grantAdminAccess() {
-      var uid = document.getElementById('grant-uid').value.trim();
+      var uid   = document.getElementById('grant-uid').value.trim();
       var errEl = document.getElementById('grant-error');
       var sucEl = document.getElementById('grant-success');
       errEl.style.display = 'none';
       sucEl.style.display = 'none';
-      if (!uid) { errEl.textContent = 'Enter a UID'; errEl.style.display = 'block'; return; }
-      nexaGrantAdmin(uid)
-        .then(function() { sucEl.textContent = '✅ Admin access granted to ' + uid; sucEl.style.display = 'block'; document.getElementById('grant-uid').value = ''; })
-        .catch(function(err) { errEl.textContent = 'Error: ' + err.message; errEl.style.display = 'block'; });
+
+      if (!uid) {
+        errEl.textContent = 'Please enter a User UID';
+        errEl.style.display = 'block';
+        return;
+      }
+
+      db.collection('users').doc(uid).get()
+        .then(function(doc) {
+          if (doc.exists) {
+            return db.collection('users').doc(uid).update({ isAdmin: true });
+          } else {
+            return db.collection('users').doc(uid).set({
+              uid:     uid,
+              isAdmin: true,
+              createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+            }, { merge: true });
+          }
+        })
+        .then(function() {
+          sucEl.textContent = '✅ Admin access granted successfully to UID: ' + uid;
+          sucEl.style.display = 'block';
+          document.getElementById('grant-uid').value = '';
+        })
+        .catch(function(err) {
+          errEl.textContent = 'Error: ' + err.message;
+          errEl.style.display = 'block';
+        });
     }
 
     /* ── TOAST ── */
