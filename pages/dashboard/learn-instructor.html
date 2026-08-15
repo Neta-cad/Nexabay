@@ -491,173 +491,670 @@
 
       if (preview) preview.textContent = emoji;
       if (placeholder) placeholder.style.display = 'none';
-      if (previewEl) previewEl.style.display = 'flex';
+      <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Instructor Dashboard — Nexabay</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="../../css/dashboard.css"/>
+</head>
+<body>
 
-      document.querySelectorAll('.emoji-grid span').forEach(function(s) {
-        s.classList.remove('selected');
-      });
-      event.target.classList.add('selected');
-    }
+<div class="db-toast" id="db-toast"></div>
 
-    function triggerImageUpload() {
-      document.getElementById('image-file').click();
-    }
+<div class="db-topbar">
+  <a href="../../index.html" class="db-logo">Nexa<span>bay</span></a>
+  <button class="db-tab active" onclick="showTab('overview')">📊 Overview</button>
+  <button class="db-tab" onclick="showTab('courses')">🎓 My Courses</button>
+  <button class="db-tab" onclick="showTab('add')">➕ Add Course</button>
+  <button class="db-tab" onclick="showTab('students')">👥 Students</button>
+  <button class="db-tab" onclick="showTab('earnings')">💰 Earnings</button>
+  <div class="db-topbar-right">
+    <div class="db-user-avatar" id="user-avatar">I</div>
+  </div>
+</div>
 
-    function previewImage() {
-      var file = document.getElementById('image-file').files[0];
-      if (!file) return;
-      selectedImageFile = file;
+<div class="db-content">
 
-      var reader = new FileReader();
-      reader.onload = function(e) {
-        document.getElementById('upload-placeholder').style.display = 'none';
-        var previewEl = document.getElementById('upload-preview');
-        previewEl.style.display = 'flex';
-        previewEl.innerHTML = '<img src="' + e.target.result + '" style="max-width:100%;max-height:150px;border-radius:8px;"/>';
-      };
-      reader.readAsDataURL(file);
-    }
+  <!-- OVERVIEW -->
+  <div class="db-tab-content active" id="content-overview">
+    <div class="db-page-header">
+      <div class="db-page-header-inner">
+        <div>
+          <h1>Welcome back! 👋</h1>
+          <p id="overview-sub">Here is your instructor performance</p>
+        </div>
+        <button class="db-header-btn" onclick="showTab('add')">+ Add Course</button>
+      </div>
+    </div>
+    <div class="db-stats">
+      <div class="db-stat">
+        <div class="db-stat-header"><div class="db-stat-label">Revenue</div><div class="db-stat-icon" style="background:#fff3e0;">💰</div></div>
+        <div class="db-stat-value" id="stat-revenue">₦0</div>
+        <div class="db-stat-sub">Total earned</div>
+      </div>
+      <div class="db-stat">
+        <div class="db-stat-header"><div class="db-stat-label">Students</div><div class="db-stat-icon" style="background:#e8f5e9;">👥</div></div>
+        <div class="db-stat-value" id="stat-students">0</div>
+        <div class="db-stat-sub">Enrolled</div>
+      </div>
+      <div class="db-stat">
+        <div class="db-stat-header"><div class="db-stat-label">Courses</div><div class="db-stat-icon" style="background:#e3f2fd;">🎓</div></div>
+        <div class="db-stat-value" id="stat-courses">0</div>
+        <div class="db-stat-sub">Published</div>
+      </div>
+      <div class="db-stat">
+        <div class="db-stat-header"><div class="db-stat-label">Balance</div><div class="db-stat-icon" style="background:#f3e5f5;">💸</div></div>
+        <div class="db-stat-value" id="stat-balance">₦0</div>
+        <div class="db-stat-sub">Available</div>
+      </div>
+    </div>
+    <div class="db-card">
+      <div class="db-card-header"><div class="db-card-title">⚡ Quick Actions</div></div>
+      <div class="db-card-body">
+        <div class="db-quick-grid">
+          <button class="db-quick-btn" onclick="showTab('add')"><div class="db-quick-icon">➕</div>Add Course</button>
+          <button class="db-quick-btn" onclick="showTab('students')"><div class="db-quick-icon">👥</div>View Students</button>
+          <button class="db-quick-btn" onclick="showTab('earnings')"><div class="db-quick-icon">💸</div>Withdraw</button>
+          <button class="db-quick-btn" onclick="showTab('courses')"><div class="db-quick-icon">🎓</div>My Courses</button>
+        </div>
+      </div>
+    </div>
+    <div class="db-card">
+      <div class="db-card-header">
+        <div class="db-card-title">🕒 Recent Enrollments</div>
+        <button onclick="showTab('students')" style="background:none;border:none;color:#ff6b00;font-size:0.8em;font-weight:700;cursor:pointer;">See All →</button>
+      </div>
+      <div id="recent-students-wrap">
+        <div style="padding:16px;">
+          <div class="db-skeleton" style="width:100%;"></div>
+          <div class="db-skeleton" style="width:75%;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-    function publishCourse() {
-      var title    = document.getElementById('ac-title').value.trim();
-      var category = document.getElementById('ac-category').value;
-      var desc     = document.getElementById('ac-desc').value.trim();
-      var level    = document.getElementById('ac-level').value;
-      var price    = document.getElementById('ac-price').value;
-      var errEl    = document.getElementById('ac-error');
-      var sucEl    = document.getElementById('ac-success');
+  <!-- MY COURSES -->
+  <div class="db-tab-content" id="content-courses">
+    <div class="db-page-header">
+      <div class="db-page-header-inner">
+        <div><h1>My Courses</h1><p>Manage your course listings</p></div>
+        <button class="db-header-btn" onclick="showTab('add')">+ Add New</button>
+      </div>
+    </div>
+    <div class="db-card">
+      <div id="courses-list">
+        <div class="db-empty"><div class="db-empty-icon">⏳</div><h3>Loading courses...</h3></div>
+      </div>
+    </div>
+  </div>
 
-      errEl.style.display = 'none';
-      sucEl.style.display = 'none';
+  <!-- ADD COURSE -->
+  <div class="db-tab-content" id="content-add">
+    <div class="db-page-header">
+      <div class="db-page-header-inner">
+        <div><h1 id="add-form-title">Add New Course</h1><p>Fill details carefully — admin reviews before publishing</p></div>
+      </div>
+    </div>
+    <div class="db-card">
+      <div class="db-card-body">
+        <div class="db-form">
 
-      var lessons = collectLessons();
+          <div class="db-form-group">
+            <label>Course Title *</label>
+            <input type="text" id="c-title" placeholder="e.g. Complete Web Design Masterclass for Beginners"/>
+          </div>
 
-      if (!title)    { errEl.textContent = 'Enter course title';     errEl.style.display = 'block'; return; }
-      if (!category) { errEl.textContent = 'Select a category';      errEl.style.display = 'block'; return; }
-      if (!desc)     { errEl.textContent = 'Enter description';      errEl.style.display = 'block'; return; }
-      if (!isFreeCourse && !price) { errEl.textContent = 'Enter price or mark as free'; errEl.style.display = 'block'; return; }
-      if (lessons.length === 0) { errEl.textContent = 'Add at least one lesson with title and video link'; errEl.style.display = 'block'; return; }
+          <div class="db-form-row">
+            <div class="db-form-group">
+              <label>Category *</label>
+              <select id="c-category">
+                <option value="">Select category</option>
+                <option>Web Development & Coding</option>
+                <option>Graphic Design</option>
+                <option>Digital Marketing</option>
+                <option>Photography & Videography</option>
+                <option>Business & Entrepreneurship</option>
+                <option>Finance & Investment</option>
+                <option>Fashion & Beauty</option>
+                <option>Cooking & Baking</option>
+                <option>Music & Entertainment</option>
+                <option>Health & Fitness</option>
+                <option>Languages</option>
+                <option>Agriculture & Farming</option>
+                <option>Trade & Vocational</option>
+                <option>Personal Development</option>
+                <option>Other</option>
+              </select>
+            </div>
+            <div class="db-form-group">
+              <label>Level *</label>
+              <select id="c-level">
+                <option value="Beginner">Beginner</option>
+                <option value="Intermediate">Intermediate</option>
+                <option value="Advanced">Advanced</option>
+                <option value="All Levels">All Levels</option>
+              </select>
+            </div>
+          </div>
 
-      var user = auth.currentUser;
-      if (!user) {
-        errEl.textContent = 'Please login first';
-        errEl.style.display = 'block';
-        return;
-      }
+          <div class="db-form-row">
+            <div class="db-form-group">
+              <label>Price (₦) *</label>
+              <input type="number" id="c-price" placeholder="e.g. 15000" min="0"/>
+            </div>
+            <div class="db-form-group">
+              <label>Duration</label>
+              <input type="text" id="c-duration" placeholder="e.g. 8 hours, 4 weeks"/>
+            </div>
+          </div>
 
-      var publishBtn = document.querySelector('.btn-publish');
-      if (publishBtn) { publishBtn.textContent = 'Publishing...'; publishBtn.disabled = true; }
+          <div class="db-form-group">
+            <label>Language</label>
+            <select id="c-language">
+              <option value="English">English</option>
+              <option value="Yoruba">Yoruba</option>
+              <option value="Igbo">Igbo</option>
+              <option value="Hausa">Hausa</option>
+              <option value="Pidgin English">Pidgin English</option>
+            </select>
+          </div>
 
-      var userData = JSON.parse(localStorage.getItem('nexa_current_user') || '{}');
+          <div class="db-form-group">
+            <label>Course Description *</label>
+            <textarea id="c-desc" rows="4" placeholder="Describe what students will learn, who this course is for, and what makes it unique..."></textarea>
+          </div>
 
-      var uploadPromise = selectedImageFile
-        ? uploadImageToImgBB(selectedImageFile)
-        : Promise.resolve('');
+          <div class="db-form-group">
+            <label>What Students Will Learn *</label>
+            <textarea id="c-outcomes" rows="4" placeholder="List what students will be able to do after this course. e.g.&#10;— Build professional websites&#10;— Design logos using Canva&#10;— Start a freelancing career"></textarea>
+          </div>
 
-      uploadPromise.then(function(imageUrl) {
-        return nexaAddCourse({
-          title: title, category: category, description: desc, level: level,
-          price: isFreeCourse ? 0 : price, isFree: isFreeCourse,
-          emoji: selectedEmoji || '🎓', imageUrl: imageUrl,
-          lessons: lessons,
-          instructorName: userData.fullName || userData.firstName || 'Instructor',
-        });
-      })
-      .then(function(courseId) {
-        sucEl.textContent = '🎉 Course published! ID: ' + courseId;
-        sucEl.style.display = 'block';
+          <div class="db-form-group">
+            <label>Requirements</label>
+            <textarea id="c-requirements" rows="3" placeholder="What students need before taking this course. e.g. Basic phone or computer skills, internet access..."></textarea>
+          </div>
 
-        document.getElementById('ac-title').value = '';
-        document.getElementById('ac-category').value = '';
-        document.getElementById('ac-desc').value = '';
-        document.getElementById('ac-price').value = '';
-        document.getElementById('upload-placeholder').style.display = 'block';
-        document.getElementById('upload-preview').style.display = 'none';
-        document.getElementById('lessons-container').innerHTML = '';
-        lessonCount = 0;
-        addLessonField();
-        selectedEmoji = '🎓';
-        selectedImageFile = null;
-        setPriceType(false);
+          <div class="db-form-group">
+            <label>Course Format</label>
+            <div class="cb-group">
+              <label class="cb-label"><input type="checkbox" class="format" value="Video Lessons"/> 🎥 Video Lessons</label>
+              <label class="cb-label"><input type="checkbox" class="format" value="PDF Materials"/> 📄 PDF Materials</label>
+              <label class="cb-label"><input type="checkbox" class="format" value="Live Sessions"/> 📡 Live Sessions</label>
+              <label class="cb-label"><input type="checkbox" class="format" value="WhatsApp Group"/> 💬 WhatsApp Group</label>
+              <label class="cb-label"><input type="checkbox" class="format" value="Certificate"/> 🏆 Certificate</label>
+              <label class="cb-label"><input type="checkbox" class="format" value="Assignments"/> 📝 Assignments</label>
+            </div>
+          </div>
 
-        if (publishBtn) { publishBtn.textContent = '🚀 Publish Course'; publishBtn.disabled = false; }
+          <div class="db-form-group">
+            <label>Course Thumbnail Image</label>
+            <div class="db-img-upload" onclick="document.getElementById('c-img-file').click()">
+              <input type="file" id="c-img-file" accept="image/*" onchange="previewImg(this)"/>
+              <div id="c-img-placeholder">
+                <div class="db-img-upload-icon">📷</div>
+                <div class="db-img-upload-text">Tap to upload course thumbnail (recommended: 1280x720)</div>
+              </div>
+              <img id="c-img-preview" class="db-img-preview" style="display:none;"/>
+            </div>
+          </div>
 
-        loadMyCourses();
-      })
-      .catch(function(err) {
-        errEl.textContent = '❌ Error: ' + (err.message || err.toString());
-        errEl.style.display = 'block';
-        if (publishBtn) { publishBtn.textContent = '🚀 Publish Course'; publishBtn.disabled = false; }
-      });
-    }
+          <div class="db-form-group">
+            <label>Or choose an emoji</label>
+            <div class="db-emoji-grid">
+              <button class="db-emoji-btn selected" onclick="selEmoji('🎓',this)">🎓</button>
+              <button class="db-emoji-btn" onclick="selEmoji('💻',this)">💻</button>
+              <button class="db-emoji-btn" onclick="selEmoji('🎨',this)">🎨</button>
+              <button class="db-emoji-btn" onclick="selEmoji('📸',this)">📸</button>
+              <button class="db-emoji-btn" onclick="selEmoji('📊',this)">📊</button>
+              <button class="db-emoji-btn" onclick="selEmoji('🍳',this)">🍳</button>
+              <button class="db-emoji-btn" onclick="selEmoji('💄',this)">💄</button>
+              <button class="db-emoji-btn" onclick="selEmoji('🎵',this)">🎵</button>
+              <button class="db-emoji-btn" onclick="selEmoji('📱',this)">📱</button>
+              <button class="db-emoji-btn" onclick="selEmoji('✍️',this)">✍️</button>
+              <button class="db-emoji-btn" onclick="selEmoji('🌱',this)">🌱</button>
+              <button class="db-emoji-btn" onclick="selEmoji('💪',this)">💪</button>
+            </div>
+          </div>
 
-    function previewCourse(courseId) {
-      var course = myCourses.find(function(c) { return c.id === courseId; });
-      if (!course) { showToast('Course not found'); return; }
+          <div class="db-error-msg" id="c-error"></div>
+          <div class="db-success-msg" id="c-success"></div>
+          <button class="db-submit-btn" id="c-submit-btn" onclick="publishCourse()">🚀 Submit for Approval</button>
+          <div style="text-align:center;font-size:0.75em;color:#999;margin-top:8px;">
+            Nexabay charges 20% commission on every sale • Admin reviews within 24 hours
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-      var imgHtml = course.imageUrl
-        ? '<img src="' + course.imageUrl + '" style="width:100%;border-radius:10px;margin-bottom:14px;"/>'
-        : '<div style="font-size:4em;text-align:center;background:var(--gray);border-radius:10px;padding:30px 0;margin-bottom:14px;">' + (course.emoji || '🎓') + '</div>';
+  <!-- STUDENTS -->
+  <div class="db-tab-content" id="content-students">
+    <div class="db-page-header">
+      <div class="db-page-header-inner">
+        <div><h1>My Students</h1><p>Everyone enrolled in your courses</p></div>
+      </div>
+    </div>
+    <div class="db-card">
+      <div class="db-table-wrap">
+        <table class="db-table">
+          <thead>
+            <tr>
+              <th>Student</th><th>Email</th><th>Course</th>
+              <th>Amount Paid</th><th>Date</th>
+            </tr>
+          </thead>
+          <tbody id="students-body">
+            <tr><td colspan="5" style="text-align:center;padding:20px;color:#999;">No students yet</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
 
-      var lessonsHtml = (course.lessons || []).map(function(l, i) {
-        return '<div style="padding:8px 0;border-bottom:1px solid var(--border);font-size:0.85em;">' + (i+1) + '. ' + l.title + ' (' + l.duration + ')</div>';
-      }).join('');
+  <!-- EARNINGS -->
+  <div class="db-tab-content" id="content-earnings">
+    <div class="db-page-header">
+      <div class="db-page-header-inner">
+        <div><h1>Earnings</h1><p>Track revenue and withdraw funds</p></div>
+      </div>
+    </div>
+    <div class="db-earnings-cards">
+      <div class="db-earning-card"><div class="db-earning-label">Total Revenue</div><div class="db-earning-value" id="ec-total">₦0</div></div>
+      <div class="db-earning-card"><div class="db-earning-label">Your Share (80%)</div><div class="db-earning-value green" id="ec-avail">₦0</div></div>
+      <div class="db-earning-card"><div class="db-earning-label">Nexabay Fee (20%)</div><div class="db-earning-value orange" id="ec-fee">₦0</div></div>
+      <div class="db-earning-card"><div class="db-earning-label">Total Students</div><div class="db-earning-value" id="ec-students">0</div></div>
+    </div>
+    <div class="db-withdraw-card">
+      <div class="db-withdraw-title">💸 Withdraw Funds</div>
+      <div class="db-form" style="gap:12px;">
+        <div class="db-form-group">
+          <label>Bank Name</label>
+          <select id="wd-bank">
+            <option>GTBank</option><option>Access Bank</option>
+            <option>First Bank</option><option>Zenith Bank</option>
+            <option>UBA</option><option>Opay</option>
+            <option>Palmpay</option><option>Kuda Bank</option>
+            <option>Moniepoint</option>
+          </select>
+        </div>
+        <div class="db-form-row">
+          <div class="db-form-group">
+            <label>Account Number</label>
+            <input type="text" id="wd-acct" placeholder="10 digits" maxlength="10"/>
+          </div>
+          <div class="db-form-group">
+            <label>Account Name</label>
+            <input type="text" id="wd-name" placeholder="Your name"/>
+          </div>
+        </div>
+        <div class="db-form-group">
+          <label>Amount (₦)</label>
+          <input type="number" id="wd-amount" placeholder="Minimum ₦1,000" min="1000"/>
+        </div>
+        <div id="wd-error" style="color:#cc0000;font-size:0.82em;display:none;"></div>
+        <div id="wd-success" style="color:#00a651;font-size:0.82em;display:none;"></div>
+        <button class="db-submit-btn" onclick="doWithdraw()">💸 Request Withdrawal</button>
+      </div>
+    </div>
+  </div>
 
-      var body = document.getElementById('preview-modal-body');
-      body.innerHTML =
-        imgHtml +
-        '<h2 style="font-size:1.2em;margin-bottom:6px;">' + course.title + '</h2>' +
-        '<div style="color:var(--orange);font-size:1.4em;font-weight:800;margin-bottom:10px;">' + (course.isFree ? 'Free' : '₦' + parseInt(course.price).toLocaleString()) + '</div>' +
-        '<p style="font-size:0.9em;color:var(--text2);line-height:1.6;margin-bottom:14px;">' + (course.description || '') + '</p>' +
-        '<h3 style="font-size:1em;margin-bottom:6px;">Lessons (' + (course.lessons ? course.lessons.length : 0) + ')</h3>' +
-        lessonsHtml;
+</div>
 
-      document.getElementById('preview-modal-overlay').style.display = 'block';
-      document.getElementById('preview-modal').style.display = 'block';
-    }
+<!-- BOTTOM NAV -->
+<div class="db-bottom-nav">
+  <a href="../../index.html"><span>🏠</span><span>Home</span></a>
+  <a href="../../pages/learn/browse.html"><span>🎓</span><span>Browse</span></a>
+  <a href="#" onclick="showTab('add');return false;" class="active"><span>➕</span><span>Add</span></a>
+  <a href="#" onclick="showTab('students');return false;"><span>👥</span><span>Students</span></a>
+  <a href="buyer.html"><span>👤</span><span>Account</span></a>
+</div>
 
-    function closePreviewModal() {
-      document.getElementById('preview-modal-overlay').style.display = 'none';
-      document.getElementById('preview-modal').style.display = 'none';
-    }
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="../../js/firebase/config.js"></script>
+<script src="../../js/firebase/auth.js"></script>
+<script src="../../js/firebase/learn.js"></script>
+<script src="../../js/firebase/imgbb.js"></script>
+<script src="../../js/core/main.js"></script>
+<script>
 
-    function deleteCourse(courseId) {
-      if (confirm('Delete this course?')) {
-        nexaDeleteCourse(courseId)
-          .then(function() {
-            showToast('🗑️ Course deleted');
-            myCourses = myCourses.filter(function(c) { return c.id !== courseId; });
-            renderMyCourses(myCourses);
-            updateStats();
-            setTimeout(function() { loadMyCourses(); }, 800);
-          })
-          .catch(function(err) {
-            showToast('Error: ' + err.message);
-          });
-      }
-    }
+  var myCourses=[], myStudents=[];
+  var selEmoji_val='🎓', selImgFile=null, editId=null;
 
-    function saveInstructorSettings() {
-      showToast('✅ Settings saved!');
-    }
+  function init() {
+    var user = JSON.parse(localStorage.getItem('nexa_current_user')||'null');
+    if (!user) { window.location.href='../auth/login.html'; return; }
+    var av=document.getElementById('user-avatar');
+    var sb=document.getElementById('overview-sub');
+    if (av) av.textContent=(user.firstName||'I')[0].toUpperCase();
+    if (sb) sb.textContent='Welcome back, '+(user.firstName||'Instructor')+'!';
+    showTab('overview');
+  }
 
-    function doInstructorLogout() {
-      if (typeof nexaLogout === 'function') {
-        nexaLogout().then(function() {
-          localStorage.removeItem('nexa_current_user');
-          window.location.href = '../../index.html';
-        });
-      } else {
-        localStorage.removeItem('nexa_current_user');
-        window.location.href = '../../index.html';
-      }
-    }
-
-    document.addEventListener('DOMContentLoaded', function() {
-      init();
+  if (typeof auth!=='undefined') {
+    auth.onAuthStateChanged(function(u){
+      if (u){ loadCourses(); loadStudents(); }
+      else { window.location.href='../auth/login.html'; }
     });
+  }
 
-  </script>
+  function showTab(tab) {
+    document.querySelectorAll('.db-tab').forEach(function(t){ t.classList.remove('active'); });
+    document.querySelectorAll('.db-tab-content').forEach(function(c){ c.classList.remove('active'); });
+    var map={overview:0,courses:1,add:2,students:3,earnings:4};
+    var tabs=document.querySelectorAll('.db-tab');
+    if (map[tab]!==undefined && tabs[map[tab]]) tabs[map[tab]].classList.add('active');
+    var c=document.getElementById('content-'+tab);
+    if (c) c.classList.add('active');
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
 
+  function loadCourses() {
+    var user=auth.currentUser;
+    if (!user) return;
+    nexaGetInstructorCourses(user.uid)
+      .then(function(courses){
+        myCourses=courses.filter(function(c){ return c.status!=='deleted'; });
+        renderCourses(myCourses);
+        updateStats();
+      })
+      .catch(function(){ renderCourses([]); });
+  }
+
+  function loadStudents() {
+    var user=auth.currentUser;
+    if (!user) return;
+    db.collection('enrollments')
+      .where('instructorId','==',user.uid)
+      .get()
+      .then(function(snap){
+        myStudents=[];
+        snap.forEach(function(doc){ myStudents.push(Object.assign({id:doc.id},doc.data())); });
+        myStudents.sort(function(a,b){
+          return (b.createdAt?b.createdAt.toMillis():0)-(a.createdAt?a.createdAt.toMillis():0);
+        });
+        renderStudents(myStudents);
+        renderRecentStudents(myStudents.slice(0,5));
+        updateStats();
+      })
+      .catch(function(err){ console.log('Students error:',err); });
+  }
+
+  function renderCourses(courses) {
+    var list=document.getElementById('courses-list');
+    if (!list) return;
+    if (!courses||courses.length===0) {
+      list.innerHTML='<div class="db-empty"><div class="db-empty-icon">🎓</div><h3>No courses yet</h3><p>Create your first course and start earning from your knowledge</p><button class="db-empty-btn" onclick="showTab(\'add\')">+ Create Your First Course</button></div>';
+      return;
+    }
+    list.innerHTML=courses.map(function(c){
+      var sc={active:'status-active',pending:'status-pending',rejected:'status-rejected'}[c.status]||'status-pending';
+      var sl={active:'✅ Live',pending:'⏳ Pending',rejected:'❌ Rejected'}[c.status]||'⏳ Pending';
+      var enrolled=myStudents.filter(function(s){ return s.courseId===c.id; }).length;
+      var img=c.imageUrl?'<img src="'+c.imageUrl+'"/>':(c.emoji||'🎓');
+      return '<div class="db-row">'+
+        '<div class="db-row-img">'+img+'</div>'+
+        '<div class="db-row-info">'+
+          '<div class="db-row-name">'+(c.title||'Course')+'</div>'+
+          '<div class="db-row-meta">'+(c.category||'')+' • '+(c.level||'')+' • 👥 '+enrolled+' students</div>'+
+          '<div class="db-row-status '+sc+'">'+sl+'</div>'+
+        '</div>'+
+        '<div class="db-row-price">₦'+parseInt(c.price||0).toLocaleString()+'</div>'+
+        '<div class="db-row-actions">'+
+          '<button class="db-action-btn" onclick="editCourse(\''+c.id+'\')">✏️</button>'+
+          '<button class="db-action-btn danger" onclick="deleteCourse(\''+c.id+'\')">🗑️</button>'+
+        '</div>'+
+      '</div>';
+    }).join('');
+  }
+
+  function renderStudents(students) {
+    var body=document.getElementById('students-body');
+    if (!body) return;
+    if (!students||students.length===0) {
+      body.innerHTML='<tr><td colspan="5" style="text-align:center;padding:20px;color:#999;">No students enrolled yet</td></tr>';
+      return;
+    }
+    body.innerHTML=students.map(function(s){
+      return '<tr>'+
+        '<td style="font-weight:600;">'+(s.studentName||'Student')+'</td>'+
+        '<td style="font-size:0.85em;color:#6c757d;">'+(s.studentEmail||'')+'</td>'+
+        '<td style="font-size:0.85em;max-width:120px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+(s.courseTitle||'')+'</td>'+
+        '<td style="font-weight:700;color:#ff6b00;">₦'+parseInt(s.amountPaid||0).toLocaleString()+'</td>'+
+        '<td style="font-size:0.82em;color:#999;">'+(s.createdAt?new Date(s.createdAt.toMillis()).toLocaleDateString():'')+'</td>'+
+      '</tr>';
+    }).join('');
+  }
+
+  function renderRecentStudents(students) {
+    var wrap=document.getElementById('recent-students-wrap');
+    if (!wrap) return;
+    if (!students||students.length===0) {
+      wrap.innerHTML='<div class="db-empty" style="padding:20px;"><div class="db-empty-icon" style="font-size:2em;">👥</div><h3>No students yet</h3><p>Create a course to start getting enrollments</p></div>';
+      return;
+    }
+    wrap.innerHTML=students.map(function(s){
+      return '<div class="db-row">'+
+        '<div class="db-row-img" style="background:#e3f2fd;font-size:1em;font-weight:700;color:#1565c0;">'+(s.studentName||'S')[0].toUpperCase()+'</div>'+
+        '<div class="db-row-info">'+
+          '<div class="db-row-name">'+(s.studentName||'Student')+'</div>'+
+          '<div class="db-row-meta">📚 '+(s.courseTitle||'')+'</div>'+
+        '</div>'+
+        '<div class="db-row-price">₦'+parseInt(s.amountPaid||0).toLocaleString()+'</div>'+
+      '</div>';
+    }).join('');
+  }
+
+  function updateStats() {
+    var revenue=myStudents.reduce(function(s,e){ return s+(e.amountPaid||0); },0);
+    var share=Math.round(revenue*0.8);
+    document.getElementById('stat-revenue').textContent='₦'+revenue.toLocaleString();
+    document.getElementById('stat-students').textContent=myStudents.length;
+    document.getElementById('stat-courses').textContent=myCourses.filter(function(c){ return c.status==='active'; }).length;
+    document.getElementById('stat-balance').textContent='₦'+share.toLocaleString();
+    document.getElementById('ec-total').textContent='₦'+revenue.toLocaleString();
+    document.getElementById('ec-avail').textContent='₦'+share.toLocaleString();
+    document.getElementById('ec-fee').textContent='₦'+Math.round(revenue*0.2).toLocaleString();
+    document.getElementById('ec-students').textContent=myStudents.length;
+  }
+
+  function previewImg(input) {
+    var file=input.files[0];
+    if (!file) return;
+    selImgFile=file;
+    var reader=new FileReader();
+    reader.onload=function(e){
+      document.getElementById('c-img-placeholder').style.display='none';
+      var p=document.getElementById('c-img-preview');
+      p.src=e.target.result;
+      p.style.display='block';
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function selEmoji(emoji,btn) {
+    selEmoji_val=emoji;
+    document.querySelectorAll('.db-emoji-btn').forEach(function(b){ b.classList.remove('selected'); });
+    btn.classList.add('selected');
+  }
+
+  function getFormats() {
+    var f=[];
+    document.querySelectorAll('.format:checked').forEach(function(cb){ f.push(cb.value); });
+    return f;
+  }
+
+  function publishCourse() {
+    var title=document.getElementById('c-title').value.trim();
+    var cat=document.getElementById('c-category').value;
+    var level=document.getElementById('c-level').value;
+    var price=document.getElementById('c-price').value;
+    var duration=document.getElementById('c-duration').value.trim();
+    var lang=document.getElementById('c-language').value;
+    var desc=document.getElementById('c-desc').value.trim();
+    var outcomes=document.getElementById('c-outcomes').value.trim();
+    var reqs=document.getElementById('c-requirements').value.trim();
+    var errEl=document.getElementById('c-error');
+    var sucEl=document.getElementById('c-success');
+    var btn=document.getElementById('c-submit-btn');
+
+    errEl.style.display='none';
+    sucEl.style.display='none';
+
+    if (!title){ errEl.textContent='Enter course title'; errEl.style.display='block'; return; }
+    if (!cat){ errEl.textContent='Select a category'; errEl.style.display='block'; return; }
+    if (!price){ errEl.textContent='Enter course price'; errEl.style.display='block'; return; }
+    if (!desc){ errEl.textContent='Enter course description'; errEl.style.display='block'; return; }
+    if (!outcomes){ errEl.textContent='Enter what students will learn'; errEl.style.display='block'; return; }
+
+    var user=auth.currentUser;
+    if (!user){ errEl.textContent='Please login first'; errEl.style.display='block'; return; }
+
+    btn.textContent='Submitting...';
+    btn.disabled=true;
+
+    var userData=JSON.parse(localStorage.getItem('nexa_current_user')||'{}');
+    var upload=selImgFile?uploadImageToImgBB(selImgFile):Promise.resolve('');
+
+    upload.then(function(imageUrl){
+      var data={
+        instructorId:user.uid,
+        instructorName:userData.fullName||userData.firstName||'Instructor',
+        title:title,
+        category:cat,
+        level:level,
+        price:parseFloat(price),
+        duration:duration,
+        language:lang,
+        description:desc,
+        outcomes:outcomes,
+        requirements:reqs,
+        formats:getFormats(),
+        imageUrl:imageUrl,
+        emoji:selEmoji_val,
+        status:'pending',
+        students:0,
+        rating:0,
+        reviews:0,
+        createdAt:firebase.firestore.FieldValue.serverTimestamp(),
+      };
+      if (editId) {
+        return db.collection('courses').doc(editId).update(data);
+      } else {
+        var ref=db.collection('courses').doc();
+        data.id=ref.id;
+        return ref.set(data);
+      }
+    })
+    .then(function(){
+      sucEl.textContent=editId
+        ?'✅ Course updated! Admin will review changes.'
+        :'🎉 Course submitted! Admin will review and publish within 24 hours.';
+      sucEl.style.display='block';
+      btn.textContent='🚀 Submit for Approval';
+      btn.disabled=false;
+      document.getElementById('c-title').value='';
+      document.getElementById('c-category').value='';
+      document.getElementById('c-price').value='';
+      document.getElementById('c-duration').value='';
+      document.getElementById('c-desc').value='';
+      document.getElementById('c-outcomes').value='';
+      document.getElementById('c-requirements').value='';
+      document.getElementById('c-img-preview').style.display='none';
+      document.getElementById('c-img-placeholder').style.display='block';
+      document.querySelectorAll('.format').forEach(function(cb){ cb.checked=false; });
+      selImgFile=null; editId=null;
+      document.getElementById('add-form-title').textContent='Add New Course';
+      loadCourses();
+      setTimeout(function(){ showTab('courses'); },2000);
+    })
+    .catch(function(err){
+      errEl.textContent='❌ Error: '+err.message;
+      errEl.style.display='block';
+      btn.textContent='🚀 Submit for Approval';
+      btn.disabled=false;
+    });
+  }
+
+  function editCourse(id) {
+    var c=myCourses.find(function(x){ return x.id===id; });
+    if (!c) return;
+    editId=id;
+    document.getElementById('add-form-title').textContent='Edit Course';
+    document.getElementById('c-title').value=c.title||'';
+    document.getElementById('c-category').value=c.category||'';
+    document.getElementById('c-level').value=c.level||'Beginner';
+    document.getElementById('c-price').value=c.price||'';
+    document.getElementById('c-duration').value=c.duration||'';
+    document.getElementById('c-language').value=c.language||'English';
+    document.getElementById('c-desc').value=c.description||'';
+    document.getElementById('c-outcomes').value=c.outcomes||'';
+    document.getElementById('c-requirements').value=c.requirements||'';
+    if (c.formats) {
+      document.querySelectorAll('.format').forEach(function(cb){
+        cb.checked=c.formats.indexOf(cb.value)>-1;
+      });
+    }
+    if (c.imageUrl) {
+      document.getElementById('c-img-preview').src=c.imageUrl;
+      document.getElementById('c-img-preview').style.display='block';
+      document.getElementById('c-img-placeholder').style.display='none';
+    }
+    showTab('add');
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+
+  function deleteCourse(id) {
+    if (!confirm('Delete this course?')) return;
+    db.collection('courses').doc(id).update({status:'deleted'})
+      .then(function(){
+        showToast('🗑️ Course deleted');
+        myCourses=myCourses.filter(function(c){ return c.id!==id; });
+        renderCourses(myCourses);
+        updateStats();
+      })
+      .catch(function(err){ showToast('Error: '+err.message); });
+  }
+
+  function doWithdraw() {
+    var bank=document.getElementById('wd-bank').value;
+    var acct=document.getElementById('wd-acct').value.trim();
+    var name=document.getElementById('wd-name').value.trim();
+    var amount=parseInt(document.getElementById('wd-amount').value);
+    var errEl=document.getElementById('wd-error');
+    var sucEl=document.getElementById('wd-success');
+    errEl.style.display='none'; sucEl.style.display='none';
+    if (!acct||acct.length<10){ errEl.textContent='Enter valid 10-digit account number'; errEl.style.display='block'; return; }
+    if (!name){ errEl.textContent='Enter account name'; errEl.style.display='block'; return; }
+    if (!amount||amount<1000){ errEl.textContent='Minimum withdrawal is ₦1,000'; errEl.style.display='block'; return; }
+    var user=auth.currentUser;
+    if (!user) return;
+    db.collection('withdrawalRequests').add({
+      userId:user.uid,userType:'instructor',
+      bank:bank,account:acct,name:name,
+      amount:amount,status:'pending',
+      createdAt:firebase.firestore.FieldValue.serverTimestamp(),
+    }).then(function(){
+      sucEl.textContent='✅ Withdrawal request submitted! We will process within 1-2 business days.';
+      sucEl.style.display='block';
+      document.getElementById('wd-amount').value='';
+    }).catch(function(err){ errEl.textContent='Error: '+err.message; errEl.style.display='block'; });
+  }
+
+  function showToast(msg) {
+    var t=document.getElementById('db-toast');
+    if (!t) return;
+    t.textContent=msg;
+    t.style.display='block';
+    setTimeout(function(){ t.style.display='none'; },2500);
+  }
+
+  document.addEventListener('DOMContentLoaded',function(){ init(); });
+
+</script>
 </body>
 </html>
