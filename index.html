@@ -25,26 +25,26 @@
 
     /* ── NAVBAR ── */
     .nav{position:fixed;top:0;left:0;right:0;z-index:500;background:rgba(9,9,11,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
-    .nav-row{max-width:1100px;margin:0 auto;padding:0 20px;height:62px;display:flex;align-items:center;gap:14px;}
+    .nav-row{max-width:1100px;margin:0 auto;padding:0 16px;height:58px;display:flex;align-items:center;gap:10px;}
     .nav-logo{font-weight:900;font-size:1.3em;text-decoration:none;color:var(--white);flex-shrink:0;letter-spacing:-0.02em;}
     .nav-logo em{color:var(--accent);font-style:normal;}
     .nav-search{flex:1;display:flex;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.1);border-radius:10px;overflow:hidden;min-width:0;}
     .nav-search input{flex:1;background:transparent;border:none;outline:none;padding:11px 14px;color:var(--white);font-size:0.85em;font-family:'Inter',sans-serif;min-width:0;}
     .nav-search input::placeholder{color:rgba(255,255,255,0.3);}
     .nav-search button{background:var(--accent);border:none;padding:11px 14px;cursor:pointer;font-size:0.88em;flex-shrink:0;}
-    .nav-right{display:flex;align-items:center;gap:12px;flex-shrink:0;}
+    .nav-right{display:flex;align-items:center;gap:8px;flex-shrink:0;}
     .nav-cart{position:relative;color:var(--white);font-size:1.2em;text-decoration:none;flex-shrink:0;}
     .nav-cart-badge{position:absolute;top:-5px;right:-5px;background:var(--accent);color:white;border-radius:50%;width:16px;height:16px;font-size:0.58em;display:flex;align-items:center;justify-content:center;font-weight:700;}
-    .nav-login-btn{color:rgba(255,255,255,0.7);text-decoration:none;font-size:0.82em;font-weight:600;white-space:nowrap;}
-    .nav-signup-btn{background:var(--brand);color:white;padding:8px 18px;border-radius:9px;text-decoration:none;font-size:0.82em;font-weight:700;white-space:nowrap;}
-    .nav-account-btn{background:var(--brand);color:white;padding:8px 18px;border-radius:9px;text-decoration:none;font-size:0.82em;font-weight:700;white-space:nowrap;display:none;}
+    .nav-login-btn{color:rgba(255,255,255,0.7);text-decoration:none;font-size:0.8em;font-weight:600;white-space:nowrap;display:none;}
+    .nav-signup-btn{background:var(--brand);color:white;padding:7px 14px;border-radius:8px;text-decoration:none;font-size:0.8em;font-weight:700;white-space:nowrap;}
+    .nav-account-btn{background:var(--brand);color:white;padding:7px 14px;border-radius:8px;text-decoration:none;font-size:0.8em;font-weight:700;white-space:nowrap;display:none;}
     .nav-hamburger{background:none;border:none;color:white;font-size:1.2em;cursor:pointer;padding:6px;flex-shrink:0;}
 
     /* ── SECTION NAV ── */
     .snav{background:rgba(9,9,11,0.95);border-bottom:1px solid var(--border);overflow-x:auto;scrollbar-width:none;}
     .snav::-webkit-scrollbar{display:none;}
     .snav-inner{max-width:1100px;margin:0 auto;padding:0 20px;display:flex;}
-    .snav-link{padding:11px 14px;color:rgba(255,255,255,0.5);text-decoration:none;font-size:0.78em;font-weight:600;white-space:nowrap;border-bottom:2px solid transparent;flex-shrink:0;transition:all 0.15s;}
+    .snav-link{padding:9px 12px;color:rgba(255,255,255,0.5);text-decoration:none;font-size:0.78em;font-weight:600;white-space:nowrap;border-bottom:2px solid transparent;flex-shrink:0;transition:all 0.15s;}
     .snav-link:hover{color:white;border-bottom-color:var(--accent);}
 
     /* ── MOBILE MENU ── */
@@ -70,11 +70,11 @@
     .mm-link.danger{color:#f87171;}
 
     /* ── HERO ── */
-    .hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;overflow:hidden;padding-top:120px;padding-bottom:40px;}
+    .hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;overflow:hidden;padding-top:95px;padding-bottom:30px;}
     .hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(124,58,237,0.22) 0%,transparent 65%),radial-gradient(ellipse 50% 50% at 80% 60%,rgba(249,115,22,0.1) 0%,transparent 50%),var(--dark);}
     .hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.025) 1px,transparent 1px);background-size:44px 44px;mask-image:radial-gradient(ellipse 80% 80% at 50% 50%,black 20%,transparent 100%);}
-    .hero-inner{max-width:680px;margin:0 auto;padding:0 24px;position:relative;z-index:1;text-align:center;}
-    .hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(124,58,237,0.12);border:1px solid rgba(124,58,237,0.25);color:rgba(255,255,255,0.82);padding:7px 16px;border-radius:100px;font-size:0.78em;font-weight:600;margin-bottom:18px;}
+    .hero-inner{max-width:680px;margin:0 auto;padding:0 20px;position:relative;z-index:1;text-align:center;}
+    .hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(124,58,237,0.12);border:1px solid rgba(124,58,237,0.25);color:rgba(255,255,255,0.82);padding:6px 14px;border-radius:100px;font-size:0.78em;font-weight:600;margin-bottom:14px;}
     .hero-badge-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:blink 2s infinite;flex-shrink:0;}
     @keyframes blink{0%,100%{opacity:1;}50%{opacity:0.3;}}
     .hero-eyebrow{font-size:clamp(0.78em,2vw,0.92em);font-weight:800;color:var(--accent);text-transform:uppercase;letter-spacing:1.8px;margin-bottom:14px;}
@@ -333,7 +333,7 @@
 </div>
 
 <!-- ANNOUNCE -->
-<div style="background:var(--dark);padding:28px 0 4px;">
+<div id="announce-wrap" style="background:var(--dark);padding:28px 0 4px;">
   <div class="announce rv">
     <div>
       <h3>🚀 We're live and accepting listings</h3>
@@ -423,7 +423,7 @@
 </div>
 
 <!-- CTA -->
-<div style="background:var(--dark);padding:24px 0 0;">
+<div id="cta-wrap" style="background:var(--dark);padding:24px 0 0;">
   <div class="cta-box rv">
     <h2>Ready to experience everything Nigeria has to offer?</h2>
     <p>Join Nexabay today — it takes 30 seconds and it's completely free.</p>
@@ -577,6 +577,11 @@
       if (el_login)   el_login.style.display   = 'none';
       if (el_signup)  el_signup.style.display  = 'none';
       if (el_account){ el_account.style.display='inline-block'; el_account.href='pages/dashboard/buyer.html'; }
+
+      var announceWrap = document.getElementById('announce-wrap');
+      var ctaWrap      = document.getElementById('cta-wrap');
+      if (announceWrap) announceWrap.style.display = 'none';
+      if (ctaWrap)      ctaWrap.style.display      = 'none';
       if (el_mmuser) {
         el_mmuser.innerHTML =
           '<div class="mm-user-row">' +
@@ -593,6 +598,11 @@
       if (el_signup)  el_signup.style.display  = 'inline-block';
       if (el_account) el_account.style.display = 'none';
       if (el_logout)  el_logout.style.display  = 'none';
+
+      var announceWrap = document.getElementById('announce-wrap');
+      var ctaWrap      = document.getElementById('cta-wrap');
+      if (announceWrap) announceWrap.style.display = 'block';
+      if (ctaWrap)      ctaWrap.style.display      = 'block';
     }
   }
 
