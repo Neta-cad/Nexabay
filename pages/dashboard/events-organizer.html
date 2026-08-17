@@ -4,877 +4,766 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Events Dashboard — Nexabay</title>
-  <link rel="stylesheet" href="../../css/main.css"/>
-  <link rel="stylesheet" href="../../css/dashboard.css"/>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="../../css/dashboard.css"/>
 </head>
-<body class="dashboard-body">
+<body>
 
-  <!-- NAVBAR -->
-  <nav class="navbar">
-    <div class="nav-inner">
-      <a href="../../index.html" class="logo">
-        <span class="logo-nexa">Nexa</span><span class="logo-bay">bay</span>
-      </a>
-      <div class="nav-actions">
-        <span class="nav-link" id="nav-organizer-name">My Events</span>
-        <a href="../../index.html" class="nav-link">← Back to Site</a>
+<div class="db-toast" id="db-toast"></div>
+
+<div class="db-topbar">
+  <a href="../../index.html" class="db-logo">Nexa<span>bay</span></a>
+  <button class="db-tab active" onclick="showTab('overview')">📊 Overview</button>
+  <button class="db-tab" onclick="showTab('events')">🎉 My Events</button>
+  <button class="db-tab" onclick="showTab('add')">➕ Create Event</button>
+  <button class="db-tab" onclick="showTab('tickets')">
+    🎟️ Tickets
+    <span class="db-tab-badge" id="tickets-badge" style="display:none;">0</span>
+  </button>
+  <button class="db-tab" onclick="showTab('earnings')">💰 Earnings</button>
+  <div class="db-topbar-right">
+    <div class="db-user-avatar" id="user-avatar">E</div>
+  </div>
+</div>
+
+<div class="db-content">
+
+  <!-- OVERVIEW -->
+  <div class="db-tab-content active" id="content-overview">
+    <div class="db-page-header">
+      <div class="db-page-header-inner">
+        <div>
+          <h1>Welcome back! 👋</h1>
+          <p id="overview-sub">Here is your events performance</p>
+        </div>
+        <button class="db-header-btn" onclick="showTab('add')">+ Create Event</button>
       </div>
     </div>
-  </nav>
 
-  <div class="dashboard-layout">
-
-    <!-- SIDEBAR -->
-    <aside class="dash-sidebar">
-      <div class="dash-profile">
-        <div class="dash-avatar" id="dash-avatar">O</div>
-        <div class="dash-name" id="dash-name">Organizer</div>
-        <div class="dash-badge">🎉 Event Organizer</div>
+    <div class="db-stats">
+      <div class="db-stat">
+        <div class="db-stat-header"><div class="db-stat-label">Revenue</div><div class="db-stat-icon" style="background:#fff3e0;">💰</div></div>
+        <div class="db-stat-value" id="stat-revenue">₦0</div>
+        <div class="db-stat-sub">Total earned</div>
       </div>
+      <div class="db-stat">
+        <div class="db-stat-header"><div class="db-stat-label">Tickets Sold</div><div class="db-stat-icon" style="background:#e8f5e9;">🎟️</div></div>
+        <div class="db-stat-value" id="stat-tickets">0</div>
+        <div class="db-stat-sub">Total sold</div>
+      </div>
+      <div class="db-stat">
+        <div class="db-stat-header"><div class="db-stat-label">Events</div><div class="db-stat-icon" style="background:#e3f2fd;">🎉</div></div>
+        <div class="db-stat-value" id="stat-events">0</div>
+        <div class="db-stat-sub">Active events</div>
+      </div>
+      <div class="db-stat">
+        <div class="db-stat-header"><div class="db-stat-label">Balance</div><div class="db-stat-icon" style="background:#f3e5f5;">💸</div></div>
+        <div class="db-stat-value" id="stat-balance">₦0</div>
+        <div class="db-stat-sub">Available</div>
+      </div>
+    </div>
 
-      <nav class="dash-nav">
-        <a href="#" class="dash-nav-item active" onclick="showTab('overview')">
-          📊 Overview
-        </a>
-        <a href="#" class="dash-nav-item" onclick="showTab('events')">
-          🎉 My Events
-        </a>
-        <a href="#" class="dash-nav-item" onclick="showTab('add-event')">
-          ➕ Create Event
-        </a>
-        <a href="#" class="dash-nav-item" onclick="showTab('tickets')">
-          🎟️ Ticket Sales
-        </a>
-        <a href="#" class="dash-nav-item" onclick="showTab('earnings')">
-          💰 Earnings
-        </a>
-        <a href="#" class="dash-nav-item" onclick="showTab('settings')">
-          ⚙️ Settings
-        </a>
-        <a href="buyer.html" class="dash-nav-item">
-          👤 My Account
-        </a>
-        <a href="#" class="dash-nav-item logout" onclick="doOrganizerLogout()">
-          🚪 Logout
-        </a>
-      </nav>
-    </aside>
-
-    <!-- MAIN CONTENT -->
-    <main class="dash-main">
-
-      <!-- OVERVIEW TAB -->
-      <div class="dash-tab" id="tab-overview">
-        <div class="dash-header">
-          <h1>Welcome back! 👋</h1>
-          <p>Here is your events performance</p>
-        </div>
-
-        <div class="stats-grid">
-          <div class="stat-card">
-            <div class="stat-icon">💰</div>
-            <div class="stat-info">
-              <div class="stat-value" id="stat-revenue">₦0</div>
-              <div class="stat-label">Total Revenue</div>
-            </div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-icon">🎉</div>
-            <div class="stat-info">
-              <div class="stat-value" id="stat-events">0</div>
-              <div class="stat-label">Events Created</div>
-            </div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-icon">🎟️</div>
-            <div class="stat-info">
-              <div class="stat-value" id="stat-tickets">0</div>
-              <div class="stat-label">Tickets Sold</div>
-            </div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-icon">💸</div>
-            <div class="stat-info">
-              <div class="stat-value" id="stat-balance">₦0</div>
-              <div class="stat-label">Available Balance</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="dash-section">
-          <h2>Quick Actions</h2>
-          <div class="quick-actions">
-            <button class="quick-btn" onclick="showTab('add-event')">
-              ➕ Create Event
-            </button>
-            <button class="quick-btn" onclick="showTab('tickets')">
-              🎟️ View Ticket Sales
-            </button>
-            <button class="quick-btn" onclick="showTab('earnings')">
-              💸 Withdraw Earnings
-            </button>
-          </div>
+    <div class="db-card">
+      <div class="db-card-header"><div class="db-card-title">⚡ Quick Actions</div></div>
+      <div class="db-card-body">
+        <div class="db-quick-grid">
+          <button class="db-quick-btn" onclick="showTab('add')"><div class="db-quick-icon">➕</div>Create Event</button>
+          <button class="db-quick-btn" onclick="showTab('tickets')"><div class="db-quick-icon">🎟️</div>View Tickets</button>
+          <button class="db-quick-btn" onclick="showTab('earnings')"><div class="db-quick-icon">💸</div>Withdraw</button>
+          <button class="db-quick-btn" onclick="showTab('events')"><div class="db-quick-icon">🎉</div>My Events</button>
         </div>
       </div>
+    </div>
 
-      <!-- MY EVENTS TAB -->
-      <div class="dash-tab" id="tab-events" style="display:none;">
-        <div class="dash-header">
-          <h1>My Events</h1>
-          <button class="btn-primary" onclick="showTab('add-event')">
-            ➕ Create Event
-          </button>
-        </div>
-        <div id="my-events-list" class="my-products-list"></div>
+    <div class="db-card">
+      <div class="db-card-header">
+        <div class="db-card-title">🕒 Recent Ticket Sales</div>
+        <button onclick="showTab('tickets')" style="background:none;border:none;color:#ff6b00;font-size:0.8em;font-weight:700;cursor:pointer;">See All →</button>
       </div>
-      <!-- ADD EVENT TAB -->
-      <div class="dash-tab" id="tab-add-event" style="display:none;">
-        <div class="dash-header">
-          <h1>Create New Event</h1>
+      <div id="recent-tickets-wrap">
+        <div style="padding:16px;">
+          <div class="db-skeleton" style="width:100%;"></div>
+          <div class="db-skeleton" style="width:75%;"></div>
         </div>
+      </div>
+    </div>
+  </div>
 
-        <div class="add-product-form">
+  <!-- MY EVENTS -->
+  <div class="db-tab-content" id="content-events">
+    <div class="db-page-header">
+      <div class="db-page-header-inner">
+        <div><h1>My Events</h1><p>Manage your event listings</p></div>
+        <button class="db-header-btn" onclick="showTab('add')">+ Create New</button>
+      </div>
+    </div>
+    <div class="db-filters">
+      <button class="db-filter-btn active" onclick="filterEvents('all',this)">All</button>
+      <button class="db-filter-btn" onclick="filterEvents('upcoming',this)">📅 Upcoming</button>
+      <button class="db-filter-btn" onclick="filterEvents('active',this)">✅ Live</button>
+      <button class="db-filter-btn" onclick="filterEvents('pending',this)">⏳ Pending</button>
+    </div>
+    <div class="db-card">
+      <div id="events-list">
+        <div class="db-empty"><div class="db-empty-icon">⏳</div><h3>Loading events...</h3></div>
+      </div>
+    </div>
+  </div>
 
-          <div class="form-section">
-            <h3>Event Details</h3>
+  <!-- CREATE EVENT -->
+  <div class="db-tab-content" id="content-add">
+    <div class="db-page-header">
+      <div class="db-page-header-inner">
+        <div><h1 id="add-form-title">Create New Event</h1><p>Fill details carefully — admin reviews before publishing</p></div>
+      </div>
+    </div>
+    <div class="db-card">
+      <div class="db-card-body">
+        <div class="db-form">
 
-            <div class="form-group">
-              <label>Event Title *</label>
-              <input type="text" id="ae-title" placeholder="e.g. Lagos Music Festival 2025" maxlength="100"/>
-            </div>
+          <div class="db-form-group">
+            <label>Event Name *</label>
+            <input type="text" id="e-name" placeholder="e.g. Lagos Tech Summit 2025"/>
+          </div>
 
-            <div class="form-group">
+          <div class="db-form-row">
+            <div class="db-form-group">
               <label>Category *</label>
-              <select id="ae-category">
+              <select id="e-category">
                 <option value="">Select category</option>
                 <option>Music & Concert</option>
-                <option>Conference & Business</option>
                 <option>Comedy Show</option>
+                <option>Conference & Summit</option>
+                <option>Fashion Show</option>
                 <option>Sports & Fitness</option>
-                <option>Food & Drink</option>
-                <option>Art & Culture</option>
-                <option>Fashion</option>
-                <option>Tech & Innovation</option>
-                <option>Religious</option>
-                <option>Education & Workshop</option>
+                <option>Religious & Spiritual</option>
+                <option>Food & Drinks</option>
+                <option>Arts & Culture</option>
+                <option>Networking & Business</option>
+                <option>Workshop & Training</option>
+                <option>Wedding & Social</option>
                 <option>Other</option>
               </select>
             </div>
-
-            <div class="form-group">
-              <label>Description *</label>
-              <textarea id="ae-desc" placeholder="Tell people about your event..." rows="4"></textarea>
-            </div>
-
-            <div class="form-section">
-              <h3>Event Type</h3>
-              <div class="account-type">
-                <button class="type-btn active" id="btn-physical" onclick="setEventType('physical')">
-                  📍 Physical Event
-                </button>
-                <button class="type-btn" id="btn-virtual" onclick="setEventType('virtual')">
-                  🌐 Virtual/Online
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <div class="form-section">
-            <h3>Date & Time</h3>
-            <div class="form-row-2">
-              <div class="form-group">
-                <label>Event Date *</label>
-                <input type="date" id="ae-date"/>
-              </div>
-              <div class="form-group">
-                <label>Start Time *</label>
-                <input type="time" id="ae-time"/>
-              </div>
-            </div>
-            <div class="form-group">
-              <label>End Time</label>
-              <input type="time" id="ae-end-time"/>
-            </div>
-          </div>
-
-          <div class="form-section" id="physical-fields">
-            <h3>Venue</h3>
-            <div class="form-group">
-              <label>Venue Name *</label>
-              <input type="text" id="ae-venue" placeholder="e.g. Eko Hotel & Suites"/>
-            </div>
-            <div class="form-group">
-              <label>Full Address</label>
-              <input type="text" id="ae-address" placeholder="Street, area, city"/>
-            </div>
-            <div class="form-group">
-              <label>State *</label>
-              <select id="ae-location">
-                <option value="">Select state</option>
-                <option>Lagos</option>
-                <option>Abuja FCT</option>
-                <option>Rivers</option>
-                <option>Kano</option>
-                <option>Oyo</option>
-                <option>Enugu</option>
-                <option>Anambra</option>
-                <option>Delta</option>
-                <option>Edo</option>
-                <option>Imo</option>
+            <div class="db-form-group">
+              <label>Event Type</label>
+              <select id="e-type">
+                <option value="Physical">Physical (In-person)</option>
+                <option value="Virtual">Virtual (Online)</option>
+                <option value="Hybrid">Hybrid</option>
               </select>
             </div>
           </div>
 
-          <div class="form-section" id="virtual-fields" style="display:none;">
-            <h3>Online Event Details</h3>
-            <div class="form-group">
-              <label>Platform *</label>
-              <select id="ae-platform">
-                <option value="">Select platform</option>
-                <option>Zoom</option>
-                <option>Google Meet</option>
-                <option>YouTube Live</option>
-                <option>Instagram Live</option>
-                <option>Facebook Live</option>
-                <option>Other</option>
-              </select>
+          <div class="db-form-row">
+            <div class="db-form-group">
+              <label>Event Date *</label>
+              <input type="date" id="e-date"/>
             </div>
-            <div class="form-group">
-              <label>Online Link (shared after ticket purchase)</label>
-              <input type="text" id="ae-online-link" placeholder="https://zoom.us/j/..."/>
-            </div>
-            <div class="form-group">
-              <label>State (where organizer is based) *</label>
-              <select id="ae-location-virtual">
-                <option value="">Select state</option>
-                <option>Lagos</option>
-                <option>Abuja FCT</option>
-                <option>Rivers</option>
-                <option>Kano</option>
-                <option>Oyo</option>
-                <option>Remote/Online</option>
-              </select>
+            <div class="db-form-group">
+              <label>Start Time *</label>
+              <input type="time" id="e-time"/>
             </div>
           </div>
 
-          <div class="form-section">
-            <h3>Ticket Tiers</h3>
-            <p style="color:var(--text2);font-size:0.85em;margin-bottom:12px;">
-              Add different ticket types with their own prices and quantities
-            </p>
-
-            <div id="ticket-tiers-container"></div>
-
-            <button type="button" onclick="addTicketTier()"
-              style="width:100%;padding:12px;background:var(--gray);border:2px dashed var(--border);border-radius:8px;cursor:pointer;margin-top:8px;font-weight:600;">
-              ➕ Add Ticket Tier
-            </button>
+          <div class="db-form-group">
+            <label>Venue / Location *</label>
+            <input type="text" id="e-venue" placeholder="e.g. Eko Hotel & Suites, Victoria Island, Lagos"/>
           </div>
 
-          <div class="form-section">
-            <h3>Event Image</h3>
-            <div class="image-upload" id="image-upload" onclick="triggerImageUpload()">
-              <div class="upload-placeholder" id="upload-placeholder">
-                <div class="upload-icon">📷</div>
-                <p>Click to add event banner/poster</p>
-                <small>JPG, PNG up to 5MB</small>
-              </div>
-              <div class="upload-preview" id="upload-preview" style="display:none;">
-                <span id="preview-emoji">🎉</span>
+          <div class="db-form-group">
+            <label>State *</label>
+            <select id="e-state">
+              <option value="">Select state</option>
+              <option>Lagos</option><option>Abuja FCT</option>
+              <option>Rivers</option><option>Kano</option>
+              <option>Oyo</option><option>Enugu</option>
+              <option>Anambra</option><option>Delta</option>
+              <option>Edo</option><option>Online (Virtual)</option>
+              <option>Multiple States</option>
+            </select>
+          </div>
+
+          <div class="db-form-group">
+            <label>Event Description *</label>
+            <textarea id="e-desc" rows="4" placeholder="Describe the event — what will happen, who is performing, what attendees can expect..."></textarea>
+          </div>
+
+          <!-- Ticket Tiers -->
+          <div style="background:#f8f9fa;border-radius:12px;padding:16px;border:1.5px solid #e9ecef;">
+            <div style="font-size:0.82em;font-weight:700;color:#555;text-transform:uppercase;letter-spacing:0.4px;margin-bottom:12px;">🎟️ Ticket Tiers</div>
+
+            <div style="margin-bottom:12px;">
+              <div style="font-size:0.78em;font-weight:700;color:#333;margin-bottom:6px;">Regular Ticket</div>
+              <div class="db-form-row">
+                <div class="db-form-group" style="margin-bottom:0;">
+                  <input type="number" id="e-regular-price" placeholder="Price (₦)" min="0"/>
+                </div>
+                <div class="db-form-group" style="margin-bottom:0;">
+                  <input type="number" id="e-regular-qty" placeholder="Quantity available" min="1"/>
+                </div>
               </div>
             </div>
-            <input type="file" id="image-file" style="display:none;" accept="image/*" onchange="previewImage()"/>
 
-            <div class="emoji-selector">
-              <p>Or pick an emoji:</p>
-              <div class="emoji-grid">
-                <span onclick="selectEmoji('🎉')">🎉</span>
-                <span onclick="selectEmoji('🎵')">🎵</span>
-                <span onclick="selectEmoji('🎭')">🎭</span>
-                <span onclick="selectEmoji('🏆')">🏆</span>
-                <span onclick="selectEmoji('🎨')">🎨</span>
-                <span onclick="selectEmoji('💼')">💼</span>
-                <span onclick="selectEmoji('🙏')">🙏</span>
-                <span onclick="selectEmoji('💻')">💻</span>
-                <span onclick="selectEmoji('👗')">👗</span>
-                <span onclick="selectEmoji('🍽️')">🍽️</span>
+            <div style="margin-bottom:12px;">
+              <div style="font-size:0.78em;font-weight:700;color:#333;margin-bottom:6px;">VIP Ticket <span style="color:#999;font-weight:400;">(optional)</span></div>
+              <div class="db-form-row">
+                <div class="db-form-group" style="margin-bottom:0;">
+                  <input type="number" id="e-vip-price" placeholder="Price (₦)" min="0"/>
+                </div>
+                <div class="db-form-group" style="margin-bottom:0;">
+                  <input type="number" id="e-vip-qty" placeholder="Quantity available" min="1"/>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <div style="font-size:0.78em;font-weight:700;color:#333;margin-bottom:6px;">VVIP / Table <span style="color:#999;font-weight:400;">(optional)</span></div>
+              <div class="db-form-row">
+                <div class="db-form-group" style="margin-bottom:0;">
+                  <input type="number" id="e-vvip-price" placeholder="Price (₦)" min="0"/>
+                </div>
+                <div class="db-form-group" style="margin-bottom:0;">
+                  <input type="number" id="e-vvip-qty" placeholder="Quantity available" min="1"/>
+                </div>
               </div>
             </div>
           </div>
 
-          <div id="ae-error" class="ap-error" style="display:none;"></div>
-          <div id="ae-success" class="ap-success" style="display:none;"></div>
-
-          <div class="form-actions">
-            <button class="btn-publish" onclick="publishEvent()">
-              🚀 Publish Event
-            </button>
+          <div class="db-form-group">
+            <label>What's Included</label>
+            <div class="cb-group">
+              <label class="cb-label"><input type="checkbox" class="inclusion" value="Free Food"/> 🍔 Free Food</label>
+              <label class="cb-label"><input type="checkbox" class="inclusion" value="Free Drinks"/> 🥤 Free Drinks</label>
+              <label class="cb-label"><input type="checkbox" class="inclusion" value="Live Music"/> 🎵 Live Music</label>
+              <label class="cb-label"><input type="checkbox" class="inclusion" value="Networking"/> 🤝 Networking</label>
+              <label class="cb-label"><input type="checkbox" class="inclusion" value="Certificate"/> 🏆 Certificate</label>
+              <label class="cb-label"><input type="checkbox" class="inclusion" value="Gift Bag"/> 🎁 Gift Bag</label>
+              <label class="cb-label"><input type="checkbox" class="inclusion" value="Parking"/> 🅿️ Free Parking</label>
+              <label class="cb-label"><input type="checkbox" class="inclusion" value="Live Streaming"/> 📡 Live Stream</label>
+            </div>
           </div>
 
+          <div class="db-form-group">
+            <label>Event Flyer / Poster</label>
+            <div class="db-img-upload" onclick="document.getElementById('e-img-file').click()">
+              <input type="file" id="e-img-file" accept="image/*" onchange="previewImg(this)"/>
+              <div id="e-img-placeholder">
+                <div class="db-img-upload-icon">🖼️</div>
+                <div class="db-img-upload-text">Tap to upload event flyer or poster</div>
+              </div>
+              <img id="e-img-preview" class="db-img-preview" style="display:none;"/>
+            </div>
+          </div>
+
+          <div class="db-form-group">
+            <label>Or choose an emoji</label>
+            <div class="db-emoji-grid">
+              <button class="db-emoji-btn selected" onclick="selEmoji('🎉',this)">🎉</button>
+              <button class="db-emoji-btn" onclick="selEmoji('🎵',this)">🎵</button>
+              <button class="db-emoji-btn" onclick="selEmoji('🎤',this)">🎤</button>
+              <button class="db-emoji-btn" onclick="selEmoji('🏆',this)">🏆</button>
+              <button class="db-emoji-btn" onclick="selEmoji('🎭',this)">🎭</button>
+              <button class="db-emoji-btn" onclick="selEmoji('🎪',this)">🎪</button>
+              <button class="db-emoji-btn" onclick="selEmoji('💃',this)">💃</button>
+              <button class="db-emoji-btn" onclick="selEmoji('🙏',this)">🙏</button>
+              <button class="db-emoji-btn" onclick="selEmoji('👔',this)">👔</button>
+              <button class="db-emoji-btn" onclick="selEmoji('🍾',this)">🍾</button>
+            </div>
+          </div>
+
+          <div class="db-error-msg" id="e-error"></div>
+          <div class="db-success-msg" id="e-success"></div>
+          <button class="db-submit-btn" id="e-submit-btn" onclick="publishEvent()">🚀 Submit for Approval</button>
+          <div style="text-align:center;font-size:0.75em;color:#999;margin-top:8px;">
+            Nexabay charges 8% on every ticket sold • Admin reviews within 24 hours
+          </div>
         </div>
       </div>
-      <!-- TICKET SALES TAB -->
-      <div class="dash-tab" id="tab-tickets" style="display:none;">
-        <div class="dash-header">
-          <h1>Ticket Sales</h1>
-        </div>
+    </div>
+  </div>
 
-        <div class="form-group">
-          <label>Select an event to view ticket sales</label>
-          <select id="ticket-event-select" onchange="loadTicketsForEvent()">
-            <option value="">Select an event...</option>
+  <!-- TICKETS -->
+  <div class="db-tab-content" id="content-tickets">
+    <div class="db-page-header">
+      <div class="db-page-header-inner">
+        <div><h1>Ticket Sales</h1><p>Track who bought tickets to your events</p></div>
+      </div>
+    </div>
+    <div class="db-card">
+      <div class="db-table-wrap">
+        <table class="db-table">
+          <thead>
+            <tr>
+              <th>Buyer</th><th>Event</th><th>Ticket Type</th>
+              <th>Amount</th><th>Date</th><th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="tickets-body">
+            <tr><td colspan="6" style="text-align:center;padding:20px;color:#999;">No ticket sales yet</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- EARNINGS -->
+  <div class="db-tab-content" id="content-earnings">
+    <div class="db-page-header">
+      <div class="db-page-header-inner">
+        <div><h1>Earnings</h1><p>Track revenue and withdraw funds</p></div>
+      </div>
+    </div>
+    <div class="db-earnings-cards">
+      <div class="db-earning-card"><div class="db-earning-label">Total Revenue</div><div class="db-earning-value" id="ec-total">₦0</div></div>
+      <div class="db-earning-card"><div class="db-earning-label">Your Share (92%)</div><div class="db-earning-value green" id="ec-avail">₦0</div></div>
+      <div class="db-earning-card"><div class="db-earning-label">Nexabay Fee (8%)</div><div class="db-earning-value orange" id="ec-fee">₦0</div></div>
+      <div class="db-earning-card"><div class="db-earning-label">Tickets Sold</div><div class="db-earning-value" id="ec-tickets">0</div></div>
+    </div>
+    <div class="db-withdraw-card">
+      <div class="db-withdraw-title">💸 Withdraw Funds</div>
+      <div class="db-form" style="gap:12px;">
+        <div class="db-form-group">
+          <label>Bank Name</label>
+          <select id="wd-bank">
+            <option>GTBank</option><option>Access Bank</option>
+            <option>First Bank</option><option>Zenith Bank</option>
+            <option>UBA</option><option>Opay</option>
+            <option>Palmpay</option><option>Kuda Bank</option>
+            <option>Moniepoint</option>
           </select>
         </div>
-
-        <div id="tickets-list" style="margin-top:16px;"></div>
+        <div class="db-form-row">
+          <div class="db-form-group">
+            <label>Account Number</label>
+            <input type="text" id="wd-acct" placeholder="10 digits" maxlength="10"/>
+          </div>
+          <div class="db-form-group">
+            <label>Account Name</label>
+            <input type="text" id="wd-name" placeholder="Your name"/>
+          </div>
+        </div>
+        <div class="db-form-group">
+          <label>Amount (₦)</label>
+          <input type="number" id="wd-amount" placeholder="Minimum ₦1,000" min="1000"/>
+        </div>
+        <div id="wd-error" style="color:#cc0000;font-size:0.82em;display:none;"></div>
+        <div id="wd-success" style="color:#00a651;font-size:0.82em;display:none;"></div>
+        <button class="db-submit-btn" onclick="doWithdraw()">💸 Request Withdrawal</button>
       </div>
-
-      <!-- EARNINGS TAB -->
-      <div class="dash-tab" id="tab-earnings" style="display:none;">
-        <div class="dash-header">
-          <h1>Earnings & Withdrawals</h1>
-        </div>
-
-        <div class="earnings-cards">
-          <div class="earning-card">
-            <div class="ec-label">Total Revenue</div>
-            <div class="ec-value" id="ec-total">₦0</div>
-          </div>
-          <div class="earning-card">
-            <div class="ec-label">Available Balance</div>
-            <div class="ec-value green" id="ec-available">₦0</div>
-          </div>
-          <div class="earning-card">
-            <div class="ec-label">Nexabay Fee (8%)</div>
-            <div class="ec-value orange" id="ec-fee">₦0</div>
-          </div>
-        </div>
-
-        <div class="withdraw-section">
-          <h3>Withdraw Funds</h3>
-          <div class="withdraw-form">
-            <div class="form-group">
-              <label>Bank Name</label>
-              <select id="wd-bank">
-                <option>GTBank</option>
-                <option>Access Bank</option>
-                <option>First Bank</option>
-                <option>Zenith Bank</option>
-                <option>UBA</option>
-                <option>Opay</option>
-                <option>Palmpay</option>
-                <option>Kuda Bank</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label>Account Number</label>
-              <input type="text" id="wd-account" placeholder="10 digit account number" maxlength="10"/>
-            </div>
-            <div class="form-group">
-              <label>Account Name</label>
-              <input type="text" id="wd-name" placeholder="Account holder name"/>
-            </div>
-            <div class="form-group">
-              <label>Amount to Withdraw (₦)</label>
-              <input type="number" id="wd-amount" placeholder="Minimum ₦1,000" min="1000"/>
-            </div>
-            <div id="wd-error" style="color:#cc0000;font-size:0.85em;display:none;"></div>
-            <div id="wd-success" style="color:#006622;font-size:0.85em;display:none;"></div>
-            <button class="btn-withdraw" onclick="processWithdrawal()">
-              💸 Withdraw Now
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <!-- SETTINGS TAB -->
-      <div class="dash-tab" id="tab-settings" style="display:none;">
-        <div class="dash-header">
-          <h1>Organizer Settings</h1>
-        </div>
-
-        <div class="settings-card">
-          <h3>Organizer Profile</h3>
-          <div class="form-group">
-            <label>Organizer/Company Name</label>
-            <input type="text" id="org-name" placeholder="Your name or company"/>
-          </div>
-          <div class="form-group">
-            <label>Bio</label>
-            <textarea id="org-bio" rows="3" placeholder="Tell attendees about you..."></textarea>
-          </div>
-          <div class="form-group">
-            <label>WhatsApp Number</label>
-            <input type="tel" id="org-whatsapp" placeholder="080xxxxxxxx"/>
-          </div>
-          <button class="btn-save" onclick="saveOrganizerSettings()">Save Changes</button>
-        </div>
-      </div>
-
-    </main>
-  </div>
-
-  <!-- PREVIEW MODAL -->
-  <div id="preview-modal-overlay" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);z-index:900;" onclick="closePreviewModal()"></div>
-  <div id="preview-modal" style="display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:white;border-radius:14px;max-width:380px;width:90%;max-height:85vh;overflow-y:auto;z-index:901;padding:20px;">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
-      <h3 style="font-size:1.1em;font-weight:700;">Event Preview</h3>
-      <button onclick="closePreviewModal()" style="background:var(--gray);border:none;width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:0.9em;">✕</button>
     </div>
-    <div id="preview-modal-body"></div>
   </div>
 
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-  <script src="../../js/firebase/config.js"></script>
-  <script src="../../js/firebase/auth.js"></script>
-  <script src="../../js/firebase/events.js"></script>
-  <script src="../../js/firebase/imgbb.js"></script>
-  <script src="../../js/core/main.js"></script>
-  <script>
+</div>
 
-    var myEvents = [];
-    var selectedEmoji = '🎉';
-    var selectedImageFile = null;
-    var tierCount = 0;
-    var currentEventType = 'physical';
+<!-- BOTTOM NAV -->
+<div class="db-bottom-nav">
+  <a href="../../index.html"><span>🏠</span><span>Home</span></a>
+  <a href="../../pages/events/browse.html"><span>🎉</span><span>Browse</span></a>
+  <a href="#" onclick="showTab('add');return false;" class="active"><span>➕</span><span>Create</span></a>
+  <a href="#" onclick="showTab('tickets');return false;"><span>🎟️</span><span>Tickets</span></a>
+  <a href="buyer.html"><span>👤</span><span>Account</span></a>
+</div>
 
-    function init() {
-      var user = JSON.parse(localStorage.getItem('nexa_current_user') || 'null');
-      if (user) {
-        var nameEl   = document.getElementById('dash-name');
-        var avatarEl = document.getElementById('dash-avatar');
-        var navEl    = document.getElementById('nav-organizer-name');
-        if (nameEl)   nameEl.textContent   = user.fullName || user.firstName || 'Organizer';
-        if (avatarEl) avatarEl.textContent = (user.firstName || 'O')[0].toUpperCase();
-        if (navEl)    navEl.textContent    = user.firstName + '\'s Events';
-      }
-      addTicketTier();
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="../../js/firebase/config.js"></script>
+<script src="../../js/firebase/auth.js"></script>
+<script src="../../js/firebase/events.js"></script>
+<script src="../../js/firebase/imgbb.js"></script>
+<script src="../../js/core/main.js"></script>
+<script>
+
+  var myEvents=[], myTickets=[], filteredEvents=[];
+  var selEmoji_val='🎉', selImgFile=null, editId=null;
+
+  function init() {
+    var user=JSON.parse(localStorage.getItem('nexa_current_user')||'null');
+    if (!user){ window.location.href='../auth/login.html'; return; }
+    var av=document.getElementById('user-avatar');
+    var sb=document.getElementById('overview-sub');
+    if (av) av.textContent=(user.firstName||'E')[0].toUpperCase();
+    if (sb) sb.textContent='Welcome back, '+(user.firstName||'Organizer')+'!';
+    showTab('overview');
+  }
+
+  if (typeof auth!=='undefined') {
+    auth.onAuthStateChanged(function(u){
+      if (u){ loadEvents(); loadTickets(); }
+      else { window.location.href='../auth/login.html'; }
+    });
+  }
+
+  function showTab(tab) {
+    document.querySelectorAll('.db-tab').forEach(function(t){ t.classList.remove('active'); });
+    document.querySelectorAll('.db-tab-content').forEach(function(c){ c.classList.remove('active'); });
+    var map={overview:0,events:1,add:2,tickets:3,earnings:4};
+    var tabs=document.querySelectorAll('.db-tab');
+    if (map[tab]!==undefined&&tabs[map[tab]]) tabs[map[tab]].classList.add('active');
+    var c=document.getElementById('content-'+tab);
+    if (c) c.classList.add('active');
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+
+  function loadEvents() {
+    var user=auth.currentUser;
+    if (!user) return;
+    nexaGetOrganizerEvents(user.uid)
+      .then(function(events){
+        myEvents=events.filter(function(e){ return e.status!=='deleted'; });
+        filteredEvents=myEvents.slice();
+        renderEvents(filteredEvents);
+        updateStats();
+      })
+      .catch(function(){ renderEvents([]); });
+  }
+
+  function loadTickets() {
+    var user=auth.currentUser;
+    if (!user) return;
+    db.collection('tickets')
+      .where('organizerId','==',user.uid)
+      .get()
+      .then(function(snap){
+        myTickets=[];
+        snap.forEach(function(doc){ myTickets.push(Object.assign({id:doc.id},doc.data())); });
+        myTickets.sort(function(a,b){
+          return (b.createdAt?b.createdAt.toMillis():0)-(a.createdAt?a.createdAt.toMillis():0);
+        });
+        renderTickets(myTickets);
+        renderRecentTickets(myTickets.slice(0,5));
+        updateStats();
+        var badge=document.getElementById('tickets-badge');
+        if (badge&&myTickets.length>0){ badge.textContent=myTickets.length; badge.style.display='inline'; }
+      })
+      .catch(function(err){ console.log('Tickets error:',err); });
+  }
+
+  function filterEvents(filter,btn) {
+    document.querySelectorAll('#content-events .db-filter-btn').forEach(function(b){ b.classList.remove('active'); });
+    btn.classList.add('active');
+    var today=new Date().toISOString().split('T')[0];
+    if (filter==='upcoming') {
+      filteredEvents=myEvents.filter(function(e){ return e.date>=today && e.status==='active'; });
+    } else if (filter==='all') {
+      filteredEvents=myEvents.slice();
+    } else {
+      filteredEvents=myEvents.filter(function(e){ return e.status===filter; });
     }
+    renderEvents(filteredEvents);
+  }
 
-    if (typeof auth !== 'undefined') {
-      auth.onAuthStateChanged(function(user) {
-        if (user) loadMyEvents();
-      });
+  function renderEvents(events) {
+    var list=document.getElementById('events-list');
+    if (!list) return;
+    if (!events||events.length===0) {
+      list.innerHTML='<div class="db-empty"><div class="db-empty-icon">🎉</div><h3>No events yet</h3><p>Create your first event and start selling tickets on Nexabay</p><button class="db-empty-btn" onclick="showTab(\'add\')">+ Create Your First Event</button></div>';
+      return;
     }
+    list.innerHTML=events.map(function(ev){
+      var sc={active:'status-active',pending:'status-pending',rejected:'status-rejected'}[ev.status]||'status-pending';
+      var sl={active:'✅ Live',pending:'⏳ Pending',rejected:'❌ Rejected'}[ev.status]||'⏳ Pending';
+      var sold=myTickets.filter(function(t){ return t.eventId===ev.id; }).length;
+      var img=ev.imageUrl?'<img src="'+ev.imageUrl+'"/>':(ev.emoji||'🎉');
+      return '<div class="db-row">'+
+        '<div class="db-row-img">'+img+'</div>'+
+        '<div class="db-row-info">'+
+          '<div class="db-row-name">'+(ev.title||ev.name||'Event')+'</div>'+
+          '<div class="db-row-meta">📅 '+(ev.date||'TBA')+' • 📍 '+(ev.state||'')+'</div>'+
+          '<div style="display:flex;gap:6px;margin-top:3px;">'+
+            '<div class="db-row-status '+sc+'">'+sl+'</div>'+
+            '<div style="font-size:0.7em;color:#6c757d;padding:2px 0;">🎟️ '+sold+' sold</div>'+
+          '</div>'+
+        '</div>'+
+        '<div class="db-row-actions">'+
+          '<button class="db-action-btn" onclick="editEvent(\''+ev.id+'\')">✏️</button>'+
+          '<button class="db-action-btn danger" onclick="deleteEvent(\''+ev.id+'\')">🗑️</button>'+
+        '</div>'+
+      '</div>';
+    }).join('');
+  }
 
-    function showTab(tab) {
-      var tabs = document.querySelectorAll('.dash-tab');
-      tabs.forEach(function(t) { t.style.display = 'none'; });
+  function renderTickets(tickets) {
+    var body=document.getElementById('tickets-body');
+    if (!body) return;
+    if (!tickets||tickets.length===0) {
+      body.innerHTML='<tr><td colspan="6" style="text-align:center;padding:20px;color:#999;">No tickets sold yet</td></tr>';
+      return;
+    }
+    body.innerHTML=tickets.map(function(t){
+      return '<tr>'+
+        '<td style="font-weight:600;">'+(t.buyerName||'Buyer')+'</td>'+
+        '<td style="font-size:0.85em;max-width:100px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+(t.eventTitle||t.eventName||'Event')+'</td>'+
+        '<td><span style="background:#e3f2fd;color:#1565c0;padding:2px 7px;border-radius:4px;font-size:0.72em;font-weight:700;">'+(t.ticketType||'Regular')+'</span></td>'+
+        '<td style="font-weight:700;color:#ff6b00;">₦'+parseInt(t.amount||0).toLocaleString()+'</td>'+
+        '<td style="font-size:0.82em;color:#999;">'+(t.createdAt?new Date(t.createdAt.toMillis()).toLocaleDateString():'')+'</td>'+
+        '<td><span style="background:#d4edda;color:#155724;padding:2px 7px;border-radius:4px;font-size:0.72em;font-weight:700;">Paid</span></td>'+
+      '</tr>';
+    }).join('');
+  }
 
-      var navItems = document.querySelectorAll('.dash-nav-item');
-      navItems.forEach(function(n) { n.classList.remove('active'); });
+  function renderRecentTickets(tickets) {
+    var wrap=document.getElementById('recent-tickets-wrap');
+    if (!wrap) return;
+    if (!tickets||tickets.length===0) {
+      wrap.innerHTML='<div class="db-empty" style="padding:20px;"><div class="db-empty-icon" style="font-size:2em;">🎟️</div><h3>No ticket sales yet</h3><p>Create an event to start selling tickets</p></div>';
+      return;
+    }
+    wrap.innerHTML=tickets.map(function(t){
+      return '<div class="db-row">'+
+        '<div class="db-row-img" style="background:#e3f2fd;font-size:1em;font-weight:700;color:#1565c0;">'+(t.buyerName||'B')[0].toUpperCase()+'</div>'+
+        '<div class="db-row-info">'+
+          '<div class="db-row-name">'+(t.buyerName||'Buyer')+'</div>'+
+          '<div class="db-row-meta">🎟️ '+(t.ticketType||'Regular')+' • '+(t.eventTitle||'Event')+'</div>'+
+        '</div>'+
+        '<div class="db-row-price">₦'+parseInt(t.amount||0).toLocaleString()+'</div>'+
+      '</div>';
+    }).join('');
+  }
 
-      var target = document.getElementById('tab-' + tab);
-      if (target) target.style.display = 'block';
+  function updateStats() {
+    var revenue=myTickets.reduce(function(s,t){ return s+parseInt(t.amount||0); },0);
+    var balance=Math.round(revenue*0.92);
+    document.getElementById('stat-revenue').textContent='₦'+revenue.toLocaleString();
+    document.getElementById('stat-tickets').textContent=myTickets.length;
+    document.getElementById('stat-events').textContent=myEvents.filter(function(e){ return e.status==='active'; }).length;
+    document.getElementById('stat-balance').textContent='₦'+balance.toLocaleString();
+    document.getElementById('ec-total').textContent='₦'+revenue.toLocaleString();
+    document.getElementById('ec-avail').textContent='₦'+balance.toLocaleString();
+    document.getElementById('ec-fee').textContent='₦'+Math.round(revenue*0.08).toLocaleString();
+    document.getElementById('ec-tickets').textContent=myTickets.length;
+  }
 
-      var navMap = {
-        'overview': 0, 'events': 1, 'add-event': 2,
-        'tickets': 3, 'earnings': 4, 'settings': 5
+  function previewImg(input) {
+    var file=input.files[0];
+    if (!file) return;
+    selImgFile=file;
+    var reader=new FileReader();
+    reader.onload=function(e){
+      document.getElementById('e-img-placeholder').style.display='none';
+      var p=document.getElementById('e-img-preview');
+      p.src=e.target.result;
+      p.style.display='block';
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function selEmoji(emoji,btn) {
+    selEmoji_val=emoji;
+    document.querySelectorAll('.db-emoji-btn').forEach(function(b){ b.classList.remove('selected'); });
+    btn.classList.add('selected');
+  }
+
+  function getInclusions() {
+    var inc=[];
+    document.querySelectorAll('.inclusion:checked').forEach(function(cb){ inc.push(cb.value); });
+    return inc;
+  }
+
+  function publishEvent() {
+    var name=document.getElementById('e-name').value.trim();
+    var cat=document.getElementById('e-category').value;
+    var type=document.getElementById('e-type').value;
+    var date=document.getElementById('e-date').value;
+    var time=document.getElementById('e-time').value;
+    var venue=document.getElementById('e-venue').value.trim();
+    var state=document.getElementById('e-state').value;
+    var desc=document.getElementById('e-desc').value.trim();
+    var regPrice=document.getElementById('e-regular-price').value;
+    var regQty=document.getElementById('e-regular-qty').value;
+    var vipPrice=document.getElementById('e-vip-price').value;
+    var vipQty=document.getElementById('e-vip-qty').value;
+    var vvipPrice=document.getElementById('e-vvip-price').value;
+    var vvipQty=document.getElementById('e-vvip-qty').value;
+    var errEl=document.getElementById('e-error');
+    var sucEl=document.getElementById('e-success');
+    var btn=document.getElementById('e-submit-btn');
+
+    errEl.style.display='none';
+    sucEl.style.display='none';
+
+    if (!name){ errEl.textContent='Enter event name'; errEl.style.display='block'; return; }
+    if (!cat){ errEl.textContent='Select a category'; errEl.style.display='block'; return; }
+    if (!date){ errEl.textContent='Select event date'; errEl.style.display='block'; return; }
+    if (!time){ errEl.textContent='Enter start time'; errEl.style.display='block'; return; }
+    if (!venue){ errEl.textContent='Enter venue or location'; errEl.style.display='block'; return; }
+    if (!state){ errEl.textContent='Select state'; errEl.style.display='block'; return; }
+    if (!desc){ errEl.textContent='Enter event description'; errEl.style.display='block'; return; }
+    if (!regPrice){ errEl.textContent='Enter Regular ticket price'; errEl.style.display='block'; return; }
+    if (!regQty){ errEl.textContent='Enter Regular ticket quantity'; errEl.style.display='block'; return; }
+
+    var user=auth.currentUser;
+    if (!user){ errEl.textContent='Please login first'; errEl.style.display='block'; return; }
+
+    btn.textContent='Submitting...';
+    btn.disabled=true;
+
+    var userData=JSON.parse(localStorage.getItem('nexa_current_user')||'{}');
+    var upload=selImgFile?uploadImageToImgBB(selImgFile):Promise.resolve('');
+
+    upload.then(function(imageUrl){
+      var tickets=[];
+      if (regPrice&&regQty) tickets.push({type:'Regular',price:parseFloat(regPrice),qty:parseInt(regQty),sold:0});
+      if (vipPrice&&vipQty) tickets.push({type:'VIP',price:parseFloat(vipPrice),qty:parseInt(vipQty),sold:0});
+      if (vvipPrice&&vvipQty) tickets.push({type:'VVIP',price:parseFloat(vvipPrice),qty:parseInt(vvipQty),sold:0});
+
+      var minPrice=tickets.reduce(function(m,t){ return Math.min(m,t.price); },Infinity);
+
+      var data={
+        organizerId:user.uid,
+        organizerName:userData.fullName||userData.firstName||'Organizer',
+        title:name,
+        category:cat,
+        type:type,
+        date:date,
+        time:time,
+        venue:venue,
+        state:state,
+        description:desc,
+        tickets:tickets,
+        price:minPrice===Infinity?0:minPrice,
+        inclusions:getInclusions(),
+        imageUrl:imageUrl,
+        emoji:selEmoji_val,
+        status:'pending',
+        totalSold:0,
+        createdAt:firebase.firestore.FieldValue.serverTimestamp(),
       };
-      var index = navMap[tab];
-      if (index !== undefined && navItems[index]) {
-        navItems[index].classList.add('active');
+
+      if (editId) {
+        return db.collection('events').doc(editId).update(data);
+      } else {
+        var ref=db.collection('events').doc();
+        data.id=ref.id;
+        return ref.set(data);
       }
-    }
+    })
+    .then(function(){
+      sucEl.textContent=editId
+        ?'✅ Event updated! Admin will review changes.'
+        :'🎉 Event submitted! Admin will review and publish within 24 hours.';
+      sucEl.style.display='block';
+      btn.textContent='🚀 Submit for Approval';
+      btn.disabled=false;
+      document.getElementById('e-name').value='';
+      document.getElementById('e-category').value='';
+      document.getElementById('e-date').value='';
+      document.getElementById('e-time').value='';
+      document.getElementById('e-venue').value='';
+      document.getElementById('e-state').value='';
+      document.getElementById('e-desc').value='';
+      document.getElementById('e-regular-price').value='';
+      document.getElementById('e-regular-qty').value='';
+      document.getElementById('e-vip-price').value='';
+      document.getElementById('e-vip-qty').value='';
+      document.getElementById('e-vvip-price').value='';
+      document.getElementById('e-vvip-qty').value='';
+      document.getElementById('e-img-preview').style.display='none';
+      document.getElementById('e-img-placeholder').style.display='block';
+      document.querySelectorAll('.inclusion').forEach(function(cb){ cb.checked=false; });
+      selImgFile=null; editId=null;
+      document.getElementById('add-form-title').textContent='Create New Event';
+      loadEvents();
+      setTimeout(function(){ showTab('events'); },2000);
+    })
+    .catch(function(err){
+      errEl.textContent='❌ Error: '+err.message;
+      errEl.style.display='block';
+      btn.textContent='🚀 Submit for Approval';
+      btn.disabled=false;
+    });
+  }
 
-    function setEventType(type) {
-      currentEventType = type;
-      document.getElementById('btn-physical').classList.toggle('active', type === 'physical');
-      document.getElementById('btn-virtual').classList.toggle('active', type === 'virtual');
-      document.getElementById('physical-fields').style.display = type === 'physical' ? 'block' : 'none';
-      document.getElementById('virtual-fields').style.display  = type === 'virtual'  ? 'block' : 'none';
-    }
-
-    function addTicketTier() {
-      tierCount++;
-      var container = document.getElementById('ticket-tiers-container');
-      var div = document.createElement('div');
-      div.id = 'tier-' + tierCount;
-      div.style.cssText = 'border:1px solid var(--border);border-radius:8px;padding:12px;margin-bottom:10px;';
-      div.innerHTML =
-        '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">' +
-          '<b style="font-size:0.9em;">Ticket Tier ' + tierCount + '</b>' +
-          '<button type="button" onclick="removeTier(' + tierCount + ')" style="background:none;border:none;color:#cc0000;cursor:pointer;">✕ Remove</button>' +
-        '</div>' +
-        '<div class="form-row-2">' +
-          '<div class="form-group">' +
-            '<label>Tier Name *</label>' +
-            '<input type="text" class="tier-name" placeholder="e.g. VIP, Regular, Early Bird" style="width:100%;padding:10px;border:1px solid var(--border);border-radius:6px;"/>' +
-          '</div>' +
-          '<div class="form-group">' +
-            '<label>Price (₦) *</label>' +
-            '<input type="number" class="tier-price" placeholder="0 for free" min="0" style="width:100%;padding:10px;border:1px solid var(--border);border-radius:6px;"/>' +
-          '</div>' +
-        '</div>' +
-        '<div class="form-row-2">' +
-          '<div class="form-group">' +
-            '<label>Quantity Available *</label>' +
-            '<input type="number" class="tier-qty" placeholder="e.g. 100" min="1" style="width:100%;padding:10px;border:1px solid var(--border);border-radius:6px;"/>' +
-          '</div>' +
-          '<div class="form-group">' +
-            '<label>Perks (optional)</label>' +
-            '<input type="text" class="tier-perks" placeholder="e.g. Front row, Meet & Greet" style="width:100%;padding:10px;border:1px solid var(--border);border-radius:6px;"/>' +
-          '</div>' +
-        '</div>';
-      container.appendChild(div);
-    }
-
-    function removeTier(id) {
-      var el = document.getElementById('tier-' + id);
-      if (el) el.remove();
-    }
-
-    function collectTicketTiers() {
-      var tiers = [];
-      document.querySelectorAll('#ticket-tiers-container > div').forEach(function(div) {
-        var name  = div.querySelector('.tier-name').value.trim();
-        var price = parseFloat(div.querySelector('.tier-price').value) || 0;
-        var qty   = parseInt(div.querySelector('.tier-qty').value) || 0;
-        var perks = div.querySelector('.tier-perks').value.trim();
-        if (name && qty > 0) {
-          tiers.push({ name: name, price: price, quantity: qty, perks: perks, sold: 0 });
+  function editEvent(id) {
+    var ev=myEvents.find(function(e){ return e.id===id; });
+    if (!ev) return;
+    editId=id;
+    document.getElementById('add-form-title').textContent='Edit Event';
+    document.getElementById('e-name').value=ev.title||ev.name||'';
+    document.getElementById('e-category').value=ev.category||'';
+    document.getElementById('e-type').value=ev.type||'Physical';
+    document.getElementById('e-date').value=ev.date||'';
+    document.getElementById('e-time').value=ev.time||'';
+    document.getElementById('e-venue').value=ev.venue||'';
+    document.getElementById('e-state').value=ev.state||'';
+    document.getElementById('e-desc').value=ev.description||'';
+    if (ev.tickets) {
+      ev.tickets.forEach(function(t){
+        if (t.type==='Regular'){
+          document.getElementById('e-regular-price').value=t.price||'';
+          document.getElementById('e-regular-qty').value=t.qty||'';
+        } else if (t.type==='VIP'){
+          document.getElementById('e-vip-price').value=t.price||'';
+          document.getElementById('e-vip-qty').value=t.qty||'';
+        } else if (t.type==='VVIP'){
+          document.getElementById('e-vvip-price').value=t.price||'';
+          document.getElementById('e-vvip-qty').value=t.qty||'';
         }
       });
-      return tiers;
     }
-
-    function loadMyEvents() {
-      var user = auth.currentUser;
-      if (!user) { renderMyEvents([]); return; }
-
-      nexaGetOrganizerEvents(user.uid)
-        .then(function(events) {
-          myEvents = events;
-          renderMyEvents(events);
-          updateStats();
-          populateEventSelect();
-        })
-        .catch(function(err) {
-          console.log('Error loading events:', err);
-          renderMyEvents([]);
-        });
-    }
-
-    function updateStats() {
-      var eventsEl  = document.getElementById('stat-events');
-      var ticketsEl = document.getElementById('stat-tickets');
-      var revenueEl = document.getElementById('stat-revenue');
-      var balanceEl = document.getElementById('stat-balance');
-
-      if (eventsEl) eventsEl.textContent = myEvents.length;
-      var totalTickets = myEvents.reduce(function(s, e) { return s + (e.soldTickets || 0); }, 0);
-      if (ticketsEl) ticketsEl.textContent = totalTickets;
-
-      var revenue = myEvents.reduce(function(s, e) {
-        var eventRevenue = (e.ticketTiers || []).reduce(function(ts, t) {
-          return ts + (t.price * (t.sold || 0));
-        }, 0);
-        return s + eventRevenue;
-      }, 0);
-
-      if (revenueEl) revenueEl.textContent = '₦' + revenue.toLocaleString();
-      var balance = Math.round(revenue * 0.92);
-      if (balanceEl) balanceEl.textContent = '₦' + balance.toLocaleString();
-
-      var ecTotal = document.getElementById('ec-total');
-      var ecAvail = document.getElementById('ec-available');
-      var ecFee   = document.getElementById('ec-fee');
-      if (ecTotal) ecTotal.textContent = '₦' + revenue.toLocaleString();
-      if (ecAvail) ecAvail.textContent = '₦' + balance.toLocaleString();
-      if (ecFee)   ecFee.textContent   = '₦' + Math.round(revenue * 0.08).toLocaleString();
-    }
-
-    function renderMyEvents(events) {
-      var list = document.getElementById('my-events-list');
-      if (!list) return;
-      if (!events || events.length === 0) {
-        list.innerHTML =
-          '<div class="empty-products">' +
-            '<div style="font-size:3em;margin-bottom:12px">🎉</div>' +
-            '<h3>No events yet</h3>' +
-            '<p>Create your first event to start selling tickets</p>' +
-            '<button class="btn-primary" onclick="showTab(\'add-event\')">➕ Create Event</button>' +
-          '</div>';
-        return;
-      }
-      list.innerHTML = events.map(function(e) {
-        var lowestPrice = e.ticketTiers && e.ticketTiers.length > 0
-          ? Math.min.apply(null, e.ticketTiers.map(function(t) { return t.price; }))
-          : 0;
-        return '<div class="my-product-row">' +
-          '<div class="mp-img">' + (e.emoji || '🎉') + '</div>' +
-          '<div class="mp-info">' +
-            '<div class="mp-name">' + e.title + '</div>' +
-            '<div class="mp-cat">' + e.category + ' • ' + e.date + '</div>' +
-            '<div class="mp-stock">🎟️ ' + (e.soldTickets || 0) + ' tickets sold</div>' +
-          '</div>' +
-          '<div class="mp-price">from ₦' + lowestPrice.toLocaleString() + '</div>' +
-          '<div class="mp-actions">' +
-            '<button onclick="previewEvent(\'' + e.id + '\')" style="padding:6px 10px;background:white;border:1px solid var(--border);border-radius:6px;cursor:pointer;margin-right:4px;">👁️</button>' +
-            '<button onclick="deleteEvent(\'' + e.id + '\')" class="btn-delete">🗑️</button>' +
-          '</div>' +
-        '</div>';
-      }).join('');
-    }
-
-    function triggerImageUpload() {
-      document.getElementById('image-file').click();
-    }
-
-    function previewImage() {
-      var file = document.getElementById('image-file').files[0];
-      if (!file) return;
-      selectedImageFile = file;
-      var reader = new FileReader();
-      reader.onload = function(e) {
-        document.getElementById('upload-placeholder').style.display = 'none';
-        var previewEl = document.getElementById('upload-preview');
-        previewEl.style.display = 'flex';
-        previewEl.innerHTML = '<img src="' + e.target.result + '" style="max-width:100%;max-height:150px;border-radius:8px;"/>';
-      };
-      reader.readAsDataURL(file);
-    }
-
-    function selectEmoji(emoji) {
-      selectedEmoji = emoji;
-      document.getElementById('preview-emoji').textContent = emoji;
-      document.getElementById('upload-placeholder').style.display = 'none';
-      document.getElementById('upload-preview').style.display = 'flex';
-      document.querySelectorAll('.emoji-grid span').forEach(function(s) { s.classList.remove('selected'); });
-      event.target.classList.add('selected');
-    }
-
-    function publishEvent() {
-      var title    = document.getElementById('ae-title').value.trim();
-      var category = document.getElementById('ae-category').value;
-      var desc     = document.getElementById('ae-desc').value.trim();
-      var date     = document.getElementById('ae-date').value;
-      var time     = document.getElementById('ae-time').value;
-      var endTime  = document.getElementById('ae-end-time').value;
-      var location = currentEventType === 'physical'
-        ? document.getElementById('ae-location').value
-        : document.getElementById('ae-location-virtual').value;
-      var venue    = currentEventType === 'physical' ? document.getElementById('ae-venue').value.trim() : '';
-      var address  = currentEventType === 'physical' ? document.getElementById('ae-address').value.trim() : '';
-      var onlineLink = currentEventType === 'virtual' ? document.getElementById('ae-online-link').value.trim() : '';
-      var errEl    = document.getElementById('ae-error');
-      var sucEl    = document.getElementById('ae-success');
-
-      errEl.style.display = 'none';
-      sucEl.style.display = 'none';
-
-      var tiers = collectTicketTiers();
-
-      if (!title)    { errEl.textContent = 'Enter event title';    errEl.style.display = 'block'; return; }
-      if (!category) { errEl.textContent = 'Select a category';    errEl.style.display = 'block'; return; }
-      if (!desc)     { errEl.textContent = 'Enter description';    errEl.style.display = 'block'; return; }
-      if (!date)     { errEl.textContent = 'Select event date';    errEl.style.display = 'block'; return; }
-      if (!time)     { errEl.textContent = 'Select start time';    errEl.style.display = 'block'; return; }
-      if (!location) { errEl.textContent = 'Select location';      errEl.style.display = 'block'; return; }
-      if (tiers.length === 0) { errEl.textContent = 'Add at least one ticket tier'; errEl.style.display = 'block'; return; }
-
-      var user = auth.currentUser;
-      if (!user) { errEl.textContent = 'Please login first'; errEl.style.display = 'block'; return; }
-
-      var publishBtn = document.querySelector('.btn-publish');
-      if (publishBtn) { publishBtn.textContent = 'Publishing...'; publishBtn.disabled = true; }
-
-      var userData = JSON.parse(localStorage.getItem('nexa_current_user') || '{}');
-      var totalTickets = tiers.reduce(function(s, t) { return s + t.quantity; }, 0);
-
-      var uploadPromise = selectedImageFile
-        ? uploadImageToImgBB(selectedImageFile)
-        : Promise.resolve('');
-
-      uploadPromise.then(function(imageUrl) {
-        return nexaAddEvent({
-          title: title, category: category, description: desc,
-          eventType: currentEventType, date: date, time: time, endTime: endTime,
-          venue: venue, address: address, onlineLink: onlineLink, location: location,
-          ticketTiers: tiers, totalTickets: totalTickets,
-          emoji: selectedEmoji || '🎉',
-          organizerName: userData.fullName || userData.firstName || 'Organizer',
-        }, imageUrl);
-      })
-      .then(function(eventId) {
-        sucEl.textContent = '🎉 Event published! ID: ' + eventId;
-        sucEl.style.display = 'block';
-
-        document.getElementById('ae-title').value = '';
-        document.getElementById('ae-category').value = '';
-        document.getElementById('ae-desc').value = '';
-        document.getElementById('ae-date').value = '';
-        document.getElementById('ae-time').value = '';
-        document.getElementById('ae-end-time').value = '';
-        document.getElementById('ticket-tiers-container').innerHTML = '';
-        document.getElementById('upload-placeholder').style.display = 'block';
-        document.getElementById('upload-preview').style.display = 'none';
-        tierCount = 0;
-        selectedEmoji = '🎉';
-        selectedImageFile = null;
-        addTicketTier();
-
-        if (publishBtn) { publishBtn.textContent = '🚀 Publish Event'; publishBtn.disabled = false; }
-        loadMyEvents();
-      })
-      .catch(function(err) {
-        errEl.textContent = '❌ Error: ' + (err.message || err.toString());
-        errEl.style.display = 'block';
-        if (publishBtn) { publishBtn.textContent = '🚀 Publish Event'; publishBtn.disabled = false; }
+    if (ev.inclusions) {
+      document.querySelectorAll('.inclusion').forEach(function(cb){
+        cb.checked=ev.inclusions.indexOf(cb.value)>-1;
       });
     }
-
-    function previewEvent(eventId) {
-      var ev = myEvents.find(function(e) { return e.id === eventId; });
-      if (!ev) return;
-
-      var imgHtml = ev.imageUrl
-        ? '<img src="' + ev.imageUrl + '" style="width:100%;border-radius:10px;margin-bottom:14px;"/>'
-        : '<div style="font-size:4em;text-align:center;background:var(--gray);border-radius:10px;padding:30px 0;margin-bottom:14px;">' + (ev.emoji || '🎉') + '</div>';
-
-      var tiersHtml = (ev.ticketTiers || []).map(function(t) {
-        return '<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);font-size:0.85em;">' +
-          '<span>' + t.name + (t.perks ? ' — ' + t.perks : '') + '</span>' +
-          '<span style="font-weight:700;color:var(--orange);">' + (t.price === 0 ? 'Free' : '₦' + t.price.toLocaleString()) + '</span>' +
-        '</div>';
-      }).join('');
-
-      var body = document.getElementById('preview-modal-body');
-      body.innerHTML =
-        imgHtml +
-        '<h2 style="font-size:1.2em;margin-bottom:6px;">' + ev.title + '</h2>' +
-        '<div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;">' +
-          '<span style="background:var(--gray);padding:4px 10px;border-radius:6px;font-size:0.8em;">' + ev.category + '</span>' +
-          '<span style="background:var(--gray);padding:4px 10px;border-radius:6px;font-size:0.8em;">📅 ' + ev.date + '</span>' +
-          '<span style="background:var(--gray);padding:4px 10px;border-radius:6px;font-size:0.8em;">🕒 ' + ev.time + '</span>' +
-          '<span style="background:var(--gray);padding:4px 10px;border-radius:6px;font-size:0.8em;">📍 ' + ev.location + '</span>' +
-        '</div>' +
-        '<p style="font-size:0.9em;color:var(--text2);line-height:1.6;margin-bottom:14px;">' + (ev.description || '') + '</p>' +
-        '<h3 style="font-size:1em;margin-bottom:8px;">Ticket Tiers</h3>' +
-        tiersHtml;
-
-      document.getElementById('preview-modal-overlay').style.display = 'block';
-      document.getElementById('preview-modal').style.display = 'block';
+    if (ev.imageUrl) {
+      document.getElementById('e-img-preview').src=ev.imageUrl;
+      document.getElementById('e-img-preview').style.display='block';
+      document.getElementById('e-img-placeholder').style.display='none';
     }
+    showTab('add');
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
 
-    function closePreviewModal() {
-      document.getElementById('preview-modal-overlay').style.display = 'none';
-      document.getElementById('preview-modal').style.display = 'none';
-    }
+  function deleteEvent(id) {
+    if (!confirm('Delete this event?')) return;
+    db.collection('events').doc(id).update({status:'deleted'})
+      .then(function(){
+        showToast('🗑️ Event deleted');
+        myEvents=myEvents.filter(function(e){ return e.id!==id; });
+        filteredEvents=myEvents.slice();
+        renderEvents(filteredEvents);
+        updateStats();
+      })
+      .catch(function(err){ showToast('Error: '+err.message); });
+  }
 
-    function deleteEvent(eventId) {
-      if (confirm('Delete this event?')) {
-        nexaDeleteEvent(eventId)
-          .then(function() {
-            showToast('🗑️ Event deleted');
-            myEvents = myEvents.filter(function(e) { return e.id !== eventId; });
-            renderMyEvents(myEvents);
-            updateStats();
-            setTimeout(function() { loadMyEvents(); }, 800);
-          })
-          .catch(function(err) { showToast('Error: ' + err.message); });
-      }
-    }
+  function doWithdraw() {
+    var bank=document.getElementById('wd-bank').value;
+    var acct=document.getElementById('wd-acct').value.trim();
+    var name=document.getElementById('wd-name').value.trim();
+    var amount=parseInt(document.getElementById('wd-amount').value);
+    var errEl=document.getElementById('wd-error');
+    var sucEl=document.getElementById('wd-success');
+    errEl.style.display='none'; sucEl.style.display='none';
+    if (!acct||acct.length<10){ errEl.textContent='Enter valid 10-digit account number'; errEl.style.display='block'; return; }
+    if (!name){ errEl.textContent='Enter account name'; errEl.style.display='block'; return; }
+    if (!amount||amount<1000){ errEl.textContent='Minimum withdrawal is ₦1,000'; errEl.style.display='block'; return; }
+    var user=auth.currentUser;
+    if (!user) return;
+    db.collection('withdrawalRequests').add({
+      userId:user.uid,userType:'event-organizer',
+      bank:bank,account:acct,name:name,
+      amount:amount,status:'pending',
+      createdAt:firebase.firestore.FieldValue.serverTimestamp(),
+    }).then(function(){
+      sucEl.textContent='✅ Withdrawal request submitted! We will process within 1-2 business days.';
+      sucEl.style.display='block';
+      document.getElementById('wd-amount').value='';
+    }).catch(function(err){ errEl.textContent='Error: '+err.message; errEl.style.display='block'; });
+  }
 
-    function populateEventSelect() {
-      var select = document.getElementById('ticket-event-select');
-      if (!select) return;
-      select.innerHTML = '<option value="">Select an event...</option>' +
-        myEvents.map(function(e) {
-          return '<option value="' + e.id + '">' + e.title + ' (' + (e.soldTickets || 0) + ' sold)</option>';
-        }).join('');
-    }
+  function showToast(msg) {
+    var t=document.getElementById('db-toast');
+    if (!t) return;
+    t.textContent=msg;
+    t.style.display='block';
+    setTimeout(function(){ t.style.display='none'; },2500);
+  }
 
-    function loadTicketsForEvent() {
-      var eventId = document.getElementById('ticket-event-select').value;
-      var list = document.getElementById('tickets-list');
-      if (!eventId) { list.innerHTML = ''; return; }
+  document.addEventListener('DOMContentLoaded',function(){ init(); });
 
-      list.innerHTML = '<p style="color:var(--text2);">Loading tickets...</p>';
-
-      nexaGetEventTickets(eventId)
-        .then(function(tickets) {
-          if (tickets.length === 0) {
-            list.innerHTML = '<div class="empty-products"><div style="font-size:3em;">🎟️</div><h3>No tickets sold yet</h3></div>';
-            return;
-          }
-          list.innerHTML = '<div class="orders-table-wrap"><table class="orders-table"><thead><tr><th>Buyer</th><th>Tier</th><th>Qty</th><th>Total</th><th>Status</th></tr></thead><tbody>' +
-            tickets.map(function(t) {
-              return '<tr>' +
-                '<td><b>' + t.buyerName + '</b><br/><small>' + t.buyerEmail + '</small></td>' +
-                '<td>' + t.tierName + '</td>' +
-                '<td>' + t.quantity + '</td>' +
-                '<td>₦' + (t.totalPaid || 0).toLocaleString() + '</td>' +
-                '<td><span class="status-badge status-confirmed">' + t.status + '</span></td>' +
-              '</tr>';
-            }).join('') +
-          '</tbody></table></div>';
-        })
-        .catch(function(err) {
-          list.innerHTML = '<p style="color:#cc0000;">Error: ' + err.message + '</p>';
-        });
-    }
-
-    function processWithdrawal() {
-      var account = document.getElementById('wd-account').value.trim();
-      var name    = document.getElementById('wd-name').value.trim();
-      var amount  = parseInt(document.getElementById('wd-amount').value);
-      var errEl   = document.getElementById('wd-error');
-      var sucEl   = document.getElementById('wd-success');
-
-      errEl.style.display = 'none';
-      sucEl.style.display = 'none';
-
-      if (!account || account.length !== 10) { errEl.textContent = 'Enter valid 10-digit account number'; errEl.style.display = 'block'; return; }
-      if (!name)   { errEl.textContent = 'Enter account name'; errEl.style.display = 'block'; return; }
-      if (!amount || amount < 1000) { errEl.textContent = 'Minimum withdrawal is ₦1,000'; errEl.style.display = 'block'; return; }
-
-      var user = auth.currentUser;
-      if (!user) return;
-
-      db.collection('withdrawalRequests').add({
-        userId:    user.uid,
-        userType:  'organizer',
-        bank:      document.getElementById('wd-bank').value,
-        account:   account,
-        name:      name,
-        amount:    amount,
-        status:    'pending',
-        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-      }).then(function() {
-        sucEl.textContent = '✅ Withdrawal request submitted! We will process within 1-2 business days.';
-        sucEl.style.display = 'block';
-        document.getElementById('wd-amount').value = '';
-      }).catch(function(err) {
-        errEl.textContent = 'Error: ' + err.message;
-        errEl.style.display = 'block';
-      });
-    }
-
-    function saveOrganizerSettings() {
-      showToast('✅ Settings saved!');
-    }
-
-    function doOrganizerLogout() {
-      if (typeof nexaLogout === 'function') {
-        nexaLogout().then(function() {
-          localStorage.removeItem('nexa_current_user');
-          window.location.href = '../../index.html';
-        });
-      } else {
-        localStorage.removeItem('nexa_current_user');
-        window.location.href = '../../index.html';
-      }
-    }
-
-    document.addEventListener('DOMContentLoaded', function() {
-      init();
-    });
-
-  </script>
-
+</script>
 </body>
 </html>
