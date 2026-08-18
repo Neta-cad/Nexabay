@@ -3,909 +3,662 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Travel Dashboard — Nexabay</title>
-  <link rel="stylesheet" href="../../css/main.css"/>
-  <link rel="stylesheet" href="../../css/dashboard.css"/>
+  <title>Travel Agent Dashboard — Nexabay</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="../../css/dashboard.css"/>
 </head>
-<body class="dashboard-body">
+<body>
 
-  <!-- NAVBAR -->
-  <nav class="navbar">
-    <div class="nav-inner">
-      <a href="../../index.html" class="logo">
-        <span class="logo-nexa">Nexa</span><span class="logo-bay">bay</span>
-      </a>
-      <div class="nav-actions">
-        <span class="nav-link" id="nav-agent-name">My Listings</span>
-        <a href="../../index.html" class="nav-link">← Back to Site</a>
+<div class="db-toast" id="db-toast"></div>
+
+<div class="db-topbar">
+  <a href="../../index.html" class="db-logo">Nexa<span>bay</span></a>
+  <button class="db-tab active" onclick="showTab('overview')">📊 Overview</button>
+  <button class="db-tab" onclick="showTab('listings')">✈️ My Packages</button>
+  <button class="db-tab" onclick="showTab('add')">➕ Add Package</button>
+  <button class="db-tab" onclick="showTab('bookings')">
+    📋 Bookings
+    <span class="db-tab-badge" id="bk-badge" style="display:none;">0</span>
+  </button>
+  <button class="db-tab" onclick="showTab('earnings')">💰 Earnings</button>
+  <div class="db-topbar-right">
+    <div class="db-user-avatar" id="user-avatar">T</div>
+  </div>
+</div>
+
+<div class="db-content">
+
+  <!-- OVERVIEW -->
+  <div class="db-tab-content active" id="content-overview">
+    <div class="db-page-header">
+      <div class="db-page-header-inner">
+        <div><h1>Welcome back! 👋</h1><p id="overview-sub">Here is your travel agency performance</p></div>
+        <button class="db-header-btn" onclick="showTab('add')">+ Add Package</button>
       </div>
     </div>
-  </nav>
-
-  <div class="dashboard-layout">
-
-    <!-- SIDEBAR -->
-    <aside class="dash-sidebar">
-      <div class="dash-profile">
-        <div class="dash-avatar" id="dash-avatar">A</div>
-        <div class="dash-name" id="dash-name">Agent</div>
-        <div class="dash-badge">✈️ Travel Agent</div>
+    <div class="db-stats">
+      <div class="db-stat">
+        <div class="db-stat-header"><div class="db-stat-label">Revenue</div><div class="db-stat-icon" style="background:#fff3e0;">💰</div></div>
+        <div class="db-stat-value" id="stat-revenue">₦0</div>
+        <div class="db-stat-sub">Total earned</div>
       </div>
-
-      <nav class="dash-nav">
-        <a href="#" class="dash-nav-item active" onclick="showTab('overview')">
-          📊 Overview
-        </a>
-        <a href="#" class="dash-nav-item" onclick="showTab('listings')">
-          ✈️ My Listings
-        </a>
-        <a href="#" class="dash-nav-item" onclick="showTab('add-listing')">
-          ➕ Add Listing
-        </a>
-        <a href="#" class="dash-nav-item" onclick="showTab('bookings')">
-          📅 Bookings
-        </a>
-        <a href="#" class="dash-nav-item" onclick="showTab('earnings')">
-          💰 Earnings
-        </a>
-        <a href="#" class="dash-nav-item" onclick="showTab('settings')">
-          ⚙️ Settings
-        </a>
-        <a href="buyer.html" class="dash-nav-item">
-          👤 My Account
-        </a>
-        <a href="#" class="dash-nav-item logout" onclick="doAgentLogout()">
-          🚪 Logout
-        </a>
-      </nav>
-    </aside>
-
-    <!-- MAIN CONTENT -->
-    <main class="dash-main">
-
-      <!-- OVERVIEW TAB -->
-      <div class="dash-tab" id="tab-overview">
-        <div class="dash-header">
-          <h1>Welcome back! 👋</h1>
-          <p>Here is your travel business performance</p>
-        </div>
-
-        <div class="stats-grid">
-          <div class="stat-card">
-            <div class="stat-icon">💰</div>
-            <div class="stat-info">
-              <div class="stat-value" id="stat-revenue">₦0</div>
-              <div class="stat-label">Total Revenue</div>
-            </div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-icon">📅</div>
-            <div class="stat-info">
-              <div class="stat-value" id="stat-bookings">0</div>
-              <div class="stat-label">Total Bookings</div>
-            </div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-icon">✈️</div>
-            <div class="stat-info">
-              <div class="stat-value" id="stat-listings">0</div>
-              <div class="stat-label">Active Listings</div>
-            </div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-icon">💸</div>
-            <div class="stat-info">
-              <div class="stat-value" id="stat-balance">₦0</div>
-              <div class="stat-label">Available Balance</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="dash-section">
-          <h2>Quick Actions</h2>
-          <div class="quick-actions">
-            <button class="quick-btn" onclick="showTab('add-listing')">
-              ➕ Add New Listing
-            </button>
-            <button class="quick-btn" onclick="showTab('bookings')">
-              📅 View Bookings
-            </button>
-            <button class="quick-btn" onclick="showTab('earnings')">
-              💸 Withdraw
-            </button>
-          </div>
+      <div class="db-stat">
+        <div class="db-stat-header"><div class="db-stat-label">Bookings</div><div class="db-stat-icon" style="background:#e8f5e9;">📋</div></div>
+        <div class="db-stat-value" id="stat-bookings">0</div>
+        <div class="db-stat-sub">Total bookings</div>
+      </div>
+      <div class="db-stat">
+        <div class="db-stat-header"><div class="db-stat-label">Packages</div><div class="db-stat-icon" style="background:#e3f2fd;">✈️</div></div>
+        <div class="db-stat-value" id="stat-listings">0</div>
+        <div class="db-stat-sub">Active listings</div>
+      </div>
+      <div class="db-stat">
+        <div class="db-stat-header"><div class="db-stat-label">Balance</div><div class="db-stat-icon" style="background:#f3e5f5;">💸</div></div>
+        <div class="db-stat-value" id="stat-balance">₦0</div>
+        <div class="db-stat-sub">Available</div>
+      </div>
+    </div>
+    <div class="db-card">
+      <div class="db-card-header"><div class="db-card-title">⚡ Quick Actions</div></div>
+      <div class="db-card-body">
+        <div class="db-quick-grid">
+          <button class="db-quick-btn" onclick="showTab('add')"><div class="db-quick-icon">➕</div>Add Package</button>
+          <button class="db-quick-btn" onclick="showTab('bookings')"><div class="db-quick-icon">📋</div>View Bookings</button>
+          <button class="db-quick-btn" onclick="showTab('earnings')"><div class="db-quick-icon">💸</div>Withdraw</button>
+          <button class="db-quick-btn" onclick="showTab('listings')"><div class="db-quick-icon">✈️</div>My Packages</button>
         </div>
       </div>
-
-      <!-- MY LISTINGS TAB -->
-      <div class="dash-tab" id="tab-listings" style="display:none;">
-        <div class="dash-header">
-          <h1>My Listings</h1>
-          <button class="btn-primary" onclick="showTab('add-listing')">
-            ➕ Add Listing
-          </button>
+    </div>
+    <div class="db-card">
+      <div class="db-card-header">
+        <div class="db-card-title">🕒 Recent Bookings</div>
+        <button onclick="showTab('bookings')" style="background:none;border:none;color:#ff6b00;font-size:0.8em;font-weight:700;cursor:pointer;">See All →</button>
+      </div>
+      <div id="recent-bookings-wrap">
+        <div style="padding:16px;">
+          <div class="db-skeleton" style="width:100%;"></div>
+          <div class="db-skeleton" style="width:75%;"></div>
         </div>
+      </div>
+    </div>
+  </div>
 
-        <div class="products-toolbar">
-          <select id="listing-type-filter" onchange="filterListings()">
-            <option value="all">All Types</option>
-            <option value="hotel">Hotels</option>
-            <option value="flight">Flight Packages</option>
-            <option value="tour">Tour Packages</option>
+  <!-- MY PACKAGES -->
+  <div class="db-tab-content" id="content-listings">
+    <div class="db-page-header">
+      <div class="db-page-header-inner">
+        <div><h1>My Packages</h1><p>Manage your travel listings</p></div>
+        <button class="db-header-btn" onclick="showTab('add')">+ Add New</button>
+      </div>
+    </div>
+    <div class="db-card">
+      <div id="listings-list">
+        <div class="db-empty"><div class="db-empty-icon">⏳</div><h3>Loading packages...</h3></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ADD PACKAGE -->
+  <div class="db-tab-content" id="content-add">
+    <div class="db-page-header">
+      <div class="db-page-header-inner">
+        <div><h1 id="add-form-title">Add Travel Package</h1><p>Fill details carefully — admin reviews before publishing</p></div>
+      </div>
+    </div>
+    <div class="db-card">
+      <div class="db-card-body">
+        <div class="db-form">
+
+          <div class="db-form-group">
+            <label>Package Title *</label>
+            <input type="text" id="t-title" placeholder="e.g. 5 Days Dubai All-Inclusive Package"/>
+          </div>
+
+          <div class="db-form-row">
+            <div class="db-form-group">
+              <label>Package Type *</label>
+              <select id="t-type">
+                <option value="">Select type</option>
+                <option>Hotel Only</option>
+                <option>Flight Only</option>
+                <option>Flight + Hotel</option>
+                <option>Tour Package</option>
+                <option>Honeymoon Package</option>
+                <option>Group Tour</option>
+                <option>Business Travel</option>
+                <option>Cruise</option>
+                <option>Weekend Getaway</option>
+                <option>Other</option>
+              </select>
+            </div>
+            <div class="db-form-group">
+              <label>Destination *</label>
+              <input type="text" id="t-destination" placeholder="e.g. Dubai, UAE"/>
+            </div>
+          </div>
+
+          <div class="db-form-row">
+            <div class="db-form-group">
+              <label>Duration *</label>
+              <input type="text" id="t-duration" placeholder="e.g. 5 Days / 4 Nights"/>
+            </div>
+            <div class="db-form-group">
+              <label>Departure City *</label>
+              <select id="t-departure">
+                <option value="">Select city</option>
+                <option>Lagos (LOS)</option>
+                <option>Abuja (ABV)</option>
+                <option>Port Harcourt (PHC)</option>
+                <option>Kano (KAN)</option>
+                <option>Enugu (ENU)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="db-form-row">
+            <div class="db-form-group">
+              <label>Price Per Person (₦) *</label>
+              <input type="number" id="t-price" placeholder="e.g. 850000" min="0"/>
+            </div>
+            <div class="db-form-group">
+              <label>Available Slots</label>
+              <input type="number" id="t-slots" placeholder="e.g. 20" min="1"/>
+            </div>
+          </div>
+
+          <div class="db-form-group">
+            <label>Description *</label>
+            <textarea id="t-desc" rows="4" placeholder="Describe the package — what's included, itinerary highlights, accommodation quality, activities..."></textarea>
+          </div>
+
+          <div class="db-form-group">
+            <label>What's Included</label>
+            <div class="cb-group">
+              <label class="cb-label"><input type="checkbox" class="inclusion" value="Return Flights"/> ✈️ Return Flights</label>
+              <label class="cb-label"><input type="checkbox" class="inclusion" value="Hotel Accommodation"/> 🏨 Hotel</label>
+              <label class="cb-label"><input type="checkbox" class="inclusion" value="Airport Transfer"/> 🚐 Airport Transfer</label>
+              <label class="cb-label"><input type="checkbox" class="inclusion" value="Breakfast"/> 🍳 Breakfast</label>
+              <label class="cb-label"><input type="checkbox" class="inclusion" value="All Meals"/> 🍽️ All Meals</label>
+              <label class="cb-label"><input type="checkbox" class="inclusion" value="Tour Guide"/> 🧭 Tour Guide</label>
+              <label class="cb-label"><input type="checkbox" class="inclusion" value="Visa Assistance"/> 📄 Visa Assistance</label>
+              <label class="cb-label"><input type="checkbox" class="inclusion" value="Travel Insurance"/> 🛡️ Travel Insurance</label>
+              <label class="cb-label"><input type="checkbox" class="inclusion" value="Activities"/> 🎯 Activities</label>
+              <label class="cb-label"><input type="checkbox" class="inclusion" value="Sightseeing"/> 👁️ Sightseeing</label>
+            </div>
+          </div>
+
+          <div class="db-form-group">
+            <label>Package Image</label>
+            <div class="db-img-upload" onclick="document.getElementById('t-img-file').click()">
+              <input type="file" id="t-img-file" accept="image/*" onchange="previewImg(this)"/>
+              <div id="t-img-placeholder">
+                <div class="db-img-upload-icon">📷</div>
+                <div class="db-img-upload-text">Tap to upload a stunning destination photo</div>
+              </div>
+              <img id="t-img-preview" class="db-img-preview" style="display:none;"/>
+            </div>
+          </div>
+
+          <div class="db-form-group">
+            <label>Or choose an emoji</label>
+            <div class="db-emoji-grid">
+              <button class="db-emoji-btn selected" onclick="selEmoji('✈️',this)">✈️</button>
+              <button class="db-emoji-btn" onclick="selEmoji('🏨',this)">🏨</button>
+              <button class="db-emoji-btn" onclick="selEmoji('🌴',this)">🌴</button>
+              <button class="db-emoji-btn" onclick="selEmoji('🗼',this)">🗼</button>
+              <button class="db-emoji-btn" onclick="selEmoji('🏖️',this)">🏖️</button>
+              <button class="db-emoji-btn" onclick="selEmoji('🌍',this)">🌍</button>
+              <button class="db-emoji-btn" onclick="selEmoji('🛳️',this)">🛳️</button>
+              <button class="db-emoji-btn" onclick="selEmoji('🏔️',this)">🏔️</button>
+            </div>
+          </div>
+
+          <div class="db-error-msg" id="t-error"></div>
+          <div class="db-success-msg" id="t-success"></div>
+          <button class="db-submit-btn" id="t-submit-btn" onclick="publishListing()">🚀 Submit for Approval</button>
+          <div style="text-align:center;font-size:0.75em;color:#999;margin-top:8px;">
+            Nexabay charges 8% on every booking • Admin reviews within 24 hours
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BOOKINGS -->
+  <div class="db-tab-content" id="content-bookings">
+    <div class="db-page-header">
+      <div class="db-page-header-inner">
+        <div><h1>Bookings</h1><p>Manage travel bookings from customers</p></div>
+      </div>
+    </div>
+    <div class="db-filters">
+      <button class="db-filter-btn active" onclick="filterBookings('all',this)">All</button>
+      <button class="db-filter-btn" onclick="filterBookings('confirmed',this)">✅ Confirmed</button>
+      <button class="db-filter-btn" onclick="filterBookings('pending',this)">⏳ Pending</button>
+      <button class="db-filter-btn" onclick="filterBookings('completed',this)">🏁 Completed</button>
+    </div>
+    <div class="db-card">
+      <div class="db-table-wrap">
+        <table class="db-table">
+          <thead>
+            <tr>
+              <th>ID</th><th>Package</th><th>Traveller</th>
+              <th>Amount</th><th>Date</th><th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="bookings-body">
+            <tr><td colspan="6" style="text-align:center;padding:20px;color:#999;">No bookings yet</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- EARNINGS -->
+  <div class="db-tab-content" id="content-earnings">
+    <div class="db-page-header">
+      <div class="db-page-header-inner">
+        <div><h1>Earnings</h1><p>Track revenue and withdraw funds</p></div>
+      </div>
+    </div>
+    <div class="db-earnings-cards">
+      <div class="db-earning-card"><div class="db-earning-label">Total Revenue</div><div class="db-earning-value" id="ec-total">₦0</div></div>
+      <div class="db-earning-card"><div class="db-earning-label">Your Share (92%)</div><div class="db-earning-value green" id="ec-avail">₦0</div></div>
+      <div class="db-earning-card"><div class="db-earning-label">Nexabay Fee (8%)</div><div class="db-earning-value orange" id="ec-fee">₦0</div></div>
+      <div class="db-earning-card"><div class="db-earning-label">Total Bookings</div><div class="db-earning-value" id="ec-bk">0</div></div>
+    </div>
+    <div class="db-withdraw-card">
+      <div class="db-withdraw-title">💸 Withdraw Funds</div>
+      <div class="db-form" style="gap:12px;">
+        <div class="db-form-group">
+          <label>Bank Name</label>
+          <select id="wd-bank">
+            <option>GTBank</option><option>Access Bank</option>
+            <option>First Bank</option><option>Zenith Bank</option>
+            <option>UBA</option><option>Opay</option>
+            <option>Palmpay</option><option>Kuda Bank</option>
+            <option>Moniepoint</option>
           </select>
         </div>
-
-        <div id="my-listings-list" class="my-products-list"></div>
+        <div class="db-form-row">
+          <div class="db-form-group">
+            <label>Account Number</label>
+            <input type="text" id="wd-acct" placeholder="10 digits" maxlength="10"/>
+          </div>
+          <div class="db-form-group">
+            <label>Account Name</label>
+            <input type="text" id="wd-name" placeholder="Your name"/>
+          </div>
+        </div>
+        <div class="db-form-group">
+          <label>Amount (₦)</label>
+          <input type="number" id="wd-amount" placeholder="Minimum ₦1,000" min="1000"/>
+        </div>
+        <div id="wd-error" style="color:#cc0000;font-size:0.82em;display:none;"></div>
+        <div id="wd-success" style="color:#00a651;font-size:0.82em;display:none;"></div>
+        <button class="db-submit-btn" onclick="doWithdraw()">💸 Request Withdrawal</button>
       </div>
-      <!-- ADD LISTING TAB -->
-      <div class="dash-tab" id="tab-add-listing" style="display:none;">
-        <div class="dash-header">
-          <h1>Add New Listing</h1>
-        </div>
-
-        <div class="add-product-form">
-
-          <div class="form-section">
-            <h3>Listing Type</h3>
-            <div class="account-type">
-              <button class="type-btn active" id="btn-hotel" onclick="setListingType('hotel')">
-                🏨 Hotel
-              </button>
-              <button class="type-btn" id="btn-flight" onclick="setListingType('flight')">
-                ✈️ Flight Package
-              </button>
-              <button class="type-btn" id="btn-tour" onclick="setListingType('tour')">
-                🗺️ Tour Package
-              </button>
-            </div>
-          </div>
-
-          <div class="form-section">
-            <h3>Basic Information</h3>
-
-            <div class="form-group">
-              <label>Title *</label>
-              <input type="text" id="al-title" placeholder="e.g. Eko Hotel & Suites Lagos" maxlength="100"/>
-            </div>
-
-            <div class="form-group" id="hotel-category-group">
-              <label>Hotel Category *</label>
-              <select id="al-hotel-category">
-                <option value="">Select category</option>
-                <option>5 Star Hotel</option>
-                <option>4 Star Hotel</option>
-                <option>3 Star Hotel</option>
-                <option>Boutique Hotel</option>
-                <option>Guest House</option>
-                <option>Serviced Apartment</option>
-                <option>Resort</option>
-              </select>
-            </div>
-
-            <div class="form-group" id="flight-category-group" style="display:none;">
-              <label>Flight Type *</label>
-              <select id="al-flight-category">
-                <option value="">Select type</option>
-                <option>Domestic Flight</option>
-                <option>International Flight</option>
-                <option>Return Package</option>
-                <option>One Way</option>
-              </select>
-            </div>
-
-            <div class="form-group" id="tour-category-group" style="display:none;">
-              <label>Tour Type *</label>
-              <select id="al-tour-category">
-                <option value="">Select type</option>
-                <option>Cultural Tour</option>
-                <option>Adventure Tour</option>
-                <option>Beach Holiday</option>
-                <option>Safari</option>
-                <option>City Tour</option>
-                <option>Honeymoon Package</option>
-              </select>
-            </div>
-
-            <div class="form-group">
-              <label>Description *</label>
-              <textarea id="al-desc" placeholder="Describe this listing in detail..." rows="4"></textarea>
-            </div>
-
-            <div class="form-row-2">
-              <div class="form-group">
-                <label>Location/City *</label>
-                <input type="text" id="al-location" placeholder="e.g. Lagos, Victoria Island"/>
-              </div>
-              <div class="form-group">
-                <label>Country</label>
-                <input type="text" id="al-country" placeholder="e.g. Nigeria" value="Nigeria"/>
-              </div>
-            </div>
-          </div>
-
-          <div class="form-section">
-            <h3>Pricing</h3>
-            <div class="form-row-2">
-              <div class="form-group">
-                <label>Starting Price (₦) *</label>
-                <input type="number" id="al-price" placeholder="0" min="0"/>
-              </div>
-              <div class="form-group">
-                <label>Price Unit</label>
-                <select id="al-price-unit">
-                  <option value="per night">Per Night</option>
-                  <option value="per person">Per Person</option>
-                  <option value="per package">Per Package</option>
-                  <option value="per trip">Per Trip</option>
-                </select>
-              </div>
-            </div>
-          </div>
-
-          <!-- HOTEL SPECIFIC FIELDS -->
-          <div class="form-section" id="hotel-fields">
-            <h3>Room Types</h3>
-            <p style="color:var(--text2);font-size:0.85em;margin-bottom:12px;">
-              Add different room types with prices
-            </p>
-            <div id="room-types-container"></div>
-            <button type="button" onclick="addRoomType()"
-              style="width:100%;padding:12px;background:var(--gray);border:2px dashed var(--border);border-radius:8px;cursor:pointer;margin-top:8px;font-weight:600;">
-              ➕ Add Room Type
-            </button>
-
-            <h3 style="margin-top:20px;">Amenities</h3>
-            <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;">
-              <label class="checkbox-label"><input type="checkbox" class="amenity-cb" value="WiFi"/> WiFi</label>
-              <label class="checkbox-label"><input type="checkbox" class="amenity-cb" value="Pool"/> Pool</label>
-              <label class="checkbox-label"><input type="checkbox" class="amenity-cb" value="Gym"/> Gym</label>
-              <label class="checkbox-label"><input type="checkbox" class="amenity-cb" value="Spa"/> Spa</label>
-              <label class="checkbox-label"><input type="checkbox" class="amenity-cb" value="Restaurant"/> Restaurant</label>
-              <label class="checkbox-label"><input type="checkbox" class="amenity-cb" value="Bar"/> Bar</label>
-              <label class="checkbox-label"><input type="checkbox" class="amenity-cb" value="Parking"/> Parking</label>
-              <label class="checkbox-label"><input type="checkbox" class="amenity-cb" value="AC"/> AC</label>
-              <label class="checkbox-label"><input type="checkbox" class="amenity-cb" value="Airport Shuttle"/> Airport Shuttle</label>
-              <label class="checkbox-label"><input type="checkbox" class="amenity-cb" value="24hr Reception"/> 24hr Reception</label>
-            </div>
-
-            <div class="form-row-2" style="margin-top:16px;">
-              <div class="form-group">
-                <label>Check-in Time</label>
-                <input type="text" id="al-checkin" placeholder="e.g. 2:00 PM"/>
-              </div>
-              <div class="form-group">
-                <label>Check-out Time</label>
-                <input type="text" id="al-checkout" placeholder="e.g. 12:00 PM"/>
-              </div>
-            </div>
-          </div>
-
-          <!-- FLIGHT SPECIFIC FIELDS -->
-          <div class="form-section" id="flight-fields" style="display:none;">
-            <h3>Flight Details</h3>
-            <div class="form-row-2">
-              <div class="form-group">
-                <label>Departure City</label>
-                <input type="text" id="al-departure" placeholder="e.g. Lagos (LOS)"/>
-              </div>
-              <div class="form-group">
-                <label>Destination City</label>
-                <input type="text" id="al-destination" placeholder="e.g. Dubai (DXB)"/>
-              </div>
-            </div>
-            <div class="form-row-2">
-              <div class="form-group">
-                <label>Duration</label>
-                <input type="text" id="al-duration" placeholder="e.g. 6 hours 30 mins"/>
-              </div>
-              <div class="form-group">
-                <label>Airline</label>
-                <input type="text" id="al-airline" placeholder="e.g. Air Peace"/>
-              </div>
-            </div>
-            <div class="form-group">
-              <label>Includes</label>
-              <input type="text" id="al-includes" placeholder="e.g. Return ticket, 23kg baggage, meals"/>
-            </div>
-          </div>
-
-          <!-- TOUR SPECIFIC FIELDS -->
-          <div class="form-section" id="tour-fields" style="display:none;">
-            <h3>Tour Details</h3>
-            <div class="form-row-2">
-              <div class="form-group">
-                <label>Duration</label>
-                <input type="text" id="al-tour-duration" placeholder="e.g. 7 days 6 nights"/>
-              </div>
-              <div class="form-group">
-                <label>Group Size</label>
-                <input type="text" id="al-group-size" placeholder="e.g. 2-15 people"/>
-              </div>
-            </div>
-            <div class="form-group">
-              <label>What's Included</label>
-              <textarea id="al-tour-includes" rows="3" placeholder="e.g. Hotel, flights, meals, guide, transfers..."></textarea>
-            </div>
-          </div>
-
-          <div class="form-section">
-            <h3>Listing Image</h3>
-            <div class="image-upload" id="image-upload" onclick="triggerImageUpload()">
-              <div class="upload-placeholder" id="upload-placeholder">
-                <div class="upload-icon">📷</div>
-                <p>Click to add a photo</p>
-                <small>JPG, PNG up to 5MB</small>
-              </div>
-              <div class="upload-preview" id="upload-preview" style="display:none;">
-                <span id="preview-emoji">🏨</span>
-              </div>
-            </div>
-            <input type="file" id="image-file" style="display:none;" accept="image/*" onchange="previewImage()"/>
-
-            <div class="emoji-selector">
-              <p>Or pick an emoji:</p>
-              <div class="emoji-grid">
-                <span onclick="selectEmoji('🏨')">🏨</span>
-                <span onclick="selectEmoji('🏖️')">🏖️</span>
-                <span onclick="selectEmoji('🏔️')">🏔️</span>
-                <span onclick="selectEmoji('✈️')">✈️</span>
-                <span onclick="selectEmoji('🗺️')">🗺️</span>
-                <span onclick="selectEmoji('🌍')">🌍</span>
-                <span onclick="selectEmoji('🏝️')">🏝️</span>
-                <span onclick="selectEmoji('🎡')">🎡</span>
-              </div>
-            </div>
-          </div>
-
-          <div id="al-error" class="ap-error" style="display:none;"></div>
-          <div id="al-success" class="ap-success" style="display:none;"></div>
-
-          <div class="form-actions">
-            <button class="btn-publish" onclick="publishListing()">
-              🚀 Publish Listing
-            </button>
-          </div>
-
-        </div>
-      </div>
-      <!-- BOOKINGS TAB -->
-      <div class="dash-tab" id="tab-bookings" style="display:none;">
-        <div class="dash-header">
-          <h1>Bookings</h1>
-        </div>
-        <div class="orders-table-wrap">
-          <table class="orders-table">
-            <thead>
-              <tr>
-                <th>Booking ID</th>
-                <th>Listing</th>
-                <th>Customer</th>
-                <th>Total</th>
-                <th>Status</th>
-                <th>Date</th>
-              </tr>
-            </thead>
-            <tbody id="bookings-body">
-              <tr><td colspan="6" style="text-align:center;color:var(--text2);padding:20px">No bookings yet</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <!-- EARNINGS TAB -->
-      <div class="dash-tab" id="tab-earnings" style="display:none;">
-        <div class="dash-header">
-          <h1>Earnings & Withdrawals</h1>
-        </div>
-
-        <div class="earnings-cards">
-          <div class="earning-card">
-            <div class="ec-label">Total Revenue</div>
-            <div class="ec-value" id="ec-total">₦0</div>
-          </div>
-          <div class="earning-card">
-            <div class="ec-label">Available Balance</div>
-            <div class="ec-value green" id="ec-available">₦0</div>
-          </div>
-          <div class="earning-card">
-            <div class="ec-label">Nexabay Fee (8%)</div>
-            <div class="ec-value orange" id="ec-fee">₦0</div>
-          </div>
-        </div>
-
-        <div class="withdraw-section">
-          <h3>Withdraw Funds</h3>
-          <div class="withdraw-form">
-            <div class="form-group">
-              <label>Bank Name</label>
-              <select id="wd-bank">
-                <option>GTBank</option>
-                <option>Access Bank</option>
-                <option>First Bank</option>
-                <option>Zenith Bank</option>
-                <option>UBA</option>
-                <option>Opay</option>
-                <option>Palmpay</option>
-                <option>Kuda Bank</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label>Account Number</label>
-              <input type="text" id="wd-account" placeholder="10 digit account number" maxlength="10"/>
-            </div>
-            <div class="form-group">
-              <label>Account Name</label>
-              <input type="text" id="wd-name" placeholder="Account holder name"/>
-            </div>
-            <div class="form-group">
-              <label>Amount to Withdraw (₦)</label>
-              <input type="number" id="wd-amount" placeholder="Minimum ₦1,000" min="1000"/>
-            </div>
-            <div id="wd-error" style="color:#cc0000;font-size:0.85em;display:none;"></div>
-            <div id="wd-success" style="color:#006622;font-size:0.85em;display:none;"></div>
-            <button class="btn-withdraw" onclick="processWithdrawal()">
-              💸 Withdraw Now
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <!-- SETTINGS TAB -->
-      <div class="dash-tab" id="tab-settings" style="display:none;">
-        <div class="dash-header">
-          <h1>Agent Settings</h1>
-        </div>
-        <div class="settings-card">
-          <h3>Agency Profile</h3>
-          <div class="form-group">
-            <label>Agency Name</label>
-            <input type="text" id="agency-name" placeholder="Your travel agency name"/>
-          </div>
-          <div class="form-group">
-            <label>Description</label>
-            <textarea id="agency-desc" rows="3" placeholder="Tell customers about your agency..."></textarea>
-          </div>
-          <div class="form-group">
-            <label>WhatsApp Number</label>
-            <input type="tel" id="agency-whatsapp" placeholder="080xxxxxxxx"/>
-          </div>
-          <button class="btn-save" onclick="saveAgentSettings()">Save Changes</button>
-        </div>
-      </div>
-
-    </main>
-  </div>
-
-  <!-- PREVIEW MODAL -->
-  <div id="preview-modal-overlay" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);z-index:900;" onclick="closePreviewModal()"></div>
-  <div id="preview-modal" style="display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:white;border-radius:14px;max-width:380px;width:90%;max-height:85vh;overflow-y:auto;z-index:901;padding:20px;">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
-      <h3 style="font-size:1.1em;font-weight:700;">Listing Preview</h3>
-      <button onclick="closePreviewModal()" style="background:var(--gray);border:none;width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:0.9em;">✕</button>
     </div>
-    <div id="preview-modal-body"></div>
   </div>
 
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-  <script src="../../js/firebase/config.js"></script>
-  <script src="../../js/firebase/auth.js"></script>
-  <script src="../../js/firebase/travel.js"></script>
-  <script src="../../js/firebase/imgbb.js"></script>
-  <script src="../../js/core/main.js"></script>
-  <script>
+</div>
 
-    var myListings = [];
-    var selectedEmoji = '🏨';
-    var selectedImageFile = null;
-    var currentListingType = 'hotel';
-    var roomTypeCount = 0;
+<!-- BOTTOM NAV -->
+<div class="db-bottom-nav">
+  <a href="../../index.html"><span>🏠</span><span>Home</span></a>
+  <a href="../../pages/travel/browse.html"><span>✈️</span><span>Browse</span></a>
+  <a href="#" onclick="showTab('add');return false;" class="active"><span>➕</span><span>Add</span></a>
+  <a href="#" onclick="showTab('bookings');return false;"><span>📋</span><span>Bookings</span></a>
+  <a href="buyer.html"><span>👤</span><span>Account</span></a>
+</div>
 
-    function init() {
-      var user = JSON.parse(localStorage.getItem('nexa_current_user') || 'null');
-      if (user) {
-        var nameEl   = document.getElementById('dash-name');
-        var avatarEl = document.getElementById('dash-avatar');
-        var navEl    = document.getElementById('nav-agent-name');
-        if (nameEl)   nameEl.textContent   = user.fullName || user.firstName || 'Agent';
-        if (avatarEl) avatarEl.textContent = (user.firstName || 'A')[0].toUpperCase();
-        if (navEl)    navEl.textContent    = user.firstName + '\'s Travel Agency';
-      }
-      addRoomType();
-    }
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="../../js/firebase/config.js"></script>
+<script src="../../js/firebase/auth.js"></script>
+<script src="../../js/firebase/travel.js"></script>
+<script src="../../js/firebase/imgbb.js"></script>
+<script src="../../js/core/main.js"></script>
+<script>
 
-    if (typeof auth !== 'undefined') {
-      auth.onAuthStateChanged(function(user) {
-        if (user) loadMyListings();
-      });
-    }
+  var myListings=[], myBookings=[], filteredBookings=[];
+  var selEmoji_val='✈️', selImgFile=null, editId=null;
 
-    function showTab(tab) {
-      var tabs = document.querySelectorAll('.dash-tab');
-      tabs.forEach(function(t) { t.style.display = 'none'; });
+  function init() {
+    var user=JSON.parse(localStorage.getItem('nexa_current_user')||'null');
+    if (!user){ window.location.href='../auth/login.html'; return; }
+    var av=document.getElementById('user-avatar');
+    var sb=document.getElementById('overview-sub');
+    if (av) av.textContent=(user.firstName||'T')[0].toUpperCase();
+    if (sb) sb.textContent='Welcome back, '+(user.firstName||'Agent')+'!';
+    showTab('overview');
+  }
 
-      var navItems = document.querySelectorAll('.dash-nav-item');
-      navItems.forEach(function(n) { n.classList.remove('active'); });
-
-      var target = document.getElementById('tab-' + tab);
-      if (target) target.style.display = 'block';
-
-      var navMap = {
-        'overview': 0, 'listings': 1, 'add-listing': 2,
-        'bookings': 3, 'earnings': 4, 'settings': 5
-      };
-      var index = navMap[tab];
-      if (index !== undefined && navItems[index]) {
-        navItems[index].classList.add('active');
-      }
-    }
-
-    function setListingType(type) {
-      currentListingType = type;
-      var types = ['hotel', 'flight', 'tour'];
-      types.forEach(function(t) {
-        document.getElementById('btn-' + t).classList.toggle('active', t === type);
-        var fields = document.getElementById(t + '-fields');
-        var catGroup = document.getElementById(t + '-category-group');
-        if (fields) fields.style.display = type === t ? 'block' : 'none';
-        if (catGroup) catGroup.style.display = type === t ? 'block' : 'none';
-      });
-
-      var priceUnit = document.getElementById('al-price-unit');
-      if (priceUnit) {
-        priceUnit.value = type === 'hotel' ? 'per night' : type === 'flight' ? 'per person' : 'per package';
-      }
-
-      var emojiMap = { hotel: '🏨', flight: '✈️', tour: '🗺️' };
-      selectedEmoji = emojiMap[type];
-      var previewEl = document.getElementById('preview-emoji');
-      if (previewEl) previewEl.textContent = selectedEmoji;
-    }
-
-    function addRoomType() {
-      roomTypeCount++;
-      var container = document.getElementById('room-types-container');
-      var div = document.createElement('div');
-      div.id = 'room-' + roomTypeCount;
-      div.style.cssText = 'border:1px solid var(--border);border-radius:8px;padding:12px;margin-bottom:10px;';
-      div.innerHTML =
-        '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">' +
-          '<b style="font-size:0.9em;">Room Type ' + roomTypeCount + '</b>' +
-          '<button type="button" onclick="removeRoomType(' + roomTypeCount + ')" style="background:none;border:none;color:#cc0000;cursor:pointer;">✕ Remove</button>' +
-        '</div>' +
-        '<div class="form-row-2">' +
-          '<div class="form-group">' +
-            '<label>Room Name *</label>' +
-            '<input type="text" class="room-name" placeholder="e.g. Standard, Deluxe, Suite" style="width:100%;padding:10px;border:1px solid var(--border);border-radius:6px;"/>' +
-          '</div>' +
-          '<div class="form-group">' +
-            '<label>Price per Night (₦) *</label>' +
-            '<input type="number" class="room-price" placeholder="0" min="0" style="width:100%;padding:10px;border:1px solid var(--border);border-radius:6px;"/>' +
-          '</div>' +
-        '</div>' +
-        '<input type="text" class="room-perks" placeholder="Perks (e.g. Sea view, King bed, Breakfast included)" style="width:100%;padding:10px;border:1px solid var(--border);border-radius:6px;"/>';
-      container.appendChild(div);
-    }
-
-    function removeRoomType(id) {
-      var el = document.getElementById('room-' + id);
-      if (el) el.remove();
-    }
-
-    function collectRoomTypes() {
-      var rooms = [];
-      document.querySelectorAll('#room-types-container > div').forEach(function(div) {
-        var name  = div.querySelector('.room-name').value.trim();
-        var price = parseFloat(div.querySelector('.room-price').value) || 0;
-        var perks = div.querySelector('.room-perks').value.trim();
-        if (name) rooms.push({ name: name, price: price, perks: perks });
-      });
-      return rooms;
-    }
-
-    function collectAmenities() {
-      var checked = document.querySelectorAll('.amenity-cb:checked');
-      var result = [];
-      checked.forEach(function(cb) { result.push(cb.value); });
-      return result;
-    }
-
-    function loadMyListings() {
-      var user = auth.currentUser;
-      if (!user) { renderMyListings([]); return; }
-
-      nexaGetAgentListings(user.uid)
-        .then(function(listings) {
-          myListings = listings;
-          renderMyListings(listings);
-          updateStats();
-        })
-        .catch(function(err) {
-          console.log('Error loading listings:', err);
-          renderMyListings([]);
-        });
-    }
-
-    function updateStats() {
-      var listingsEl = document.getElementById('stat-listings');
-      if (listingsEl) listingsEl.textContent = myListings.length;
-    }
-
-    function filterListings() {
-      var type = document.getElementById('listing-type-filter').value;
-      var filtered = type === 'all'
-        ? myListings
-        : myListings.filter(function(l) { return l.listingType === type; });
-      renderMyListings(filtered);
-    }
-
-    function renderMyListings(listings) {
-      var list = document.getElementById('my-listings-list');
-      if (!list) return;
-      if (!listings || listings.length === 0) {
-        list.innerHTML =
-          '<div class="empty-products">' +
-            '<div style="font-size:3em;margin-bottom:12px">✈️</div>' +
-            '<h3>No listings yet</h3>' +
-            '<p>Add your first listing to start receiving bookings</p>' +
-            '<button class="btn-primary" onclick="showTab(\'add-listing\')">➕ Add Listing</button>' +
-          '</div>';
-        return;
-      }
-      list.innerHTML = listings.map(function(l) {
-        var typeLabel = { hotel: '🏨 Hotel', flight: '✈️ Flight', tour: '🗺️ Tour' }[l.listingType] || l.listingType;
-        return '<div class="my-product-row">' +
-          '<div class="mp-img">' + (l.emoji || '✈️') + '</div>' +
-          '<div class="mp-info">' +
-            '<div class="mp-name">' + l.title + '</div>' +
-            '<div class="mp-cat">' + typeLabel + ' • ' + l.location + '</div>' +
-            '<div class="mp-stock">📅 ' + (l.bookings || 0) + ' bookings</div>' +
-          '</div>' +
-          '<div class="mp-price">₦' + parseInt(l.price).toLocaleString() + '<small style="font-size:0.7em;color:var(--text2);">/' + (l.priceUnit || 'night') + '</small></div>' +
-          '<div class="mp-actions">' +
-            '<button onclick="previewListing(\'' + l.id + '\')" style="padding:6px 10px;background:white;border:1px solid var(--border);border-radius:6px;cursor:pointer;margin-right:4px;">👁️</button>' +
-            '<button onclick="deleteListing(\'' + l.id + '\')" class="btn-delete">🗑️</button>' +
-          '</div>' +
-        '</div>';
-      }).join('');
-    }
-
-    function triggerImageUpload() {
-      document.getElementById('image-file').click();
-    }
-
-    function previewImage() {
-      var file = document.getElementById('image-file').files[0];
-      if (!file) return;
-      selectedImageFile = file;
-      var reader = new FileReader();
-      reader.onload = function(e) {
-        document.getElementById('upload-placeholder').style.display = 'none';
-        var previewEl = document.getElementById('upload-preview');
-        previewEl.style.display = 'flex';
-        previewEl.innerHTML = '<img src="' + e.target.result + '" style="max-width:100%;max-height:150px;border-radius:8px;"/>';
-      };
-      reader.readAsDataURL(file);
-    }
-
-    function selectEmoji(emoji) {
-      selectedEmoji = emoji;
-      document.getElementById('preview-emoji').textContent = emoji;
-      document.getElementById('upload-placeholder').style.display = 'none';
-      document.getElementById('upload-preview').style.display = 'flex';
-      document.querySelectorAll('.emoji-grid span').forEach(function(s) { s.classList.remove('selected'); });
-      event.target.classList.add('selected');
-    }
-
-    function publishListing() {
-      var title    = document.getElementById('al-title').value.trim();
-      var desc     = document.getElementById('al-desc').value.trim();
-      var location = document.getElementById('al-location').value.trim();
-      var country  = document.getElementById('al-country').value.trim();
-      var price    = document.getElementById('al-price').value;
-      var priceUnit = document.getElementById('al-price-unit').value;
-      var errEl    = document.getElementById('al-error');
-      var sucEl    = document.getElementById('al-success');
-
-      errEl.style.display = 'none';
-      sucEl.style.display = 'none';
-
-      var category = currentListingType === 'hotel'
-        ? document.getElementById('al-hotel-category').value
-        : currentListingType === 'flight'
-        ? document.getElementById('al-flight-category').value
-        : document.getElementById('al-tour-category').value;
-
-      if (!title)    { errEl.textContent = 'Enter a title';      errEl.style.display = 'block'; return; }
-      if (!category) { errEl.textContent = 'Select a category';  errEl.style.display = 'block'; return; }
-      if (!desc)     { errEl.textContent = 'Enter description';  errEl.style.display = 'block'; return; }
-      if (!location) { errEl.textContent = 'Enter location';     errEl.style.display = 'block'; return; }
-      if (!price)    { errEl.textContent = 'Enter price';        errEl.style.display = 'block'; return; }
-
-      var user = auth.currentUser;
-      if (!user) { errEl.textContent = 'Please login first'; errEl.style.display = 'block'; return; }
-
-      var publishBtn = document.querySelector('.btn-publish');
-      if (publishBtn) { publishBtn.textContent = 'Publishing...'; publishBtn.disabled = true; }
-
-      var userData = JSON.parse(localStorage.getItem('nexa_current_user') || '{}');
-
-      var extraData = {};
-      if (currentListingType === 'hotel') {
-        extraData.roomTypes = collectRoomTypes();
-        extraData.amenities = collectAmenities();
-        extraData.checkIn   = document.getElementById('al-checkin').value;
-        extraData.checkOut  = document.getElementById('al-checkout').value;
-      } else if (currentListingType === 'flight') {
-        extraData.duration    = document.getElementById('al-duration').value;
-        extraData.includes    = document.getElementById('al-includes').value;
-        extraData.departure   = document.getElementById('al-departure').value;
-        extraData.destination = document.getElementById('al-destination').value;
-        extraData.airline     = document.getElementById('al-airline').value;
-      } else {
-        extraData.duration  = document.getElementById('al-tour-duration').value;
-        extraData.includes  = document.getElementById('al-tour-includes').value;
-      }
-
-      var uploadPromise = selectedImageFile
-        ? uploadImageToImgBB(selectedImageFile)
-        : Promise.resolve('');
-
-      uploadPromise.then(function(imageUrl) {
-        return nexaAddTravelListing(Object.assign({
-          title: title, listingType: currentListingType, category: category,
-          description: desc, location: location, country: country,
-          price: price, priceUnit: priceUnit,
-          emoji: selectedEmoji || '✈️',
-          agentName: userData.fullName || userData.firstName || 'Agent',
-        }, extraData), imageUrl);
-      })
-      .then(function(listingId) {
-        sucEl.textContent = '🎉 Listing published!';
-        sucEl.style.display = 'block';
-
-        document.getElementById('al-title').value = '';
-        document.getElementById('al-desc').value = '';
-        document.getElementById('al-location').value = '';
-        document.getElementById('al-price').value = '';
-        document.getElementById('room-types-container').innerHTML = '';
-        document.getElementById('upload-placeholder').style.display = 'block';
-        document.getElementById('upload-preview').style.display = 'none';
-        document.querySelectorAll('.amenity-cb').forEach(function(cb) { cb.checked = false; });
-        roomTypeCount = 0;
-        selectedImageFile = null;
-        addRoomType();
-
-        if (publishBtn) { publishBtn.textContent = '🚀 Publish Listing'; publishBtn.disabled = false; }
-        loadMyListings();
-      })
-      .catch(function(err) {
-        errEl.textContent = '❌ Error: ' + (err.message || err.toString());
-        errEl.style.display = 'block';
-        if (publishBtn) { publishBtn.textContent = '🚀 Publish Listing'; publishBtn.disabled = false; }
-      });
-    }
-
-    function previewListing(listingId) {
-      var listing = myListings.find(function(l) { return l.id === listingId; });
-      if (!listing) return;
-
-      var imgHtml = listing.imageUrl
-        ? '<img src="' + listing.imageUrl + '" style="width:100%;border-radius:10px;margin-bottom:14px;"/>'
-        : '<div style="font-size:4em;text-align:center;background:var(--gray);border-radius:10px;padding:30px 0;margin-bottom:14px;">' + (listing.emoji || '✈️') + '</div>';
-
-      var extraHtml = '';
-      if (listing.listingType === 'hotel' && listing.roomTypes && listing.roomTypes.length > 0) {
-        extraHtml = '<h3 style="font-size:1em;margin-bottom:8px;">Room Types</h3>' +
-          listing.roomTypes.map(function(r) {
-            return '<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);font-size:0.85em;">' +
-              '<span>' + r.name + (r.perks ? ' — ' + r.perks : '') + '</span>' +
-              '<span style="font-weight:700;color:var(--orange);">₦' + r.price.toLocaleString() + '/night</span>' +
-            '</div>';
-          }).join('');
-      }
-
-      if (listing.amenities && listing.amenities.length > 0) {
-        extraHtml += '<div style="margin-top:12px;display:flex;flex-wrap:wrap;gap:6px;">' +
-          listing.amenities.map(function(a) {
-            return '<span style="background:var(--gray);padding:4px 10px;border-radius:6px;font-size:0.78em;">✓ ' + a + '</span>';
-          }).join('') + '</div>';
-      }
-
-      var body = document.getElementById('preview-modal-body');
-      body.innerHTML =
-        imgHtml +
-        '<h2 style="font-size:1.2em;margin-bottom:6px;">' + listing.title + '</h2>' +
-        '<div style="color:var(--orange);font-size:1.4em;font-weight:800;margin-bottom:10px;">₦' + parseInt(listing.price).toLocaleString() + ' <small style="font-size:0.6em;color:var(--text2);">' + listing.priceUnit + '</small></div>' +
-        '<div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;">' +
-          '<span style="background:var(--gray);padding:4px 10px;border-radius:6px;font-size:0.8em;">' + listing.category + '</span>' +
-          '<span style="background:var(--gray);padding:4px 10px;border-radius:6px;font-size:0.8em;">📍 ' + listing.location + '</span>' +
-        '</div>' +
-        '<p style="font-size:0.9em;color:var(--text2);line-height:1.6;margin-bottom:14px;">' + (listing.description || '') + '</p>' +
-        extraHtml;
-
-      document.getElementById('preview-modal-overlay').style.display = 'block';
-      document.getElementById('preview-modal').style.display = 'block';
-    }
-
-    function closePreviewModal() {
-      document.getElementById('preview-modal-overlay').style.display = 'none';
-      document.getElementById('preview-modal').style.display = 'none';
-    }
-
-    function deleteListing(listingId) {
-      if (confirm('Delete this listing?')) {
-        nexaDeleteTravelListing(listingId)
-          .then(function() {
-            showToast('🗑️ Listing deleted');
-            myListings = myListings.filter(function(l) { return l.id !== listingId; });
-            renderMyListings(myListings);
-            updateStats();
-            setTimeout(function() { loadMyListings(); }, 800);
-          })
-          .catch(function(err) { showToast('Error: ' + err.message); });
-      }
-    }
-
-    function processWithdrawal() {
-      var account = document.getElementById('wd-account').value.trim();
-      var name    = document.getElementById('wd-name').value.trim();
-      var amount  = parseInt(document.getElementById('wd-amount').value);
-      var errEl   = document.getElementById('wd-error');
-      var sucEl   = document.getElementById('wd-success');
-
-      errEl.style.display = 'none';
-      sucEl.style.display = 'none';
-
-      if (!account || account.length !== 10) { errEl.textContent = 'Enter valid 10-digit account number'; errEl.style.display = 'block'; return; }
-      if (!name)   { errEl.textContent = 'Enter account name'; errEl.style.display = 'block'; return; }
-      if (!amount || amount < 1000) { errEl.textContent = 'Minimum withdrawal is ₦1,000'; errEl.style.display = 'block'; return; }
-
-      var user = auth.currentUser;
-      if (!user) return;
-
-      db.collection('withdrawalRequests').add({
-        userId:    user.uid,
-        userType:  'travel-agent',
-        bank:      document.getElementById('wd-bank').value,
-        account:   account,
-        name:      name,
-        amount:    amount,
-        status:    'pending',
-        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-      }).then(function() {
-        sucEl.textContent = '✅ Withdrawal request submitted! We will process within 1-2 business days.';
-        sucEl.style.display = 'block';
-        document.getElementById('wd-amount').value = '';
-      }).catch(function(err) {
-        errEl.textContent = 'Error: ' + err.message;
-        errEl.style.display = 'block';
-      });
-    }
-
-    function saveAgentSettings() {
-      showToast('✅ Settings saved!');
-    }
-
-    function doAgentLogout() {
-      if (typeof nexaLogout === 'function') {
-        nexaLogout().then(function() {
-          localStorage.removeItem('nexa_current_user');
-          window.location.href = '../../index.html';
-        });
-      } else {
-        localStorage.removeItem('nexa_current_user');
-        window.location.href = '../../index.html';
-      }
-    }
-
-    document.addEventListener('DOMContentLoaded', function() {
-      init();
+  if (typeof auth!=='undefined') {
+    auth.onAuthStateChanged(function(u){
+      if (u){ loadListings(); loadBookings(); }
+      else { window.location.href='../auth/login.html'; }
     });
+  }
 
-  </script>
+  function showTab(tab) {
+    document.querySelectorAll('.db-tab').forEach(function(t){ t.classList.remove('active'); });
+    document.querySelectorAll('.db-tab-content').forEach(function(c){ c.classList.remove('active'); });
+    var map={overview:0,listings:1,add:2,bookings:3,earnings:4};
+    var tabs=document.querySelectorAll('.db-tab');
+    if (map[tab]!==undefined&&tabs[map[tab]]) tabs[map[tab]].classList.add('active');
+    var c=document.getElementById('content-'+tab);
+    if (c) c.classList.add('active');
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
 
+  function loadListings() {
+    var user=auth.currentUser;
+    if (!user) return;
+    nexaGetAgentListings(user.uid)
+      .then(function(items){
+        myListings=items.filter(function(i){ return i.status!=='deleted'; });
+        renderListings(myListings);
+        updateStats();
+      })
+      .catch(function(){ renderListings([]); });
+  }
+
+  function loadBookings() {
+    var user=auth.currentUser;
+    if (!user) return;
+    db.collection('travelBookings')
+      .where('agentId','==',user.uid)
+      .get()
+      .then(function(snap){
+        myBookings=[];
+        snap.forEach(function(doc){ myBookings.push(Object.assign({id:doc.id},doc.data())); });
+        myBookings.sort(function(a,b){
+          return (b.createdAt?b.createdAt.toMillis():0)-(a.createdAt?a.createdAt.toMillis():0);
+        });
+        filteredBookings=myBookings.slice();
+        renderBookings(filteredBookings);
+        renderRecentBookings(myBookings.slice(0,5));
+        updateStats();
+        var badge=document.getElementById('bk-badge');
+        var newBk=myBookings.filter(function(b){ return b.status==='confirmed'; }).length;
+        if (badge&&newBk>0){ badge.textContent=newBk; badge.style.display='inline'; }
+      })
+      .catch(function(err){ console.log('Bookings error:',err); });
+  }
+
+  function renderListings(items) {
+    var list=document.getElementById('listings-list');
+    if (!list) return;
+    if (!items||items.length===0) {
+      list.innerHTML='<div class="db-empty"><div class="db-empty-icon">✈️</div><h3>No packages yet</h3><p>Add your first travel package to start receiving bookings</p><button class="db-empty-btn" onclick="showTab(\'add\')">+ Add Your First Package</button></div>';
+      return;
+    }
+    list.innerHTML=items.map(function(item){
+      var sc={active:'status-active',pending:'status-pending',rejected:'status-rejected'}[item.status]||'status-pending';
+      var sl={active:'✅ Live',pending:'⏳ Pending',rejected:'❌ Rejected'}[item.status]||'⏳ Pending';
+      var img=item.imageUrl?'<img src="'+item.imageUrl+'"/>':(item.emoji||'✈️');
+      return '<div class="db-row">'+
+        '<div class="db-row-img">'+img+'</div>'+
+        '<div class="db-row-info">'+
+          '<div class="db-row-name">'+(item.title||'Package')+'</div>'+
+          '<div class="db-row-meta">📍 '+(item.destination||'')+' • ⏱️ '+(item.duration||'')+' • ✈️ '+( item.departure||'')+'</div>'+
+          '<div class="db-row-status '+sc+'" style="margin-top:3px;">'+sl+'</div>'+
+        '</div>'+
+        '<div class="db-row-price">₦'+parseInt(item.price||0).toLocaleString()+'<small style="font-size:0.65em;color:#999;">/person</small></div>'+
+        '<div class="db-row-actions">'+
+          '<button class="db-action-btn" onclick="editListing(\''+item.id+'\')">✏️</button>'+
+          '<button class="db-action-btn danger" onclick="deleteListing(\''+item.id+'\')">🗑️</button>'+
+        '</div>'+
+      '</div>';
+    }).join('');
+  }
+
+  function filterBookings(status,btn) {
+    document.querySelectorAll('#content-bookings .db-filter-btn').forEach(function(b){ b.classList.remove('active'); });
+    btn.classList.add('active');
+    filteredBookings=status==='all'?myBookings.slice():myBookings.filter(function(b){ return b.status===status; });
+    renderBookings(filteredBookings);
+  }
+
+  function renderBookings(bookings) {
+    var body=document.getElementById('bookings-body');
+    if (!body) return;
+    if (!bookings||bookings.length===0) {
+      body.innerHTML='<tr><td colspan="6" style="text-align:center;padding:20px;color:#999;">No bookings yet</td></tr>';
+      return;
+    }
+    body.innerHTML=bookings.map(function(b){
+      return '<tr>'+
+        '<td><strong style="color:#ff6b00;">'+(b.id||'').slice(-6)+'</strong></td>'+
+        '<td style="font-size:0.85em;max-width:100px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+(b.packageTitle||b.listingTitle||'Package')+'</td>'+
+        '<td>'+(b.customerName||'Traveller')+'</td>'+
+        '<td style="font-weight:700;color:#ff6b00;">₦'+parseInt(b.totalPrice||b.amount||0).toLocaleString()+'</td>'+
+        '<td style="font-size:0.82em;color:#999;">'+(b.createdAt?new Date(b.createdAt.toMillis()).toLocaleDateString():'')+'</td>'+
+        '<td><span style="background:#d4edda;color:#155724;padding:3px 8px;border-radius:4px;font-size:0.72em;font-weight:700;">'+(b.status||'confirmed')+'</span></td>'+
+      '</tr>';
+    }).join('');
+  }
+
+  function renderRecentBookings(bookings) {
+    var wrap=document.getElementById('recent-bookings-wrap');
+    if (!wrap) return;
+    if (!bookings||bookings.length===0) {
+      wrap.innerHTML='<div class="db-empty" style="padding:20px;"><div class="db-empty-icon" style="font-size:2em;">📋</div><h3>No bookings yet</h3><p>Add packages to start receiving travel bookings</p></div>';
+      return;
+    }
+    wrap.innerHTML=bookings.map(function(b){
+      return '<div class="db-row">'+
+        '<div class="db-row-img" style="font-size:1.5em;">✈️</div>'+
+        '<div class="db-row-info">'+
+          '<div class="db-row-name">'+(b.customerName||'Traveller')+'</div>'+
+          '<div class="db-row-meta">📦 '+(b.packageTitle||b.listingTitle||'Package')+'</div>'+
+        '</div>'+
+        '<div class="db-row-price">₦'+parseInt(b.totalPrice||b.amount||0).toLocaleString()+'</div>'+
+      '</div>';
+    }).join('');
+  }
+
+  function updateStats() {
+    var revenue=myBookings.reduce(function(s,b){ return s+parseInt(b.totalPrice||b.amount||0); },0);
+    var balance=Math.round(revenue*0.92);
+    document.getElementById('stat-revenue').textContent='₦'+revenue.toLocaleString();
+    document.getElementById('stat-bookings').textContent=myBookings.length;
+    document.getElementById('stat-listings').textContent=myListings.filter(function(i){ return i.status==='active'; }).length;
+    document.getElementById('stat-balance').textContent='₦'+balance.toLocaleString();
+    document.getElementById('ec-total').textContent='₦'+revenue.toLocaleString();
+    document.getElementById('ec-avail').textContent='₦'+balance.toLocaleString();
+    document.getElementById('ec-fee').textContent='₦'+Math.round(revenue*0.08).toLocaleString();
+    document.getElementById('ec-bk').textContent=myBookings.length;
+  }
+
+  function previewImg(input) {
+    var file=input.files[0];
+    if (!file) return;
+    selImgFile=file;
+    var reader=new FileReader();
+    reader.onload=function(e){
+      document.getElementById('t-img-placeholder').style.display='none';
+      var p=document.getElementById('t-img-preview');
+      p.src=e.target.result; p.style.display='block';
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function selEmoji(emoji,btn) {
+    selEmoji_val=emoji;
+    document.querySelectorAll('.db-emoji-btn').forEach(function(b){ b.classList.remove('selected'); });
+    btn.classList.add('selected');
+  }
+
+  function getInclusions() {
+    var inc=[];
+    document.querySelectorAll('.inclusion:checked').forEach(function(cb){ inc.push(cb.value); });
+    return inc;
+  }
+
+  function publishListing() {
+    var title=document.getElementById('t-title').value.trim();
+    var type=document.getElementById('t-type').value;
+    var dest=document.getElementById('t-destination').value.trim();
+    var dur=document.getElementById('t-duration').value.trim();
+    var dep=document.getElementById('t-departure').value;
+    var price=document.getElementById('t-price').value;
+    var slots=document.getElementById('t-slots').value;
+    var desc=document.getElementById('t-desc').value.trim();
+    var errEl=document.getElementById('t-error');
+    var sucEl=document.getElementById('t-success');
+    var btn=document.getElementById('t-submit-btn');
+
+    errEl.style.display='none'; sucEl.style.display='none';
+
+    if (!title){ errEl.textContent='Enter package title'; errEl.style.display='block'; return; }
+    if (!type){ errEl.textContent='Select package type'; errEl.style.display='block'; return; }
+    if (!dest){ errEl.textContent='Enter destination'; errEl.style.display='block'; return; }
+    if (!dur){ errEl.textContent='Enter duration'; errEl.style.display='block'; return; }
+    if (!dep){ errEl.textContent='Select departure city'; errEl.style.display='block'; return; }
+    if (!price){ errEl.textContent='Enter price per person'; errEl.style.display='block'; return; }
+    if (!desc){ errEl.textContent='Enter package description'; errEl.style.display='block'; return; }
+
+    var user=auth.currentUser;
+    if (!user){ errEl.textContent='Please login first'; errEl.style.display='block'; return; }
+
+    btn.textContent='Submitting...'; btn.disabled=true;
+
+    var userData=JSON.parse(localStorage.getItem('nexa_current_user')||'{}');
+    var upload=selImgFile?uploadImageToImgBB(selImgFile):Promise.resolve('');
+
+    upload.then(function(imageUrl){
+      var data={
+        agentId:user.uid,
+        agentName:userData.fullName||userData.firstName||'Travel Agent',
+        title:title,
+        type:type,
+        destination:dest,
+        duration:dur,
+        departure:dep,
+        price:parseFloat(price),
+        slots:slots?parseInt(slots):0,
+        description:desc,
+        inclusions:getInclusions(),
+        imageUrl:imageUrl,
+        emoji:selEmoji_val,
+        status:'pending',
+        booked:0,
+        rating:0,
+        reviews:0,
+        createdAt:firebase.firestore.FieldValue.serverTimestamp(),
+      };
+      if (editId) {
+        return db.collection('travelListings').doc(editId).update(data);
+      } else {
+        var ref=db.collection('travelListings').doc();
+        data.id=ref.id;
+        return ref.set(data);
+      }
+    })
+    .then(function(){
+      sucEl.textContent=editId?'✅ Package updated!':'🎉 Package submitted! Admin will review within 24 hours.';
+      sucEl.style.display='block';
+      btn.textContent='🚀 Submit for Approval'; btn.disabled=false;
+      document.getElementById('t-title').value='';
+      document.getElementById('t-type').value='';
+      document.getElementById('t-destination').value='';
+      document.getElementById('t-duration').value='';
+      document.getElementById('t-departure').value='';
+      document.getElementById('t-price').value='';
+      document.getElementById('t-slots').value='';
+      document.getElementById('t-desc').value='';
+      document.getElementById('t-img-preview').style.display='none';
+      document.getElementById('t-img-placeholder').style.display='block';
+      document.querySelectorAll('.inclusion').forEach(function(cb){ cb.checked=false; });
+      selImgFile=null; editId=null;
+      document.getElementById('add-form-title').textContent='Add Travel Package';
+      loadListings();
+      setTimeout(function(){ showTab('listings'); },2000);
+    })
+    .catch(function(err){
+      errEl.textContent='❌ Error: '+err.message;
+      errEl.style.display='block';
+      btn.textContent='🚀 Submit for Approval'; btn.disabled=false;
+    });
+  }
+
+  function editListing(id) {
+    var item=myListings.find(function(i){ return i.id===id; });
+    if (!item) return;
+    editId=id;
+    document.getElementById('add-form-title').textContent='Edit Package';
+    document.getElementById('t-title').value=item.title||'';
+    document.getElementById('t-type').value=item.type||'';
+    document.getElementById('t-destination').value=item.destination||'';
+    document.getElementById('t-duration').value=item.duration||'';
+    document.getElementById('t-departure').value=item.departure||'';
+    document.getElementById('t-price').value=item.price||'';
+    document.getElementById('t-slots').value=item.slots||'';
+    document.getElementById('t-desc').value=item.description||'';
+    if (item.inclusions){
+      document.querySelectorAll('.inclusion').forEach(function(cb){
+        cb.checked=item.inclusions.indexOf(cb.value)>-1;
+      });
+    }
+    if (item.imageUrl){
+      document.getElementById('t-img-preview').src=item.imageUrl;
+      document.getElementById('t-img-preview').style.display='block';
+      document.getElementById('t-img-placeholder').style.display='none';
+    }
+    showTab('add');
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+
+  function deleteListing(id) {
+    if (!confirm('Delete this package?')) return;
+    db.collection('travelListings').doc(id).update({status:'deleted'})
+      .then(function(){
+        showToast('🗑️ Package deleted');
+        myListings=myListings.filter(function(i){ return i.id!==id; });
+        renderListings(myListings);
+        updateStats();
+      })
+      .catch(function(err){ showToast('Error: '+err.message); });
+  }
+
+  function doWithdraw() {
+    var bank=document.getElementById('wd-bank').value;
+    var acct=document.getElementById('wd-acct').value.trim();
+    var name=document.getElementById('wd-name').value.trim();
+    var amount=parseInt(document.getElementById('wd-amount').value);
+    var errEl=document.getElementById('wd-error');
+    var sucEl=document.getElementById('wd-success');
+    errEl.style.display='none'; sucEl.style.display='none';
+    if (!acct||acct.length<10){ errEl.textContent='Enter valid 10-digit account number'; errEl.style.display='block'; return; }
+    if (!name){ errEl.textContent='Enter account name'; errEl.style.display='block'; return; }
+    if (!amount||amount<1000){ errEl.textContent='Minimum withdrawal is ₦1,000'; errEl.style.display='block'; return; }
+    var user=auth.currentUser;
+    if (!user) return;
+    db.collection('withdrawalRequests').add({
+      userId:user.uid,userType:'travel-agent',
+      bank:bank,account:acct,name:name,
+      amount:amount,status:'pending',
+      createdAt:firebase.firestore.FieldValue.serverTimestamp(),
+    }).then(function(){
+      sucEl.textContent='✅ Withdrawal request submitted! We will process within 1-2 business days.';
+      sucEl.style.display='block';
+      document.getElementById('wd-amount').value='';
+    }).catch(function(err){ errEl.textContent='Error: '+err.message; errEl.style.display='block'; });
+  }
+
+  function showToast(msg) {
+    var t=document.getElementById('db-toast');
+    if (!t) return;
+    t.textContent=msg;
+    t.style.display='block';
+    setTimeout(function(){ t.style.display='none'; },2500);
+  }
+
+  document.addEventListener('DOMContentLoaded',function(){ init(); });
+
+</script>
 </body>
 </html>
