@@ -6,6 +6,7 @@
   <meta name="description" content="Nexabay — Nigeria's all-in-one digital marketplace."/>
   <title>Nexabay — Nigeria's All-in-One Digital Marketplace</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
   <style>
     :root{
       --brand:#7c3aed;
@@ -137,14 +138,17 @@
     .how-bg{background:rgba(124,58,237,0.04);border-top:1px solid var(--border);border-bottom:1px solid var(--border);}
     .steps{display:grid;gap:9px;margin-top:14px;}
     .step{background:var(--dark2);border:1px solid var(--border);border-radius:13px;padding:16px 14px;display:flex;gap:12px;align-items:flex-start;}
-    .step-n{width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,var(--brand),var(--accent));color:white;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:0.88em;flex-shrink:0;}
+    .step-n{width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,var(--brand),var(--accent));color:white;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+    .step-n-icon{display:flex;align-items:center;justify-content:center;}
+    .step-n-icon svg{width:18px;height:18px;stroke:white;stroke-width:2;}
     .step-t{font-weight:700;font-size:0.86em;margin-bottom:4px;}
     .step-d{font-size:0.76em;color:rgba(255,255,255,0.43);line-height:1.5;}
 
     /* ── TRUST ── */
     .trust-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:14px;}
     .trust-card{background:var(--dark2);border:1px solid var(--border);border-radius:12px;padding:16px 13px;text-align:center;}
-    .trust-ico{font-size:1.7em;margin-bottom:7px;}
+    .trust-ico{display:flex;align-items:center;justify-content:center;margin-bottom:10px;}
+    .trust-ico .nx-icon svg{width:28px;height:28px;stroke:rgba(255,255,255,0.7);stroke-width:1.5;}
     .trust-t{font-weight:700;font-size:0.82em;margin-bottom:4px;}
     .trust-d{font-size:0.7em;color:rgba(255,255,255,0.43);line-height:1.4;}
 
@@ -201,6 +205,18 @@
       .explore-grid{grid-template-columns:repeat(4,1fr);}
       .prod-grid{grid-template-columns:repeat(4,1fr);}
     }
+    .nx-icon{display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;}
+    .nx-icon svg{stroke-width:1.75;display:block;}
+    .explore-ico .nx-icon svg{width:22px;height:22px;}
+    .snav-link .nx-icon svg{width:15px;height:15px;}
+    .mm-link .nx-icon svg{width:16px;height:16px;}
+    .hero-trust-i .nx-icon svg{width:14px;height:14px;}
+    .step-n-icon svg{width:18px;height:18px;stroke:white;stroke-width:2;}
+    .trust-ico .nx-icon svg{width:32px;height:32px;}
+    .earn-val-icon svg{width:20px;height:20px;}
+    .footer-contact .nx-icon svg{width:14px;height:14px;opacity:0.6;}
+    .pay-tag .nx-icon svg{width:12px;height:12px;}
+    
   </style>
 </head>
 <body>
@@ -228,16 +244,16 @@
 
   <div class="snav">
     <div class="snav-inner">
-      <a href="pages/shop/browse.html" class="snav-link">🛍️ Shop</a>
-      <a href="pages/services/browse.html" class="snav-link">🛠️ Services</a>
-      <a href="pages/rentals/browse.html" class="snav-link">🏠 Rent</a>
-      <a href="pages/jobs/browse.html" class="snav-link">💼 Jobs</a>
-      <a href="pages/learn/browse.html" class="snav-link">🎓 Learn</a>
-      <a href="pages/food/browse.html" class="snav-link">🍔 Food</a>
-      <a href="pages/health/browse.html" class="snav-link">🏥 Health</a>
-      <a href="pages/events/browse.html" class="snav-link">🎉 Events</a>
-      <a href="pages/travel/browse.html" class="snav-link">✈️ Travel</a>
-      <a href="pages/ride/index.html" class="snav-link">🚗 Ride</a>
+      <a href="pages/shop/browse.html" class="snav-link"><span class="nx-icon"><i data-lucide="shopping-bag"></i></span> Shop</a>
+      <a href="pages/services/browse.html" class="snav-link"><span class="nx-icon"><i data-lucide="wrench"></i></span> Services</a>
+      <a href="pages/rentals/browse.html" class="snav-link"><span class="nx-icon"><i data-lucide="home"></i></span> Rent</a>
+      <a href="pages/jobs/browse.html" class="snav-link"><span class="nx-icon"><i data-lucide="briefcase"></i></span> Jobs</a>
+      <a href="pages/learn/browse.html" class="snav-link"><span class="nx-icon"><i data-lucide="graduation-cap"></i></span> Learn</a>
+      <a href="pages/food/browse.html" class="snav-link"><span class="nx-icon"><i data-lucide="utensils"></i></span> Food</a>
+      <a href="pages/health/browse.html" class="snav-link"><span class="nx-icon"><i data-lucide="heart-pulse"></i></span> Health</a>
+      <a href="pages/events/browse.html" class="snav-link"><span class="nx-icon"><i data-lucide="calendar-days"></i></span> Events</a>
+      <a href="pages/travel/browse.html" class="snav-link"><span class="nx-icon"><i data-lucide="plane"></i></span> Travel</a>
+      <a href="pages/ride/index.html" class="snav-link"><span class="nx-icon"><i data-lucide="car"></i></span> Ride</a>
     </div>
   </div>
 </nav>
@@ -260,39 +276,39 @@
   </div>
   <div class="mm-section">
     <div class="mm-label">Marketplace</div>
-    <a href="pages/shop/browse.html" class="mm-link">🛍️ NexaShop</a>
-    <a href="pages/rentals/browse.html" class="mm-link">🏠 NexaRent</a>
+    <a href="pages/shop/browse.html" class="mm-link"><span class="nx-icon"><i data-lucide="shopping-bag"></i></span> NexaShop</a>
+    <a href="pages/rentals/browse.html" class="mm-link"><span class="nx-icon"><i data-lucide="home"></i></span> NexaRent</a>
     <div class="mm-label">Services</div>
-    <a href="pages/services/browse.html" class="mm-link">🛠️ NexaServices</a>
-    <a href="pages/food/browse.html" class="mm-link">🍔 NexaFood</a>
-    <a href="pages/health/browse.html" class="mm-link">🏥 NexaHealth</a>
+    <a href="pages/services/browse.html" class="mm-link"><span class="nx-icon"><i data-lucide="wrench"></i></span> NexaServices</a>
+    <a href="pages/food/browse.html" class="mm-link"><span class="nx-icon"><i data-lucide="utensils"></i></span> NexaFood</a>
+    <a href="pages/health/browse.html" class="mm-link"><span class="nx-icon"><i data-lucide="heart-pulse"></i></span> NexaHealth</a>
     <div class="mm-label">Work & Learning</div>
-    <a href="pages/jobs/browse.html" class="mm-link">💼 NexaJobs</a>
-    <a href="pages/learn/browse.html" class="mm-link">🎓 NexaLearn</a>
+    <a href="pages/jobs/browse.html" class="mm-link"><span class="nx-icon"><i data-lucide="briefcase"></i></span> NexaJobs</a>
+    <a href="pages/learn/browse.html" class="mm-link"><span class="nx-icon"><i data-lucide="graduation-cap"></i></span> NexaLearn</a>
     <div class="mm-label">Lifestyle</div>
-    <a href="pages/ride/index.html" class="mm-link">🚗 NexaRide</a>
-    <a href="pages/travel/browse.html" class="mm-link">✈️ NexaTravel</a>
-    <a href="pages/events/browse.html" class="mm-link">🎉 NexaEvents</a>
-    <a href="pages/pay/index.html" class="mm-link">💳 NexaPay</a>
-    <a href="pages/community/index.html" class="mm-link">👥 Community</a>
+    <a href="pages/ride/index.html" class="mm-link"><span class="nx-icon"><i data-lucide="car"></i></span> NexaRide</a>
+    <a href="pages/travel/browse.html" class="mm-link"><span class="nx-icon"><i data-lucide="plane"></i></span> NexaTravel</a>
+    <a href="pages/events/browse.html" class="mm-link"><span class="nx-icon"><i data-lucide="calendar-days"></i></span> NexaEvents</a>
+    <a href="pages/pay/index.html" class="mm-link"><span class="nx-icon"><i data-lucide="credit-card"></i></span> NexaPay</a>
+    <a href="pages/community/index.html" class="mm-link"><span class="nx-icon"><i data-lucide="users"></i></span> Community</a>
   </div>
   <div class="mm-section">
     <div class="mm-label">Earn on Nexabay</div>
-    <a href="pages/auth/become-provider.html?type=seller" class="mm-link earn">🟠 Sell Products</a>
-    <a href="pages/auth/become-provider.html?type=service" class="mm-link earn">🟠 Offer Services</a>
-    <a href="pages/auth/become-provider.html?type=driver" class="mm-link earn">🟠 Drive with Nexabay</a>
-    <a href="pages/auth/become-provider.html?type=restaurant" class="mm-link earn">🟠 List Your Restaurant</a>
-    <a href="pages/auth/become-provider.html?type=instructor" class="mm-link earn">🟠 Teach a Course</a>
+    <a href="pages/auth/become-provider.html?type=seller" class="mm-link earn"><span class="nx-icon"><i data-lucide="tag"></i></span> Sell Products</a>
+    <a href="pages/auth/become-provider.html?type=service" class="mm-link earn"><span class="nx-icon"><i data-lucide="tool"></i></span> Offer Services</a>
+    <a href="pages/auth/become-provider.html?type=driver" class="mm-link earn"><span class="nx-icon"><i data-lucide="car"></i></span> Drive with Nexabay</a>
+    <a href="pages/auth/become-provider.html?type=restaurant" class="mm-link earn"><span class="nx-icon"><i data-lucide="utensils"></i></span> List Your Restaurant</a>
+    <a href="pages/auth/become-provider.html?type=instructor" class="mm-link earn"><span class="nx-icon"><i data-lucide="book-open"></i></span> Teach a Course</a>
   </div>
   <div class="mm-section">
     <div class="mm-label">More</div>
-    <a href="pages/dashboard/buyer.html" class="mm-link">👤 My Account</a>
-    <a href="pages/shop/cart.html" class="mm-link">🛒 My Cart</a>
-    <a href="pages/search.html" class="mm-link">🔍 Search</a>
-    <a href="pages/help.html" class="mm-link">❓ Help Center</a>
-    <a href="pages/contact.html" class="mm-link">💬 Contact Us</a>
-    <a href="pages/about.html" class="mm-link">ℹ️ About Nexabay</a>
-    <a href="#" class="mm-link danger" id="mm-logout" onclick="doLogout();return false;" style="display:none;">🚪 Logout</a>
+    <a href="pages/dashboard/buyer.html" class="mm-link"><span class="nx-icon"><i data-lucide="user"></i></span> My Account</a>
+    <a href="pages/shop/cart.html" class="mm-link"><span class="nx-icon"><i data-lucide="shopping-cart"></i></span> My Cart</a>
+    <a href="pages/search.html" class="mm-link"><span class="nx-icon"><i data-lucide="search"></i></span> Search</a>
+    <a href="pages/help.html" class="mm-link"><span class="nx-icon"><i data-lucide="help-circle"></i></span> Help Center</a>
+    <a href="pages/contact.html" class="mm-link"><span class="nx-icon"><i data-lucide="message-circle"></i></span> Contact Us</a>
+    <a href="pages/about.html" class="mm-link"><span class="nx-icon"><i data-lucide="info"></i></span> About Nexabay</a>
+    <a href="#" class="mm-link danger" id="mm-logout" onclick="doLogout();return false;" style="display:none;"><span class="nx-icon"><i data-lucide="log-out"></i></span> Logout</a>
   </div>
 </div>
 
@@ -311,9 +327,9 @@
       <a href="pages/auth/become-provider.html" class="btn-o">Start Earning</a>
     </div>
     <div class="hero-trust">
-      <div class="hero-trust-i">✅ <strong>Secure</strong> Paystack payments</div>
-      <div class="hero-trust-i">🛡️ <strong>Buyer</strong> protection policy</div>
-      <div class="hero-trust-i">🇳🇬 <strong>All 36</strong> states covered</div>
+      <div class="hero-trust-i"><span class="nx-icon"><i data-lucide="shield-check"></i></span> <strong>Secure</strong> Paystack payments</div>
+      <div class="hero-trust-i"><span class="nx-icon"><i data-lucide="shield"></i></span> <strong>Buyer</strong> protection policy</div>
+      <div class="hero-trust-i"><span class="nx-icon"><i data-lucide="map-pin"></i></span> <strong>All 36</strong> states covered</div>
     </div>
   </div>
 </section>
@@ -327,11 +343,11 @@
       <div class="explore-sub">12 services under one roof — tap to explore</div>
     </div>
     <div class="explore-tabs">
-      <button class="explore-tab active" onclick="setTab('all',this)">🌍 All</button>
-      <button class="explore-tab" onclick="setTab('marketplace',this)">🛍️ Marketplace</button>
-      <button class="explore-tab" onclick="setTab('services',this)">🛠️ Services</button>
-      <button class="explore-tab" onclick="setTab('work',this)">💼 Work & Learning</button>
-      <button class="explore-tab" onclick="setTab('lifestyle',this)">🌟 Lifestyle</button>
+      <button class="explore-tab active" onclick="setTab('all',this)">All</button>
+      <button class="explore-tab" onclick="setTab('marketplace',this)">Marketplace</button>
+      <button class="explore-tab" onclick="setTab('services',this)">Services</button>
+      <button class="explore-tab" onclick="setTab('work',this)">Work & Learning</button>
+      <button class="explore-tab" onclick="setTab('lifestyle',this)">Lifestyle</button>
     </div>
     <div class="explore-grid" id="explore-grid"></div>
   </div>
@@ -375,10 +391,19 @@
     <div class="sec-eye">Simple process</div>
     <div class="sec-title">Up and running in 3 steps</div>
     <div class="steps">
-      <div class="step"><div class="step-n">1</div><div><div class="step-t">Create your free account</div><div class="step-d">Register in 30 seconds. One account unlocks all 12 services on Nexabay.</div></div></div>
-      <div class="step"><div class="step-n">2</div><div><div class="step-t">Browse and choose</div><div class="step-d">Find products, services, jobs or food. Every listing is reviewed by admin before going live.</div></div></div>
-      <div class="step"><div class="step-n">3</div><div><div class="step-t">Pay safely and enjoy</div><div class="step-d">Pay with card, bank transfer or USSD. Money held in escrow until you confirm delivery.</div></div></div>
-    </div>
+        <div class="step">
+          <div class="step-n"><span class="step-n-icon"><i data-lucide="user-plus"></i></span></div>
+          <div><div class="step-t">Create your free account</div><div class="step-d">Register in 30 seconds. One account unlocks all 12 services on Nexabay.</div></div>
+        </div>
+        <div class="step">
+          <div class="step-n"><span class="step-n-icon"><i data-lucide="search"></i></span></div>
+          <div><div class="step-t">Browse and choose</div><div class="step-d">Find products, services, jobs or food. Every listing is reviewed by admin before going live.</div></div>
+        </div>
+        <div class="step">
+          <div class="step-n"><span class="step-n-icon"><i data-lucide="shield-check"></i></span></div>
+          <div><div class="step-t">Pay safely and enjoy</div><div class="step-d">Pay with card, bank transfer or USSD. Money held in escrow until you confirm delivery.</div></div>
+        </div>
+      </div>
   </div>
 </div>
 
@@ -392,10 +417,10 @@
       <div class="sec-title">Built for Nigeria.<br/>Built to last.</div>
     </div>
     <div class="trust-grid">
-      <div class="trust-card"><div class="trust-ico">🔒</div><div class="trust-t">Escrow Payments</div><div class="trust-d">Money held safely until you confirm receipt</div></div>
-      <div class="trust-card"><div class="trust-ico">✅</div><div class="trust-t">Verified Sellers</div><div class="trust-d">Every provider reviewed and approved by our team</div></div>
-      <div class="trust-card"><div class="trust-ico">🛡️</div><div class="trust-t">Buyer Protection</div><div class="trust-d">Minimum 50% refund guarantee on genuine disputes</div></div>
-      <div class="trust-card"><div class="trust-ico">📱</div><div class="trust-t">Works on Any Phone</div><div class="trust-d">Fully optimised for Android — no app download needed</div></div>
+      <div class="trust-card"><div class="trust-ico"><span class="nx-icon"><i data-lucide="lock"></i></span></div><div class="trust-t">Escrow Payments</div><div class="trust-d">Money held safely until you confirm receipt</div></div>
+      <div class="trust-card"><div class="trust-ico"><span class="nx-icon"><i data-lucide="badge-check"></i></span></div><div class="trust-t">Verified Sellers</div><div class="trust-d">Every provider reviewed and approved by our team</div></div>
+      <div class="trust-card"><div class="trust-ico"><span class="nx-icon"><i data-lucide="shield"></i></span></div><div class="trust-t">Buyer Protection</div><div class="trust-d">Minimum 50% refund guarantee on genuine disputes</div></div>
+      <div class="trust-card"><div class="trust-ico"><span class="nx-icon"><i data-lucide="smartphone"></i></span></div><div class="trust-t">Works on Any Phone</div><div class="trust-d">Fully optimised for Android — no app download needed</div></div>
     </div>
   </div>
 </div>
@@ -438,9 +463,9 @@
         <div class="f-logo">Nexa<em>bay</em></div>
         <p class="f-brand-desc">Nigeria's all-in-one digital marketplace. One account for shopping, services, jobs, learning, food, health and more — built in Nigeria for Nigeria.</p>
         <div class="f-contact">
-          📧 <a href="mailto:nexabay7@gmail.com">nexabay7@gmail.com</a><br/>
-          📱 <a href="https://wa.me/2349076519852">+234 907 651 9852</a><br/>
-          📍 Lagos, Nigeria 🇳🇬
+          <span class="nx-icon" style="vertical-align:middle;margin-right:4px;"><i data-lucide="mail"></i></span><a href="mailto:nexabay7@gmail.com">nexabay7@gmail.com</a><br/>
+          <span class="nx-icon" style="vertical-align:middle;margin-right:4px;"><i data-lucide="phone"></i></span><a href="https://wa.me/2349076519852">+234 907 651 9852</a><br/>
+          <span class="nx-icon" style="vertical-align:middle;margin-right:4px;"><i data-lucide="map-pin"></i></span>Lagos, Nigeria
         </div>
       </div>
       <div>
@@ -470,9 +495,9 @@
     <div class="footer-bottom">
       <div class="footer-copy">© 2025 Nexabay Ltd. All rights reserved. Made with ❤️ in Nigeria 🇳🇬</div>
       <div class="footer-pays">
-        <span class="pay-tag">💳 Paystack</span>
-        <span class="pay-tag">🏦 Bank Transfer</span>
-        <span class="pay-tag">📱 USSD</span>
+        <span class="pay-tag"><span class="nx-icon" style="vertical-align:middle;margin-right:3px;"><i data-lucide="credit-card"></i></span>Paystack</span>
+        <span class="pay-tag"><span class="nx-icon" style="vertical-align:middle;margin-right:3px;"><i data-lucide="landmark"></i></span>Bank Transfer</span>
+        <span class="pay-tag"><span class="nx-icon" style="vertical-align:middle;margin-right:3px;"><i data-lucide="smartphone"></i></span>USSD</span>
       </div>
     </div>
   </div>
@@ -490,38 +515,38 @@
   /* ── EXPLORE DATA ── */
   var EXPLORE = {
     all:[
-      {n:'NexaShop',d:'Buy & sell products',i:'🛍️',b:'rgba(249,115,22,0.12)',u:'pages/shop/browse.html'},
-      {n:'NexaRent',d:'Property & rental items',i:'🏠',b:'rgba(34,197,94,0.12)',u:'pages/rentals/browse.html'},
-      {n:'NexaServices',d:'Hire skilled professionals',i:'🛠️',b:'rgba(124,58,237,0.12)',u:'pages/services/browse.html'},
-      {n:'NexaFood',d:'Order from restaurants',i:'🍔',b:'rgba(234,179,8,0.12)',u:'pages/food/browse.html'},
-      {n:'NexaHealth',d:'Book doctors & labs',i:'🏥',b:'rgba(239,68,68,0.12)',u:'pages/health/browse.html'},
-      {n:'NexaJobs',d:'Find jobs or hire talent',i:'💼',b:'rgba(236,72,153,0.12)',u:'pages/jobs/browse.html'},
-      {n:'NexaLearn',d:'Learn new skills online',i:'🎓',b:'rgba(59,130,246,0.12)',u:'pages/learn/browse.html'},
-      {n:'NexaRide',d:'Book rides & delivery',i:'🚗',b:'rgba(249,115,22,0.12)',u:'pages/ride/index.html'},
-      {n:'NexaTravel',d:'Hotels, flights & tours',i:'✈️',b:'rgba(20,184,166,0.12)',u:'pages/travel/browse.html'},
-      {n:'NexaEvents',d:'Buy event tickets',i:'🎉',b:'rgba(168,85,247,0.12)',u:'pages/events/browse.html'},
-      {n:'NexaPay',d:'Secure wallet & payments',i:'💳',b:'rgba(124,58,237,0.12)',u:'pages/pay/index.html'},
-      {n:'Community',d:'Connect with Nigerians',i:'👥',b:'rgba(34,197,94,0.12)',u:'pages/community/index.html'},
+      {n:'NexaShop',d:'Buy & sell products',icon:'shopping-bag',bg:'rgba(249,115,22,0.12)',u:'pages/shop/browse.html'},
+      {n:'NexaRent',d:'Property & rental items',icon:'home',bg:'rgba(34,197,94,0.12)',u:'pages/rentals/browse.html'},
+      {n:'NexaServices',d:'Hire skilled professionals',icon:'wrench',bg:'rgba(124,58,237,0.12)',u:'pages/services/browse.html'},
+      {n:'NexaFood',d:'Order from restaurants',icon:'utensils',bg:'rgba(234,179,8,0.12)',u:'pages/food/browse.html'},
+      {n:'NexaHealth',d:'Book doctors & labs',icon:'heart-pulse',bg:'rgba(239,68,68,0.12)',u:'pages/health/browse.html'},
+      {n:'NexaJobs',d:'Find jobs or hire talent',icon:'briefcase',bg:'rgba(236,72,153,0.12)',u:'pages/jobs/browse.html'},
+      {n:'NexaLearn',d:'Learn new skills online',icon:'graduation-cap',bg:'rgba(59,130,246,0.12)',u:'pages/learn/browse.html'},
+      {n:'NexaRide',d:'Book rides & delivery',icon:'car',bg:'rgba(249,115,22,0.12)',u:'pages/ride/index.html'},
+      {n:'NexaTravel',d:'Hotels, flights & tours',icon:'plane',bg:'rgba(20,184,166,0.12)',u:'pages/travel/browse.html'},
+      {n:'NexaEvents',d:'Buy event tickets',icon:'calendar-days',bg:'rgba(168,85,247,0.12)',u:'pages/events/browse.html'},
+      {n:'NexaPay',d:'Secure wallet & payments',icon:'credit-card',bg:'rgba(124,58,237,0.12)',u:'pages/pay/index.html'},
+      {n:'Community',d:'Connect with Nigerians',icon:'users',bg:'rgba(34,197,94,0.12)',u:'pages/community/index.html'},
     ],
     marketplace:[
-      {n:'NexaShop',d:'Buy & sell products across Nigeria',i:'🛍️',b:'rgba(249,115,22,0.12)',u:'pages/shop/browse.html'},
-      {n:'NexaRent',d:'Find property & rental items',i:'🏠',b:'rgba(34,197,94,0.12)',u:'pages/rentals/browse.html'},
+      {n:'NexaShop',d:'Buy & sell products across Nigeria',icon:'shopping-bag',bg:'rgba(249,115,22,0.12)',u:'pages/shop/browse.html'},
+      {n:'NexaRent',d:'Find property & rental items',icon:'home',bg:'rgba(34,197,94,0.12)',u:'pages/rentals/browse.html'},
     ],
     services:[
-      {n:'NexaServices',d:'Hire skilled Nigerian professionals',i:'🛠️',b:'rgba(124,58,237,0.12)',u:'pages/services/browse.html'},
-      {n:'NexaFood',d:'Order food from local restaurants',i:'🍔',b:'rgba(234,179,8,0.12)',u:'pages/food/browse.html'},
-      {n:'NexaHealth',d:'Book doctors, labs & pharmacies',i:'🏥',b:'rgba(239,68,68,0.12)',u:'pages/health/browse.html'},
+      {n:'NexaServices',d:'Hire skilled Nigerian professionals',icon:'wrench',bg:'rgba(124,58,237,0.12)',u:'pages/services/browse.html'},
+      {n:'NexaFood',d:'Order food from local restaurants',icon:'utensils',bg:'rgba(234,179,8,0.12)',u:'pages/food/browse.html'},
+      {n:'NexaHealth',d:'Book doctors, labs & pharmacies',icon:'heart-pulse',bg:'rgba(239,68,68,0.12)',u:'pages/health/browse.html'},
     ],
     work:[
-      {n:'NexaJobs',d:'Find jobs or hire talent nationwide',i:'💼',b:'rgba(236,72,153,0.12)',u:'pages/jobs/browse.html'},
-      {n:'NexaLearn',d:'Learn skills from Nigerian instructors',i:'🎓',b:'rgba(59,130,246,0.12)',u:'pages/learn/browse.html'},
+      {n:'NexaJobs',d:'Find jobs or hire talent nationwide',icon:'briefcase',bg:'rgba(236,72,153,0.12)',u:'pages/jobs/browse.html'},
+      {n:'NexaLearn',d:'Learn skills from Nigerian instructors',icon:'graduation-cap',bg:'rgba(59,130,246,0.12)',u:'pages/learn/browse.html'},
     ],
     lifestyle:[
-      {n:'NexaRide',d:'Book rides & delivery services',i:'🚗',b:'rgba(249,115,22,0.12)',u:'pages/ride/index.html'},
-      {n:'NexaTravel',d:'Hotels, flights & tour packages',i:'✈️',b:'rgba(20,184,166,0.12)',u:'pages/travel/browse.html'},
-      {n:'NexaEvents',d:'Buy tickets for events near you',i:'🎉',b:'rgba(168,85,247,0.12)',u:'pages/events/browse.html'},
-      {n:'NexaPay',d:'Secure wallet & payment system',i:'💳',b:'rgba(124,58,237,0.12)',u:'pages/pay/index.html'},
-      {n:'Community',d:'Connect with Nigerians nationwide',i:'👥',b:'rgba(34,197,94,0.12)',u:'pages/community/index.html'},
+      {n:'NexaRide',d:'Book rides & delivery services',icon:'car',bg:'rgba(249,115,22,0.12)',u:'pages/ride/index.html'},
+      {n:'NexaTravel',d:'Hotels, flights & tour packages',icon:'plane',bg:'rgba(20,184,166,0.12)',u:'pages/travel/browse.html'},
+      {n:'NexaEvents',d:'Buy tickets for events near you',icon:'calendar-days',bg:'rgba(168,85,247,0.12)',u:'pages/events/browse.html'},
+      {n:'NexaPay',d:'Secure wallet & payment system',icon:'credit-card',bg:'rgba(124,58,237,0.12)',u:'pages/pay/index.html'},
+      {n:'Community',d:'Connect with Nigerians nationwide',icon:'users',bg:'rgba(34,197,94,0.12)',u:'pages/community/index.html'},
     ],
   };
 
@@ -536,10 +561,13 @@
     if (!grid) return;
     grid.innerHTML = items.map(function(s) {
       return '<a href="' + s.u + '" class="explore-card">' +
-        '<div class="explore-ico" style="background:' + s.b + ';">' + s.i + '</div>' +
+        '<div class="explore-ico" style="background:' + s.bg + ';">' +
+          '<span class="nx-icon"><i data-lucide="' + s.icon + '"></i></span>' +
+        '</div>' +
         '<div><div class="explore-name">' + s.n + '</div><div class="explore-desc">' + s.d + '</div></div>' +
       '</a>';
     }).join('');
+    if (typeof lucide !== 'undefined') lucide.createIcons();
   }
 
   /* ── MOBILE MENU ── */
@@ -665,6 +693,7 @@
     loadProducts();
     initReveal();
     renderExplore(EXPLORE.all);
+    if (typeof lucide !== 'undefined') lucide.createIcons();
 
     if (typeof auth !== 'undefined') {
       auth.onAuthStateChanged(function(u) {
