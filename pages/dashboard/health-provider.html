@@ -3,870 +3,770 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Health Dashboard — Nexabay</title>
-  <link rel="stylesheet" href="../../css/main.css"/>
-  <link rel="stylesheet" href="../../css/dashboard.css"/>
+  <title>Health Provider Dashboard — Nexabay</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="../../css/dashboard.css"/>
 </head>
-<body class="dashboard-body">
+<body>
 
-  <!-- NAVBAR -->
-  <nav class="navbar">
-    <div class="nav-inner">
-      <a href="../../index.html" class="logo">
-        <span class="logo-nexa">Nexa</span><span class="logo-bay">bay</span>
-      </a>
-      <div class="nav-actions">
-        <span class="nav-link" id="nav-provider-name">My Practice</span>
-        <a href="../../index.html" class="nav-link">← Back to Site</a>
+<div class="db-toast" id="db-toast"></div>
+
+<div class="db-topbar">
+  <a href="../../index.html" class="db-logo">Nexa<span>bay</span></a>
+  <button class="db-tab active" onclick="showTab('overview')">📊 Overview</button>
+  <button class="db-tab" onclick="showTab('services')">🏥 My Services</button>
+  <button class="db-tab" onclick="showTab('add')">➕ Add Service</button>
+  <button class="db-tab" onclick="showTab('appointments')">
+    📋 Appointments
+    <span class="db-tab-badge" id="apt-badge" style="display:none;">0</span>
+  </button>
+  <button class="db-tab" onclick="showTab('earnings')">💰 Earnings</button>
+  <div class="db-topbar-right">
+    <div class="db-user-avatar" id="user-avatar">H</div>
+  </div>
+</div>
+
+<div class="db-content">
+
+  <!-- OVERVIEW -->
+  <div class="db-tab-content active" id="content-overview">
+    <div class="db-page-header">
+      <div class="db-page-header-inner">
+        <div><h1>Welcome back! 👋</h1><p id="overview-sub">Here is your health practice performance</p></div>
+        <button class="db-header-btn" onclick="showTab('add')">+ Add Service</button>
       </div>
     </div>
-  </nav>
-
-  <div class="dashboard-layout">
-
-    <!-- SIDEBAR -->
-    <aside class="dash-sidebar">
-      <div class="dash-profile">
-        <div class="dash-avatar" id="dash-avatar">H</div>
-        <div class="dash-name" id="dash-name">Provider</div>
-        <div class="dash-badge">🏥 Health Provider</div>
+    <div class="db-stats">
+      <div class="db-stat">
+        <div class="db-stat-header"><div class="db-stat-label">Revenue</div><div class="db-stat-icon" style="background:#fff3e0;">💰</div></div>
+        <div class="db-stat-value" id="stat-revenue">₦0</div>
+        <div class="db-stat-sub">Total earned</div>
       </div>
-
-      <nav class="dash-nav">
-        <a href="#" class="dash-nav-item active" onclick="showTab('overview')">
-          📊 Overview
-        </a>
-        <a href="#" class="dash-nav-item" onclick="showTab('listings')">
-          🏥 My Listings
-        </a>
-        <a href="#" class="dash-nav-item" onclick="showTab('add-listing')">
-          ➕ Add Listing
-        </a>
-        <a href="#" class="dash-nav-item" onclick="showTab('appointments')">
-          📅 Appointments
-        </a>
-        <a href="#" class="dash-nav-item" onclick="showTab('earnings')">
-          💰 Earnings
-        </a>
-        <a href="#" class="dash-nav-item" onclick="showTab('settings')">
-          ⚙️ Settings
-        </a>
-        <a href="buyer.html" class="dash-nav-item">
-          👤 My Account
-        </a>
-        <a href="#" class="dash-nav-item logout" onclick="doHealthLogout()">
-          🚪 Logout
-        </a>
-      </nav>
-    </aside>
-
-    <!-- MAIN CONTENT -->
-    <main class="dash-main">
-
-      <!-- OVERVIEW TAB -->
-      <div class="dash-tab" id="tab-overview">
-        <div class="dash-header">
-          <h1>Welcome back! 👋</h1>
-          <p>Here is your health practice performance</p>
-        </div>
-
-        <div class="stats-grid">
-          <div class="stat-card">
-            <div class="stat-icon">💰</div>
-            <div class="stat-info">
-              <div class="stat-value" id="stat-revenue">₦0</div>
-              <div class="stat-label">Total Revenue</div>
-            </div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-icon">📅</div>
-            <div class="stat-info">
-              <div class="stat-value" id="stat-appointments">0</div>
-              <div class="stat-label">Appointments</div>
-            </div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-icon">🏥</div>
-            <div class="stat-info">
-              <div class="stat-value" id="stat-listings">0</div>
-              <div class="stat-label">Active Listings</div>
-            </div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-icon">⭐</div>
-            <div class="stat-info">
-              <div class="stat-value">0.0</div>
-              <div class="stat-label">Rating</div>
-            </div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-icon">💸</div>
-            <div class="stat-info">
-              <div class="stat-value" id="stat-balance">₦0</div>
-              <div class="stat-label">Available Balance</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="dash-section">
-          <h2>Quick Actions</h2>
-          <div class="quick-actions">
-            <button class="quick-btn" onclick="showTab('add-listing')">
-              ➕ Add Listing
-            </button>
-            <button class="quick-btn" onclick="showTab('appointments')">
-              📅 View Appointments
-            </button>
-            <button class="quick-btn" onclick="showTab('earnings')">
-              💸 Withdraw
-            </button>
-          </div>
+      <div class="db-stat">
+        <div class="db-stat-header"><div class="db-stat-label">Appointments</div><div class="db-stat-icon" style="background:#e8f5e9;">📋</div></div>
+        <div class="db-stat-value" id="stat-apts">0</div>
+        <div class="db-stat-sub">Total booked</div>
+      </div>
+      <div class="db-stat">
+        <div class="db-stat-header"><div class="db-stat-label">Services</div><div class="db-stat-icon" style="background:#e3f2fd;">🏥</div></div>
+        <div class="db-stat-value" id="stat-services">0</div>
+        <div class="db-stat-sub">Active listings</div>
+      </div>
+      <div class="db-stat">
+        <div class="db-stat-header"><div class="db-stat-label">Balance</div><div class="db-stat-icon" style="background:#f3e5f5;">💸</div></div>
+        <div class="db-stat-value" id="stat-balance">₦0</div>
+        <div class="db-stat-sub">Available</div>
+      </div>
+    </div>
+    <div class="db-card">
+      <div class="db-card-header"><div class="db-card-title">⚡ Quick Actions</div></div>
+      <div class="db-card-body">
+        <div class="db-quick-grid">
+          <button class="db-quick-btn" onclick="showTab('add')"><div class="db-quick-icon">➕</div>Add Service</button>
+          <button class="db-quick-btn" onclick="showTab('appointments')"><div class="db-quick-icon">📋</div>Appointments</button>
+          <button class="db-quick-btn" onclick="showTab('earnings')"><div class="db-quick-icon">💸</div>Withdraw</button>
+          <button class="db-quick-btn" onclick="showTab('services')"><div class="db-quick-icon">🏥</div>My Services</button>
         </div>
       </div>
-
-      <!-- MY LISTINGS TAB -->
-      <div class="dash-tab" id="tab-listings" style="display:none;">
-        <div class="dash-header">
-          <h1>My Listings</h1>
-          <button class="btn-primary" onclick="showTab('add-listing')">
-            ➕ Add Listing
-          </button>
-        </div>
-
-        <div class="products-toolbar">
-          <select id="health-type-filter" onchange="filterHealthListings()">
-            <option value="all">All Types</option>
-            <option value="doctor">Doctors</option>
-            <option value="hospital">Hospitals</option>
-            <option value="pharmacy">Pharmacies</option>
-            <option value="lab">Labs</option>
-          </select>
-        </div>
-
-        <div id="my-health-list" class="my-products-list"></div>
+    </div>
+    <div class="db-card">
+      <div class="db-card-header">
+        <div class="db-card-title">🕒 Upcoming Appointments</div>
+        <button onclick="showTab('appointments')" style="background:none;border:none;color:#ff6b00;font-size:0.8em;font-weight:700;cursor:pointer;">See All →</button>
       </div>
-      <!-- ADD LISTING TAB -->
-      <div class="dash-tab" id="tab-add-listing" style="display:none;">
-        <div class="dash-header">
-          <h1>Add New Listing</h1>
+      <div id="recent-apts-wrap">
+        <div style="padding:16px;">
+          <div class="db-skeleton" style="width:100%;"></div>
+          <div class="db-skeleton" style="width:75%;"></div>
         </div>
+      </div>
+    </div>
+  </div>
 
-        <div class="add-product-form">
+  <!-- MY SERVICES -->
+  <div class="db-tab-content" id="content-services">
+    <div class="db-page-header">
+      <div class="db-page-header-inner">
+        <div><h1>My Health Services</h1><p>Manage your health listings</p></div>
+        <button class="db-header-btn" onclick="showTab('add')">+ Add New</button>
+      </div>
+    </div>
+    <div class="db-card">
+      <div id="services-list">
+        <div class="db-empty"><div class="db-empty-icon">⏳</div><h3>Loading services...</h3></div>
+      </div>
+    </div>
+  </div>
 
-          <div class="form-section">
-            <h3>Listing Type</h3>
-            <div class="account-type">
-              <button class="type-btn active" id="btn-doctor" onclick="setHealthType('doctor')">
-                👨‍⚕️ Doctor
-              </button>
-              <button class="type-btn" id="btn-hospital" onclick="setHealthType('hospital')">
-                🏥 Hospital
-              </button>
-              <button class="type-btn" id="btn-pharmacy" onclick="setHealthType('pharmacy')">
-                💊 Pharmacy
-              </button>
-              <button class="type-btn" id="btn-lab" onclick="setHealthType('lab')">
-                🔬 Lab
-              </button>
-            </div>
+  <!-- ADD SERVICE -->
+  <div class="db-tab-content" id="content-add">
+    <div class="db-page-header">
+      <div class="db-page-header-inner">
+        <div><h1 id="add-form-title">Add Health Service</h1><p>Fill details carefully — admin reviews before publishing</p></div>
+      </div>
+    </div>
+    <div class="db-card">
+      <div class="db-card-body">
+        <div class="db-form">
+
+          <div class="db-form-group">
+            <label>Service / Practice Name *</label>
+            <input type="text" id="h-title" placeholder="e.g. General Medical Consultation"/>
           </div>
 
-          <div class="form-section">
-            <h3>Basic Information</h3>
-
-            <div class="form-group">
-              <label id="name-label">Doctor/Clinic Name *</label>
-              <input type="text" id="hl-name" placeholder="e.g. Dr. Chidi Okafor or Lagos General Hospital"/>
-            </div>
-
-            <div class="form-group" id="specialization-group">
-              <label>Specialization *</label>
-              <select id="hl-specialization">
-                <option value="">Select specialization</option>
-                <option>General Practitioner</option>
-                <option>Cardiologist</option>
-                <option>Dermatologist</option>
-                <option>Gynecologist</option>
-                <option>Pediatrician</option>
-                <option>Orthopedic Surgeon</option>
-                <option>Neurologist</option>
-                <option>Ophthalmologist</option>
+          <div class="db-form-row">
+            <div class="db-form-group">
+              <label>Category *</label>
+              <select id="h-category">
+                <option value="">Select category</option>
+                <option>General Practitioner (GP)</option>
+                <option>Specialist Doctor</option>
                 <option>Dentist</option>
-                <option>Psychiatrist</option>
-                <option>Urologist</option>
-                <option>ENT Specialist</option>
-                <option>Oncologist</option>
+                <option>Optician / Eye Care</option>
+                <option>Physiotherapy</option>
+                <option>Mental Health / Therapy</option>
+                <option>Nutritionist / Dietician</option>
+                <option>Pharmacy</option>
+                <option>Laboratory / Diagnostics</option>
+                <option>Radiology / Imaging</option>
+                <option>Maternity / Midwifery</option>
+                <option>Pediatrics (Child Health)</option>
+                <option>Dermatology (Skin)</option>
+                <option>Cardiology (Heart)</option>
+                <option>Orthopedics (Bone)</option>
+                <option>Alternative Medicine</option>
+                <option>Home Care / Nursing</option>
                 <option>Other</option>
               </select>
             </div>
-
-            <div class="form-group" id="hospital-category-group" style="display:none;">
-              <label>Hospital Type *</label>
-              <select id="hl-hospital-category">
-                <option value="">Select type</option>
-                <option>General Hospital</option>
-                <option>Teaching Hospital</option>
-                <option>Specialist Hospital</option>
-                <option>Private Clinic</option>
-                <option>Maternity Hospital</option>
-                <option>Children Hospital</option>
+            <div class="db-form-group">
+              <label>Consultation Type *</label>
+              <select id="h-consult-type">
+                <option value="In-Person">In-Person Visit</option>
+                <option value="Virtual">Virtual / Telemedicine</option>
+                <option value="Home Visit">Home Visit</option>
+                <option value="Both">In-Person & Virtual</option>
               </select>
-            </div>
-
-            <div class="form-group" id="pharmacy-category-group" style="display:none;">
-              <label>Pharmacy Type *</label>
-              <select id="hl-pharmacy-category">
-                <option value="">Select type</option>
-                <option>Community Pharmacy</option>
-                <option>Hospital Pharmacy</option>
-                <option>Online Pharmacy</option>
-                <option>Compounding Pharmacy</option>
-              </select>
-            </div>
-
-            <div class="form-group" id="lab-category-group" style="display:none;">
-              <label>Lab Type *</label>
-              <select id="hl-lab-category">
-                <option value="">Select type</option>
-                <option>Diagnostic Lab</option>
-                <option>Pathology Lab</option>
-                <option>Radiology Center</option>
-                <option>Blood Bank</option>
-                <option>Genetics Lab</option>
-              </select>
-            </div>
-
-            <div class="form-group">
-              <label>Description *</label>
-              <textarea id="hl-desc" placeholder="Describe your services, expertise..." rows="4"></textarea>
-            </div>
-
-            <div class="form-group" id="qualifications-group">
-              <label>Qualifications</label>
-              <input type="text" id="hl-qualifications" placeholder="e.g. MBBS, FMCP, Fellowship (Johns Hopkins)"/>
-            </div>
-
-            <div class="form-group" id="experience-group">
-              <label>Years of Experience</label>
-              <input type="text" id="hl-experience" placeholder="e.g. 10 years"/>
             </div>
           </div>
 
-          <div class="form-section">
-            <h3>Consultation Fee</h3>
-            <div class="form-group">
-              <label>Fee (₦) *</label>
-              <input type="number" id="hl-fee" placeholder="0" min="0"/>
+          <div class="db-form-row">
+            <div class="db-form-group">
+              <label>Consultation Fee (₦) *</label>
+              <input type="number" id="h-price" placeholder="e.g. 10000" min="0"/>
+            </div>
+            <div class="db-form-group">
+              <label>Session Duration</label>
+              <select id="h-duration">
+                <option value="15 mins">15 minutes</option>
+                <option value="30 mins">30 minutes</option>
+                <option value="45 mins" selected>45 minutes</option>
+                <option value="1 hour">1 hour</option>
+                <option value="1.5 hours">1.5 hours</option>
+                <option value="Varies">Varies by case</option>
+              </select>
             </div>
           </div>
 
-          <div class="form-section">
-            <h3>Availability</h3>
-
-            <div class="form-group">
-              <label>Available Days</label>
-              <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;">
-                <label class="checkbox-label"><input type="checkbox" class="day-cb" value="Monday"/> Mon</label>
-                <label class="checkbox-label"><input type="checkbox" class="day-cb" value="Tuesday"/> Tue</label>
-                <label class="checkbox-label"><input type="checkbox" class="day-cb" value="Wednesday"/> Wed</label>
-                <label class="checkbox-label"><input type="checkbox" class="day-cb" value="Thursday"/> Thu</label>
-                <label class="checkbox-label"><input type="checkbox" class="day-cb" value="Friday"/> Fri</label>
-                <label class="checkbox-label"><input type="checkbox" class="day-cb" value="Saturday"/> Sat</label>
-                <label class="checkbox-label"><input type="checkbox" class="day-cb" value="Sunday"/> Sun</label>
-              </div>
-            </div>
-
-            <div class="form-row-2">
-              <div class="form-group">
-                <label>Available From</label>
-                <input type="time" id="hl-from"/>
-              </div>
-              <div class="form-group">
-                <label>Available To</label>
-                <input type="time" id="hl-to"/>
-              </div>
-            </div>
-          </div>
-
-          <div class="form-section">
-            <h3>Location</h3>
-            <div class="form-group">
+          <div class="db-form-row">
+            <div class="db-form-group">
               <label>State *</label>
-              <select id="hl-location">
+              <select id="h-state">
                 <option value="">Select state</option>
-                <option>Lagos</option>
-                <option>Abuja FCT</option>
-                <option>Rivers</option>
-                <option>Kano</option>
-                <option>Oyo</option>
-                <option>Enugu</option>
-                <option>Anambra</option>
-                <option>Delta</option>
-                <option>Edo</option>
-                <option>Imo</option>
+                <option>Lagos</option><option>Abuja FCT</option>
+                <option>Rivers</option><option>Kano</option>
+                <option>Oyo</option><option>Enugu</option>
+                <option>Anambra</option><option>Delta</option>
+                <option>Edo</option><option>Imo</option>
+                <option>Nationwide (Virtual)</option>
               </select>
             </div>
-            <div class="form-group">
-              <label>Full Address</label>
-              <input type="text" id="hl-address" placeholder="Street, area, city"/>
+            <div class="db-form-group">
+              <label>Area / Hospital</label>
+              <input type="text" id="h-area" placeholder="e.g. Lekki Phase 1 / Lagos Island General"/>
             </div>
           </div>
 
-          <div class="form-section">
-            <h3>Profile Photo</h3>
-            <div class="image-upload" id="image-upload" onclick="triggerImageUpload()">
-              <div class="upload-placeholder" id="upload-placeholder">
-                <div class="upload-icon">📷</div>
-                <p>Click to add a photo</p>
-                <small>JPG, PNG up to 5MB</small>
-              </div>
-              <div class="upload-preview" id="upload-preview" style="display:none;">
-                <span id="preview-emoji">🏥</span>
-              </div>
-            </div>
-            <input type="file" id="image-file" style="display:none;" accept="image/*" onchange="previewImage()"/>
+          <div class="db-form-group">
+            <label>Professional Qualifications *</label>
+            <input type="text" id="h-qualifications" placeholder="e.g. MBBS, FWACP — University of Lagos"/>
+          </div>
 
-            <div class="emoji-selector">
-              <p>Or pick an emoji:</p>
-              <div class="emoji-grid">
-                <span onclick="selectEmoji('👨‍⚕️')">👨‍⚕️</span>
-                <span onclick="selectEmoji('👩‍⚕️')">👩‍⚕️</span>
-                <span onclick="selectEmoji('🏥')">🏥</span>
-                <span onclick="selectEmoji('💊')">💊</span>
-                <span onclick="selectEmoji('🔬')">🔬</span>
-                <span onclick="selectEmoji('🩺')">🩺</span>
-                <span onclick="selectEmoji('🧪')">🧪</span>
-                <span onclick="selectEmoji('🦷')">🦷</span>
-              </div>
+          <div class="db-form-group">
+            <label>Years of Experience</label>
+            <select id="h-experience">
+              <option value="0-2 years">0-2 years</option>
+              <option value="3-5 years">3-5 years</option>
+              <option value="6-10 years">6-10 years</option>
+              <option value="11-20 years">11-20 years</option>
+              <option value="20+ years">20+ years</option>
+            </select>
+          </div>
+
+          <div class="db-form-group">
+            <label>Description *</label>
+            <textarea id="h-desc" rows="4" placeholder="Describe your services — specialties, conditions you treat, your approach to patient care, what to expect during a consultation..."></textarea>
+          </div>
+
+          <div class="db-form-group">
+            <label>Availability</label>
+            <div class="cb-group">
+              <label class="cb-label"><input type="checkbox" class="avail-day" value="Monday"/> Mon</label>
+              <label class="cb-label"><input type="checkbox" class="avail-day" value="Tuesday"/> Tue</label>
+              <label class="cb-label"><input type="checkbox" class="avail-day" value="Wednesday"/> Wed</label>
+              <label class="cb-label"><input type="checkbox" class="avail-day" value="Thursday"/> Thu</label>
+              <label class="cb-label"><input type="checkbox" class="avail-day" value="Friday"/> Fri</label>
+              <label class="cb-label"><input type="checkbox" class="avail-day" value="Saturday"/> Sat</label>
+              <label class="cb-label"><input type="checkbox" class="avail-day" value="Sunday"/> Sun</label>
             </div>
           </div>
 
-          <div id="hl-error" class="ap-error" style="display:none;"></div>
-          <div id="hl-success" class="ap-success" style="display:none;"></div>
-
-          <div class="form-actions">
-            <button class="btn-publish" onclick="publishHealthListing()">
-              🚀 Publish Listing
-            </button>
+          <div class="db-form-row">
+            <div class="db-form-group">
+              <label>Available From</label>
+              <input type="time" id="h-from"/>
+            </div>
+            <div class="db-form-group">
+              <label>Available To</label>
+              <input type="time" id="h-to"/>
+            </div>
           </div>
 
+          <div class="db-form-group">
+            <label>Services Offered</label>
+            <div class="cb-group">
+              <label class="cb-label"><input type="checkbox" class="h-service" value="Consultation"/> 🩺 Consultation</label>
+              <label class="cb-label"><input type="checkbox" class="h-service" value="Lab Tests"/> 🔬 Lab Tests</label>
+              <label class="cb-label"><input type="checkbox" class="h-service" value="Prescriptions"/> 💊 Prescriptions</label>
+              <label class="cb-label"><input type="checkbox" class="h-service" value="Follow-up Care"/> 📅 Follow-up</label>
+              <label class="cb-label"><input type="checkbox" class="h-service" value="Emergency"/> 🚨 Emergency</label>
+              <label class="cb-label"><input type="checkbox" class="h-service" value="Health Check"/> ✅ Health Check</label>
+              <label class="cb-label"><input type="checkbox" class="h-service" value="Vaccination"/> 💉 Vaccination</label>
+              <label class="cb-label"><input type="checkbox" class="h-service" value="Surgery"/> 🔪 Surgery</label>
+            </div>
+          </div>
+
+          <div class="db-form-group">
+            <label>Profile / Clinic Photo</label>
+            <div class="db-img-upload" onclick="document.getElementById('h-img-file').click()">
+              <input type="file" id="h-img-file" accept="image/*" onchange="previewImg(this)"/>
+              <div id="h-img-placeholder">
+                <div class="db-img-upload-icon">📷</div>
+                <div class="db-img-upload-text">Upload your professional photo or clinic image</div>
+              </div>
+              <img id="h-img-preview" class="db-img-preview" style="display:none;"/>
+            </div>
+          </div>
+
+          <div class="db-form-group">
+            <label>Or choose an emoji</label>
+            <div class="db-emoji-grid">
+              <button class="db-emoji-btn selected" onclick="selEmoji('🏥',this)">🏥</button>
+              <button class="db-emoji-btn" onclick="selEmoji('🩺',this)">🩺</button>
+              <button class="db-emoji-btn" onclick="selEmoji('💊',this)">💊</button>
+              <button class="db-emoji-btn" onclick="selEmoji('🔬',this)">🔬</button>
+              <button class="db-emoji-btn" onclick="selEmoji('🦷',this)">🦷</button>
+              <button class="db-emoji-btn" onclick="selEmoji('👁️',this)">👁️</button>
+              <button class="db-emoji-btn" onclick="selEmoji('🧠',this)">🧠</button>
+              <button class="db-emoji-btn" onclick="selEmoji('❤️',this)">❤️</button>
+              <button class="db-emoji-btn" onclick="selEmoji('🦴',this)">🦴</button>
+              <button class="db-emoji-btn" onclick="selEmoji('👶',this)">👶</button>
+            </div>
+          </div>
+
+          <div class="db-error-msg" id="h-error"></div>
+          <div class="db-success-msg" id="h-success"></div>
+          <button class="db-submit-btn" id="h-submit-btn" onclick="publishService()">🚀 Submit for Approval</button>
+          <div style="text-align:center;font-size:0.75em;color:#999;margin-top:8px;">
+            Nexabay charges 10% on every appointment • Admin reviews within 24 hours
+          </div>
         </div>
       </div>
-      <!-- APPOINTMENTS TAB -->
-      <div class="dash-tab" id="tab-appointments" style="display:none;">
-        <div class="dash-header">
-          <h1>Appointments</h1>
-        </div>
+    </div>
+  </div>
 
-        <div class="form-group">
-          <label>Select listing to view appointments</label>
-          <select id="appt-listing-select" onchange="loadAppointmentsForListing()">
-            <option value="">Select a listing...</option>
+  <!-- APPOINTMENTS -->
+  <div class="db-tab-content" id="content-appointments">
+    <div class="db-page-header">
+      <div class="db-page-header-inner">
+        <div><h1>Appointments</h1><p>Manage patient bookings</p></div>
+      </div>
+    </div>
+    <div class="db-filters">
+      <button class="db-filter-btn active" onclick="filterApts('all',this)">All</button>
+      <button class="db-filter-btn" onclick="filterApts('confirmed',this)">✅ Confirmed</button>
+      <button class="db-filter-btn" onclick="filterApts('pending',this)">⏳ Pending</button>
+      <button class="db-filter-btn" onclick="filterApts('completed',this)">🏁 Completed</button>
+      <button class="db-filter-btn" onclick="filterApts('cancelled',this)">❌ Cancelled</button>
+    </div>
+    <div class="db-card">
+      <div class="db-table-wrap">
+        <table class="db-table">
+          <thead>
+            <tr>
+              <th>Patient</th><th>Service</th><th>Type</th>
+              <th>Fee</th><th>Date</th><th>Status</th><th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="apts-body">
+            <tr><td colspan="7" style="text-align:center;padding:20px;color:#999;">No appointments yet</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- EARNINGS -->
+  <div class="db-tab-content" id="content-earnings">
+    <div class="db-page-header">
+      <div class="db-page-header-inner">
+        <div><h1>Earnings</h1><p>Track revenue and withdraw funds</p></div>
+      </div>
+    </div>
+    <div class="db-earnings-cards">
+      <div class="db-earning-card"><div class="db-earning-label">Total Revenue</div><div class="db-earning-value" id="ec-total">₦0</div></div>
+      <div class="db-earning-card"><div class="db-earning-label">Your Share (90%)</div><div class="db-earning-value green" id="ec-avail">₦0</div></div>
+      <div class="db-earning-card"><div class="db-earning-label">Nexabay Fee (10%)</div><div class="db-earning-value orange" id="ec-fee">₦0</div></div>
+      <div class="db-earning-card"><div class="db-earning-label">Total Appointments</div><div class="db-earning-value" id="ec-apts">0</div></div>
+    </div>
+    <div class="db-withdraw-card">
+      <div class="db-withdraw-title">💸 Withdraw Funds</div>
+      <div class="db-form" style="gap:12px;">
+        <div class="db-form-group">
+          <label>Bank Name</label>
+          <select id="wd-bank">
+            <option>GTBank</option><option>Access Bank</option>
+            <option>First Bank</option><option>Zenith Bank</option>
+            <option>UBA</option><option>Opay</option>
+            <option>Palmpay</option><option>Kuda Bank</option>
+            <option>Moniepoint</option>
           </select>
         </div>
-
-        <div id="appointments-list" style="margin-top:16px;"></div>
+        <div class="db-form-row">
+          <div class="db-form-group">
+            <label>Account Number</label>
+            <input type="text" id="wd-acct" placeholder="10 digits" maxlength="10"/>
+          </div>
+          <div class="db-form-group">
+            <label>Account Name</label>
+            <input type="text" id="wd-name" placeholder="Your name"/>
+          </div>
+        </div>
+        <div class="db-form-group">
+          <label>Amount (₦)</label>
+          <input type="number" id="wd-amount" placeholder="Minimum ₦1,000" min="1000"/>
+        </div>
+        <div id="wd-error" style="color:#cc0000;font-size:0.82em;display:none;"></div>
+        <div id="wd-success" style="color:#00a651;font-size:0.82em;display:none;"></div>
+        <button class="db-submit-btn" onclick="doWithdraw()">💸 Request Withdrawal</button>
       </div>
-
-      <!-- EARNINGS TAB -->
-      <div class="dash-tab" id="tab-earnings" style="display:none;">
-        <div class="dash-header">
-          <h1>Earnings & Withdrawals</h1>
-        </div>
-
-        <div class="earnings-cards">
-          <div class="earning-card">
-            <div class="ec-label">Total Revenue</div>
-            <div class="ec-value" id="ec-total">₦0</div>
-          </div>
-          <div class="earning-card">
-            <div class="ec-label">Available Balance</div>
-            <div class="ec-value green" id="ec-available">₦0</div>
-          </div>
-          <div class="earning-card">
-            <div class="ec-label">Nexabay Fee (10%)</div>
-            <div class="ec-value orange" id="ec-fee">₦0</div>
-          </div>
-        </div>
-
-        <div class="withdraw-section">
-          <h3>Withdraw Funds</h3>
-          <div class="withdraw-form">
-            <div class="form-group">
-              <label>Bank Name</label>
-              <select id="wd-bank">
-                <option>GTBank</option>
-                <option>Access Bank</option>
-                <option>First Bank</option>
-                <option>Zenith Bank</option>
-                <option>UBA</option>
-                <option>Opay</option>
-                <option>Palmpay</option>
-                <option>Kuda Bank</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label>Account Number</label>
-              <input type="text" id="wd-account" placeholder="10 digit account number" maxlength="10"/>
-            </div>
-            <div class="form-group">
-              <label>Account Name</label>
-              <input type="text" id="wd-name" placeholder="Account holder name"/>
-            </div>
-            <div class="form-group">
-              <label>Amount to Withdraw (₦)</label>
-              <input type="number" id="wd-amount" placeholder="Minimum ₦1,000" min="1000"/>
-            </div>
-            <div id="wd-error" style="color:#cc0000;font-size:0.85em;display:none;"></div>
-            <div id="wd-success" style="color:#006622;font-size:0.85em;display:none;"></div>
-            <button class="btn-withdraw" onclick="processWithdrawal()">
-              💸 Withdraw Now
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <!-- SETTINGS TAB -->
-      <div class="dash-tab" id="tab-settings" style="display:none;">
-        <div class="dash-header">
-          <h1>Provider Settings</h1>
-        </div>
-        <div class="settings-card">
-          <h3>Practice Profile</h3>
-          <div class="form-group">
-            <label>Display Name</label>
-            <input type="text" id="health-display-name" placeholder="Your name or clinic name"/>
-          </div>
-          <div class="form-group">
-            <label>Bio</label>
-            <textarea id="health-bio" rows="3" placeholder="Tell patients about your practice..."></textarea>
-          </div>
-          <div class="form-group">
-            <label>WhatsApp Number</label>
-            <input type="tel" id="health-whatsapp" placeholder="080xxxxxxxx"/>
-          </div>
-          <button class="btn-save" onclick="saveHealthSettings()">Save Changes</button>
-        </div>
-      </div>
-
-    </main>
-  </div>
-
-  <!-- PREVIEW MODAL -->
-  <div id="preview-modal-overlay" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);z-index:900;" onclick="closePreviewModal()"></div>
-  <div id="preview-modal" style="display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:white;border-radius:14px;max-width:380px;width:90%;max-height:85vh;overflow-y:auto;z-index:901;padding:20px;">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
-      <h3 style="font-size:1.1em;font-weight:700;">Listing Preview</h3>
-      <button onclick="closePreviewModal()" style="background:var(--gray);border:none;width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:0.9em;">✕</button>
     </div>
-    <div id="preview-modal-body"></div>
   </div>
 
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-  <script src="../../js/firebase/config.js"></script>
-  <script src="../../js/firebase/auth.js"></script>
-  <script src="../../js/firebase/health.js"></script>
-  <script src="../../js/firebase/imgbb.js"></script>
-  <script src="../../js/core/main.js"></script>
-  <script>
+</div>
 
-    var myListings = [];
-    var selectedEmoji = '🏥';
-    var selectedImageFile = null;
-    var currentHealthType = 'doctor';
+<!-- BOTTOM NAV -->
+<div class="db-bottom-nav">
+  <a href="../../index.html"><span>🏠</span><span>Home</span></a>
+  <a href="../../pages/health/browse.html"><span>🏥</span><span>Browse</span></a>
+  <a href="#" onclick="showTab('add');return false;" class="active"><span>➕</span><span>Add</span></a>
+  <a href="#" onclick="showTab('appointments');return false;"><span>📋</span><span>Apts</span></a>
+  <a href="buyer.html"><span>👤</span><span>Account</span></a>
+</div>
 
-    function init() {
-      var user = JSON.parse(localStorage.getItem('nexa_current_user') || 'null');
-      if (user) {
-        var nameEl   = document.getElementById('dash-name');
-        var avatarEl = document.getElementById('dash-avatar');
-        var navEl    = document.getElementById('nav-provider-name');
-        if (nameEl)   nameEl.textContent   = user.fullName || user.firstName || 'Provider';
-        if (avatarEl) avatarEl.textContent = (user.firstName || 'H')[0].toUpperCase();
-        if (navEl)    navEl.textContent    = user.firstName + '\'s Practice';
-      }
-    }
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="../../js/firebase/config.js"></script>
+<script src="../../js/firebase/auth.js"></script>
+<script src="../../js/firebase/health.js"></script>
+<script src="../../js/firebase/imgbb.js"></script>
+<script src="../../js/core/main.js"></script>
+<script>
 
-    if (typeof auth !== 'undefined') {
-      auth.onAuthStateChanged(function(user) {
-        if (user) loadMyListings();
-      });
-    }
+  var myServices=[], myApts=[], filteredApts=[];
+  var selEmoji_val='🏥', selImgFile=null, editId=null;
 
-    function showTab(tab) {
-      var tabs = document.querySelectorAll('.dash-tab');
-      tabs.forEach(function(t) { t.style.display = 'none'; });
+  function init() {
+    var user=JSON.parse(localStorage.getItem('nexa_current_user')||'null');
+    if (!user){ window.location.href='../auth/login.html'; return; }
+    var av=document.getElementById('user-avatar');
+    var sb=document.getElementById('overview-sub');
+    if (av) av.textContent=(user.firstName||'H')[0].toUpperCase();
+    if (sb) sb.textContent='Welcome back, '+(user.firstName||'Provider')+'!';
+    showTab('overview');
+  }
 
-      var navItems = document.querySelectorAll('.dash-nav-item');
-      navItems.forEach(function(n) { n.classList.remove('active'); });
-
-      var target = document.getElementById('tab-' + tab);
-      if (target) target.style.display = 'block';
-
-      var navMap = {
-        'overview': 0, 'listings': 1, 'add-listing': 2,
-        'appointments': 3, 'earnings': 4, 'settings': 5
-      };
-      var index = navMap[tab];
-      if (index !== undefined && navItems[index]) {
-        navItems[index].classList.add('active');
-      }
-    }
-
-    function setHealthType(type) {
-      currentHealthType = type;
-      var types = ['doctor', 'hospital', 'pharmacy', 'lab'];
-      types.forEach(function(t) {
-        document.getElementById('btn-' + t).classList.toggle('active', t === type);
-      });
-
-      document.getElementById('specialization-group').style.display      = type === 'doctor'   ? 'block' : 'none';
-      document.getElementById('hospital-category-group').style.display   = type === 'hospital' ? 'block' : 'none';
-      document.getElementById('pharmacy-category-group').style.display   = type === 'pharmacy' ? 'block' : 'none';
-      document.getElementById('lab-category-group').style.display        = type === 'lab'      ? 'block' : 'none';
-      document.getElementById('qualifications-group').style.display      = type === 'doctor'   ? 'block' : 'none';
-      document.getElementById('experience-group').style.display          = type === 'doctor'   ? 'block' : 'none';
-
-      var nameLabel = document.getElementById('name-label');
-      var namePlaceholders = {
-        doctor: 'e.g. Dr. Chidi Okafor', hospital: 'e.g. Lagos Island General Hospital',
-        pharmacy: 'e.g. HealthPlus Pharmacy', lab: 'e.g. Synlab Nigeria'
-      };
-      if (nameLabel) nameLabel.textContent = type.charAt(0).toUpperCase() + type.slice(1) + ' Name *';
-      document.getElementById('hl-name').placeholder = namePlaceholders[type] || '';
-
-      var emojiMap = { doctor: '👨‍⚕️', hospital: '🏥', pharmacy: '💊', lab: '🔬' };
-      selectedEmoji = emojiMap[type];
-      document.getElementById('preview-emoji').textContent = selectedEmoji;
-    }
-
-    function collectAvailableDays() {
-      var days = [];
-      document.querySelectorAll('.day-cb:checked').forEach(function(cb) { days.push(cb.value); });
-      return days;
-    }
-
-    function loadMyListings() {
-      var user = auth.currentUser;
-      if (!user) { renderMyListings([]); return; }
-
-      nexaGetProviderHealthListings(user.uid)
-        .then(function(listings) {
-          myListings = listings;
-          renderMyListings(listings);
-          updateStats();
-          populateListingSelect();
-        })
-        .catch(function(err) {
-          console.log('Error loading listings:', err);
-          renderMyListings([]);
-        });
-    }
-
-    function updateStats() {
-      var listingsEl     = document.getElementById('stat-listings');
-      var appointmentsEl = document.getElementById('stat-appointments');
-      if (listingsEl)     listingsEl.textContent     = myListings.length;
-      var totalAppts = myListings.reduce(function(s, l) { return s + (l.appointments || 0); }, 0);
-      if (appointmentsEl) appointmentsEl.textContent = totalAppts;
-    }
-
-    function filterHealthListings() {
-      var type = document.getElementById('health-type-filter').value;
-      var filtered = type === 'all'
-        ? myListings
-        : myListings.filter(function(l) { return l.listingType === type; });
-      renderMyListings(filtered);
-    }
-
-    function renderMyListings(listings) {
-      var list = document.getElementById('my-health-list');
-      if (!list) return;
-      if (!listings || listings.length === 0) {
-        list.innerHTML =
-          '<div class="empty-products">' +
-            '<div style="font-size:3em;margin-bottom:12px">🏥</div>' +
-            '<h3>No listings yet</h3>' +
-            '<p>Add your first listing to start receiving appointments</p>' +
-            '<button class="btn-primary" onclick="showTab(\'add-listing\')">➕ Add Listing</button>' +
-          '</div>';
-        return;
-      }
-      list.innerHTML = listings.map(function(l) {
-        var typeIcon = { doctor: '👨‍⚕️', hospital: '🏥', pharmacy: '💊', lab: '🔬' }[l.listingType] || '🏥';
-        return '<div class="my-product-row">' +
-          '<div class="mp-img">' + (l.emoji || typeIcon) + '</div>' +
-          '<div class="mp-info">' +
-            '<div class="mp-name">' + l.name + '</div>' +
-            '<div class="mp-cat">' + typeIcon + ' ' + (l.specialization || l.category || l.listingType) + '</div>' +
-            '<div class="mp-stock">📅 ' + (l.appointments || 0) + ' appointments • 📍 ' + l.location + '</div>' +
-          '</div>' +
-          '<div class="mp-price">₦' + parseInt(l.consultationFee).toLocaleString() + '<small style="font-size:0.7em;color:var(--text2);"> /consult</small></div>' +
-          '<div class="mp-actions">' +
-            '<button onclick="previewListing(\'' + l.id + '\')" style="padding:6px 10px;background:white;border:1px solid var(--border);border-radius:6px;cursor:pointer;margin-right:4px;">👁️</button>' +
-            '<button onclick="deleteListing(\'' + l.id + '\')" class="btn-delete">🗑️</button>' +
-          '</div>' +
-        '</div>';
-      }).join('');
-    }
-
-    function triggerImageUpload() {
-      document.getElementById('image-file').click();
-    }
-
-    function previewImage() {
-      var file = document.getElementById('image-file').files[0];
-      if (!file) return;
-      selectedImageFile = file;
-      var reader = new FileReader();
-      reader.onload = function(e) {
-        document.getElementById('upload-placeholder').style.display = 'none';
-        var previewEl = document.getElementById('upload-preview');
-        previewEl.style.display = 'flex';
-        previewEl.innerHTML = '<img src="' + e.target.result + '" style="max-width:100%;max-height:150px;border-radius:8px;"/>';
-      };
-      reader.readAsDataURL(file);
-    }
-
-    function selectEmoji(emoji) {
-      selectedEmoji = emoji;
-      document.getElementById('preview-emoji').textContent = emoji;
-      document.getElementById('upload-placeholder').style.display = 'none';
-      document.getElementById('upload-preview').style.display = 'flex';
-      document.querySelectorAll('.emoji-grid span').forEach(function(s) { s.classList.remove('selected'); });
-      event.target.classList.add('selected');
-    }
-
-    function publishHealthListing() {
-      var name     = document.getElementById('hl-name').value.trim();
-      var desc     = document.getElementById('hl-desc').value.trim();
-      var fee      = document.getElementById('hl-fee').value;
-      var location = document.getElementById('hl-location').value;
-      var address  = document.getElementById('hl-address').value.trim();
-      var fromTime = document.getElementById('hl-from').value;
-      var toTime   = document.getElementById('hl-to').value;
-      var errEl    = document.getElementById('hl-error');
-      var sucEl    = document.getElementById('hl-success');
-
-      errEl.style.display = 'none';
-      sucEl.style.display = 'none';
-
-      var category = currentHealthType === 'doctor'
-        ? document.getElementById('hl-specialization').value
-        : currentHealthType === 'hospital'
-        ? document.getElementById('hl-hospital-category').value
-        : currentHealthType === 'pharmacy'
-        ? document.getElementById('hl-pharmacy-category').value
-        : document.getElementById('hl-lab-category').value;
-
-      if (!name)     { errEl.textContent = 'Enter a name';       errEl.style.display = 'block'; return; }
-      if (!category) { errEl.textContent = 'Select a category';  errEl.style.display = 'block'; return; }
-      if (!desc)     { errEl.textContent = 'Enter description';  errEl.style.display = 'block'; return; }
-      if (!fee)      { errEl.textContent = 'Enter fee';          errEl.style.display = 'block'; return; }
-      if (!location) { errEl.textContent = 'Select location';    errEl.style.display = 'block'; return; }
-
-      var user = auth.currentUser;
-      if (!user) { errEl.textContent = 'Please login first'; errEl.style.display = 'block'; return; }
-
-      var publishBtn = document.querySelector('.btn-publish');
-      if (publishBtn) { publishBtn.textContent = 'Publishing...'; publishBtn.disabled = true; }
-
-      var userData = JSON.parse(localStorage.getItem('nexa_current_user') || '{}');
-
-      var uploadPromise = selectedImageFile
-        ? uploadImageToImgBB(selectedImageFile)
-        : Promise.resolve('');
-
-      uploadPromise.then(function(imageUrl) {
-        return nexaAddHealthListing({
-          name: name, listingType: currentHealthType, category: category,
-          description: desc, consultationFee: fee, location: location, address: address,
-          specialization: currentHealthType === 'doctor' ? category : '',
-          qualifications: document.getElementById('hl-qualifications') ? document.getElementById('hl-qualifications').value : '',
-          experience: document.getElementById('hl-experience') ? document.getElementById('hl-experience').value : '',
-          availableDays: collectAvailableDays(),
-          availableFrom: fromTime,
-          availableTo:   toTime,
-          emoji: selectedEmoji || '🏥',
-          providerName: userData.fullName || userData.firstName || 'Provider',
-        }, imageUrl);
-      })
-      .then(function(listingId) {
-        sucEl.textContent = '🎉 Listing published successfully!';
-        sucEl.style.display = 'block';
-
-        document.getElementById('hl-name').value = '';
-        document.getElementById('hl-desc').value = '';
-        document.getElementById('hl-fee').value  = '';
-        document.getElementById('hl-address').value = '';
-        document.getElementById('hl-from').value = '';
-        document.getElementById('hl-to').value   = '';
-        document.querySelectorAll('.day-cb').forEach(function(cb) { cb.checked = false; });
-        document.getElementById('upload-placeholder').style.display = 'block';
-        document.getElementById('upload-preview').style.display     = 'none';
-        selectedEmoji = '🏥';
-        selectedImageFile = null;
-
-        if (publishBtn) { publishBtn.textContent = '🚀 Publish Listing'; publishBtn.disabled = false; }
-        loadMyListings();
-      })
-      .catch(function(err) {
-        errEl.textContent = '❌ Error: ' + (err.message || err.toString());
-        errEl.style.display = 'block';
-        if (publishBtn) { publishBtn.textContent = '🚀 Publish Listing'; publishBtn.disabled = false; }
-      });
-    }
-
-    function previewListing(listingId) {
-      var listing = myListings.find(function(l) { return l.id === listingId; });
-      if (!listing) return;
-
-      var imgHtml = listing.imageUrl
-        ? '<img src="' + listing.imageUrl + '" style="width:100%;border-radius:10px;margin-bottom:14px;"/>'
-        : '<div style="font-size:4em;text-align:center;background:var(--gray);border-radius:10px;padding:30px 0;margin-bottom:14px;">' + (listing.emoji || '🏥') + '</div>';
-
-      var daysHtml = listing.availableDays && listing.availableDays.length > 0
-        ? '<div style="margin-top:8px;font-size:0.85em;color:var(--text2);">📅 ' + listing.availableDays.join(', ') + '</div>'
-        : '';
-
-      var body = document.getElementById('preview-modal-body');
-      body.innerHTML =
-        imgHtml +
-        '<h2 style="font-size:1.2em;margin-bottom:4px;">' + listing.name + '</h2>' +
-        '<div style="color:var(--text2);font-size:0.85em;margin-bottom:10px;">' + (listing.specialization || listing.category || '') + '</div>' +
-        '<div style="color:var(--orange);font-size:1.4em;font-weight:800;margin-bottom:10px;">₦' + parseInt(listing.consultationFee).toLocaleString() + ' <small style="font-size:0.6em;color:var(--text2);">per consultation</small></div>' +
-        '<div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;">' +
-          '<span style="background:var(--gray);padding:4px 10px;border-radius:6px;font-size:0.8em;">📍 ' + listing.location + '</span>' +
-          (listing.experience ? '<span style="background:var(--gray);padding:4px 10px;border-radius:6px;font-size:0.8em;">⏱️ ' + listing.experience + '</span>' : '') +
-          (listing.availableFrom ? '<span style="background:var(--gray);padding:4px 10px;border-radius:6px;font-size:0.8em;">🕒 ' + listing.availableFrom + ' - ' + listing.availableTo + '</span>' : '') +
-        '</div>' +
-        daysHtml +
-        '<p style="font-size:0.9em;color:var(--text2);line-height:1.6;margin-top:10px;">' + (listing.description || '') + '</p>' +
-        (listing.qualifications ? '<div style="margin-top:10px;font-size:0.85em;"><b>Qualifications:</b> ' + listing.qualifications + '</div>' : '');
-
-      document.getElementById('preview-modal-overlay').style.display = 'block';
-      document.getElementById('preview-modal').style.display = 'block';
-    }
-
-    function closePreviewModal() {
-      document.getElementById('preview-modal-overlay').style.display = 'none';
-      document.getElementById('preview-modal').style.display = 'none';
-    }
-
-    function deleteListing(listingId) {
-      if (confirm('Delete this listing?')) {
-        nexaDeleteHealthListing(listingId)
-          .then(function() {
-            showToast('🗑️ Listing deleted');
-            myListings = myListings.filter(function(l) { return l.id !== listingId; });
-            renderMyListings(myListings);
-            updateStats();
-            setTimeout(function() { loadMyListings(); }, 800);
-          })
-          .catch(function(err) { showToast('Error: ' + err.message); });
-      }
-    }
-
-    function populateListingSelect() {
-      var select = document.getElementById('appt-listing-select');
-      if (!select) return;
-      select.innerHTML = '<option value="">Select a listing...</option>' +
-        myListings.map(function(l) {
-          return '<option value="' + l.id + '">' + l.name + ' (' + (l.appointments || 0) + ' appts)</option>';
-        }).join('');
-    }
-
-    function loadAppointmentsForListing() {
-      var listingId = document.getElementById('appt-listing-select').value;
-      var list = document.getElementById('appointments-list');
-      if (!listingId) { list.innerHTML = ''; return; }
-
-      list.innerHTML = '<p style="color:var(--text2);">Loading appointments...</p>';
-
-      nexaGetListingAppointments(listingId)
-        .then(function(appointments) {
-          if (appointments.length === 0) {
-            list.innerHTML = '<div class="empty-products"><div style="font-size:3em;">📅</div><h3>No appointments yet</h3></div>';
-            return;
-          }
-          list.innerHTML = '<div class="orders-table-wrap"><table class="orders-table"><thead><tr><th>Patient</th><th>Date</th><th>Time</th><th>Reason</th><th>Fee</th><th>Status</th></tr></thead><tbody>' +
-            appointments.map(function(a) {
-              return '<tr>' +
-                '<td><b>' + a.patientName + '</b><br/><small>' + a.patientPhone + '</small></td>' +
-                '<td>' + (a.appointmentDate || 'N/A') + '</td>' +
-                '<td>' + (a.appointmentTime || 'N/A') + '</td>' +
-                '<td style="font-size:0.85em;">' + (a.reason || 'General') + '</td>' +
-                '<td>₦' + (a.consultationFee || 0).toLocaleString() + '</td>' +
-                '<td><span class="status-badge status-confirmed">' + a.status + '</span></td>' +
-              '</tr>';
-            }).join('') +
-          '</tbody></table></div>';
-        })
-        .catch(function(err) {
-          list.innerHTML = '<p style="color:#cc0000;">Error: ' + err.message + '</p>';
-        });
-    }
-
-    function processWithdrawal() {
-      var account = document.getElementById('wd-account').value.trim();
-      var name    = document.getElementById('wd-name').value.trim();
-      var amount  = parseInt(document.getElementById('wd-amount').value);
-      var errEl   = document.getElementById('wd-error');
-      var sucEl   = document.getElementById('wd-success');
-
-      errEl.style.display = 'none';
-      sucEl.style.display = 'none';
-
-      if (!account || account.length !== 10) { errEl.textContent = 'Enter valid 10-digit account number'; errEl.style.display = 'block'; return; }
-      if (!name)   { errEl.textContent = 'Enter account name'; errEl.style.display = 'block'; return; }
-      if (!amount || amount < 1000) { errEl.textContent = 'Minimum withdrawal is ₦1,000'; errEl.style.display = 'block'; return; }
-
-      var user = auth.currentUser;
-      if (!user) return;
-
-      db.collection('withdrawalRequests').add({
-        userId:    user.uid,
-        userType:  'health-provider',
-        bank:      document.getElementById('wd-bank').value,
-        account:   account,
-        name:      name,
-        amount:    amount,
-        status:    'pending',
-        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-      }).then(function() {
-        sucEl.textContent = '✅ Withdrawal request submitted! We will process within 1-2 business days.';
-        sucEl.style.display = 'block';
-        document.getElementById('wd-amount').value = '';
-      }).catch(function(err) {
-        errEl.textContent = 'Error: ' + err.message;
-        errEl.style.display = 'block';
-      });
-    }
-
-    function saveHealthSettings() {
-      showToast('✅ Settings saved!');
-    }
-
-    function doHealthLogout() {
-      if (typeof nexaLogout === 'function') {
-        nexaLogout().then(function() {
-          localStorage.removeItem('nexa_current_user');
-          window.location.href = '../../index.html';
-        });
-      } else {
-        localStorage.removeItem('nexa_current_user');
-        window.location.href = '../../index.html';
-      }
-    }
-
-    document.addEventListener('DOMContentLoaded', function() {
-      init();
+  if (typeof auth!=='undefined') {
+    auth.onAuthStateChanged(function(u){
+      if (u){ loadServices(); loadAppointments(); }
+      else { window.location.href='../auth/login.html'; }
     });
+  }
 
-  </script>
+  function showTab(tab) {
+    document.querySelectorAll('.db-tab').forEach(function(t){ t.classList.remove('active'); });
+    document.querySelectorAll('.db-tab-content').forEach(function(c){ c.classList.remove('active'); });
+    var map={overview:0,services:1,add:2,appointments:3,earnings:4};
+    var tabs=document.querySelectorAll('.db-tab');
+    if (map[tab]!==undefined&&tabs[map[tab]]) tabs[map[tab]].classList.add('active');
+    var c=document.getElementById('content-'+tab);
+    if (c) c.classList.add('active');
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
 
+  function loadServices() {
+    var user=auth.currentUser;
+    if (!user) return;
+    nexaGetHealthServices(user.uid)
+      .then(function(items){
+        myServices=items.filter(function(i){ return i.status!=='deleted'; });
+        renderServices(myServices);
+        updateStats();
+      })
+      .catch(function(){ renderServices([]); });
+  }
+
+  function loadAppointments() {
+    var user=auth.currentUser;
+    if (!user) return;
+    db.collection('appointments')
+      .where('providerId','==',user.uid)
+      .get()
+      .then(function(snap){
+        myApts=[];
+        snap.forEach(function(doc){ myApts.push(Object.assign({id:doc.id},doc.data())); });
+        myApts.sort(function(a,b){
+          return (b.createdAt?b.createdAt.toMillis():0)-(a.createdAt?a.createdAt.toMillis():0);
+        });
+        filteredApts=myApts.slice();
+        renderApts(filteredApts);
+        renderRecentApts(myApts.slice(0,5));
+        updateStats();
+        var badge=document.getElementById('apt-badge');
+        var newApts=myApts.filter(function(a){ return a.status==='confirmed'; }).length;
+        if (badge&&newApts>0){ badge.textContent=newApts; badge.style.display='inline'; }
+      })
+      .catch(function(err){ console.log('Appointments error:',err); });
+  }
+
+  function renderServices(items) {
+    var list=document.getElementById('services-list');
+    if (!list) return;
+    if (!items||items.length===0) {
+      list.innerHTML='<div class="db-empty"><div class="db-empty-icon">🏥</div><h3>No services yet</h3><p>Add your first health service to start receiving appointments</p><button class="db-empty-btn" onclick="showTab(\'add\')">+ Add Your First Service</button></div>';
+      return;
+    }
+    list.innerHTML=items.map(function(item){
+      var sc={active:'status-active',pending:'status-pending',rejected:'status-rejected'}[item.status]||'status-pending';
+      var sl={active:'✅ Live',pending:'⏳ Pending',rejected:'❌ Rejected'}[item.status]||'⏳ Pending';
+      var img=item.imageUrl?'<img src="'+item.imageUrl+'"/>':(item.emoji||'🏥');
+      var apts=myApts.filter(function(a){ return a.serviceId===item.id; }).length;
+      return '<div class="db-row">'+
+        '<div class="db-row-img">'+img+'</div>'+
+        '<div class="db-row-info">'+
+          '<div class="db-row-name">'+(item.title||'Service')+'</div>'+
+          '<div class="db-row-meta">'+(item.category||'')+' • '+(item.consultType||'')+' • ⏱️ '+(item.duration||'')+'</div>'+
+          '<div style="display:flex;gap:6px;margin-top:3px;">'+
+            '<div class="db-row-status '+sc+'">'+sl+'</div>'+
+            '<div style="font-size:0.7em;color:#6c757d;">📋 '+apts+' apts</div>'+
+          '</div>'+
+        '</div>'+
+        '<div class="db-row-price">₦'+parseInt(item.price||0).toLocaleString()+'</div>'+
+        '<div class="db-row-actions">'+
+          '<button class="db-action-btn" onclick="editService(\''+item.id+'\')">✏️</button>'+
+          '<button class="db-action-btn danger" onclick="deleteService(\''+item.id+'\')">🗑️</button>'+
+        '</div>'+
+      '</div>';
+    }).join('');
+  }
+
+  function filterApts(status,btn) {
+    document.querySelectorAll('#content-appointments .db-filter-btn').forEach(function(b){ b.classList.remove('active'); });
+    btn.classList.add('active');
+    filteredApts=status==='all'?myApts.slice():myApts.filter(function(a){ return a.status===status; });
+    renderApts(filteredApts);
+  }
+
+  function renderApts(apts) {
+    var body=document.getElementById('apts-body');
+    if (!body) return;
+    if (!apts||apts.length===0) {
+      body.innerHTML='<tr><td colspan="7" style="text-align:center;padding:20px;color:#999;">No appointments yet</td></tr>';
+      return;
+    }
+    body.innerHTML=apts.map(function(a){
+      var sc={
+        confirmed:'background:#d4edda;color:#155724;',
+        pending:'background:#fff3cd;color:#856404;',
+        completed:'background:#cce5ff;color:#004085;',
+        cancelled:'background:#f8d7da;color:#721c24;',
+      }[a.status]||'background:#f5f5f5;color:#666;';
+      var nextStatus={confirmed:'completed',pending:'confirmed'}[a.status];
+      var nextLabel={confirmed:'Mark Completed',pending:'Confirm'}[a.status];
+      return '<tr>'+
+        '<td style="font-weight:600;">'+(a.patientName||a.customerName||'Patient')+'</td>'+
+        '<td style="font-size:0.82em;max-width:90px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+(a.serviceTitle||'')+'</td>'+
+        '<td><span style="background:#e3f2fd;color:#1565c0;padding:2px 6px;border-radius:4px;font-size:0.7em;font-weight:700;">'+(a.consultType||'In-Person')+'</span></td>'+
+        '<td style="font-weight:700;color:#ff6b00;">₦'+parseInt(a.amount||a.fee||0).toLocaleString()+'</td>'+
+        '<td style="font-size:0.78em;color:#999;">'+(a.appointmentDate||(a.createdAt?new Date(a.createdAt.toMillis()).toLocaleDateString():''))+'</td>'+
+        '<td><span style="padding:3px 8px;border-radius:4px;font-size:0.7em;font-weight:700;'+sc+'">'+(a.status||'pending')+'</span></td>'+
+        '<td>'+
+          (nextStatus&&nextLabel
+            ?'<button onclick="updateApt(\''+a.id+'\',\''+nextStatus+'\')" style="background:#ff6b00;color:white;border:none;padding:5px 8px;border-radius:6px;font-size:0.7em;cursor:pointer;font-weight:700;">'+nextLabel+'</button>'
+            :'<span style="color:#00a651;font-size:0.75em;font-weight:700;">Done</span>')+
+        '</td>'+
+      '</tr>';
+    }).join('');
+  }
+
+  function renderRecentApts(apts) {
+    var wrap=document.getElementById('recent-apts-wrap');
+    if (!wrap) return;
+    if (!apts||apts.length===0) {
+      wrap.innerHTML='<div class="db-empty" style="padding:20px;"><div class="db-empty-icon" style="font-size:2em;">📋</div><h3>No appointments yet</h3><p>Add services to start receiving patient bookings</p></div>';
+      return;
+    }
+    wrap.innerHTML=apts.map(function(a){
+      return '<div class="db-row">'+
+        '<div class="db-row-img" style="background:#e8f5e9;font-size:1em;font-weight:700;color:#155724;">'+(a.patientName||a.customerName||'P')[0].toUpperCase()+'</div>'+
+        '<div class="db-row-info">'+
+          '<div class="db-row-name">'+(a.patientName||a.customerName||'Patient')+'</div>'+
+          '<div class="db-row-meta">🏥 '+(a.serviceTitle||'Consultation')+' • '+(a.consultType||'In-Person')+'</div>'+
+        '</div>'+
+        '<div class="db-row-price">₦'+parseInt(a.amount||a.fee||0).toLocaleString()+'</div>'+
+      '</div>';
+    }).join('');
+  }
+
+  function updateApt(aptId,status) {
+    db.collection('appointments').doc(aptId).update({status:status})
+      .then(function(){ showToast('✅ Appointment updated to: '+status); loadAppointments(); })
+      .catch(function(err){ showToast('Error: '+err.message); });
+  }
+
+  function updateStats() {
+    var revenue=myApts.reduce(function(s,a){ return s+parseInt(a.amount||a.fee||0); },0);
+    var balance=Math.round(revenue*0.9);
+    document.getElementById('stat-revenue').textContent='₦'+revenue.toLocaleString();
+    document.getElementById('stat-apts').textContent=myApts.length;
+    document.getElementById('stat-services').textContent=myServices.filter(function(s){ return s.status==='active'; }).length;
+    document.getElementById('stat-balance').textContent='₦'+balance.toLocaleString();
+    document.getElementById('ec-total').textContent='₦'+revenue.toLocaleString();
+    document.getElementById('ec-avail').textContent='₦'+balance.toLocaleString();
+    document.getElementById('ec-fee').textContent='₦'+Math.round(revenue*0.1).toLocaleString();
+    document.getElementById('ec-apts').textContent=myApts.length;
+  }
+
+  function previewImg(input) {
+    var file=input.files[0];
+    if (!file) return;
+    selImgFile=file;
+    var reader=new FileReader();
+    reader.onload=function(e){
+      document.getElementById('h-img-placeholder').style.display='none';
+      var p=document.getElementById('h-img-preview');
+      p.src=e.target.result; p.style.display='block';
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function selEmoji(emoji,btn) {
+    selEmoji_val=emoji;
+    document.querySelectorAll('.db-emoji-btn').forEach(function(b){ b.classList.remove('selected'); });
+    btn.classList.add('selected');
+  }
+
+  function getDays() {
+    var d=[];
+    document.querySelectorAll('.avail-day:checked').forEach(function(cb){ d.push(cb.value); });
+    return d;
+  }
+
+  function getServices() {
+    var s=[];
+    document.querySelectorAll('.h-service:checked').forEach(function(cb){ s.push(cb.value); });
+    return s;
+  }
+
+  function publishService() {
+    var title=document.getElementById('h-title').value.trim();
+    var cat=document.getElementById('h-category').value;
+    var consultType=document.getElementById('h-consult-type').value;
+    var price=document.getElementById('h-price').value;
+    var dur=document.getElementById('h-duration').value;
+    var state=document.getElementById('h-state').value;
+    var area=document.getElementById('h-area').value.trim();
+    var qual=document.getElementById('h-qualifications').value.trim();
+    var exp=document.getElementById('h-experience').value;
+    var desc=document.getElementById('h-desc').value.trim();
+    var from=document.getElementById('h-from').value;
+    var to=document.getElementById('h-to').value;
+    var errEl=document.getElementById('h-error');
+    var sucEl=document.getElementById('h-success');
+    var btn=document.getElementById('h-submit-btn');
+
+    errEl.style.display='none'; sucEl.style.display='none';
+
+    if (!title){ errEl.textContent='Enter service name'; errEl.style.display='block'; return; }
+    if (!cat){ errEl.textContent='Select a category'; errEl.style.display='block'; return; }
+    if (!price){ errEl.textContent='Enter consultation fee'; errEl.style.display='block'; return; }
+    if (!state){ errEl.textContent='Select your state'; errEl.style.display='block'; return; }
+    if (!qual){ errEl.textContent='Enter your qualifications'; errEl.style.display='block'; return; }
+    if (!desc){ errEl.textContent='Enter service description'; errEl.style.display='block'; return; }
+
+    var user=auth.currentUser;
+    if (!user){ errEl.textContent='Please login first'; errEl.style.display='block'; return; }
+
+    btn.textContent='Submitting...'; btn.disabled=true;
+
+    var userData=JSON.parse(localStorage.getItem('nexa_current_user')||'{}');
+    var upload=selImgFile?uploadImageToImgBB(selImgFile):Promise.resolve('');
+
+    upload.then(function(imageUrl){
+      var data={
+        providerId:user.uid,
+        providerName:userData.fullName||userData.firstName||'Provider',
+        title:title,
+        category:cat,
+        consultType:consultType,
+        price:parseFloat(price),
+        duration:dur,
+        state:state,
+        area:area,
+        qualifications:qual,
+        experience:exp,
+        description:desc,
+        availableDays:getDays(),
+        availableFrom:from,
+        availableTo:to,
+        services:getServices(),
+        imageUrl:imageUrl,
+        emoji:selEmoji_val,
+        status:'pending',
+        rating:0,
+        reviews:0,
+        createdAt:firebase.firestore.FieldValue.serverTimestamp(),
+      };
+      if (editId) {
+        return db.collection('healthListings').doc(editId).update(data);
+      } else {
+        var ref=db.collection('healthListings').doc();
+        data.id=ref.id;
+        return ref.set(data);
+      }
+    })
+    .then(function(){
+      sucEl.textContent=editId?'✅ Service updated!':'🎉 Service submitted! Admin will review within 24 hours.';
+      sucEl.style.display='block';
+      btn.textContent='🚀 Submit for Approval'; btn.disabled=false;
+      document.getElementById('h-title').value='';
+      document.getElementById('h-category').value='';
+      document.getElementById('h-price').value='';
+      document.getElementById('h-state').value='';
+      document.getElementById('h-area').value='';
+      document.getElementById('h-qualifications').value='';
+      document.getElementById('h-desc').value='';
+      document.getElementById('h-from').value='';
+      document.getElementById('h-to').value='';
+      document.getElementById('h-img-preview').style.display='none';
+      document.getElementById('h-img-placeholder').style.display='block';
+      document.querySelectorAll('.avail-day,.h-service').forEach(function(cb){ cb.checked=false; });
+      selImgFile=null; editId=null;
+      document.getElementById('add-form-title').textContent='Add Health Service';
+      loadServices();
+      setTimeout(function(){ showTab('services'); },2000);
+    })
+    .catch(function(err){
+      errEl.textContent='❌ Error: '+err.message;
+      errEl.style.display='block';
+      btn.textContent='🚀 Submit for Approval'; btn.disabled=false;
+    });
+  }
+
+  function editService(id) {
+    var item=myServices.find(function(s){ return s.id===id; });
+    if (!item) return;
+    editId=id;
+    document.getElementById('add-form-title').textContent='Edit Service';
+    document.getElementById('h-title').value=item.title||'';
+    document.getElementById('h-category').value=item.category||'';
+    document.getElementById('h-consult-type').value=item.consultType||'In-Person';
+    document.getElementById('h-price').value=item.price||'';
+    document.getElementById('h-duration').value=item.duration||'45 mins';
+    document.getElementById('h-state').value=item.state||'';
+    document.getElementById('h-area').value=item.area||'';
+    document.getElementById('h-qualifications').value=item.qualifications||'';
+    document.getElementById('h-experience').value=item.experience||'0-2 years';
+    document.getElementById('h-desc').value=item.description||'';
+    document.getElementById('h-from').value=item.availableFrom||'';
+    document.getElementById('h-to').value=item.availableTo||'';
+    if (item.availableDays){
+      document.querySelectorAll('.avail-day').forEach(function(cb){
+        cb.checked=item.availableDays.indexOf(cb.value)>-1;
+      });
+    }
+    if (item.services){
+      document.querySelectorAll('.h-service').forEach(function(cb){
+        cb.checked=item.services.indexOf(cb.value)>-1;
+      });
+    }
+    if (item.imageUrl){
+      document.getElementById('h-img-preview').src=item.imageUrl;
+      document.getElementById('h-img-preview').style.display='block';
+      document.getElementById('h-img-placeholder').style.display='none';
+    }
+    showTab('add');
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+
+  function deleteService(id) {
+    if (!confirm('Delete this service?')) return;
+    db.collection('healthListings').doc(id).update({status:'deleted'})
+      .then(function(){
+        showToast('🗑️ Service deleted');
+        myServices=myServices.filter(function(s){ return s.id!==id; });
+        renderServices(myServices);
+        updateStats();
+      })
+      .catch(function(err){ showToast('Error: '+err.message); });
+  }
+
+  function doWithdraw() {
+    var bank=document.getElementById('wd-bank').value;
+    var acct=document.getElementById('wd-acct').value.trim();
+    var name=document.getElementById('wd-name').value.trim();
+    var amount=parseInt(document.getElementById('wd-amount').value);
+    var errEl=document.getElementById('wd-error');
+    var sucEl=document.getElementById('wd-success');
+    errEl.style.display='none'; sucEl.style.display='none';
+    if (!acct||acct.length<10){ errEl.textContent='Enter valid 10-digit account number'; errEl.style.display='block'; return; }
+    if (!name){ errEl.textContent='Enter account name'; errEl.style.display='block'; return; }
+    if (!amount||amount<1000){ errEl.textContent='Minimum withdrawal is ₦1,000'; errEl.style.display='block'; return; }
+    var user=auth.currentUser;
+    if (!user) return;
+    db.collection('withdrawalRequests').add({
+      userId:user.uid,userType:'health-provider',
+      bank:bank,account:acct,name:name,
+      amount:amount,status:'pending',
+      createdAt:firebase.firestore.FieldValue.serverTimestamp(),
+    }).then(function(){
+      sucEl.textContent='✅ Withdrawal request submitted! We will process within 1-2 business days.';
+      sucEl.style.display='block';
+      document.getElementById('wd-amount').value='';
+    }).catch(function(err){ errEl.textContent='Error: '+err.message; errEl.style.display='block'; });
+  }
+
+  function showToast(msg) {
+    var t=document.getElementById('db-toast');
+    if (!t) return;
+    t.textContent=msg;
+    t.style.display='block';
+    setTimeout(function(){ t.style.display='none'; },2500);
+  }
+
+  document.addEventListener('DOMContentLoaded',function(){ init(); });
+
+</script>
 </body>
 </html>
