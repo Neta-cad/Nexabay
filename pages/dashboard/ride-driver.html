@@ -4,868 +4,829 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Driver Dashboard — Nexabay</title>
-  <link rel="stylesheet" href="../../css/main.css"/>
-  <link rel="stylesheet" href="../../css/dashboard.css"/>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="../../css/dashboard.css"/>
+  <style>
+    .online-toggle-wrap{background:white;border-radius:14px;border:1px solid #e9ecef;padding:18px 16px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;gap:12px;}
+    .online-toggle-info h3{font-size:0.95em;font-weight:700;margin-bottom:3px;}
+    .online-toggle-info p{font-size:0.78em;color:#6c757d;}
+    .toggle-switch{position:relative;width:52px;height:28px;flex-shrink:0;}
+    .toggle-switch input{opacity:0;width:0;height:0;}
+    .toggle-slider{position:absolute;top:0;left:0;right:0;bottom:0;background:#ccc;border-radius:28px;cursor:pointer;transition:background 0.2s;}
+    .toggle-slider::before{content:'';position:absolute;width:22px;height:22px;left:3px;bottom:3px;background:white;border-radius:50%;transition:transform 0.2s;box-shadow:0 1px 4px rgba(0,0,0,0.2);}
+    .toggle-switch input:checked+.toggle-slider{background:#00a651;}
+    .toggle-switch input:checked+.toggle-slider::before{transform:translateX(24px);}
+    .status-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+    .status-dot.online{background:#00a651;}
+    .status-dot.offline{background:#dc3545;}
+    .trip-card{background:white;border-radius:14px;border:1px solid #e9ecef;padding:16px;margin-bottom:10px;box-shadow:0 1px 4px rgba(0,0,0,0.04);}
+    .trip-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;}
+    .trip-id{font-size:0.72em;color:#6c757d;font-weight:600;}
+    .trip-amount{font-size:1.1em;font-weight:900;color:#ff6b00;}
+    .trip-route{display:flex;flex-direction:column;gap:6px;margin-bottom:12px;padding:10px;background:#f8f9fa;border-radius:8px;}
+    .trip-point{display:flex;align-items:center;gap:8px;font-size:0.82em;}
+    .trip-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+    .trip-dot.pickup{background:#00a651;}
+    .trip-dot.dropoff{background:#ff6b00;}
+    .trip-actions{display:flex;gap:8px;}
+    .trip-accept-btn{flex:1;padding:10px;background:#ff6b00;color:white;border:none;border-radius:9px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;font-size:0.85em;}
+    .trip-decline-btn{padding:10px 16px;background:#f8f9fa;border:1.5px solid #e9ecef;border-radius:9px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;font-size:0.85em;color:#666;}
+    .vehicle-card{background:white;border-radius:14px;border:1px solid #e9ecef;padding:16px;margin-bottom:14px;}
+    .vehicle-card-title{font-size:0.88em;font-weight:700;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid #f0f0f0;}
+  </style>
 </head>
-<body class="dashboard-body">
+<body>
 
-  <!-- NAVBAR -->
-  <nav class="navbar">
-    <div class="nav-inner">
-      <a href="../../index.html" class="logo">
-        <span class="logo-nexa">Nexa</span><span class="logo-bay">bay</span>
-      </a>
-      <div class="nav-actions">
-        <span class="nav-link" id="nav-driver-name">My Rides</span>
-        <a href="../../index.html" class="nav-link">← Back to Site</a>
+<div class="db-toast" id="db-toast"></div>
+
+<div class="db-topbar">
+  <a href="../../index.html" class="db-logo">Nexa<span>bay</span></a>
+  <button class="db-tab active" onclick="showTab('overview')">📊 Overview</button>
+  <button class="db-tab" onclick="showTab('trips')">
+    🚗 Trips
+    <span class="db-tab-badge" id="trips-badge" style="display:none;">0</span>
+  </button>
+  <button class="db-tab" onclick="showTab('history')">📋 History</button>
+  <button class="db-tab" onclick="showTab('earnings')">💰 Earnings</button>
+  <button class="db-tab" onclick="showTab('vehicle')">🚙 Vehicle</button>
+  <div class="db-topbar-right">
+    <div class="db-user-avatar" id="user-avatar">D</div>
+  </div>
+</div>
+
+<div class="db-content">
+
+  <!-- OVERVIEW -->
+  <div class="db-tab-content active" id="content-overview">
+    <div class="db-page-header">
+      <div class="db-page-header-inner">
+        <div><h1>Welcome back! 👋</h1><p id="overview-sub">Here is your driver performance</p></div>
       </div>
     </div>
-  </nav>
 
-  <div class="dashboard-layout">
-
-    <!-- SIDEBAR -->
-    <aside class="dash-sidebar">
-      <div class="dash-profile">
-        <div class="dash-avatar" id="dash-avatar">D</div>
-        <div class="dash-name" id="dash-name">Driver</div>
-        <div class="dash-badge">🚗 Driver Partner</div>
+    <!-- ONLINE TOGGLE -->
+    <div class="online-toggle-wrap">
+      <div class="online-toggle-info">
+        <h3 style="display:flex;align-items:center;gap:8px;">
+          <span class="status-dot" id="status-dot-overview"></span>
+          <span id="online-status-text">You are Offline</span>
+        </h3>
+        <p id="online-status-sub">Go online to start receiving ride requests</p>
       </div>
-
-      <nav class="dash-nav">
-        <a href="#" class="dash-nav-item active" onclick="showTab('overview')">
-          📊 Overview
-        </a>
-        <a href="#" class="dash-nav-item" onclick="showTab('listings')">
-          🚗 My Listings
-        </a>
-        <a href="#" class="dash-nav-item" onclick="showTab('add-listing')">
-          ➕ Add Listing
-        </a>
-        <a href="#" class="dash-nav-item" onclick="showTab('requests')">
-          📋 Ride Requests
-        </a>
-        <a href="#" class="dash-nav-item" onclick="showTab('earnings')">
-          💰 Earnings
-        </a>
-        <a href="#" class="dash-nav-item" onclick="showTab('settings')">
-          ⚙️ Settings
-        </a>
-        <a href="buyer.html" class="dash-nav-item">
-          👤 My Account
-        </a>
-        <a href="#" class="dash-nav-item logout" onclick="doDriverLogout()">
-          🚪 Logout
-        </a>
-      </nav>
-    </aside>
-
-    <!-- MAIN CONTENT -->
-    <main class="dash-main">
-
-      <!-- OVERVIEW TAB -->
-      <div class="dash-tab" id="tab-overview">
-        <div class="dash-header">
-          <h1>Welcome back! 👋</h1>
-          <p>Here is your driving performance today</p>
-        </div>
-
-        <div class="stats-grid">
-          <div class="stat-card">
-            <div class="stat-icon">💰</div>
-            <div class="stat-info">
-              <div class="stat-value" id="stat-revenue">₦0</div>
-              <div class="stat-label">Total Earned</div>
-            </div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-icon">📋</div>
-            <div class="stat-info">
-              <div class="stat-value" id="stat-rides">0</div>
-              <div class="stat-label">Total Rides</div>
-            </div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-icon">🚗</div>
-            <div class="stat-info">
-              <div class="stat-value" id="stat-listings">0</div>
-              <div class="stat-label">Active Listings</div>
-            </div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-icon">⭐</div>
-            <div class="stat-info">
-              <div class="stat-value">0.0</div>
-              <div class="stat-label">Rating</div>
-            </div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-icon">💸</div>
-            <div class="stat-info">
-              <div class="stat-value" id="stat-balance">₦0</div>
-              <div class="stat-label">Available Balance</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="dash-section">
-          <h2>Quick Actions</h2>
-          <div class="quick-actions">
-            <button class="quick-btn" onclick="showTab('add-listing')">
-              ➕ Add Listing
-            </button>
-            <button class="quick-btn" onclick="showTab('requests')">
-              📋 View Requests
-            </button>
-            <button class="quick-btn" onclick="showTab('earnings')">
-              💸 Withdraw
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <!-- MY LISTINGS TAB -->
-      <div class="dash-tab" id="tab-listings" style="display:none;">
-        <div class="dash-header">
-          <h1>My Listings</h1>
-          <button class="btn-primary" onclick="showTab('add-listing')">
-            ➕ Add Listing
-          </button>
-        </div>
-        <div id="my-driver-list" class="my-products-list"></div>
-      </div>
-      <!-- ADD LISTING TAB -->
-      <div class="dash-tab" id="tab-add-listing" style="display:none;">
-        <div class="dash-header">
-          <h1>Add New Listing</h1>
-        </div>
-
-        <div class="add-product-form">
-
-          <div class="form-section">
-            <h3>Service Type</h3>
-            <div class="account-type">
-              <button class="type-btn active" id="btn-ride" onclick="setServiceType('ride')">
-                🚖 Rides
-              </button>
-              <button class="type-btn" id="btn-delivery" onclick="setServiceType('delivery')">
-                📦 Delivery
-              </button>
-              <button class="type-btn" id="btn-bothservice" onclick="setServiceType('both')">
-                🚗📦 Both
-              </button>
-            </div>
-          </div>
-
-          <div class="form-section">
-            <h3>Vehicle Information</h3>
-
-            <div class="form-group">
-              <label>Vehicle Type *</label>
-              <select id="dl-vehicle-type">
-                <option value="">Select vehicle type</option>
-                <option>Sedan Car</option>
-                <option>SUV</option>
-                <option>Mini Bus</option>
-                <option>Motorcycle</option>
-                <option>Tricycle (Keke)</option>
-                <option>Van/Truck (for delivery)</option>
-                <option>Bicycle</option>
-              </select>
-            </div>
-
-            <div class="form-row-2">
-              <div class="form-group">
-                <label>Vehicle Name/Model *</label>
-                <input type="text" id="dl-vehicle-name" placeholder="e.g. Toyota Corolla 2018"/>
-              </div>
-              <div class="form-group">
-                <label>Vehicle Color</label>
-                <input type="text" id="dl-vehicle-color" placeholder="e.g. Black"/>
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label>Plate Number</label>
-              <input type="text" id="dl-plate" placeholder="e.g. LND 123 ABC"/>
-            </div>
-
-            <div class="form-group">
-              <label>Years of Driving Experience</label>
-              <input type="text" id="dl-experience" placeholder="e.g. 5 years"/>
-            </div>
-
-            <div class="form-group">
-              <label>Description</label>
-              <textarea id="dl-desc" placeholder="Tell customers about your service..." rows="3"></textarea>
-            </div>
-          </div>
-
-          <div class="form-section">
-            <h3>Pricing</h3>
-            <div class="form-row-2">
-              <div class="form-group">
-                <label>Base Price (₦) *</label>
-                <input type="number" id="dl-base-price" placeholder="e.g. 500" min="0"/>
-              </div>
-              <div class="form-group">
-                <label>Price per KM (₦) *</label>
-                <input type="number" id="dl-price-km" placeholder="e.g. 150" min="0"/>
-              </div>
-            </div>
-            <p style="color:var(--text2);font-size:0.8em;">Customers will be charged: Base Price + (Distance × Price per KM)</p>
-          </div>
-
-          <div class="form-section">
-            <h3>Service Areas</h3>
-            <p style="color:var(--text2);font-size:0.85em;margin-bottom:12px;">Select the states/areas you operate in</p>
-            <div style="display:flex;flex-wrap:wrap;gap:8px;">
-              <label class="checkbox-label"><input type="checkbox" class="area-cb" value="Lagos"/> Lagos</label>
-              <label class="checkbox-label"><input type="checkbox" class="area-cb" value="Abuja FCT"/> Abuja FCT</label>
-              <label class="checkbox-label"><input type="checkbox" class="area-cb" value="Rivers"/> Rivers</label>
-              <label class="checkbox-label"><input type="checkbox" class="area-cb" value="Kano"/> Kano</label>
-              <label class="checkbox-label"><input type="checkbox" class="area-cb" value="Oyo"/> Oyo</label>
-              <label class="checkbox-label"><input type="checkbox" class="area-cb" value="Enugu"/> Enugu</label>
-              <label class="checkbox-label"><input type="checkbox" class="area-cb" value="Anambra"/> Anambra</label>
-              <label class="checkbox-label"><input type="checkbox" class="area-cb" value="Delta"/> Delta</label>
-            </div>
-          </div>
-
-          <div class="form-section">
-            <h3>Availability</h3>
-            <div class="form-group">
-              <label>Available Days</label>
-              <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;">
-                <label class="checkbox-label"><input type="checkbox" class="day-cb" value="Monday"/> Mon</label>
-                <label class="checkbox-label"><input type="checkbox" class="day-cb" value="Tuesday"/> Tue</label>
-                <label class="checkbox-label"><input type="checkbox" class="day-cb" value="Wednesday"/> Wed</label>
-                <label class="checkbox-label"><input type="checkbox" class="day-cb" value="Thursday"/> Thu</label>
-                <label class="checkbox-label"><input type="checkbox" class="day-cb" value="Friday"/> Fri</label>
-                <label class="checkbox-label"><input type="checkbox" class="day-cb" value="Saturday"/> Sat</label>
-                <label class="checkbox-label"><input type="checkbox" class="day-cb" value="Sunday"/> Sun</label>
-              </div>
-            </div>
-            <div class="form-row-2">
-              <div class="form-group">
-                <label>Available From</label>
-                <input type="time" id="dl-from"/>
-              </div>
-              <div class="form-group">
-                <label>Available To</label>
-                <input type="time" id="dl-to"/>
-              </div>
-            </div>
-          </div>
-
-          <div class="form-section">
-            <h3>Profile/Vehicle Photo</h3>
-            <div class="image-upload" id="image-upload" onclick="triggerImageUpload()">
-              <div class="upload-placeholder" id="upload-placeholder">
-                <div class="upload-icon">📷</div>
-                <p>Click to add a photo</p>
-                <small>JPG, PNG up to 5MB</small>
-              </div>
-              <div class="upload-preview" id="upload-preview" style="display:none;">
-                <span id="preview-emoji">🚗</span>
-              </div>
-            </div>
-            <input type="file" id="image-file" style="display:none;" accept="image/*" onchange="previewImage()"/>
-
-            <div class="emoji-selector">
-              <p>Or pick an emoji:</p>
-              <div class="emoji-grid">
-                <span onclick="selectEmoji('🚗')">🚗</span>
-                <span onclick="selectEmoji('🚖')">🚖</span>
-                <span onclick="selectEmoji('🚙')">🚙</span>
-                <span onclick="selectEmoji('🏍️')">🏍️</span>
-                <span onclick="selectEmoji('🛺')">🛺</span>
-                <span onclick="selectEmoji('🚐')">🚐</span>
-                <span onclick="selectEmoji('🚚')">🚚</span>
-                <span onclick="selectEmoji('🚲')">🚲</span>
-              </div>
-            </div>
-          </div>
-
-          <div id="dl-error" class="ap-error" style="display:none;"></div>
-          <div id="dl-success" class="ap-success" style="display:none;"></div>
-
-          <div class="form-actions">
-            <button class="btn-publish" onclick="publishDriverListing()">
-              🚀 Publish Listing
-            </button>
-          </div>
-
-        </div>
-      </div>
-      <!-- RIDE REQUESTS TAB -->
-      <div class="dash-tab" id="tab-requests" style="display:none;">
-        <div class="dash-header">
-          <h1>Ride Requests</h1>
-        </div>
-
-        <div class="orders-filter">
-          <button class="order-filter-btn active" onclick="filterRequests('all', this)">All</button>
-          <button class="order-filter-btn" onclick="filterRequests('pending', this)">Pending</button>
-          <button class="order-filter-btn" onclick="filterRequests('accepted', this)">Accepted</button>
-          <button class="order-filter-btn" onclick="filterRequests('completed', this)">Completed</button>
-          <button class="order-filter-btn" onclick="filterRequests('cancelled', this)">Cancelled</button>
-        </div>
-
-        <div class="orders-table-wrap">
-          <table class="orders-table">
-            <thead>
-              <tr>
-                <th>Request ID</th>
-                <th>Customer</th>
-                <th>Type</th>
-                <th>Route</th>
-                <th>Price</th>
-                <th>Status</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody id="requests-body">
-              <tr><td colspan="7" style="text-align:center;color:var(--text2);padding:20px">No requests yet</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <!-- EARNINGS TAB -->
-      <div class="dash-tab" id="tab-earnings" style="display:none;">
-        <div class="dash-header">
-          <h1>Earnings & Withdrawals</h1>
-        </div>
-
-        <div class="earnings-cards">
-          <div class="earning-card">
-            <div class="ec-label">Total Earned</div>
-            <div class="ec-value" id="ec-total">₦0</div>
-          </div>
-          <div class="earning-card">
-            <div class="ec-label">Available Balance</div>
-            <div class="ec-value green" id="ec-available">₦0</div>
-          </div>
-          <div class="earning-card">
-            <div class="ec-label">Nexabay Fee (10%)</div>
-            <div class="ec-value orange" id="ec-fee">₦0</div>
-          </div>
-        </div>
-
-        <div class="withdraw-section">
-          <h3>Withdraw Funds</h3>
-          <div class="withdraw-form">
-            <div class="form-group">
-              <label>Bank Name</label>
-              <select id="wd-bank">
-                <option>GTBank</option>
-                <option>Access Bank</option>
-                <option>First Bank</option>
-                <option>Zenith Bank</option>
-                <option>UBA</option>
-                <option>Opay</option>
-                <option>Palmpay</option>
-                <option>Kuda Bank</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label>Account Number</label>
-              <input type="text" id="wd-account" placeholder="10 digit account number" maxlength="10"/>
-            </div>
-            <div class="form-group">
-              <label>Account Name</label>
-              <input type="text" id="wd-name" placeholder="Account holder name"/>
-            </div>
-            <div class="form-group">
-              <label>Amount to Withdraw (₦)</label>
-              <input type="number" id="wd-amount" placeholder="Minimum ₦1,000" min="1000"/>
-            </div>
-            <div id="wd-error" style="color:#cc0000;font-size:0.85em;display:none;"></div>
-            <div id="wd-success" style="color:#006622;font-size:0.85em;display:none;"></div>
-            <button class="btn-withdraw" onclick="processWithdrawal()">
-              💸 Withdraw Now
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <!-- SETTINGS TAB -->
-      <div class="dash-tab" id="tab-settings" style="display:none;">
-        <div class="dash-header">
-          <h1>Driver Settings</h1>
-        </div>
-        <div class="settings-card">
-          <h3>Driver Profile</h3>
-          <div class="form-group">
-            <label>Display Name</label>
-            <input type="text" id="driver-display-name" placeholder="Your name as shown to customers"/>
-          </div>
-          <div class="form-group">
-            <label>WhatsApp Number</label>
-            <input type="tel" id="driver-whatsapp" placeholder="080xxxxxxxx"/>
-          </div>
-          <button class="btn-save" onclick="saveDriverSettings()">Save Changes</button>
-        </div>
-      </div>
-
-    </main>
-  </div>
-
-  <!-- PREVIEW MODAL -->
-  <div id="preview-modal-overlay" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);z-index:900;" onclick="closePreviewModal()"></div>
-  <div id="preview-modal" style="display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:white;border-radius:14px;max-width:380px;width:90%;max-height:85vh;overflow-y:auto;z-index:901;padding:20px;">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
-      <h3 style="font-size:1.1em;font-weight:700;">Listing Preview</h3>
-      <button onclick="closePreviewModal()" style="background:var(--gray);border:none;width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:0.9em;">✕</button>
+      <label class="toggle-switch">
+        <input type="checkbox" id="online-toggle" onchange="toggleOnlineStatus()"/>
+        <span class="toggle-slider"></span>
+      </label>
     </div>
-    <div id="preview-modal-body"></div>
+
+    <div class="db-stats">
+      <div class="db-stat">
+        <div class="db-stat-header"><div class="db-stat-label">Today's Earnings</div><div class="db-stat-icon" style="background:#fff3e0;">💰</div></div>
+        <div class="db-stat-value" id="stat-today">₦0</div>
+        <div class="db-stat-sub">Today</div>
+      </div>
+      <div class="db-stat">
+        <div class="db-stat-header"><div class="db-stat-label">Total Trips</div><div class="db-stat-icon" style="background:#e8f5e9;">🚗</div></div>
+        <div class="db-stat-value" id="stat-trips">0</div>
+        <div class="db-stat-sub">Completed</div>
+      </div>
+      <div class="db-stat">
+        <div class="db-stat-header"><div class="db-stat-label">Total Earned</div><div class="db-stat-icon" style="background:#e3f2fd;">💵</div></div>
+        <div class="db-stat-value" id="stat-revenue">₦0</div>
+        <div class="db-stat-sub">All time</div>
+      </div>
+      <div class="db-stat">
+        <div class="db-stat-header"><div class="db-stat-label">Balance</div><div class="db-stat-icon" style="background:#f3e5f5;">💸</div></div>
+        <div class="db-stat-value" id="stat-balance">₦0</div>
+        <div class="db-stat-sub">Available</div>
+      </div>
+    </div>
+
+    <div class="db-card">
+      <div class="db-card-header"><div class="db-card-title">⚡ Quick Actions</div></div>
+      <div class="db-card-body">
+        <div class="db-quick-grid">
+          <button class="db-quick-btn" onclick="showTab('trips')"><div class="db-quick-icon">🚗</div>Active Trips</button>
+          <button class="db-quick-btn" onclick="showTab('history')"><div class="db-quick-icon">📋</div>Trip History</button>
+          <button class="db-quick-btn" onclick="showTab('earnings')"><div class="db-quick-icon">💸</div>Withdraw</button>
+          <button class="db-quick-btn" onclick="showTab('vehicle')"><div class="db-quick-icon">🚙</div>My Vehicle</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="db-card">
+      <div class="db-card-header">
+        <div class="db-card-title">📍 Recent Trips</div>
+        <button onclick="showTab('history')" style="background:none;border:none;color:#ff6b00;font-size:0.8em;font-weight:700;cursor:pointer;">See All →</button>
+      </div>
+      <div id="recent-trips-wrap">
+        <div style="padding:16px;">
+          <div class="db-skeleton" style="width:100%;"></div>
+          <div class="db-skeleton" style="width:75%;"></div>
+        </div>
+      </div>
+    </div>
   </div>
 
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-  <script src="../../js/firebase/config.js"></script>
-  <script src="../../js/firebase/auth.js"></script>
-  <script src="../../js/firebase/ride.js"></script>
-  <script src="../../js/firebase/imgbb.js"></script>
-  <script src="../../js/core/main.js"></script>
-  <script>
+  <!-- ACTIVE TRIPS -->
+  <div class="db-tab-content" id="content-trips">
+    <div class="db-page-header">
+      <div class="db-page-header-inner">
+        <div><h1>Active Trips</h1><p>Incoming and ongoing ride requests</p></div>
+      </div>
+    </div>
 
-    var myListings = [];
-    var myRequests = [];
-    var selectedEmoji = '🚗';
-    var selectedImageFile = null;
-    var currentServiceType = 'ride';
+    <!-- ONLINE TOGGLE in trips tab -->
+    <div class="online-toggle-wrap">
+      <div class="online-toggle-info">
+        <h3 style="display:flex;align-items:center;gap:8px;">
+          <span class="status-dot" id="status-dot-trips"></span>
+          <span id="trips-status-text">You are Offline</span>
+        </h3>
+        <p>Toggle on to receive ride requests</p>
+      </div>
+      <label class="toggle-switch">
+        <input type="checkbox" id="online-toggle-trips" onchange="toggleOnlineStatus2()"/>
+        <span class="toggle-slider"></span>
+      </label>
+    </div>
 
-    function init() {
-      var user = JSON.parse(localStorage.getItem('nexa_current_user') || 'null');
-      if (user) {
-        var nameEl   = document.getElementById('dash-name');
-        var avatarEl = document.getElementById('dash-avatar');
-        var navEl    = document.getElementById('nav-driver-name');
-        if (nameEl)   nameEl.textContent   = user.fullName || user.firstName || 'Driver';
-        if (avatarEl) avatarEl.textContent = (user.firstName || 'D')[0].toUpperCase();
-        if (navEl)    navEl.textContent    = user.firstName + '\'s Rides';
-      }
-    }
+    <div id="active-trips-list">
+      <div class="db-empty">
+        <div class="db-empty-icon">🚗</div>
+        <h3>No active requests</h3>
+        <p>Go online to start receiving trip requests from passengers</p>
+      </div>
+    </div>
+  </div>
 
-    if (typeof auth !== 'undefined') {
-      auth.onAuthStateChanged(function(user) {
-        if (user) {
-          loadMyListings();
-          loadMyRequests();
-        }
-      });
-    }
+  <!-- TRIP HISTORY -->
+  <div class="db-tab-content" id="content-history">
+    <div class="db-page-header">
+      <div class="db-page-header-inner">
+        <div><h1>Trip History</h1><p>All your completed and cancelled trips</p></div>
+      </div>
+    </div>
+    <div class="db-filters">
+      <button class="db-filter-btn active" onclick="filterHistory('all',this)">All</button>
+      <button class="db-filter-btn" onclick="filterHistory('completed',this)">✅ Completed</button>
+      <button class="db-filter-btn" onclick="filterHistory('cancelled',this)">❌ Cancelled</button>
+    </div>
+    <div class="db-card">
+      <div class="db-table-wrap">
+        <table class="db-table">
+          <thead>
+            <tr>
+              <th>Trip ID</th><th>Passenger</th><th>From</th>
+              <th>To</th><th>Fare</th><th>Date</th><th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="history-body">
+            <tr><td colspan="7" style="text-align:center;padding:20px;color:#999;">No trips yet</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
 
-    function showTab(tab) {
-      var tabs = document.querySelectorAll('.dash-tab');
-      tabs.forEach(function(t) { t.style.display = 'none'; });
+  <!-- EARNINGS -->
+  <div class="db-tab-content" id="content-earnings">
+    <div class="db-page-header">
+      <div class="db-page-header-inner">
+        <div><h1>Earnings</h1><p>Track your income and withdraw funds</p></div>
+      </div>
+    </div>
+    <div class="db-earnings-cards">
+      <div class="db-earning-card"><div class="db-earning-label">Total Earned</div><div class="db-earning-value" id="ec-total">₦0</div></div>
+      <div class="db-earning-card"><div class="db-earning-label">Your Share (90%)</div><div class="db-earning-value green" id="ec-avail">₦0</div></div>
+      <div class="db-earning-card"><div class="db-earning-label">Nexabay Fee (10%)</div><div class="db-earning-value orange" id="ec-fee">₦0</div></div>
+      <div class="db-earning-card"><div class="db-earning-label">Total Trips</div><div class="db-earning-value" id="ec-trips">0</div></div>
+    </div>
 
-      var navItems = document.querySelectorAll('.dash-nav-item');
-      navItems.forEach(function(n) { n.classList.remove('active'); });
+    <!-- Weekly summary -->
+    <div class="db-card" style="margin-bottom:14px;">
+      <div class="db-card-header"><div class="db-card-title">📅 This Week</div></div>
+      <div class="db-card-body">
+        <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center;">
+          <div style="font-size:0.68em;color:#6c757d;padding-bottom:4px;">Mon</div>
+          <div style="font-size:0.68em;color:#6c757d;padding-bottom:4px;">Tue</div>
+          <div style="font-size:0.68em;color:#6c757d;padding-bottom:4px;">Wed</div>
+          <div style="font-size:0.68em;color:#6c757d;padding-bottom:4px;">Thu</div>
+          <div style="font-size:0.68em;color:#6c757d;padding-bottom:4px;">Fri</div>
+          <div style="font-size:0.68em;color:#6c757d;padding-bottom:4px;">Sat</div>
+          <div style="font-size:0.68em;color:#6c757d;padding-bottom:4px;">Sun</div>
+          <div id="day-0" style="font-size:0.72em;font-weight:700;color:#ff6b00;">₦0</div>
+          <div id="day-1" style="font-size:0.72em;font-weight:700;color:#ff6b00;">₦0</div>
+          <div id="day-2" style="font-size:0.72em;font-weight:700;color:#ff6b00;">₦0</div>
+          <div id="day-3" style="font-size:0.72em;font-weight:700;color:#ff6b00;">₦0</div>
+          <div id="day-4" style="font-size:0.72em;font-weight:700;color:#ff6b00;">₦0</div>
+          <div id="day-5" style="font-size:0.72em;font-weight:700;color:#ff6b00;">₦0</div>
+          <div id="day-6" style="font-size:0.72em;font-weight:700;color:#ff6b00;">₦0</div>
+        </div>
+      </div>
+    </div>
 
-      var target = document.getElementById('tab-' + tab);
-      if (target) target.style.display = 'block';
+    <div class="db-withdraw-card">
+      <div class="db-withdraw-title">💸 Withdraw Funds</div>
+      <div class="db-form" style="gap:12px;">
+        <div class="db-form-group">
+          <label>Bank Name</label>
+          <select id="wd-bank">
+            <option>GTBank</option><option>Access Bank</option>
+            <option>First Bank</option><option>Zenith Bank</option>
+            <option>UBA</option><option>Opay</option>
+            <option>Palmpay</option><option>Kuda Bank</option>
+            <option>Moniepoint</option>
+          </select>
+        </div>
+        <div class="db-form-row">
+          <div class="db-form-group">
+            <label>Account Number</label>
+            <input type="text" id="wd-acct" placeholder="10 digits" maxlength="10"/>
+          </div>
+          <div class="db-form-group">
+            <label>Account Name</label>
+            <input type="text" id="wd-name" placeholder="Your name"/>
+          </div>
+        </div>
+        <div class="db-form-group">
+          <label>Amount (₦)</label>
+          <input type="number" id="wd-amount" placeholder="Minimum ₦1,000" min="1000"/>
+        </div>
+        <div id="wd-error" style="color:#cc0000;font-size:0.82em;display:none;"></div>
+        <div id="wd-success" style="color:#00a651;font-size:0.82em;display:none;"></div>
+        <button class="db-submit-btn" onclick="doWithdraw()">💸 Request Withdrawal</button>
+      </div>
+    </div>
+  </div>
 
-      var navMap = {
-        'overview': 0, 'listings': 1, 'add-listing': 2,
-        'requests': 3, 'earnings': 4, 'settings': 5
-      };
-      var index = navMap[tab];
-      if (index !== undefined && navItems[index]) {
-        navItems[index].classList.add('active');
-      }
-    }
+  <!-- VEHICLE -->
+  <div class="db-tab-content" id="content-vehicle">
+    <div class="db-page-header">
+      <div class="db-page-header-inner">
+        <div><h1>My Vehicle</h1><p>Manage your vehicle and driver profile</p></div>
+      </div>
+    </div>
 
-    function setServiceType(type) {
-      currentServiceType = type;
-      var types = ['ride', 'delivery', 'bothservice'];
-      types.forEach(function(t) {
-        document.getElementById('btn-' + t).classList.toggle('active', t === type);
-      });
-    }
+    <div class="vehicle-card">
+      <div class="vehicle-card-title">🚗 Vehicle Information</div>
+      <div class="db-form">
+        <div class="db-form-row">
+          <div class="db-form-group">
+            <label>Vehicle Type *</label>
+            <select id="v-type">
+              <option value="Sedan">Sedan</option>
+              <option value="SUV">SUV</option>
+              <option value="Minivan">Minivan / Bus</option>
+              <option value="Tricycle">Tricycle (Keke)</option>
+              <option value="Motorcycle">Motorcycle (Okada)</option>
+              <option value="Truck">Truck / Van</option>
+            </select>
+          </div>
+          <div class="db-form-group">
+            <label>Ride Category *</label>
+            <select id="v-category">
+              <option value="Standard">Standard</option>
+              <option value="Premium">Premium / Executive</option>
+              <option value="Shared">Shared Ride</option>
+              <option value="Delivery">Delivery</option>
+              <option value="Hire">Hire / Charter</option>
+            </select>
+          </div>
+        </div>
+        <div class="db-form-row">
+          <div class="db-form-group">
+            <label>Car Brand & Model *</label>
+            <input type="text" id="v-model" placeholder="e.g. Toyota Camry 2019"/>
+          </div>
+          <div class="db-form-group">
+            <label>Plate Number *</label>
+            <input type="text" id="v-plate" placeholder="e.g. LAG-123-AA" style="text-transform:uppercase;"/>
+          </div>
+        </div>
+        <div class="db-form-row">
+          <div class="db-form-group">
+            <label>Vehicle Color</label>
+            <input type="text" id="v-color" placeholder="e.g. Silver"/>
+          </div>
+          <div class="db-form-group">
+            <label>Seat Capacity</label>
+            <select id="v-seats">
+              <option value="2">2 seats</option>
+              <option value="4" selected>4 seats</option>
+              <option value="5">5 seats</option>
+              <option value="7">7 seats</option>
+              <option value="12">12 seats</option>
+              <option value="18">18 seats</option>
+            </select>
+          </div>
+        </div>
+        <div class="db-form-row">
+          <div class="db-form-group">
+            <label>Base Price (₦/trip) *</label>
+            <input type="number" id="v-price" placeholder="e.g. 2000" min="0"/>
+          </div>
+          <div class="db-form-group">
+            <label>Price Per KM (₦)</label>
+            <input type="number" id="v-per-km" placeholder="e.g. 200" min="0"/>
+          </div>
+        </div>
+        <div class="db-form-group">
+          <label>Operating City / Area *</label>
+          <input type="text" id="v-area" placeholder="e.g. Lagos Island, Victoria Island, Lekki"/>
+        </div>
+        <div class="db-form-group">
+          <label>State *</label>
+          <select id="v-state">
+            <option value="">Select state</option>
+            <option>Lagos</option><option>Abuja FCT</option>
+            <option>Rivers</option><option>Kano</option>
+            <option>Oyo</option><option>Enugu</option>
+            <option>Anambra</option><option>Delta</option>
+          </select>
+        </div>
+        <div class="db-form-group">
+          <label>Features</label>
+          <div class="cb-group">
+            <label class="cb-label"><input type="checkbox" class="v-feature" value="AC"/> ❄️ Air Conditioning</label>
+            <label class="cb-label"><input type="checkbox" class="v-feature" value="Music"/> 🎵 Music System</label>
+            <label class="cb-label"><input type="checkbox" class="v-feature" value="WiFi"/> 📶 WiFi Hotspot</label>
+            <label class="cb-label"><input type="checkbox" class="v-feature" value="Phone Charger"/> 🔋 Phone Charger</label>
+            <label class="cb-label"><input type="checkbox" class="v-feature" value="Child Seat"/> 👶 Child Seat</label>
+            <label class="cb-label"><input type="checkbox" class="v-feature" value="Wheelchair Access"/> ♿ Wheelchair Access</label>
+            <label class="cb-label"><input type="checkbox" class="v-feature" value="Luggage Space"/> 🧳 Luggage Space</label>
+          </div>
+        </div>
+        <div id="v-error" style="color:#cc0000;font-size:0.82em;display:none;margin-top:4px;"></div>
+        <div id="v-success" style="color:#00a651;font-size:0.82em;display:none;margin-top:4px;"></div>
+        <button class="db-submit-btn" onclick="saveVehicle()">💾 Save Vehicle Profile</button>
+      </div>
+    </div>
 
-    function collectServiceAreas() {
-      var areas = [];
-      document.querySelectorAll('.area-cb:checked').forEach(function(cb) { areas.push(cb.value); });
-      return areas;
-    }
+    <div class="vehicle-card">
+      <div class="vehicle-card-title">👤 Driver Profile</div>
+      <div class="db-form">
+        <div class="db-form-group">
+          <label>Driver's License Number *</label>
+          <input type="text" id="d-license" placeholder="e.g. ABC1234567"/>
+        </div>
+        <div class="db-form-row">
+          <div class="db-form-group">
+            <label>License Expiry</label>
+            <input type="date" id="d-license-expiry"/>
+          </div>
+          <div class="db-form-group">
+            <label>Years of Experience</label>
+            <select id="d-experience">
+              <option value="0-1 year">Less than 1 year</option>
+              <option value="1-3 years">1-3 years</option>
+              <option value="3-5 years">3-5 years</option>
+              <option value="5-10 years">5-10 years</option>
+              <option value="10+ years">10+ years</option>
+            </select>
+          </div>
+        </div>
+        <div class="db-form-group">
+          <label>WhatsApp Number *</label>
+          <input type="tel" id="d-whatsapp" placeholder="080xxxxxxxx"/>
+        </div>
+        <div class="db-form-group">
+          <label>Brief About You</label>
+          <textarea id="d-bio" rows="3" placeholder="Tell passengers about yourself — your driving experience, areas you cover, commitment to safety..."></textarea>
+        </div>
+        <div id="d-error" style="color:#cc0000;font-size:0.82em;display:none;margin-top:4px;"></div>
+        <div id="d-success" style="color:#00a651;font-size:0.82em;display:none;margin-top:4px;"></div>
+        <button class="db-submit-btn" onclick="saveDriverProfile()">💾 Save Driver Profile</button>
+      </div>
+    </div>
+  </div>
 
-    function collectAvailableDays() {
-      var days = [];
-      document.querySelectorAll('.day-cb:checked').forEach(function(cb) { days.push(cb.value); });
-      return days;
-    }
+</div>
 
-    function loadMyListings() {
-      var user = auth.currentUser;
-      if (!user) { renderMyListings([]); return; }
+<!-- BOTTOM NAV -->
+<div class="db-bottom-nav">
+  <a href="../../index.html"><span>🏠</span><span>Home</span></a>
+  <a href="#" onclick="showTab('trips');return false;" class="active"><span>🚗</span><span>Trips</span></a>
+  <a href="#" onclick="showTab('history');return false;"><span>📋</span><span>History</span></a>
+  <a href="#" onclick="showTab('earnings');return false;"><span>💰</span><span>Earnings</span></a>
+  <a href="buyer.html"><span>👤</span><span>Account</span></a>
+</div>
 
-      nexaGetMyDriverListings(user.uid)
-        .then(function(listings) {
-          myListings = listings;
-          renderMyListings(listings);
-          updateStats();
-        })
-        .catch(function(err) {
-          console.log('Error loading listings:', err);
-          renderMyListings([]);
-        });
-    }
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="../../js/firebase/config.js"></script>
+<script src="../../js/firebase/auth.js"></script>
+<script src="../../js/core/main.js"></script>
+<script>
 
-    function loadMyRequests() {
-      var user = auth.currentUser;
-      if (!user) return;
+  var myTrips=[], filteredTrips=[];
+  var isOnline=false;
+  var tripsListener=null;
 
-      nexaGetDriverRideRequests(user.uid)
-        .then(function(requests) {
-          myRequests = requests;
-          renderRequests('all');
-          updateStats();
-        })
-        .catch(function(err) {
-          console.log('Error loading requests:', err);
-        });
-    }
+  function init() {
+    var user=JSON.parse(localStorage.getItem('nexa_current_user')||'null');
+    if (!user){ window.location.href='../auth/login.html'; return; }
+    var av=document.getElementById('user-avatar');
+    var sb=document.getElementById('overview-sub');
+    if (av) av.textContent=(user.firstName||'D')[0].toUpperCase();
+    if (sb) sb.textContent='Welcome back, '+(user.firstName||'Driver')+'!';
+    showTab('overview');
+    loadVehicleProfile();
+  }
 
-    function updateStats() {
-      var listingsEl = document.getElementById('stat-listings');
-      var ridesEl    = document.getElementById('stat-rides');
-      var revenueEl  = document.getElementById('stat-revenue');
-      var balanceEl  = document.getElementById('stat-balance');
-
-      if (listingsEl) listingsEl.textContent = myListings.length;
-      if (ridesEl)    ridesEl.textContent    = myRequests.length;
-
-      var revenue = myRequests
-        .filter(function(r) { return r.status === 'completed'; })
-        .reduce(function(s, r) { return s + (r.estimatedPrice || 0); }, 0);
-      var balance = Math.round(revenue * 0.9);
-
-      if (revenueEl) revenueEl.textContent = '₦' + revenue.toLocaleString();
-      if (balanceEl) balanceEl.textContent = '₦' + balance.toLocaleString();
-
-      var ecTotal = document.getElementById('ec-total');
-      var ecAvail = document.getElementById('ec-available');
-      var ecFee   = document.getElementById('ec-fee');
-      if (ecTotal) ecTotal.textContent = '₦' + revenue.toLocaleString();
-      if (ecAvail) ecAvail.textContent = '₦' + balance.toLocaleString();
-      if (ecFee)   ecFee.textContent   = '₦' + Math.round(revenue * 0.1).toLocaleString();
-    }
-
-    function renderMyListings(listings) {
-      var list = document.getElementById('my-driver-list');
-      if (!list) return;
-      if (!listings || listings.length === 0) {
-        list.innerHTML =
-          '<div class="empty-products">' +
-            '<div style="font-size:3em;margin-bottom:12px">🚗</div>' +
-            '<h3>No listings yet</h3>' +
-            '<p>Add your vehicle to start receiving ride requests</p>' +
-            '<button class="btn-primary" onclick="showTab(\'add-listing\')">➕ Add Listing</button>' +
-          '</div>';
-        return;
-      }
-      list.innerHTML = listings.map(function(l) {
-        var serviceLabel = { ride: '🚖 Rides', delivery: '📦 Delivery', both: '🚗📦 Both' }[l.serviceType] || l.serviceType;
-        return '<div class="my-product-row">' +
-          '<div class="mp-img">' + (l.emoji || '🚗') + '</div>' +
-          '<div class="mp-info">' +
-            '<div class="mp-name">' + l.vehicleName + '</div>' +
-            '<div class="mp-cat">' + l.vehicleType + ' • ' + serviceLabel + '</div>' +
-            '<div class="mp-stock" style="color:' + (l.isAvailable ? 'var(--green)' : '#cc0000') + ';">' +
-              (l.isAvailable ? '🟢 Available' : '🔴 Unavailable') +
-            '</div>' +
-          '</div>' +
-          '<div class="mp-price">₦' + parseInt(l.basePrice).toLocaleString() + '<small style="font-size:0.7em;color:var(--text2);"> base</small></div>' +
-          '<div class="mp-actions">' +
-            '<button onclick="toggleAvailability(\'' + l.id + '\', ' + !l.isAvailable + ')" style="padding:6px 8px;background:white;border:1px solid var(--border);border-radius:6px;cursor:pointer;margin-right:4px;font-size:0.75em;">' +
-              (l.isAvailable ? '❌ Go Offline' : '✅ Go Online') +
-            '</button>' +
-            '<button onclick="previewListing(\'' + l.id + '\')" style="padding:6px 10px;background:white;border:1px solid var(--border);border-radius:6px;cursor:pointer;margin-right:4px;">👁️</button>' +
-            '<button onclick="deleteListing(\'' + l.id + '\')" class="btn-delete">🗑️</button>' +
-          '</div>' +
-        '</div>';
-      }).join('');
-    }
-
-    function renderRequests(filter) {
-      var body = document.getElementById('requests-body');
-      if (!body) return;
-      var filtered = filter === 'all'
-        ? myRequests
-        : myRequests.filter(function(r) { return r.status === filter; });
-
-      if (filtered.length === 0) {
-        body.innerHTML = '<tr><td colspan="7" style="text-align:center;color:var(--text2);padding:20px">No ' + (filter === 'all' ? '' : filter) + ' requests</td></tr>';
-        return;
-      }
-
-      body.innerHTML = filtered.map(function(r) {
-        var route = (r.pickupAddress || 'N/A') + ' → ' + (r.dropoffAddress || 'N/A');
-        return '<tr>' +
-          '<td><b>' + r.id.slice(-6) + '</b></td>' +
-          '<td>' + (r.customerName || 'Customer') + '<br/><small>' + (r.customerPhone || '') + '</small></td>' +
-          '<td>' + (r.serviceType === 'delivery' ? '📦 Delivery' : '🚖 Ride') + '</td>' +
-          '<td style="font-size:0.78em;max-width:120px;word-break:break-word;">' + route + '</td>' +
-          '<td>₦' + (r.estimatedPrice || 0).toLocaleString() + '</td>' +
-          '<td><span class="status-badge status-' + r.status + '">' + r.status + '</span></td>' +
-          '<td>' +
-            (r.status === 'pending'
-              ? '<button onclick="updateRequest(\'' + r.id + '\', \'accepted\')" style="padding:4px 8px;background:var(--green);color:white;border:none;border-radius:4px;cursor:pointer;font-size:0.8em;">Accept</button>' +
-                '<button onclick="updateRequest(\'' + r.id + '\', \'cancelled\')" style="padding:4px 8px;background:#cc0000;color:white;border:none;border-radius:4px;cursor:pointer;font-size:0.8em;margin-left:4px;">Decline</button>'
-              : r.status === 'accepted'
-              ? '<button onclick="updateRequest(\'' + r.id + '\', \'completed\')" style="padding:4px 8px;background:var(--orange);color:white;border:none;border-radius:4px;cursor:pointer;font-size:0.8em;">Complete</button>'
-              : '—') +
-          '</td>' +
-        '</tr>';
-      }).join('');
-    }
-
-    function filterRequests(status, btn) {
-      var btns = document.querySelectorAll('.order-filter-btn');
-      btns.forEach(function(b) { b.classList.remove('active'); });
-      btn.classList.add('active');
-      renderRequests(status);
-    }
-
-    function updateRequest(requestId, status) {
-      nexaUpdateRideStatus(requestId, status)
-        .then(function() {
-          showToast('✅ Request ' + status);
-          loadMyRequests();
-        })
-        .catch(function(err) { showToast('Error: ' + err.message); });
-    }
-
-    function toggleAvailability(listingId, isAvailable) {
-      nexaToggleDriverAvailability(listingId, isAvailable)
-        .then(function() {
-          showToast(isAvailable ? '🟢 You are now online' : '🔴 You are now offline');
-          loadMyListings();
-        })
-        .catch(function(err) { showToast('Error: ' + err.message); });
-    }
-
-    function triggerImageUpload() {
-      document.getElementById('image-file').click();
-    }
-
-    function previewImage() {
-      var file = document.getElementById('image-file').files[0];
-      if (!file) return;
-      selectedImageFile = file;
-      var reader = new FileReader();
-      reader.onload = function(e) {
-        document.getElementById('upload-placeholder').style.display = 'none';
-        var previewEl = document.getElementById('upload-preview');
-        previewEl.style.display = 'flex';
-        previewEl.innerHTML = '<img src="' + e.target.result + '" style="max-width:100%;max-height:150px;border-radius:8px;"/>';
-      };
-      reader.readAsDataURL(file);
-    }
-
-    function selectEmoji(emoji) {
-      selectedEmoji = emoji;
-      document.getElementById('preview-emoji').textContent = emoji;
-      document.getElementById('upload-placeholder').style.display = 'none';
-      document.getElementById('upload-preview').style.display = 'flex';
-      document.querySelectorAll('.emoji-grid span').forEach(function(s) { s.classList.remove('selected'); });
-      event.target.classList.add('selected');
-    }
-
-    function publishDriverListing() {
-      var vehicleType = document.getElementById('dl-vehicle-type').value;
-      var vehicleName = document.getElementById('dl-vehicle-name').value.trim();
-      var vehicleColor = document.getElementById('dl-vehicle-color').value.trim();
-      var plate       = document.getElementById('dl-plate').value.trim();
-      var basePrice   = document.getElementById('dl-base-price').value;
-      var pricePerKm  = document.getElementById('dl-price-km').value;
-      var desc        = document.getElementById('dl-desc').value.trim();
-      var experience  = document.getElementById('dl-experience').value.trim();
-      var fromTime    = document.getElementById('dl-from').value;
-      var toTime      = document.getElementById('dl-to').value;
-      var errEl       = document.getElementById('dl-error');
-      var sucEl       = document.getElementById('dl-success');
-
-      errEl.style.display = 'none';
-      sucEl.style.display = 'none';
-
-      if (!vehicleType) { errEl.textContent = 'Select vehicle type';  errEl.style.display = 'block'; return; }
-      if (!vehicleName) { errEl.textContent = 'Enter vehicle name';   errEl.style.display = 'block'; return; }
-      if (!basePrice)   { errEl.textContent = 'Enter base price';     errEl.style.display = 'block'; return; }
-      if (!pricePerKm)  { errEl.textContent = 'Enter price per KM';   errEl.style.display = 'block'; return; }
-
-      var user = auth.currentUser;
-      if (!user) { errEl.textContent = 'Please login first'; errEl.style.display = 'block'; return; }
-
-      var publishBtn = document.querySelector('.btn-publish');
-      if (publishBtn) { publishBtn.textContent = 'Publishing...'; publishBtn.disabled = true; }
-
-      var userData = JSON.parse(localStorage.getItem('nexa_current_user') || '{}');
-
-      var uploadPromise = selectedImageFile
-        ? uploadImageToImgBB(selectedImageFile)
-        : Promise.resolve('');
-
-      uploadPromise.then(function(imageUrl) {
-        return nexaAddDriverListing({
-          driverName:    userData.fullName || userData.firstName || 'Driver',
-          serviceType:   currentServiceType === 'bothservice' ? 'both' : currentServiceType,
-          vehicleType:   vehicleType,
-          vehicleName:   vehicleName,
-          vehicleColor:  vehicleColor,
-          plateNumber:   plate,
-          basePrice:     basePrice,
-          pricePerKm:    pricePerKm,
-          description:   desc,
-          experience:    experience,
-          serviceAreas:  collectServiceAreas(),
-          availableDays: collectAvailableDays(),
-          availableFrom: fromTime,
-          availableTo:   toTime,
-          emoji:         selectedEmoji || '🚗',
-        }, imageUrl);
-      })
-      .then(function(listingId) {
-        sucEl.textContent = '🎉 Listing published! You can now receive ride requests.';
-        sucEl.style.display = 'block';
-
-        document.getElementById('dl-vehicle-name').value  = '';
-        document.getElementById('dl-vehicle-color').value = '';
-        document.getElementById('dl-plate').value         = '';
-        document.getElementById('dl-base-price').value    = '';
-        document.getElementById('dl-price-km').value      = '';
-        document.getElementById('dl-desc').value          = '';
-        document.getElementById('dl-experience').value    = '';
-        document.getElementById('dl-from').value          = '';
-        document.getElementById('dl-to').value            = '';
-        document.querySelectorAll('.area-cb').forEach(function(cb) { cb.checked = false; });
-        document.querySelectorAll('.day-cb').forEach(function(cb) { cb.checked = false; });
-        document.getElementById('upload-placeholder').style.display = 'block';
-        document.getElementById('upload-preview').style.display     = 'none';
-        selectedEmoji = '🚗';
-        selectedImageFile = null;
-
-        if (publishBtn) { publishBtn.textContent = '🚀 Publish Listing'; publishBtn.disabled = false; }
-        loadMyListings();
-      })
-      .catch(function(err) {
-        errEl.textContent = '❌ Error: ' + (err.message || err.toString());
-        errEl.style.display = 'block';
-        if (publishBtn) { publishBtn.textContent = '🚀 Publish Listing'; publishBtn.disabled = false; }
-      });
-    }
-
-    function previewListing(listingId) {
-      var listing = myListings.find(function(l) { return l.id === listingId; });
-      if (!listing) return;
-
-      var imgHtml = listing.imageUrl
-        ? '<img src="' + listing.imageUrl + '" style="width:100%;border-radius:10px;margin-bottom:14px;"/>'
-        : '<div style="font-size:4em;text-align:center;background:var(--gray);border-radius:10px;padding:30px 0;margin-bottom:14px;">' + (listing.emoji || '🚗') + '</div>';
-
-      var body = document.getElementById('preview-modal-body');
-      body.innerHTML =
-        imgHtml +
-        '<h2 style="font-size:1.2em;margin-bottom:6px;">' + listing.vehicleName + '</h2>' +
-        '<div style="color:var(--text2);font-size:0.85em;margin-bottom:10px;">' + listing.vehicleType + (listing.vehicleColor ? ' • ' + listing.vehicleColor : '') + (listing.plateNumber ? ' • ' + listing.plateNumber : '') + '</div>' +
-        '<div style="color:var(--orange);font-size:1.2em;font-weight:800;margin-bottom:10px;">₦' + parseInt(listing.basePrice).toLocaleString() + ' base + ₦' + parseInt(listing.pricePerKm).toLocaleString() + '/km</div>' +
-        '<div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;">' +
-          (listing.serviceAreas || []).map(function(a) {
-            return '<span style="background:var(--gray);padding:4px 10px;border-radius:6px;font-size:0.8em;">📍 ' + a + '</span>';
-          }).join('') +
-        '</div>' +
-        (listing.availableDays && listing.availableDays.length > 0
-          ? '<div style="font-size:0.85em;color:var(--text2);margin-bottom:8px;">📅 ' + listing.availableDays.join(', ') + '</div>'
-          : '') +
-        (listing.availableFrom
-          ? '<div style="font-size:0.85em;color:var(--text2);margin-bottom:10px;">🕒 ' + listing.availableFrom + ' — ' + listing.availableTo + '</div>'
-          : '') +
-        '<p style="font-size:0.9em;color:var(--text2);line-height:1.6;">' + (listing.description || '') + '</p>';
-
-      document.getElementById('preview-modal-overlay').style.display = 'block';
-      document.getElementById('preview-modal').style.display = 'block';
-    }
-
-    function closePreviewModal() {
-      document.getElementById('preview-modal-overlay').style.display = 'none';
-      document.getElementById('preview-modal').style.display = 'none';
-    }
-
-    function deleteListing(listingId) {
-      if (confirm('Delete this listing?')) {
-        nexaDeleteDriverListing(listingId)
-          .then(function() {
-            showToast('🗑️ Listing deleted');
-            myListings = myListings.filter(function(l) { return l.id !== listingId; });
-            renderMyListings(myListings);
-            updateStats();
-            setTimeout(function() { loadMyListings(); }, 800);
-          })
-          .catch(function(err) { showToast('Error: ' + err.message); });
-      }
-    }
-
-    function processWithdrawal() {
-      var account = document.getElementById('wd-account').value.trim();
-      var name    = document.getElementById('wd-name').value.trim();
-      var amount  = parseInt(document.getElementById('wd-amount').value);
-      var errEl   = document.getElementById('wd-error');
-      var sucEl   = document.getElementById('wd-success');
-
-      errEl.style.display = 'none';
-      sucEl.style.display = 'none';
-
-      if (!account || account.length !== 10) { errEl.textContent = 'Enter valid 10-digit account number'; errEl.style.display = 'block'; return; }
-      if (!name)   { errEl.textContent = 'Enter account name'; errEl.style.display = 'block'; return; }
-      if (!amount || amount < 1000) { errEl.textContent = 'Minimum withdrawal is ₦1,000'; errEl.style.display = 'block'; return; }
-
-      var user = auth.currentUser;
-      if (!user) return;
-
-      db.collection('withdrawalRequests').add({
-        userId:    user.uid,
-        userType:  'driver',
-        bank:      document.getElementById('wd-bank').value,
-        account:   account,
-        name:      name,
-        amount:    amount,
-        status:    'pending',
-        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-      }).then(function() {
-        sucEl.textContent = '✅ Withdrawal request submitted! We will process within 1-2 business days.';
-        sucEl.style.display = 'block';
-        document.getElementById('wd-amount').value = '';
-      }).catch(function(err) {
-        errEl.textContent = 'Error: ' + err.message;
-        errEl.style.display = 'block';
-      });
-    }
-
-    function saveDriverSettings() {
-      showToast('✅ Settings saved!');
-    }
-
-    function doDriverLogout() {
-      if (typeof nexaLogout === 'function') {
-        nexaLogout().then(function() {
-          localStorage.removeItem('nexa_current_user');
-          window.location.href = '../../index.html';
-        });
-      } else {
-        localStorage.removeItem('nexa_current_user');
-        window.location.href = '../../index.html';
-      }
-    }
-
-    document.addEventListener('DOMContentLoaded', function() {
-      init();
+  if (typeof auth!=='undefined') {
+    auth.onAuthStateChanged(function(u){
+      if (u){ loadTrips(); }
+      else { window.location.href='../auth/login.html'; }
     });
+  }
 
-  </script>
+  function showTab(tab) {
+    document.querySelectorAll('.db-tab').forEach(function(t){ t.classList.remove('active'); });
+    document.querySelectorAll('.db-tab-content').forEach(function(c){ c.classList.remove('active'); });
+    var map={overview:0,trips:1,history:2,earnings:3,vehicle:4};
+    var tabs=document.querySelectorAll('.db-tab');
+    if (map[tab]!==undefined&&tabs[map[tab]]) tabs[map[tab]].classList.add('active');
+    var c=document.getElementById('content-'+tab);
+    if (c) c.classList.add('active');
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
 
+  function toggleOnlineStatus() {
+    isOnline=document.getElementById('online-toggle').checked;
+    document.getElementById('online-toggle-trips').checked=isOnline;
+    updateOnlineUI();
+    var user=auth.currentUser;
+    if (user&&typeof db!=='undefined') {
+      db.collection('drivers').doc(user.uid).set({
+        isOnline:isOnline,
+        lastSeen:firebase.firestore.FieldValue.serverTimestamp(),
+      },{merge:true}).catch(function(err){ console.log('Online status error:',err); });
+    }
+  }
+
+  function toggleOnlineStatus2() {
+    isOnline=document.getElementById('online-toggle-trips').checked;
+    document.getElementById('online-toggle').checked=isOnline;
+    updateOnlineUI();
+    toggleOnlineStatus();
+  }
+
+  function updateOnlineUI() {
+    var dots=document.querySelectorAll('.status-dot');
+    var txt1=document.getElementById('online-status-text');
+    var sub1=document.getElementById('online-status-sub');
+    var txt2=document.getElementById('trips-status-text');
+    dots.forEach(function(d){
+      d.classList.toggle('online',isOnline);
+      d.classList.toggle('offline',!isOnline);
+    });
+    if (txt1) txt1.textContent=isOnline?'You are Online':'You are Offline';
+    if (sub1) sub1.textContent=isOnline?'You are visible to passengers and can receive trips':'Go online to start receiving ride requests';
+    if (txt2) txt2.textContent=isOnline?'You are Online':'You are Offline';
+  }
+
+  function loadTrips() {
+    var user=auth.currentUser;
+    if (!user) return;
+    if (tripsListener) tripsListener();
+    tripsListener=db.collection('rideRequests')
+      .where('driverId','==',user.uid)
+      .onSnapshot(function(snap){
+        myTrips=[];
+        snap.forEach(function(doc){ myTrips.push(Object.assign({id:doc.id},doc.data())); });
+        myTrips.sort(function(a,b){
+          return (b.createdAt?b.createdAt.toMillis():0)-(a.createdAt?a.createdAt.toMillis():0);
+        });
+        filteredTrips=myTrips.slice();
+        renderHistory(filteredTrips);
+        renderRecentTrips(myTrips.slice(0,5));
+        renderActiveTrips();
+        updateStats();
+        var pending=myTrips.filter(function(t){ return t.status==='pending'; }).length;
+        var badge=document.getElementById('trips-badge');
+        if (badge&&pending>0){ badge.textContent=pending; badge.style.display='inline'; }
+      },function(err){ console.log('Trips error:',err); });
+  }
+
+  function renderActiveTrips() {
+    var list=document.getElementById('active-trips-list');
+    if (!list) return;
+    var active=myTrips.filter(function(t){ return t.status==='pending'||t.status==='accepted'; });
+    if (active.length===0) {
+      list.innerHTML='<div class="db-empty"><div class="db-empty-icon">🚗</div><h3>No active requests</h3><p>Go online to start receiving trip requests from passengers</p></div>';
+      return;
+    }
+    list.innerHTML=active.map(function(t){
+      return '<div class="trip-card">'+
+        '<div class="trip-header">'+
+          '<div>'+
+            '<div class="trip-id">Trip #'+(t.id||'').slice(-6)+'</div>'+
+            '<div style="font-size:0.85em;font-weight:700;margin-top:2px;">'+(t.passengerName||'Passenger')+'</div>'+
+          '</div>'+
+          '<div class="trip-amount">₦'+parseInt(t.fare||0).toLocaleString()+'</div>'+
+        '</div>'+
+        '<div class="trip-route">'+
+          '<div class="trip-point">'+
+            '<span class="trip-dot pickup"></span>'+
+            '<span>'+(t.pickupAddress||'Pickup location')+'</span>'+
+          '</div>'+
+          '<div class="trip-point">'+
+            '<span class="trip-dot dropoff"></span>'+
+            '<span>'+(t.dropoffAddress||'Destination')+'</span>'+
+          '</div>'+
+        '</div>'+
+        (t.status==='pending'
+          ?'<div class="trip-actions">'+
+              '<button class="trip-accept-btn" onclick="acceptTrip(\''+t.id+'\')">✅ Accept Trip</button>'+
+              '<button class="trip-decline-btn" onclick="declineTrip(\''+t.id+'\')">Decline</button>'+
+            '</div>'
+          :'<div style="display:flex;gap:8px;">'+
+              '<button onclick="updateTrip(\''+t.id+'\',\'in-progress\')" style="flex:1;padding:10px;background:#1565c0;color:white;border:none;border-radius:9px;font-weight:700;cursor:pointer;font-family:\'Inter\',sans-serif;font-size:0.85em;">🚗 Start Trip</button>'+
+              '<button onclick="updateTrip(\''+t.id+'\',\'completed\')" style="flex:1;padding:10px;background:#00a651;color:white;border:none;border-radius:9px;font-weight:700;cursor:pointer;font-family:\'Inter\',sans-serif;font-size:0.85em;">✅ Complete</button>'+
+            '</div>')+
+      '</div>';
+    }).join('');
+  }
+
+  function acceptTrip(tripId) {
+    db.collection('rideRequests').doc(tripId).update({ status:'accepted' })
+      .then(function(){ showToast('✅ Trip accepted! Head to pickup location.'); })
+      .catch(function(err){ showToast('Error: '+err.message); });
+  }
+
+  function declineTrip(tripId) {
+    db.collection('rideRequests').doc(tripId).update({ status:'declined' })
+      .then(function(){ showToast('Trip declined'); })
+      .catch(function(err){ showToast('Error: '+err.message); });
+  }
+
+  function updateTrip(tripId,status) {
+    db.collection('rideRequests').doc(tripId).update({ status:status })
+      .then(function(){ showToast(status==='completed'?'🎉 Trip completed! Fare added to earnings.':'🚗 Trip started!'); })
+      .catch(function(err){ showToast('Error: '+err.message); });
+  }
+
+  function filterHistory(status,btn) {
+    document.querySelectorAll('#content-history .db-filter-btn').forEach(function(b){ b.classList.remove('active'); });
+    btn.classList.add('active');
+    filteredTrips=status==='all'?myTrips.slice():myTrips.filter(function(t){ return t.status===status; });
+    renderHistory(filteredTrips);
+  }
+
+  function renderHistory(trips) {
+    var body=document.getElementById('history-body');
+    if (!body) return;
+    var done=trips.filter(function(t){ return t.status==='completed'||t.status==='cancelled'||t.status==='declined'; });
+    if (done.length===0) {
+      body.innerHTML='<tr><td colspan="7" style="text-align:center;padding:20px;color:#999;">No trips yet — go online to start</td></tr>';
+      return;
+    }
+    body.innerHTML=done.map(function(t){
+      var sc=t.status==='completed'?'background:#d4edda;color:#155724;':'background:#f8d7da;color:#721c24;';
+      return '<tr>'+
+        '<td><strong style="color:#ff6b00;">'+(t.id||'').slice(-6)+'</strong></td>'+
+        '<td>'+(t.passengerName||'Passenger')+'</td>'+
+        '<td style="font-size:0.82em;max-width:80px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+(t.pickupAddress||'')+'</td>'+
+        '<td style="font-size:0.82em;max-width:80px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+(t.dropoffAddress||'')+'</td>'+
+        '<td style="font-weight:700;color:#ff6b00;">₦'+parseInt(t.fare||0).toLocaleString()+'</td>'+
+        '<td style="font-size:0.78em;color:#999;">'+(t.createdAt?new Date(t.createdAt.toMillis()).toLocaleDateString():'')+'</td>'+
+        '<td><span style="padding:3px 8px;border-radius:4px;font-size:0.7em;font-weight:700;'+sc+'">'+(t.status||'')+'</span></td>'+
+      '</tr>';
+    }).join('');
+  }
+
+  function renderRecentTrips(trips) {
+    var wrap=document.getElementById('recent-trips-wrap');
+    if (!wrap) return;
+    var done=trips.filter(function(t){ return t.status==='completed'; });
+    if (done.length===0) {
+      wrap.innerHTML='<div class="db-empty" style="padding:20px;"><div class="db-empty-icon" style="font-size:2em;">🚗</div><h3>No trips yet</h3><p>Go online to start receiving ride requests</p></div>';
+      return;
+    }
+    wrap.innerHTML=done.map(function(t){
+      return '<div class="db-row">'+
+        '<div class="db-row-img" style="font-size:1.5em;">🚗</div>'+
+        '<div class="db-row-info">'+
+          '<div class="db-row-name">'+(t.passengerName||'Passenger')+'</div>'+
+          '<div class="db-row-meta">📍 '+(t.pickupAddress||'')+'</div>'+
+        '</div>'+
+        '<div class="db-row-price">₦'+parseInt(t.fare||0).toLocaleString()+'</div>'+
+      '</div>';
+    }).join('');
+  }
+
+  function updateStats() {
+    var completed=myTrips.filter(function(t){ return t.status==='completed'; });
+    var revenue=completed.reduce(function(s,t){ return s+parseInt(t.fare||0); },0);
+    var balance=Math.round(revenue*0.9);
+    var today=new Date().toDateString();
+    var todayRevenue=completed.filter(function(t){
+      return t.createdAt&&new Date(t.createdAt.toMillis()).toDateString()===today;
+    }).reduce(function(s,t){ return s+parseInt(t.fare||0); },0);
+
+    document.getElementById('stat-today').textContent='₦'+todayRevenue.toLocaleString();
+    document.getElementById('stat-trips').textContent=completed.length;
+    document.getElementById('stat-revenue').textContent='₦'+revenue.toLocaleString();
+    document.getElementById('stat-balance').textContent='₦'+balance.toLocaleString();
+    document.getElementById('ec-total').textContent='₦'+revenue.toLocaleString();
+    document.getElementById('ec-avail').textContent='₦'+balance.toLocaleString();
+    document.getElementById('ec-fee').textContent='₦'+Math.round(revenue*0.1).toLocaleString();
+    document.getElementById('ec-trips').textContent=completed.length;
+
+    /* weekly breakdown */
+    var days=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+    var now=new Date();
+    var dayOfWeek=now.getDay();
+    var monday=new Date(now);
+    monday.setDate(now.getDate()-(dayOfWeek===0?6:dayOfWeek-1));
+    monday.setHours(0,0,0,0);
+    for (var i=0;i<7;i++) {
+      var dayStart=new Date(monday); dayStart.setDate(monday.getDate()+i);
+      var dayEnd=new Date(dayStart); dayEnd.setHours(23,59,59,999);
+      var dayEarned=completed.filter(function(t){
+        if (!t.createdAt) return false;
+        var ms=t.createdAt.toMillis();
+        return ms>=dayStart.getTime()&&ms<=dayEnd.getTime();
+      }).reduce(function(s,t){ return s+parseInt(t.fare||0); },0);
+      var el=document.getElementById('day-'+i);
+      if (el) el.textContent=dayEarned>0?'₦'+dayEarned.toLocaleString():'₦0';
+    }
+  }
+
+  function getFeatures() {
+    var f=[];
+    document.querySelectorAll('.v-feature:checked').forEach(function(cb){ f.push(cb.value); });
+    return f;
+  }
+
+  function saveVehicle() {
+    var type=document.getElementById('v-type').value;
+    var cat=document.getElementById('v-category').value;
+    var model=document.getElementById('v-model').value.trim();
+    var plate=document.getElementById('v-plate').value.trim();
+    var color=document.getElementById('v-color').value.trim();
+    var seats=document.getElementById('v-seats').value;
+    var price=document.getElementById('v-price').value;
+    var perKm=document.getElementById('v-per-km').value;
+    var area=document.getElementById('v-area').value.trim();
+    var state=document.getElementById('v-state').value;
+    var errEl=document.getElementById('v-error');
+    var sucEl=document.getElementById('v-success');
+
+    errEl.style.display='none'; sucEl.style.display='none';
+
+    if (!model){ errEl.textContent='Enter vehicle brand and model'; errEl.style.display='block'; return; }
+    if (!plate){ errEl.textContent='Enter plate number'; errEl.style.display='block'; return; }
+    if (!price){ errEl.textContent='Enter base price'; errEl.style.display='block'; return; }
+    if (!area){ errEl.textContent='Enter operating area'; errEl.style.display='block'; return; }
+    if (!state){ errEl.textContent='Select state'; errEl.style.display='block'; return; }
+
+    var user=auth.currentUser;
+    if (!user){ errEl.textContent='Please login first'; errEl.style.display='block'; return; }
+
+    var userData=JSON.parse(localStorage.getItem('nexa_current_user')||'{}');
+
+    db.collection('drivers').doc(user.uid).set({
+      driverId:user.uid,
+      driverName:userData.fullName||userData.firstName||'Driver',
+      vehicleType:type,
+      category:cat,
+      model:model,
+      plate:plate.toUpperCase(),
+      color:color,
+      seats:parseInt(seats),
+      basePrice:parseFloat(price),
+      pricePerKm:perKm?parseFloat(perKm):0,
+      area:area,
+      state:state,
+      features:getFeatures(),
+      status:'pending',
+      isOnline:false,
+      updatedAt:firebase.firestore.FieldValue.serverTimestamp(),
+    },{merge:true})
+    .then(function(){
+      sucEl.textContent='✅ Vehicle profile saved! Admin will review and activate your account.';
+      sucEl.style.display='block';
+    })
+    .catch(function(err){
+      errEl.textContent='Error: '+err.message;
+      errEl.style.display='block';
+    });
+  }
+
+  function saveDriverProfile() {
+    var license=document.getElementById('d-license').value.trim();
+    var expiry=document.getElementById('d-license-expiry').value;
+    var exp=document.getElementById('d-experience').value;
+    var whatsapp=document.getElementById('d-whatsapp').value.trim();
+    var bio=document.getElementById('d-bio').value.trim();
+    var errEl=document.getElementById('d-error');
+    var sucEl=document.getElementById('d-success');
+
+    errEl.style.display='none'; sucEl.style.display='none';
+
+    if (!license){ errEl.textContent='Enter driver\'s license number'; errEl.style.display='block'; return; }
+    if (!whatsapp){ errEl.textContent='Enter WhatsApp number'; errEl.style.display='block'; return; }
+
+    var user=auth.currentUser;
+    if (!user){ errEl.textContent='Please login first'; errEl.style.display='block'; return; }
+
+    db.collection('drivers').doc(user.uid).set({
+      licenseNumber:license,
+      licenseExpiry:expiry,
+      experience:exp,
+      whatsapp:whatsapp,
+      bio:bio,
+      updatedAt:firebase.firestore.FieldValue.serverTimestamp(),
+    },{merge:true})
+    .then(function(){
+      sucEl.textContent='✅ Driver profile saved!';
+      sucEl.style.display='block';
+    })
+    .catch(function(err){
+      errEl.textContent='Error: '+err.message;
+      errEl.style.display='block';
+    });
+  }
+
+  function loadVehicleProfile() {
+    var user=auth.currentUser||JSON.parse(localStorage.getItem('nexa_current_user')||'null');
+    if (!user) return;
+    var uid=user.uid||user;
+    if (!uid||typeof db==='undefined') return;
+    db.collection('drivers').doc(uid).get()
+      .then(function(doc){
+        if (!doc.exists) return;
+        var d=doc.data();
+        if (d.vehicleType) document.getElementById('v-type').value=d.vehicleType;
+        if (d.category) document.getElementById('v-category').value=d.category;
+        if (d.model) document.getElementById('v-model').value=d.model;
+        if (d.plate) document.getElementById('v-plate').value=d.plate;
+        if (d.color) document.getElementById('v-color').value=d.color;
+        if (d.seats) document.getElementById('v-seats').value=d.seats;
+        if (d.basePrice) document.getElementById('v-price').value=d.basePrice;
+        if (d.pricePerKm) document.getElementById('v-per-km').value=d.pricePerKm;
+        if (d.area) document.getElementById('v-area').value=d.area;
+        if (d.state) document.getElementById('v-state').value=d.state;
+        if (d.licenseNumber) document.getElementById('d-license').value=d.licenseNumber;
+        if (d.licenseExpiry) document.getElementById('d-license-expiry').value=d.licenseExpiry;
+        if (d.experience) document.getElementById('d-experience').value=d.experience;
+        if (d.whatsapp) document.getElementById('d-whatsapp').value=d.whatsapp;
+        if (d.bio) document.getElementById('d-bio').value=d.bio;
+        if (d.features) {
+          document.querySelectorAll('.v-feature').forEach(function(cb){
+            cb.checked=d.features.indexOf(cb.value)>-1;
+          });
+        }
+        isOnline=d.isOnline||false;
+        document.getElementById('online-toggle').checked=isOnline;
+        document.getElementById('online-toggle-trips').checked=isOnline;
+        updateOnlineUI();
+      })
+      .catch(function(err){ console.log('Load vehicle error:',err); });
+  }
+
+  function doWithdraw() {
+    var bank=document.getElementById('wd-bank').value;
+    var acct=document.getElementById('wd-acct').value.trim();
+    var name=document.getElementById('wd-name').value.trim();
+    var amount=parseInt(document.getElementById('wd-amount').value);
+    var errEl=document.getElementById('wd-error');
+    var sucEl=document.getElementById('wd-success');
+    errEl.style.display='none'; sucEl.style.display='none';
+    if (!acct||acct.length<10){ errEl.textContent='Enter valid 10-digit account number'; errEl.style.display='block'; return; }
+    if (!name){ errEl.textContent='Enter account name'; errEl.style.display='block'; return; }
+    if (!amount||amount<1000){ errEl.textContent='Minimum withdrawal is ₦1,000'; errEl.style.display='block'; return; }
+    var user=auth.currentUser;
+    if (!user) return;
+    db.collection('withdrawalRequests').add({
+      userId:user.uid,userType:'driver',
+      bank:bank,account:acct,name:name,
+      amount:amount,status:'pending',
+      createdAt:firebase.firestore.FieldValue.serverTimestamp(),
+    }).then(function(){
+      sucEl.textContent='✅ Withdrawal request submitted! We will process within 1-2 business days.';
+      sucEl.style.display='block';
+      document.getElementById('wd-amount').value='';
+    }).catch(function(err){ errEl.textContent='Error: '+err.message; errEl.style.display='block'; });
+  }
+
+  function showToast(msg) {
+    var t=document.getElementById('db-toast');
+    if (!t) return;
+    t.textContent=msg;
+    t.style.display='block';
+    setTimeout(function(){ t.style.display='none'; },2500);
+  }
+
+  /* init on DOM ready */
+  document.addEventListener('DOMContentLoaded',function(){
+    init();
+    updateOnlineUI();
+  });
+
+</script>
 </body>
 </html>
