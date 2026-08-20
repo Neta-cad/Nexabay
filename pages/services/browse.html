@@ -4,772 +4,436 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>NexaServices — Hire Skilled Professionals | Nexabay</title>
-  <link rel="stylesheet" href="../../css/main.css"/>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    :root{
+      --brand:#7c3aed;
+      --accent:#f97316;
+      --dark:#09090b;
+      --dark2:#18181b;
+      --dark3:#27272a;
+      --muted:#71717a;
+      --border:rgba(255,255,255,0.08);
+      --white:#fff;
+      --green:#22c55e;
+    }
+    *{box-sizing:border-box;margin:0;padding:0;}
+    html{scroll-behavior:smooth;}
+    body{background:#f4f4f5;font-family:'Inter',sans-serif;-webkit-font-smoothing:antialiased;}
+
+    /* ── NAV ── */
+    .nav{position:sticky;top:0;z-index:200;background:#09090b;border-bottom:1px solid rgba(255,255,255,0.07);}
+    .nav-inner{max-width:1100px;margin:0 auto;padding:0 16px;height:56px;display:flex;align-items:center;gap:10px;}
+    .nav-logo{font-weight:900;font-size:1.15em;text-decoration:none;color:white;letter-spacing:-0.02em;flex-shrink:0;}
+    .nav-logo em{color:#f97316;font-style:normal;}
+    .nav-search{flex:1;display:flex;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.1);border-radius:9px;overflow:hidden;min-width:0;}
+    .nav-search input{flex:1;background:transparent;border:none;outline:none;padding:9px 12px;color:white;font-size:0.84em;font-family:'Inter',sans-serif;min-width:0;}
+    .nav-search input::placeholder{color:rgba(255,255,255,0.3);}
+    .nav-search button{background:#f97316;border:none;padding:9px 13px;cursor:pointer;flex-shrink:0;display:flex;align-items:center;}
+    .nav-search button svg{stroke:white;width:15px;height:15px;}
+    .nav-back{display:flex;align-items:center;gap:6px;color:rgba(255,255,255,0.7);text-decoration:none;font-size:0.82em;font-weight:600;white-space:nowrap;flex-shrink:0;}
+    .nav-back svg{stroke:rgba(255,255,255,0.7);width:16px;height:16px;}
 
     /* ── HERO ── */
-    .ns-hero {
-      background: linear-gradient(135deg, #0a0f1e 0%, #1a237e 50%, #0a0f1e 100%);
-      padding: 50px 20px 40px;
-      text-align: center;
-      position: relative;
-      overflow: hidden;
-    }
-    .ns-hero::before {
-      content: '';
-      position: absolute;
-      top: -50%;
-      left: -50%;
-      width: 200%;
-      height: 200%;
-      background: radial-gradient(circle, rgba(255,107,0,0.08) 0%, transparent 60%);
-      pointer-events: none;
-    }
-    .ns-hero-badge {
-      display: inline-block;
-      background: rgba(255,107,0,0.15);
-      color: #ff6b00;
-      border: 1px solid rgba(255,107,0,0.3);
-      padding: 6px 16px;
-      border-radius: 20px;
-      font-size: 0.8em;
-      font-weight: 700;
-      margin-bottom: 16px;
-      letter-spacing: 1px;
-    }
-    .ns-hero h1 {
-      color: white;
-      font-size: 2em;
-      font-weight: 900;
-      line-height: 1.2;
-      margin-bottom: 10px;
-    }
-    .ns-hero h1 span { color: #ff6b00; }
-    .ns-hero p {
-      color: rgba(255,255,255,0.7);
-      font-size: 0.95em;
-      margin-bottom: 24px;
-      line-height: 1.6;
-    }
-    .ns-search-bar {
-      display: flex;
-      max-width: 560px;
-      margin: 0 auto 20px;
-      background: white;
-      border-radius: 12px;
-      overflow: hidden;
-      box-shadow: 0 8px 32px rgba(0,0,0,0.3);
-    }
-    .ns-search-bar input {
-      flex: 1;
-      padding: 14px 16px;
-      border: none;
-      outline: none;
-      font-size: 0.92em;
-      font-family: 'Inter', sans-serif;
-    }
-    .ns-search-bar button {
-      background: #ff6b00;
-      color: white;
-      border: none;
-      padding: 14px 20px;
-      font-weight: 700;
-      font-size: 0.9em;
-      cursor: pointer;
-      white-space: nowrap;
-    }
-    .ns-hero-stats {
-      display: flex;
-      justify-content: center;
-      gap: 24px;
-      flex-wrap: wrap;
-    }
-    .ns-hero-stat {
-      color: rgba(255,255,255,0.8);
-      font-size: 0.82em;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-    .ns-hero-stat strong { color: white; }
+    .hero{background:linear-gradient(135deg,#1e0a3c,#3b0764,#1e0a3c);padding:32px 16px 28px;color:white;position:relative;overflow:hidden;}
+    .hero::after{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");}
+    .hero-inner{max-width:600px;margin:0 auto;text-align:center;position:relative;z-index:1;}
+    .hero-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.15);padding:5px 12px;border-radius:100px;font-size:0.75em;font-weight:600;margin-bottom:14px;color:rgba(255,255,255,0.85);}
+    .hero h1{font-size:clamp(1.5em,5vw,2.2em);font-weight:900;line-height:1.15;letter-spacing:-0.02em;margin-bottom:10px;}
+    .hero h1 span{color:#f97316;}
+    .hero p{font-size:0.88em;color:rgba(255,255,255,0.6);line-height:1.7;margin-bottom:20px;}
+    .hero-search{display:flex;background:white;border-radius:12px;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,0.25);}
+    .hero-search input{flex:1;border:none;outline:none;padding:13px 16px;font-size:0.88em;font-family:'Inter',sans-serif;color:#09090b;min-width:0;}
+    .hero-search input::placeholder{color:#a1a1aa;}
+    .hero-search button{background:#f97316;border:none;padding:13px 18px;cursor:pointer;display:flex;align-items:center;gap:6px;color:white;font-weight:700;font-size:0.84em;font-family:'Inter',sans-serif;white-space:nowrap;flex-shrink:0;}
+    .hero-search button svg{stroke:white;width:16px;height:16px;}
+    .hero-stats{display:flex;justify-content:center;gap:20px;margin-top:16px;flex-wrap:wrap;}
+    .hero-stat{font-size:0.75em;color:rgba(255,255,255,0.5);display:flex;align-items:center;gap:4px;}
+    .hero-stat strong{color:rgba(255,255,255,0.8);}
 
-    /* ── CATEGORIES STRIP ── */
-    .ns-cats-wrap {
-      background: white;
-      border-bottom: 1px solid #eee;
-      padding: 0 16px;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-    }
-    .ns-cats {
-      display: flex;
-      gap: 4px;
-      overflow-x: auto;
-      padding: 12px 0;
-      scrollbar-width: none;
-      max-width: 1000px;
-      margin: 0 auto;
-    }
-    .ns-cats::-webkit-scrollbar { display: none; }
-    .ns-cat-btn {
-      padding: 8px 16px;
-      border-radius: 20px;
-      border: 1.5px solid #e0e0e0;
-      background: white;
-      cursor: pointer;
-      white-space: nowrap;
-      font-size: 0.82em;
-      font-weight: 600;
-      color: #333;
-      transition: all 0.2s;
-      font-family: 'Inter', sans-serif;
-    }
-    .ns-cat-btn.active, .ns-cat-btn:hover {
-      background: #ff6b00;
-      border-color: #ff6b00;
-      color: white;
-    }
+    /* ── CATEGORY STRIP ── */
+    .cat-strip{background:white;border-bottom:1px solid #e4e4e7;position:sticky;top:56px;z-index:100;overflow-x:auto;scrollbar-width:none;}
+    .cat-strip::-webkit-scrollbar{display:none;}
+    .cat-strip-inner{max-width:1100px;margin:0 auto;padding:0 16px;display:flex;gap:0;}
+    .cat-btn{display:flex;align-items:center;gap:6px;padding:11px 14px;color:#52525b;font-size:0.78em;font-weight:600;white-space:nowrap;border:none;background:none;cursor:pointer;font-family:'Inter',sans-serif;border-bottom:2px solid transparent;transition:all 0.15s;flex-shrink:0;}
+    .cat-btn:hover{color:#7c3aed;}
+    .cat-btn.active{color:#7c3aed;border-bottom-color:#7c3aed;}
+    .cat-btn svg{width:14px;height:14px;stroke:currentColor;}
 
-    /* ── MAIN LAYOUT ── */
-    .ns-main {
-      max-width: 1000px;
-      margin: 0 auto;
-      padding: 24px 16px 80px;
-    }
+    /* ── MAIN ── */
+    .main{max-width:1100px;margin:0 auto;padding:20px 16px;}
 
-    /* ── TOOLBAR ── */
-    .ns-toolbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 20px;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
-    .ns-toolbar-left {
-      font-size: 0.88em;
-      color: #666;
-    }
-    .ns-toolbar-left strong { color: #333; }
-    .ns-sort-select {
-      padding: 8px 12px;
-      border: 1.5px solid #e0e0e0;
-      border-radius: 8px;
-      font-size: 0.85em;
-      outline: none;
-      cursor: pointer;
-      font-family: 'Inter', sans-serif;
-      background: white;
-    }
+    /* ── FILTERS BAR ── */
+    .filters-bar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:16px;flex-wrap:wrap;}
+    .filters-left{display:flex;gap:8px;flex-wrap:wrap;}
+    .filter-pill{display:flex;align-items:center;gap:5px;padding:7px 13px;border-radius:100px;border:1.5px solid #e4e4e7;background:white;color:#52525b;font-size:0.78em;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:all 0.15s;white-space:nowrap;}
+    .filter-pill:hover{border-color:#7c3aed;color:#7c3aed;}
+    .filter-pill.active{background:#7c3aed;border-color:#7c3aed;color:white;}
+    .filter-pill svg{width:13px;height:13px;stroke:currentColor;}
+    .results-count{font-size:0.8em;color:#71717a;white-space:nowrap;}
+    .results-count strong{color:#18181b;}
 
-    /* ── SERVICE CARDS GRID ── */
-    .ns-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 14px;
-    }
-    .ns-card {
-      background: white;
-      border-radius: 14px;
-      overflow: hidden;
-      border: 1px solid #f0f0f0;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-      cursor: pointer;
-      transition: transform 0.2s, box-shadow 0.2s;
-    }
-    .ns-card:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 8px 24px rgba(0,0,0,0.12);
-    }
-    .ns-card-img {
-      width: 100%;
-      height: 120px;
-      object-fit: cover;
-      background: linear-gradient(135deg, #f5f5f5, #ebebeb);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 3em;
-      position: relative;
-    }
-    .ns-card-img img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-    .ns-card-cat-badge {
-      position: absolute;
-      top: 8px;
-      left: 8px;
-      background: rgba(0,0,0,0.6);
-      color: white;
-      padding: 3px 8px;
-      border-radius: 4px;
-      font-size: 0.7em;
-      font-weight: 700;
-    }
-    .ns-card-body {
-      padding: 12px;
-    }
-    .ns-card-provider {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      margin-bottom: 6px;
-    }
-    .ns-card-avatar {
-      width: 24px;
-      height: 24px;
-      border-radius: 50%;
-      background: #ff6b00;
-      color: white;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.65em;
-      font-weight: 700;
-      flex-shrink: 0;
-    }
-    .ns-card-provider-name {
-      font-size: 0.78em;
-      color: #666;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    .ns-card-title {
-      font-size: 0.88em;
-      font-weight: 700;
-      color: #1a1a1a;
-      line-height: 1.4;
-      margin-bottom: 8px;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-    }
-    .ns-card-meta {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 8px;
-      flex-wrap: wrap;
-    }
-    .ns-card-rating {
-      font-size: 0.75em;
-      color: #666;
-      display: flex;
-      align-items: center;
-      gap: 2px;
-    }
-    .ns-card-rating span { color: #f5a623; }
-    .ns-card-location {
-      font-size: 0.72em;
-      color: #999;
-      display: flex;
-      align-items: center;
-      gap: 2px;
-    }
-    .ns-card-footer {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding-top: 8px;
-      border-top: 1px solid #f5f5f5;
-    }
-    .ns-card-price {
-      font-size: 1em;
-      font-weight: 800;
-      color: #ff6b00;
-    }
-    .ns-card-price small {
-      font-size: 0.65em;
-      font-weight: 500;
-      color: #999;
-    }
-    .ns-card-hire-btn {
-      background: #ff6b00;
-      color: white;
-      border: none;
-      padding: 7px 14px;
-      border-radius: 8px;
-      font-size: 0.78em;
-      font-weight: 700;
-      cursor: pointer;
-      font-family: 'Inter', sans-serif;
-    }
+    /* ── SERVICE CARDS ── */
+    .services-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;}
+    .service-card{background:white;border-radius:14px;border:1px solid #e4e4e7;overflow:hidden;cursor:pointer;transition:all 0.2s;display:flex;flex-direction:column;}
+    .service-card:hover{border-color:#c4b5fd;box-shadow:0 8px 24px rgba(124,58,237,0.1);transform:translateY(-2px);}
+    .service-img{width:100%;aspect-ratio:4/3;background:#f4f4f5;display:flex;align-items:center;justify-content:center;font-size:2.5em;position:relative;overflow:hidden;flex-shrink:0;}
+    .service-img img{width:100%;height:100%;object-fit:cover;}
+    .service-category-tag{position:absolute;top:8px;left:8px;background:rgba(124,58,237,0.9);color:white;padding:3px 8px;border-radius:100px;font-size:0.65em;font-weight:700;letter-spacing:0.3px;}
+    .service-body{padding:11px 12px;flex:1;display:flex;flex-direction:column;}
+    .service-provider{display:flex;align-items:center;gap:6px;margin-bottom:7px;}
+    .service-avatar{width:22px;height:22px;border-radius:50%;background:linear-gradient(135deg,#7c3aed,#f97316);color:white;display:flex;align-items:center;justify-content:center;font-size:0.62em;font-weight:700;flex-shrink:0;}
+    .service-provider-name{font-size:0.72em;color:#52525b;font-weight:600;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .service-name{font-size:0.82em;font-weight:700;color:#18181b;line-height:1.4;margin-bottom:6px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;flex:1;}
+    .service-meta{display:flex;align-items:center;gap:6px;margin-bottom:7px;flex-wrap:wrap;}
+    .service-rating{display:flex;align-items:center;gap:3px;font-size:0.72em;color:#52525b;}
+    .service-rating svg{width:11px;height:11px;fill:#f97316;stroke:none;}
+    .service-location{display:flex;align-items:center;gap:3px;font-size:0.7em;color:#71717a;}
+    .service-location svg{width:11px;height:11px;stroke:#71717a;}
+    .service-delivery{display:flex;align-items:center;gap:3px;font-size:0.7em;color:#71717a;}
+    .service-delivery svg{width:11px;height:11px;stroke:#71717a;}
+    .service-footer{display:flex;align-items:center;justify-content:space-between;padding-top:8px;border-top:1px solid #f4f4f5;margin-top:auto;}
+    .service-price{font-size:0.95em;font-weight:900;color:#7c3aed;}
+    .service-price small{font-size:0.65em;font-weight:500;color:#71717a;}
+    .service-book-btn{background:#7c3aed;color:white;border:none;padding:6px 12px;border-radius:7px;font-size:0.72em;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;transition:background 0.15s;}
+    .service-book-btn:hover{background:#6d28d9;}
 
-    /* ── EMPTY STATE ── */
-    .ns-empty {
-      text-align: center;
-      padding: 60px 20px;
-      grid-column: 1/-1;
-    }
-    .ns-empty-icon { font-size: 4em; margin-bottom: 16px; }
-    .ns-empty h3 { font-size: 1.2em; margin-bottom: 8px; color: #333; }
-    .ns-empty p { color: #999; font-size: 0.9em; margin-bottom: 20px; }
-    .ns-empty-btn {
-      display: inline-block;
-      background: #ff6b00;
-      color: white;
-      padding: 12px 24px;
-      border-radius: 10px;
-      text-decoration: none;
-      font-weight: 700;
-      font-size: 0.9em;
-    }
+    /* ── SKELETON ── */
+    .skel{background:linear-gradient(90deg,#f4f4f5 25%,#e4e4e7 50%,#f4f4f5 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;border-radius:6px;}
+    @keyframes shimmer{0%{background-position:200% 0;}100%{background-position:-200% 0;}}
+    .skel-card{background:white;border-radius:14px;border:1px solid #e4e4e7;overflow:hidden;}
+    .skel-img{width:100%;aspect-ratio:4/3;}
+    .skel-body{padding:11px 12px;}
+    .skel-line{height:10px;border-radius:5px;margin-bottom:8px;}
 
-    /* ── LOADING ── */
-    .ns-loading {
-      grid-column: 1/-1;
-      text-align: center;
-      padding: 40px;
-      color: #999;
-    }
-    .ns-skeleton {
-      background: linear-gradient(90deg, #f0f0f0 25%, #e8e8e8 50%, #f0f0f0 75%);
-      background-size: 200% 100%;
-      animation: shimmer 1.5s infinite;
-      border-radius: 8px;
-    }
-    @keyframes shimmer {
-      0% { background-position: 200% 0; }
-      100% { background-position: -200% 0; }
-    }
-    .ns-skeleton-card {
-      background: white;
-      border-radius: 14px;
-      overflow: hidden;
-      border: 1px solid #f0f0f0;
-    }
-    .ns-skeleton-img {
-      height: 120px;
-      background: linear-gradient(90deg, #f0f0f0 25%, #e8e8e8 50%, #f0f0f0 75%);
-      background-size: 200% 100%;
-      animation: shimmer 1.5s infinite;
-    }
-    .ns-skeleton-body { padding: 12px; }
-    .ns-skeleton-line {
-      height: 12px;
-      border-radius: 6px;
-      margin-bottom: 8px;
-      background: linear-gradient(90deg, #f0f0f0 25%, #e8e8e8 50%, #f0f0f0 75%);
-      background-size: 200% 100%;
-      animation: shimmer 1.5s infinite;
-    }
+    /* ── EMPTY ── */
+    .empty-state{text-align:center;padding:48px 20px;background:white;border-radius:16px;border:1px solid #e4e4e7;}
+    .empty-icon{width:56px;height:56px;background:#f4f4f5;border-radius:14px;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;}
+    .empty-icon svg{stroke:#a1a1aa;width:26px;height:26px;}
+    .empty-state h3{font-size:1em;font-weight:700;color:#18181b;margin-bottom:6px;}
+    .empty-state p{font-size:0.83em;color:#71717a;margin-bottom:18px;line-height:1.6;}
+    .empty-cta{display:inline-block;background:#7c3aed;color:white;padding:10px 20px;border-radius:10px;font-weight:700;font-size:0.84em;text-decoration:none;}
 
-    /* ── HOW IT WORKS ── */
-    .ns-how {
-      background: linear-gradient(135deg, #0a0f1e, #1a237e);
-      padding: 40px 20px;
-      text-align: center;
-      margin-top: 40px;
-    }
-    .ns-how h2 {
-      color: white;
-      font-size: 1.4em;
-      margin-bottom: 6px;
-    }
-    .ns-how p {
-      color: rgba(255,255,255,0.6);
-      font-size: 0.88em;
-      margin-bottom: 28px;
-    }
-    .ns-how-steps {
-      display: grid;
-      grid-template-columns: repeat(3,1fr);
-      gap: 16px;
-      max-width: 600px;
-      margin: 0 auto 28px;
-    }
-    .ns-how-step {
-      background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 12px;
-      padding: 16px 10px;
-    }
-    .ns-how-step-num {
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      background: #ff6b00;
-      color: white;
-      font-weight: 800;
-      font-size: 0.9em;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto 8px;
-    }
-    .ns-how-step p {
-      color: rgba(255,255,255,0.8);
-      font-size: 0.78em;
-      margin: 0;
-      line-height: 1.5;
-    }
-    .ns-how-cta {
-      display: inline-block;
-      background: #ff6b00;
-      color: white;
-      padding: 14px 28px;
-      border-radius: 10px;
-      text-decoration: none;
-      font-weight: 700;
-      font-size: 0.95em;
-    }
+    /* ── LOAD MORE ── */
+    .load-more-wrap{text-align:center;padding:24px 0 8px;}
+    .load-more-btn{background:white;border:1.5px solid #e4e4e7;padding:11px 28px;border-radius:100px;font-size:0.84em;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;color:#52525b;transition:all 0.15s;}
+    .load-more-btn:hover{border-color:#7c3aed;color:#7c3aed;}
 
-    /* ── BECOME PROVIDER BANNER ── */
-    .ns-provider-banner {
-      background: white;
-      border: 2px solid #ff6b00;
-      border-radius: 16px;
-      padding: 20px;
-      margin: 24px 0;
-      display: flex;
-      align-items: center;
-      gap: 16px;
-    }
-    .ns-provider-banner-icon {
-      font-size: 2.5em;
-      flex-shrink: 0;
-    }
-    .ns-provider-banner-text h3 {
-      font-size: 1em;
-      margin-bottom: 4px;
-    }
-    .ns-provider-banner-text p {
-      font-size: 0.82em;
-      color: #666;
-      margin-bottom: 10px;
-      line-height: 1.5;
-    }
-    .ns-provider-banner-btn {
-      display: inline-block;
-      background: #ff6b00;
-      color: white;
-      padding: 9px 18px;
-      border-radius: 8px;
-      text-decoration: none;
-      font-weight: 700;
-      font-size: 0.82em;
-    }
+    /* ── TRUST STRIP ── */
+    .trust-strip{background:white;border-top:1px solid #e4e4e7;border-bottom:1px solid #e4e4e7;padding:14px 16px;margin:20px 0;}
+    .trust-strip-inner{max-width:1100px;margin:0 auto;display:flex;gap:20px;overflow-x:auto;scrollbar-width:none;justify-content:center;flex-wrap:wrap;}
+    .trust-item{display:flex;align-items:center;gap:7px;font-size:0.78em;color:#52525b;font-weight:600;white-space:nowrap;flex-shrink:0;}
+    .trust-item svg{stroke:#7c3aed;width:15px;height:15px;}
 
-    /* ── BOTTOM NAV ── */
-    .ns-bottom-nav {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: white;
-      border-top: 1px solid #eee;
-      display: flex;
-      z-index: 200;
-      box-shadow: 0 -4px 16px rgba(0,0,0,0.08);
+    /* ── FOOTER ── */
+    .footer{background:#09090b;color:rgba(255,255,255,0.5);text-align:center;padding:20px 16px;font-size:0.78em;border-top:1px solid rgba(255,255,255,0.06);}
+    .footer a{color:#f97316;text-decoration:none;}
+
+    @media(min-width:580px){
+      .services-grid{grid-template-columns:repeat(3,1fr);}
     }
-    .ns-bottom-nav a {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 10px 4px;
-      text-decoration: none;
-      color: #999;
-      font-size: 0.65em;
-      font-weight: 600;
-      gap: 3px;
+    @media(min-width:900px){
+      .services-grid{grid-template-columns:repeat(4,1fr);}
     }
-    .ns-bottom-nav a.active { color: #ff6b00; }
-    .ns-bottom-nav a span:first-child { font-size: 1.4em; }
   </style>
 </head>
-<body style="background:#f8f9fa;font-family:'Inter',sans-serif;">
+<body>
 
-  <!-- HERO -->
-  <div class="ns-hero">
-    <div class="ns-hero-badge">🛠️ NEXASERVICES</div>
-    <h1>Hire Skilled <span>Nigerian</span><br/>Professionals</h1>
-    <p>From graphic design to plumbing — find verified<br/>experts for any job, anywhere in Nigeria</p>
-
-    <div class="ns-search-bar">
-      <input type="text" id="search-input" placeholder="Try 'graphic designer' or 'plumber'..."/>
-      <button onclick="doServicesSearch()">🔍 Search</button>
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="../../index.html" class="nav-logo">Nexa<em>bay</em></a>
+    <div class="nav-search">
+      <input type="text" id="nav-search-input" placeholder="Search services..."/>
+      <button onclick="doSearch()"><i data-lucide="search"></i></button>
     </div>
+    <a href="../../index.html" class="nav-back"><i data-lucide="chevron-left"></i> Home</a>
+  </div>
+</nav>
 
-    <div class="ns-hero-stats">
-      <div class="ns-hero-stat">✅ <strong>Verified</strong> Providers</div>
-      <div class="ns-hero-stat">🔒 <strong>Secure</strong> Payments</div>
-      <div class="ns-hero-stat">⭐ <strong>Rated</strong> Professionals</div>
-      <div class="ns-hero-stat">🇳🇬 <strong>All 36</strong> States</div>
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-badge"><i data-lucide="star"></i> 5,000+ verified professionals</div>
+    <h1>Hire skilled <span>Nigerian</span><br/>professionals today</h1>
+    <p>From graphic design to home repairs, coding to catering — find the right professional for any job.</p>
+    <div class="hero-search">
+      <input type="text" id="hero-search" placeholder="What service are you looking for?"/>
+      <button onclick="doHeroSearch()"><i data-lucide="search"></i> Search</button>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat"><i data-lucide="users"></i> <strong>5,000+</strong> providers</div>
+      <div class="hero-stat"><i data-lucide="map-pin"></i> <strong>All 36</strong> states</div>
+      <div class="hero-stat"><i data-lucide="shield-check"></i> <strong>Verified</strong> & reviewed</div>
     </div>
   </div>
+</div>
 
-  <!-- CATEGORY STRIP -->
-  <div class="ns-cats-wrap">
-    <div class="ns-cats" id="cats-strip">
-      <button class="ns-cat-btn active" onclick="filterByCategory('all', this)">🌍 All Services</button>
-      <button class="ns-cat-btn" onclick="filterByCategory('Beauty & Hair', this)">💇 Beauty & Hair</button>
-      <button class="ns-cat-btn" onclick="filterByCategory('Tech & Repairs', this)">🔧 Tech & Repairs</button>
-      <button class="ns-cat-btn" onclick="filterByCategory('Cleaning', this)">🧹 Cleaning</button>
-      <button class="ns-cat-btn" onclick="filterByCategory('Graphic Design', this)">🎨 Graphic Design</button>
-      <button class="ns-cat-btn" onclick="filterByCategory('Writing & Translation', this)">✍️ Writing</button>
-      <button class="ns-cat-btn" onclick="filterByCategory('Tutoring', this)">📚 Tutoring</button>
-      <button class="ns-cat-btn" onclick="filterByCategory('Photography', this)">📸 Photography</button>
-      <button class="ns-cat-btn" onclick="filterByCategory('Plumbing', this)">🪠 Plumbing</button>
-      <button class="ns-cat-btn" onclick="filterByCategory('Electrical', this)">💡 Electrical</button>
-      <button class="ns-cat-btn" onclick="filterByCategory('Event Planning', this)">🎉 Events</button>
-      <button class="ns-cat-btn" onclick="filterByCategory('Fitness Training', this)">💪 Fitness</button>
+<!-- CATEGORY STRIP -->
+<div class="cat-strip">
+  <div class="cat-strip-inner">
+    <button class="cat-btn active" onclick="filterCategory('all',this)"><i data-lucide="layout-grid"></i> All</button>
+    <button class="cat-btn" onclick="filterCategory('Graphic Design',this)"><i data-lucide="pen-tool"></i> Design</button>
+    <button class="cat-btn" onclick="filterCategory('Web Development',this)"><i data-lucide="code-2"></i> Tech</button>
+    <button class="cat-btn" onclick="filterCategory('Beauty & Hair',this)"><i data-lucide="scissors"></i> Beauty</button>
+    <button class="cat-btn" onclick="filterCategory('Cleaning',this)"><i data-lucide="sparkles"></i> Cleaning</button>
+    <button class="cat-btn" onclick="filterCategory('Photography',this)"><i data-lucide="camera"></i> Photo</button>
+    <button class="cat-btn" onclick="filterCategory('Tutoring',this)"><i data-lucide="book-open"></i> Tutoring</button>
+    <button class="cat-btn" onclick="filterCategory('Plumbing',this)"><i data-lucide="droplets"></i> Plumbing</button>
+    <button class="cat-btn" onclick="filterCategory('Electrical',this)"><i data-lucide="zap"></i> Electrical</button>
+    <button class="cat-btn" onclick="filterCategory('Catering',this)"><i data-lucide="utensils"></i> Catering</button>
+    <button class="cat-btn" onclick="filterCategory('Tech & Repairs',this)"><i data-lucide="wrench"></i> Repairs</button>
+    <button class="cat-btn" onclick="filterCategory('Fitness Training',this)"><i data-lucide="dumbbell"></i> Fitness</button>
+    <button class="cat-btn" onclick="filterCategory('Writing & Translation',this)"><i data-lucide="file-text"></i> Writing</button>
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- FILTERS BAR -->
+  <div class="filters-bar">
+    <div class="filters-left">
+      <button class="filter-pill active" onclick="filterDelivery('all',this)"><i data-lucide="layout-grid"></i> All</button>
+      <button class="filter-pill" onclick="filterDelivery('remote',this)"><i data-lucide="wifi"></i> Remote</button>
+      <button class="filter-pill" onclick="filterDelivery('onsite',this)"><i data-lucide="map-pin"></i> On-Site</button>
+      <button class="filter-pill" onclick="sortServices('price',this)"><i data-lucide="arrow-up-down"></i> Price</button>
+      <button class="filter-pill" onclick="sortServices('rating',this)"><i data-lucide="star"></i> Rating</button>
     </div>
+    <div class="results-count" id="results-count">Loading...</div>
   </div>
 
-  <!-- MAIN -->
-  <div class="ns-main">
-
-    <!-- TOOLBAR -->
-    <div class="ns-toolbar">
-      <div class="ns-toolbar-left" id="results-count">Loading services...</div>
-      <select class="ns-sort-select" onchange="sortServices(this.value)">
-        <option value="newest">Newest First</option>
-        <option value="price-low">Price: Low to High</option>
-        <option value="price-high">Price: High to Low</option>
-        <option value="rating">Highest Rated</option>
-      </select>
-    </div>
-
-    <!-- BECOME PROVIDER BANNER -->
-    <div class="ns-provider-banner">
-      <div class="ns-provider-banner-icon">💼</div>
-      <div class="ns-provider-banner-text">
-        <h3>Have a skill? Start earning today!</h3>
-        <p>Join thousands of Nigerian professionals already earning on NexaServices. List your service for free.</p>
-        <a href="../dashboard/services-provider.html" class="ns-provider-banner-btn">Become a Provider →</a>
-      </div>
-    </div>
-
-    <!-- GRID -->
-    <div class="ns-grid" id="services-grid">
-      <!-- Skeleton loaders -->
-      <div class="ns-skeleton-card">
-        <div class="ns-skeleton-img"></div>
-        <div class="ns-skeleton-body">
-          <div class="ns-skeleton-line" style="width:60%;"></div>
-          <div class="ns-skeleton-line" style="width:90%;"></div>
-          <div class="ns-skeleton-line" style="width:40%;"></div>
-        </div>
-      </div>
-      <div class="ns-skeleton-card">
-        <div class="ns-skeleton-img"></div>
-        <div class="ns-skeleton-body">
-          <div class="ns-skeleton-line" style="width:60%;"></div>
-          <div class="ns-skeleton-line" style="width:90%;"></div>
-          <div class="ns-skeleton-line" style="width:40%;"></div>
-        </div>
-      </div>
-      <div class="ns-skeleton-card">
-        <div class="ns-skeleton-img"></div>
-        <div class="ns-skeleton-body">
-          <div class="ns-skeleton-line" style="width:60%;"></div>
-          <div class="ns-skeleton-line" style="width:90%;"></div>
-          <div class="ns-skeleton-line" style="width:40%;"></div>
-        </div>
-      </div>
-      <div class="ns-skeleton-card">
-        <div class="ns-skeleton-img"></div>
-        <div class="ns-skeleton-body">
-          <div class="ns-skeleton-line" style="width:60%;"></div>
-          <div class="ns-skeleton-line" style="width:90%;"></div>
-          <div class="ns-skeleton-line" style="width:40%;"></div>
-        </div>
-      </div>
-    </div>
-
+  <!-- SERVICES GRID -->
+  <div class="services-grid" id="services-grid">
+    <!-- skeleton -->
+    <div class="skel-card"><div class="skel-img skel"></div><div class="skel-body"><div class="skel-line skel" style="width:40%;margin-bottom:10px;"></div><div class="skel-line skel" style="width:100%;"></div><div class="skel-line skel" style="width:80%;"></div><div class="skel-line skel" style="width:60%;margin-top:10px;"></div></div></div>
+    <div class="skel-card"><div class="skel-img skel"></div><div class="skel-body"><div class="skel-line skel" style="width:40%;margin-bottom:10px;"></div><div class="skel-line skel" style="width:100%;"></div><div class="skel-line skel" style="width:80%;"></div><div class="skel-line skel" style="width:60%;margin-top:10px;"></div></div></div>
+    <div class="skel-card"><div class="skel-img skel"></div><div class="skel-body"><div class="skel-line skel" style="width:40%;margin-bottom:10px;"></div><div class="skel-line skel" style="width:100%;"></div><div class="skel-line skel" style="width:80%;"></div><div class="skel-line skel" style="width:60%;margin-top:10px;"></div></div></div>
+    <div class="skel-card"><div class="skel-img skel"></div><div class="skel-body"><div class="skel-line skel" style="width:40%;margin-bottom:10px;"></div><div class="skel-line skel" style="width:100%;"></div><div class="skel-line skel" style="width:80%;"></div><div class="skel-line skel" style="width:60%;margin-top:10px;"></div></div></div>
   </div>
 
-  <!-- HOW IT WORKS -->
-  <div class="ns-how">
-    <h2>How NexaServices Works</h2>
-    <p>Hire a professional in 3 simple steps</p>
-    <div class="ns-how-steps">
-      <div class="ns-how-step">
-        <div class="ns-how-step-num">1</div>
-        <p>Browse verified service providers in your category</p>
-      </div>
-      <div class="ns-how-step">
-        <div class="ns-how-step-num">2</div>
-        <p>Pay securely through Nexabay escrow protection</p>
-      </div>
-      <div class="ns-how-step">
-        <div class="ns-how-step-num">3</div>
-        <p>Get the job done and confirm when satisfied</p>
-      </div>
-    </div>
-    <a href="../../pages/auth/register.html" class="ns-how-cta">Get Started Free →</a>
+  <div class="load-more-wrap" id="load-more-wrap" style="display:none;">
+    <button class="load-more-btn" onclick="loadMore()">Load More Services</button>
   </div>
 
-  <!-- BOTTOM NAV -->
-  <div class="ns-bottom-nav">
-    <a href="../../index.html"><span>🏠</span><span>Home</span></a>
-    <a href="browse.html" class="active"><span>🛠️</span><span>Services</span></a>
-    <a href="../shop/browse.html"><span>🛍️</span><span>Shop</span></a>
-    <a href="../search.html"><span>🔍</span><span>Search</span></a>
-    <a href="../dashboard/buyer.html"><span>👤</span><span>Account</span></a>
+</div>
+
+<!-- TRUST STRIP -->
+<div class="trust-strip">
+  <div class="trust-strip-inner">
+    <div class="trust-item"><i data-lucide="shield-check"></i> Verified Providers</div>
+    <div class="trust-item"><i data-lucide="lock"></i> Secure Payments</div>
+    <div class="trust-item"><i data-lucide="refresh-ccw"></i> Satisfaction Guaranteed</div>
+    <div class="trust-item"><i data-lucide="headphones"></i> 24/7 Support</div>
+    <div class="trust-item"><i data-lucide="badge-check"></i> Reviewed & Rated</div>
   </div>
+</div>
 
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-  <script src="../../js/firebase/config.js"></script>
-  <script src="../../js/firebase/auth.js"></script>
-  <script src="../../js/firebase/services.js"></script>
-  <script src="../../js/core/main.js"></script>
-  <script>
+<!-- FOOTER -->
+<footer class="footer">
+  © 2025 Nexabay Ltd •
+  <a href="../privacy.html">Privacy</a> •
+  <a href="../terms.html">Terms</a> •
+  <a href="../help.html">Help</a> •
+  <a href="../../index.html">Home</a>
+</footer>
 
-    var ALL_SERVICES = [];
-    var FILTERED_SERVICES = [];
-    var currentCategory = 'all';
-    var currentSort = 'newest';
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="../../js/firebase/config.js"></script>
+<script src="../../js/firebase/auth.js"></script>
+<script src="../../js/core/main.js"></script>
+<script>
 
-    function loadAllServices() {
-      nexaGetServices('all')
-        .then(function(services) {
-          ALL_SERVICES = services;
-          FILTERED_SERVICES = services.slice();
-          applyFiltersAndSort();
-          updateCount();
-        })
-        .catch(function(err) {
-          console.log('Error:', err);
-          renderServices([]);
-        });
-    }
+  var allServices=[], filtered=[], displayed=0, pageSize=12;
+  var currentCategory='all', currentDelivery='all', currentSort='', searchQuery='';
 
-    function filterByCategory(cat, btn) {
-      currentCategory = cat;
-      document.querySelectorAll('.ns-cat-btn').forEach(function(b) {
-        b.classList.remove('active');
+  /* read URL query */
+  var urlParams=new URLSearchParams(window.location.search);
+  var urlQ=urlParams.get('q')||'';
+  if (urlQ) {
+    searchQuery=urlQ;
+    document.getElementById('nav-search-input').value=urlQ;
+    document.getElementById('hero-search').value=urlQ;
+  }
+
+  /* load services from Firestore */
+  function loadServices() {
+    if (typeof db==='undefined') return;
+    db.collection('services')
+      .where('status','==','active')
+      .get()
+      .then(function(snap){
+        allServices=[];
+        snap.forEach(function(doc){ allServices.push(doc.data()); });
+        applyFilters();
+      })
+      .catch(function(err){ console.log('Services error:',err); renderEmpty(); });
+  }
+
+  function applyFilters() {
+    filtered=allServices.slice();
+    if (searchQuery) {
+      var q=searchQuery.toLowerCase();
+      filtered=filtered.filter(function(s){
+        return (s.title||'').toLowerCase().includes(q)||
+               (s.category||'').toLowerCase().includes(q)||
+               (s.description||'').toLowerCase().includes(q)||
+               (s.providerName||'').toLowerCase().includes(q);
       });
-      btn.classList.add('active');
-      applyFiltersAndSort();
     }
-
-    function sortServices(val) {
-      currentSort = val;
-      applyFiltersAndSort();
+    if (currentCategory!=='all') {
+      filtered=filtered.filter(function(s){ return s.category===currentCategory; });
     }
-
-    function applyFiltersAndSort() {
-      var filtered = currentCategory === 'all'
-        ? ALL_SERVICES.slice()
-        : ALL_SERVICES.filter(function(s) { return s.category === currentCategory; });
-
-      var searchQuery = document.getElementById('search-input').value.trim().toLowerCase();
-      if (searchQuery) {
-        filtered = filtered.filter(function(s) {
-          return (s.title || '').toLowerCase().includes(searchQuery) ||
-                 (s.description || '').toLowerCase().includes(searchQuery) ||
-                 (s.category || '').toLowerCase().includes(searchQuery);
-        });
-      }
-
-      if (currentSort === 'price-low') {
-        filtered.sort(function(a, b) { return (a.price || 0) - (b.price || 0); });
-      } else if (currentSort === 'price-high') {
-        filtered.sort(function(a, b) { return (b.price || 0) - (a.price || 0); });
-      } else if (currentSort === 'rating') {
-        filtered.sort(function(a, b) { return (b.rating || 0) - (a.rating || 0); });
-      } else {
-        filtered.sort(function(a, b) {
-          var aTime = a.createdAt ? a.createdAt.toMillis() : 0;
-          var bTime = b.createdAt ? b.createdAt.toMillis() : 0;
-          return bTime - aTime;
-        });
-      }
-
-      FILTERED_SERVICES = filtered;
-      renderServices(filtered);
-      updateCount();
+    if (currentDelivery==='remote') {
+      filtered=filtered.filter(function(s){ return (s.location||'').toLowerCase().includes('nationwide')||(s.location||'').toLowerCase().includes('remote'); });
+    } else if (currentDelivery==='onsite') {
+      filtered=filtered.filter(function(s){ return !(s.location||'').toLowerCase().includes('nationwide'); });
     }
-
-    function updateCount() {
-      var el = document.getElementById('results-count');
-      if (el) {
-        el.innerHTML = '<strong>' + FILTERED_SERVICES.length + '</strong> service' +
-          (FILTERED_SERVICES.length !== 1 ? 's' : '') + ' available' +
-          (currentCategory !== 'all' ? ' in <strong>' + currentCategory + '</strong>' : '');
-      }
+    if (currentSort==='price') {
+      filtered.sort(function(a,b){ return (a.price||0)-(b.price||0); });
+    } else if (currentSort==='rating') {
+      filtered.sort(function(a,b){ return (b.rating||0)-(a.rating||0); });
     }
+    displayed=0;
+    renderServices();
+  }
 
-    function doServicesSearch() {
-      applyFiltersAndSort();
-    }
+  function renderServices() {
+    var grid=document.getElementById('services-grid');
+    var countEl=document.getElementById('results-count');
+    var lmWrap=document.getElementById('load-more-wrap');
+    if (!grid) return;
 
-    function renderServices(services) {
-      var grid = document.getElementById('services-grid');
-      if (!grid) return;
+    if (filtered.length===0) { renderEmpty(); if (countEl) countEl.innerHTML='<strong>0</strong> services found'; return; }
 
-      if (services.length === 0) {
-        grid.innerHTML =
-          '<div class="ns-empty">' +
-            '<div class="ns-empty-icon">🔍</div>' +
-            '<h3>No services found</h3>' +
-            '<p>Be the first to offer this service on NexaServices!</p>' +
-            '<a href="../dashboard/services-provider.html" class="ns-empty-btn">List Your Service Free →</a>' +
-          '</div>';
-        return;
-      }
+    var chunk=filtered.slice(0,displayed+pageSize);
+    displayed=chunk.length;
 
-      grid.innerHTML = services.map(function(s) {
-        var imgHtml = s.imageUrl
-          ? '<img src="' + s.imageUrl + '" alt="' + (s.title || '') + '" style="width:100%;height:100%;object-fit:cover;"/>'
-          : '<span style="font-size:2.5em;">' + (s.emoji || '🛠️') + '</span>';
+    if (countEl) countEl.innerHTML='<strong>'+filtered.length+'</strong> service'+(filtered.length!==1?'s':'')+' found';
 
-        var stars = '';
-        var rating = s.rating || 0;
-        for (var i = 0; i < 5; i++) {
-          stars += i < Math.round(rating) ? '★' : '☆';
-        }
+    grid.innerHTML=chunk.map(function(s){ return buildCard(s); }).join('');
 
-        return '<div class="ns-card" onclick="viewService(\'' + s.id + '\')">' +
-          '<div class="ns-card-img">' +
-            imgHtml +
-            '<div class="ns-card-cat-badge">' + (s.category || 'Service') + '</div>' +
-          '</div>' +
-          '<div class="ns-card-body">' +
-            '<div class="ns-card-provider">' +
-              '<div class="ns-card-avatar">' + (s.providerName || 'P')[0].toUpperCase() + '</div>' +
-              '<div class="ns-card-provider-name">' + (s.providerName || 'Nexabay Provider') + '</div>' +
-            '</div>' +
-            '<div class="ns-card-title">' + (s.title || 'Service') + '</div>' +
-            '<div class="ns-card-meta">' +
-              '<div class="ns-card-rating"><span>' + stars + '</span> ' + (rating > 0 ? rating.toFixed(1) : 'New') + '</div>' +
-              '<div class="ns-card-location">📍 ' + (s.location || 'Nigeria') + '</div>' +
-            '</div>' +
-            '<div class="ns-card-footer">' +
-              '<div class="ns-card-price">₦' + parseInt(s.price || 0).toLocaleString() + '<small> / ' + (s.deliveryTime || 'session') + '</small></div>' +
-              '<button class="ns-card-hire-btn" onclick="event.stopPropagation();viewService(\'' + s.id + '\')">Hire →</button>' +
-            '</div>' +
-          '</div>' +
-        '</div>';
-      }).join('');
-    }
+    if (lmWrap) lmWrap.style.display=displayed<filtered.length?'block':'none';
 
-    function viewService(id) {
-      window.location.href = 'service.html?id=' + id;
-    }
+    lucide.createIcons();
+  }
 
-    document.addEventListener('DOMContentLoaded', function() {
-      loadAllServices();
-      checkAuthState();
+  function buildCard(s) {
+    var rating=parseFloat(s.rating||0).toFixed(1);
+    var reviews=s.reviews||0;
+    var stars=rating>0
+      ?'<svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>'+rating+' ('+reviews+')'
+      :'<svg viewBox="0 0 24 24" style="stroke:#d4d4d8;fill:none;"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg> New';
 
-      document.getElementById('search-input').addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') doServicesSearch();
-      });
-    });
+    var imgHtml=s.imageUrl
+      ?'<img src="'+s.imageUrl+'" alt="'+escHtml(s.title||'')+'" loading="lazy"/>'
+      :'<div style="font-size:3em;">'+(s.emoji||'🛠️')+'</div>';
 
-  </script>
+    var provLetter=(s.providerName||'P')[0].toUpperCase();
+    var delivery=s.deliveryTime||'Flexible';
 
+    return '<div class="service-card" onclick="viewService(\''+s.id+'\')">' +
+      '<div class="service-img">'+imgHtml+'<div class="service-category-tag">'+escHtml(s.category||'Service')+'</div></div>'+
+      '<div class="service-body">'+
+        '<div class="service-provider">'+
+          '<div class="service-avatar">'+provLetter+'</div>'+
+          '<span class="service-provider-name">'+escHtml(s.providerName||'Provider')+'</span>'+
+        '</div>'+
+        '<div class="service-name">'+escHtml(s.title||'Service')+'</div>'+
+        '<div class="service-meta">'+
+          '<div class="service-rating">'+stars+'</div>'+
+          '<div class="service-location"><i data-lucide="map-pin"></i>'+escHtml(s.location||'Nigeria')+'</div>'+
+        '</div>'+
+        '<div class="service-delivery"><i data-lucide="clock"></i>Delivery: '+escHtml(delivery)+'</div>'+
+        '<div class="service-footer">'+
+          '<div class="service-price">₦'+parseInt(s.price||0).toLocaleString()+'<small>/service</small></div>'+
+          '<button class="service-book-btn" onclick="event.stopPropagation();bookService(\''+s.id+'\')">Book Now</button>'+
+        '</div>'+
+      '</div>'+
+    '</div>';
+  }
+
+  function renderEmpty() {
+    var grid=document.getElementById('services-grid');
+    var lmWrap=document.getElementById('load-more-wrap');
+    if (lmWrap) lmWrap.style.display='none';
+    grid.innerHTML=
+      '<div class="empty-state" style="grid-column:1/-1;">'+
+        '<div class="empty-icon"><i data-lucide="search-x"></i></div>'+
+        '<h3>No services found</h3>'+
+        '<p>No services match your search yet. Be the first to offer this service on Nexabay!</p>'+
+        '<a href="../auth/become-provider.html?type=service" class="empty-cta">Offer Your Service</a>'+
+      '</div>';
+    lucide.createIcons();
+  }
+
+  function loadMore() {
+    var chunk=filtered.slice(displayed,displayed+pageSize);
+    displayed+=chunk.length;
+    var grid=document.getElementById('services-grid');
+    chunk.forEach(function(s){ grid.insertAdjacentHTML('beforeend',buildCard(s)); });
+    var lmWrap=document.getElementById('load-more-wrap');
+    if (lmWrap) lmWrap.style.display=displayed<filtered.length?'block':'none';
+    lucide.createIcons();
+  }
+
+  function filterCategory(cat,btn) {
+    currentCategory=cat;
+    document.querySelectorAll('.cat-btn').forEach(function(b){ b.classList.remove('active'); });
+    btn.classList.add('active');
+    applyFilters();
+  }
+
+  function filterDelivery(type,btn) {
+    currentDelivery=type;
+    document.querySelectorAll('.filter-pill').forEach(function(b){ b.classList.remove('active'); });
+    btn.classList.add('active');
+    applyFilters();
+  }
+
+  function sortServices(by,btn) {
+    currentSort=currentSort===by?'':by;
+    document.querySelectorAll('.filter-pill').forEach(function(b){ b.classList.remove('active'); });
+    if (currentSort) btn.classList.add('active');
+    applyFilters();
+  }
+
+  function doSearch() {
+    searchQuery=document.getElementById('nav-search-input').value.trim();
+    document.getElementById('hero-search').value=searchQuery;
+    applyFilters();
+  }
+
+  function doHeroSearch() {
+    searchQuery=document.getElementById('hero-search').value.trim();
+    document.getElementById('nav-search-input').value=searchQuery;
+    applyFilters();
+  }
+
+  function viewService(id) {
+    window.location.href='service.html?id='+id;
+  }
+
+  function bookService(id) {
+    var user=JSON.parse(localStorage.getItem('nexa_current_user')||'null');
+    if (!user){ window.location.href='../auth/login.html?redirect='+encodeURIComponent(window.location.href); return; }
+    window.location.href='service.html?id='+id+'&book=1';
+  }
+
+  function escHtml(str) {
+    return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  document.getElementById('nav-search-input').addEventListener('keypress',function(e){ if(e.key==='Enter') doSearch(); });
+  document.getElementById('hero-search').addEventListener('keypress',function(e){ if(e.key==='Enter') doHeroSearch(); });
+
+  document.addEventListener('DOMContentLoaded',function(){
+    lucide.createIcons();
+    loadServices();
+  });
+
+</script>
 </body>
 </html>
