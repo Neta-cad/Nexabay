@@ -3,443 +3,489 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Rentals — Nexabay</title>
-  <link rel="stylesheet" href="../../css/main.css"/>
-  <link rel="stylesheet" href="../../css/rentals.css"/>
+  <title>NexaRent — Find Property & Rentals | Nexabay</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <style>
+    :root{
+      --brand:#7c3aed;
+      --accent:#f97316;
+      --green:#16a34a;
+      --dark:#09090b;
+      --muted:#71717a;
+      --border:#e4e4e7;
+      --bg:#f4f4f5;
+      --white:#ffffff;
+    }
+    *{box-sizing:border-box;margin:0;padding:0;}
+    html{scroll-behavior:smooth;}
+    body{background:var(--bg);font-family:'Inter',sans-serif;-webkit-font-smoothing:antialiased;}
+
+    /* NAV */
+    .nav{position:sticky;top:0;z-index:200;background:var(--dark);border-bottom:1px solid rgba(255,255,255,0.07);}
+    .nav-inner{max-width:1100px;margin:0 auto;padding:0 16px;height:56px;display:flex;align-items:center;gap:10px;}
+    .nav-logo{font-weight:900;font-size:1.15em;text-decoration:none;color:white;letter-spacing:-0.02em;flex-shrink:0;}
+    .nav-logo em{color:var(--accent);font-style:normal;}
+    .nav-search{flex:1;display:flex;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.1);border-radius:9px;overflow:hidden;min-width:0;}
+    .nav-search input{flex:1;background:transparent;border:none;outline:none;padding:9px 12px;color:white;font-size:0.84em;font-family:'Inter',sans-serif;min-width:0;}
+    .nav-search input::placeholder{color:rgba(255,255,255,0.3);}
+    .nav-search button{background:var(--accent);border:none;padding:9px 13px;cursor:pointer;flex-shrink:0;display:flex;align-items:center;}
+    .nav-search button svg{stroke:white;width:15px;height:15px;}
+    .nav-back{display:flex;align-items:center;gap:5px;color:rgba(255,255,255,0.7);text-decoration:none;font-size:0.82em;font-weight:600;white-space:nowrap;flex-shrink:0;}
+    .nav-back svg{width:15px;height:15px;stroke:rgba(255,255,255,0.7);}
+
+    /* HERO */
+    .hero{background:linear-gradient(135deg,#052e16,#14532d,#052e16);padding:32px 16px 28px;color:white;position:relative;overflow:hidden;}
+    .hero::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 70% at 80% 50%,rgba(22,163,74,0.15) 0%,transparent 70%);}
+    .hero-inner{max-width:600px;margin:0 auto;text-align:center;position:relative;z-index:1;}
+    .hero-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.15);padding:5px 12px;border-radius:100px;font-size:0.75em;font-weight:600;margin-bottom:14px;color:rgba(255,255,255,0.85);}
+    .hero-badge svg{width:13px;height:13px;stroke:currentColor;}
+    .hero h1{font-size:clamp(1.5em,5vw,2.2em);font-weight:900;line-height:1.15;letter-spacing:-0.02em;margin-bottom:10px;}
+    .hero h1 span{color:#4ade80;}
+    .hero p{font-size:0.88em;color:rgba(255,255,255,0.6);line-height:1.7;margin-bottom:20px;}
+    .hero-search{display:flex;background:white;border-radius:12px;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,0.25);}
+    .hero-search input{flex:1;border:none;outline:none;padding:13px 16px;font-size:0.88em;font-family:'Inter',sans-serif;color:var(--dark);min-width:0;}
+    .hero-search input::placeholder{color:#a1a1aa;}
+    .hero-search button{background:var(--green);border:none;padding:13px 18px;cursor:pointer;display:flex;align-items:center;gap:6px;color:white;font-weight:700;font-size:0.84em;font-family:'Inter',sans-serif;white-space:nowrap;flex-shrink:0;}
+    .hero-search button svg{stroke:white;width:15px;height:15px;}
+    .hero-stats{display:flex;justify-content:center;gap:20px;margin-top:16px;flex-wrap:wrap;}
+    .hero-stat{font-size:0.75em;color:rgba(255,255,255,0.5);display:flex;align-items:center;gap:4px;}
+    .hero-stat svg{width:13px;height:13px;stroke:currentColor;}
+    .hero-stat strong{color:rgba(255,255,255,0.85);}
+
+    /* QUICK FILTERS */
+    .quick-filters{background:white;padding:14px 16px;border-bottom:1px solid var(--border);overflow-x:auto;scrollbar-width:none;}
+    .quick-filters::-webkit-scrollbar{display:none;}
+    .quick-filters-inner{max-width:1100px;margin:0 auto;display:flex;gap:8px;}
+    .qf-btn{display:flex;align-items:center;gap:6px;padding:8px 14px;border-radius:100px;border:1.5px solid var(--border);background:white;color:#52525b;font-size:0.78em;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;white-space:nowrap;transition:all 0.15s;flex-shrink:0;}
+    .qf-btn:hover{border-color:var(--green);color:var(--green);}
+    .qf-btn.active{background:var(--green);border-color:var(--green);color:white;}
+    .qf-btn svg{width:13px;height:13px;stroke:currentColor;}
+
+    /* CAT STRIP */
+    .cat-strip{background:white;border-bottom:1px solid var(--border);position:sticky;top:56px;z-index:100;overflow-x:auto;scrollbar-width:none;}
+    .cat-strip::-webkit-scrollbar{display:none;}
+    .cat-strip-inner{max-width:1100px;margin:0 auto;padding:0 16px;display:flex;}
+    .cat-btn{display:flex;align-items:center;gap:5px;padding:10px 13px;color:#52525b;font-size:0.77em;font-weight:600;white-space:nowrap;border:none;background:none;cursor:pointer;font-family:'Inter',sans-serif;border-bottom:2px solid transparent;transition:all 0.15s;flex-shrink:0;}
+    .cat-btn:hover{color:var(--green);}
+    .cat-btn.active{color:var(--green);border-bottom-color:var(--green);}
+    .cat-btn svg{width:13px;height:13px;stroke:currentColor;}
+
+    /* MAIN */
+    .main{max-width:1100px;margin:0 auto;padding:20px 16px;}
+
+    /* FILTER BAR */
+    .filter-bar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:16px;flex-wrap:wrap;}
+    .filter-left{display:flex;gap:8px;flex-wrap:wrap;}
+    .filter-pill{display:flex;align-items:center;gap:5px;padding:7px 12px;border-radius:100px;border:1.5px solid var(--border);background:white;color:#52525b;font-size:0.76em;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:all 0.15s;white-space:nowrap;}
+    .filter-pill:hover{border-color:var(--green);color:var(--green);}
+    .filter-pill.active{background:var(--green);border-color:var(--green);color:white;}
+    .filter-pill svg{width:12px;height:12px;stroke:currentColor;}
+    .results-count{font-size:0.8em;color:var(--muted);white-space:nowrap;}
+    .results-count strong{color:#18181b;}
+
+    /* PROPERTY CARDS */
+    .rentals-grid{display:grid;grid-template-columns:1fr;gap:14px;}
+    .rental-card{background:white;border-radius:16px;border:1px solid var(--border);overflow:hidden;cursor:pointer;transition:all 0.2s;display:flex;flex-direction:column;}
+    .rental-card:hover{border-color:#86efac;box-shadow:0 8px 24px rgba(22,163,74,0.1);transform:translateY(-2px);}
+    .rental-img-wrap{position:relative;width:100%;aspect-ratio:16/9;overflow:hidden;background:#f4f4f5;flex-shrink:0;}
+    .rental-img-wrap img{width:100%;height:100%;object-fit:cover;transition:transform 0.3s;}
+    .rental-card:hover .rental-img-wrap img{transform:scale(1.03);}
+    .rental-img-placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:3em;}
+    .rental-tag{position:absolute;top:10px;left:10px;background:rgba(22,163,74,0.9);color:white;padding:4px 10px;border-radius:100px;font-size:0.68em;font-weight:700;}
+    .rental-tag.sale{background:rgba(249,115,22,0.9);}
+    .rental-save{position:absolute;top:10px;right:10px;width:32px;height:32px;background:white;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,0.15);border:none;transition:all 0.15s;}
+    .rental-save svg{width:16px;height:16px;stroke:#71717a;}
+    .rental-save:hover svg{stroke:#ef4444;fill:#ef4444;}
+    .rental-body{padding:14px 16px;flex:1;display:flex;flex-direction:column;gap:8px;}
+    .rental-type-row{display:flex;align-items:center;justify-content:space-between;}
+    .rental-type{font-size:0.72em;font-weight:700;color:var(--green);text-transform:uppercase;letter-spacing:0.5px;}
+    .rental-period{font-size:0.72em;color:var(--muted);background:#f4f4f5;padding:2px 8px;border-radius:4px;}
+    .rental-title{font-size:0.95em;font-weight:800;color:#18181b;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+    .rental-location{display:flex;align-items:center;gap:5px;font-size:0.78em;color:var(--muted);}
+    .rental-location svg{width:13px;height:13px;stroke:var(--muted);flex-shrink:0;}
+    .rental-features{display:flex;gap:12px;flex-wrap:wrap;}
+    .rental-feat{display:flex;align-items:center;gap:4px;font-size:0.75em;color:#52525b;font-weight:600;}
+    .rental-feat svg{width:13px;height:13px;stroke:#52525b;}
+    .rental-amenities{display:flex;gap:5px;flex-wrap:wrap;}
+    .rental-amenity{background:#f0fdf4;color:var(--green);border:1px solid #bbf7d0;padding:2px 8px;border-radius:100px;font-size:0.65em;font-weight:700;}
+    .rental-footer{display:flex;align-items:center;justify-content:space-between;padding-top:10px;border-top:1px solid #f4f4f5;margin-top:auto;}
+    .rental-price{font-size:1.1em;font-weight:900;color:var(--green);}
+    .rental-price small{font-size:0.6em;font-weight:500;color:var(--muted);}
+    .rental-owner{display:flex;align-items:center;gap:6px;}
+    .rental-owner-av{width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,var(--green),var(--brand));color:white;display:flex;align-items:center;justify-content:center;font-size:0.65em;font-weight:700;}
+    .rental-owner-name{font-size:0.73em;color:var(--muted);font-weight:600;}
+    .rental-contact-btn{background:var(--green);color:white;border:none;padding:7px 14px;border-radius:8px;font-size:0.75em;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;display:flex;align-items:center;gap:5px;}
+    .rental-contact-btn svg{width:13px;height:13px;stroke:white;}
+
+    /* SKELETON */
+    .skel{background:linear-gradient(90deg,#f4f4f5 25%,#e4e4e7 50%,#f4f4f5 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;border-radius:6px;}
+    @keyframes shimmer{0%{background-position:200% 0;}100%{background-position:-200% 0;}}
+    .skel-card{background:white;border-radius:16px;border:1px solid var(--border);overflow:hidden;margin-bottom:14px;}
+    .skel-img{width:100%;aspect-ratio:16/9;}
+    .skel-body{padding:14px 16px;}
+    .skel-line{height:10px;border-radius:5px;margin-bottom:9px;}
+
+    /* EMPTY */
+    .empty-state{text-align:center;padding:48px 20px;background:white;border-radius:16px;border:1px solid var(--border);}
+    .empty-icon{width:56px;height:56px;background:#f4f4f5;border-radius:14px;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;}
+    .empty-icon svg{stroke:#a1a1aa;width:26px;height:26px;}
+    .empty-state h3{font-size:1em;font-weight:700;color:#18181b;margin-bottom:6px;}
+    .empty-state p{font-size:0.83em;color:var(--muted);margin-bottom:18px;line-height:1.6;}
+    .empty-cta{display:inline-block;background:var(--green);color:white;padding:10px 20px;border-radius:10px;font-weight:700;font-size:0.84em;text-decoration:none;}
+
+    /* LOAD MORE */
+    .load-more-wrap{text-align:center;padding:24px 0 8px;}
+    .load-more-btn{background:white;border:1.5px solid var(--border);padding:11px 28px;border-radius:100px;font-size:0.84em;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;color:#52525b;transition:all 0.15s;}
+    .load-more-btn:hover{border-color:var(--green);color:var(--green);}
+
+    /* TRUST */
+    .trust-strip{background:white;border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:14px 16px;margin:20px 0;}
+    .trust-strip-inner{max-width:1100px;margin:0 auto;display:flex;gap:20px;overflow-x:auto;scrollbar-width:none;justify-content:center;flex-wrap:wrap;}
+    .trust-item{display:flex;align-items:center;gap:7px;font-size:0.78em;color:#52525b;font-weight:600;white-space:nowrap;}
+    .trust-item svg{stroke:var(--green);width:15px;height:15px;}
+
+    /* FOOTER */
+    .footer{background:var(--dark);color:rgba(255,255,255,0.45);text-align:center;padding:20px 16px;font-size:0.78em;}
+    .footer a{color:var(--accent);text-decoration:none;}
+
+    @media(min-width:600px){
+      .rentals-grid{grid-template-columns:repeat(2,1fr);}
+    }
+    @media(min-width:900px){
+      .rentals-grid{grid-template-columns:repeat(3,1fr);}
+    }
+  </style>
 </head>
 <body>
 
-  <!-- NAVBAR -->
-  <nav class="navbar">
-    <div class="nav-inner">
-      <a href="../../index.html" class="logo">
-        <span class="logo-nexa">Nexa</span><span class="logo-bay">bay</span>
-      </a>
-      <div class="search-bar">
-        <input type="text" id="search-input" placeholder="Search rentals..."/>
-        <button onclick="doRentalSearch()" class="search-btn">🔍</button>
-      </div>
-      <div class="nav-actions">
-        <a href="../auth/login.html" class="nav-link">Login</a>
-        <a href="../auth/register.html" class="nav-btn">Sign Up</a>
-        <a href="../shop/cart.html" class="cart-icon-desk">
-          🛒 <span class="cart-count" id="cart-count">0</span>
-        </a>
-      </div>
-      <button class="hamburger" id="hamburger-btn" onclick="toggleMobileMenu()">☰</button>
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="../../index.html" class="nav-logo">Nexa<em>bay</em></a>
+    <div class="nav-search">
+      <input type="text" id="nav-search-input" placeholder="Search property, location..."/>
+      <button onclick="doSearch()"><i data-lucide="search"></i></button>
     </div>
-    <div class="mobile-menu-overlay" id="mobile-overlay" onclick="closeMobileMenu()"></div>
-    <div class="mobile-menu" id="mobile-menu">
-      <div class="mobile-menu-header">
-        <div class="logo"><span class="logo-nexa">Nexa</span><span class="logo-bay">bay</span></div>
-        <div id="mobile-header-actions" style="display:none;">
-          <a href="../dashboard/buyer.html" class="mh-btn account">Account</a>
-          <a href="#" onclick="logoutUser()" class="mh-btn logout">Logout</a>
-        </div>
-        <button onclick="closeMobileMenu()" class="close-menu-btn">✕</button>
-      </div>
-      <div id="mobile-user-section"></div>
-      <div class="mobile-menu-links">
-        <a href="../../index.html">🏠 Home</a>
-        <a href="../shop/browse.html">🛍️ Shop</a>
-        <a href="../services/browse.html">🔧 Services</a>
-        <a href="browse.html">🏠 Rentals</a>
-        <a href="../learn/browse.html">🎓 Learn</a>
-        <a href="../jobs/browse.html">💼 Jobs</a>
-      </div>
+    <a href="../../index.html" class="nav-back"><i data-lucide="chevron-left"></i> Home</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-badge"><i data-lucide="home"></i> Properties across Nigeria</div>
+    <h1>Find your perfect<br/><span>home or rental</span></h1>
+    <p>Apartments, houses, shops, land, cars and more — verified listings across all 36 Nigerian states.</p>
+    <div class="hero-search">
+      <input type="text" id="hero-search" placeholder="Search by area, state or property type..."/>
+      <button onclick="doHeroSearch()"><i data-lucide="search"></i> Search</button>
     </div>
-  </nav>
-
-  <!-- FLOATING CART -->
-  <a href="../shop/cart.html" class="floating-cart" id="floating-cart">
-    🛒 <span class="floating-cart-count" id="floating-cart-count">0</span>
-  </a>
-
-  <!-- HERO -->
-  <div class="rentals-hero">
-    <div class="container">
-      <h1>Find Your Perfect Rental</h1>
-      <p>Apartments, houses, offices, cars and equipment — all in one place</p>
-
-      <div class="rentals-search-box">
-        <div class="rsb-row">
-          <div class="rsb-field">
-            <label>What are you looking for?</label>
-            <select id="rental-type">
-              <option value="all">All Types</option>
-              <option value="Apartment">Apartment</option>
-              <option value="House">House</option>
-              <option value="Office">Office Space</option>
-              <option value="Car">Car</option>
-              <option value="Equipment">Equipment</option>
-              <option value="Event Hall">Event Hall</option>
-            </select>
-          </div>
-          <div class="rsb-field">
-            <label>Location</label>
-            <select id="rental-location">
-              <option value="">All States</option>
-              <option>Lagos</option>
-              <option>Abuja</option>
-              <option>Port Harcourt</option>
-              <option>Kano</option>
-              <option>Ibadan</option>
-              <option>Enugu</option>
-            </select>
-          </div>
-          <div class="rsb-field">
-            <label>Budget (₦/month)</label>
-            <select id="rental-budget">
-              <option value="">Any budget</option>
-              <option value="50000">Under ₦50,000</option>
-              <option value="100000">Under ₦100,000</option>
-              <option value="200000">Under ₦200,000</option>
-              <option value="500000">Under ₦500,000</option>
-            </select>
-          </div>
-          <button onclick="doRentalSearch()" class="rsb-btn">Search</button>
-        </div>
-      </div>
-
-      <div class="rentals-hero-stats">
-        <span>🏠 8,000+ Listings</span>
-        <span>✅ Verified Landlords</span>
-        <span>🔒 Secure Payments</span>
-        <span>📍 36 States</span>
-      </div>
+    <div class="hero-stats">
+      <div class="hero-stat"><i data-lucide="building-2"></i><strong>Verified</strong> listings</div>
+      <div class="hero-stat"><i data-lucide="map-pin"></i><strong>All 36</strong> states</div>
+      <div class="hero-stat"><i data-lucide="shield-check"></i><strong>Safe</strong> transactions</div>
     </div>
   </div>
+</div>
 
-  <!-- RENTAL TYPES -->
-  <div class="container">
-    <h2 class="section-title" style="margin-top:40px">Browse by Type</h2>
-    <div class="rental-type-grid">
-      <div class="rtype-card" onclick="filterRentals('Apartment', this)">
-        <div class="rtype-icon">🏢</div>
-        <div class="rtype-name">Apartments</div>
-        <div class="rtype-count">3,200+</div>
-      </div>
-      <div class="rtype-card" onclick="filterRentals('House', this)">
-        <div class="rtype-icon">🏠</div>
-        <div class="rtype-name">Houses</div>
-        <div class="rtype-count">1,800+</div>
-      </div>
-      <div class="rtype-card" onclick="filterRentals('Office', this)">
-        <div class="rtype-icon">🏗️</div>
-        <div class="rtype-name">Offices</div>
-        <div class="rtype-count">650+</div>
-      </div>
-      <div class="rtype-card" onclick="filterRentals('Car', this)">
-        <div class="rtype-icon">🚗</div>
-        <div class="rtype-name">Cars</div>
-        <div class="rtype-count">420+</div>
-      </div>
-      <div class="rtype-card" onclick="filterRentals('Equipment', this)">
-        <div class="rtype-icon">🔧</div>
-        <div class="rtype-name">Equipment</div>
-        <div class="rtype-count">890+</div>
-      </div>
-      <div class="rtype-card" onclick="filterRentals('Event Hall', this)">
-        <div class="rtype-icon">🎉</div>
-        <div class="rtype-name">Event Halls</div>
-        <div class="rtype-count">340+</div>
-      </div>
+<!-- QUICK FILTERS -->
+<div class="quick-filters">
+  <div class="quick-filters-inner">
+    <button class="qf-btn active" onclick="filterPeriod('all',this)"><i data-lucide="layout-grid"></i> All</button>
+    <button class="qf-btn" onclick="filterPeriod('per year',this)"><i data-lucide="calendar"></i> Annual</button>
+    <button class="qf-btn" onclick="filterPeriod('per month',this)"><i data-lucide="calendar-days"></i> Monthly</button>
+    <button class="qf-btn" onclick="filterPeriod('per day',this)"><i data-lucide="sun"></i> Short Stay</button>
+    <button class="qf-btn" onclick="filterPeriod('per night',this)"><i data-lucide="moon"></i> Nightly</button>
+  </div>
+</div>
+
+<!-- CAT STRIP -->
+<div class="cat-strip">
+  <div class="cat-strip-inner">
+    <button class="cat-btn active" onclick="filterType('all',this)"><i data-lucide="layout-grid"></i> All</button>
+    <button class="cat-btn" onclick="filterType('apartment',this)"><i data-lucide="building-2"></i> Apartment</button>
+    <button class="cat-btn" onclick="filterType('house',this)"><i data-lucide="home"></i> House</button>
+    <button class="cat-btn" onclick="filterType('self-contain',this)"><i data-lucide="door-open"></i> Self Contain</button>
+    <button class="cat-btn" onclick="filterType('office',this)"><i data-lucide="briefcase"></i> Office</button>
+    <button class="cat-btn" onclick="filterType('shop',this)"><i data-lucide="store"></i> Shop</button>
+    <button class="cat-btn" onclick="filterType('land',this)"><i data-lucide="map"></i> Land</button>
+    <button class="cat-btn" onclick="filterType('car',this)"><i data-lucide="car"></i> Car Rental</button>
+    <button class="cat-btn" onclick="filterType('event-hall',this)"><i data-lucide="calendar-days"></i> Event Hall</button>
+    <button class="cat-btn" onclick="filterType('equipment',this)"><i data-lucide="package"></i> Equipment</button>
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- FILTER BAR -->
+  <div class="filter-bar">
+    <div class="filter-left">
+      <button class="filter-pill active" onclick="sortBy('newest',this)"><i data-lucide="clock"></i> Newest</button>
+      <button class="filter-pill" onclick="sortBy('price-low',this)"><i data-lucide="arrow-up"></i> Cheapest</button>
+      <button class="filter-pill" onclick="sortBy('price-high',this)"><i data-lucide="arrow-down"></i> Expensive</button>
     </div>
+    <div class="results-count" id="results-count">Loading...</div>
   </div>
 
-  <!-- FILTERS + LISTINGS -->
-  <div class="container rentals-layout">
-
-    <!-- SIDEBAR -->
-    <aside class="rentals-sidebar">
-      <div class="sidebar-header">
-        <h3>Filters</h3>
-        <button onclick="clearRentalFilters()" class="clear-btn">Clear</button>
-      </div>
-
-      <div class="filter-group">
-        <h4>Type</h4>
-        <div class="filter-options">
-          <label class="filter-opt"><input type="radio" name="rtype" value="all" checked onchange="applyRentalFilters()"/> All Types</label>
-          <label class="filter-opt"><input type="radio" name="rtype" value="Apartment" onchange="applyRentalFilters()"/> 🏢 Apartment</label>
-          <label class="filter-opt"><input type="radio" name="rtype" value="House" onchange="applyRentalFilters()"/> 🏠 House</label>
-          <label class="filter-opt"><input type="radio" name="rtype" value="Office" onchange="applyRentalFilters()"/> 🏗️ Office</label>
-          <label class="filter-opt"><input type="radio" name="rtype" value="Car" onchange="applyRentalFilters()"/> 🚗 Car</label>
-          <label class="filter-opt"><input type="radio" name="rtype" value="Equipment" onchange="applyRentalFilters()"/> 🔧 Equipment</label>
-          <label class="filter-opt"><input type="radio" name="rtype" value="Event Hall" onchange="applyRentalFilters()"/> 🎉 Event Hall</label>
-        </div>
-      </div>
-
-      <div class="filter-group">
-        <h4>Price Range (₦/month)</h4>
-        <div class="price-inputs">
-          <input type="number" id="rent-min" placeholder="Min" onchange="applyRentalFilters()"/>
-          <span>—</span>
-          <input type="number" id="rent-max" placeholder="Max" onchange="applyRentalFilters()"/>
-        </div>
-      </div>
-
-      <div class="filter-group">
-        <h4>Location</h4>
-        <select id="filter-state" onchange="applyRentalFilters()">
-          <option value="">All States</option>
-          <option>Lagos</option>
-          <option>Abuja</option>
-          <option>Port Harcourt</option>
-          <option>Kano</option>
-          <option>Ibadan</option>
-          <option>Enugu</option>
-        </select>
-      </div>
-
-      <div class="filter-group">
-        <h4>Bedrooms</h4>
-        <div class="filter-options">
-          <label class="filter-opt"><input type="radio" name="beds" value="0" checked onchange="applyRentalFilters()"/> Any</label>
-          <label class="filter-opt"><input type="radio" name="beds" value="1" onchange="applyRentalFilters()"/> 1 Bedroom</label>
-          <label class="filter-opt"><input type="radio" name="beds" value="2" onchange="applyRentalFilters()"/> 2 Bedrooms</label>
-          <label class="filter-opt"><input type="radio" name="beds" value="3" onchange="applyRentalFilters()"/> 3+ Bedrooms</label>
-        </div>
-      </div>
-
-      <div class="filter-group">
-        <h4>Features</h4>
-        <div class="filter-options">
-          <label class="filter-opt"><input type="checkbox" id="f-furnished" onchange="applyRentalFilters()"/> Furnished</label>
-          <label class="filter-opt"><input type="checkbox" id="f-parking" onchange="applyRentalFilters()"/> Parking</label>
-          <label class="filter-opt"><input type="checkbox" id="f-security" onchange="applyRentalFilters()"/> Security</label>
-          <label class="filter-opt"><input type="checkbox" id="f-pool" onchange="applyRentalFilters()"/> Swimming Pool</label>
-          <label class="filter-opt"><input type="checkbox" id="f-gym" onchange="applyRentalFilters()"/> Gym</label>
-        </div>
-      </div>
-
-    </aside>
-
-    <!-- LISTINGS -->
-    <main class="rentals-main">
-
-      <div class="rentals-topbar">
-        <div class="rentals-topbar-left">
-          <button class="filter-toggle" onclick="toggleRentalSidebar()">⚙️ Filters</button>
-          <span id="rentals-count">Showing all listings</span>
-        </div>
-        <select id="rentals-sort" onchange="applyRentalFilters()">
-          <option value="default">Sort: Featured</option>
-          <option value="price-low">Price: Low to High</option>
-          <option value="price-high">Price: High to Low</option>
-          <option value="newest">Newest First</option>
-        </select>
-      </div>
-
-      <div id="rentals-grid" class="rentals-grid"></div>
-
-      <div id="rentals-empty" style="display:none;">
-        <div class="empty-state">
-          <div class="empty-icon">🏠</div>
-          <h3>No listings found</h3>
-          <p>Try adjusting your filters</p>
-          <button onclick="clearRentalFilters()" class="btn-primary">Clear Filters</button>
-        </div>
-      </div>
-
-    </main>
+  <!-- RENTALS GRID -->
+  <div class="rentals-grid" id="rentals-grid">
+    <div class="skel-card"><div class="skel-img skel"></div><div class="skel-body"><div class="skel-line skel" style="width:35%;"></div><div class="skel-line skel" style="width:100%;"></div><div class="skel-line skel" style="width:70%;"></div><div class="skel-line skel" style="width:50%;margin-top:10px;"></div></div></div>
+    <div class="skel-card"><div class="skel-img skel"></div><div class="skel-body"><div class="skel-line skel" style="width:35%;"></div><div class="skel-line skel" style="width:100%;"></div><div class="skel-line skel" style="width:70%;"></div><div class="skel-line skel" style="width:50%;margin-top:10px;"></div></div></div>
+    <div class="skel-card"><div class="skel-img skel"></div><div class="skel-body"><div class="skel-line skel" style="width:35%;"></div><div class="skel-line skel" style="width:100%;"></div><div class="skel-line skel" style="width:70%;"></div><div class="skel-line skel" style="width:50%;margin-top:10px;"></div></div></div>
   </div>
 
-  <div style="margin-bottom:60px;"></div>
+  <div class="load-more-wrap" id="load-more-wrap" style="display:none;">
+    <button class="load-more-btn" onclick="loadMore()">Load More Listings</button>
+  </div>
 
-  <footer class="footer">
-    <div class="container">
-      <div class="footer-bottom">
-        <p>© 2025 Nexabay. All rights reserved.</p>
-        <a href="../../index.html" style="color:var(--orange)">← Back to Home</a>
-      </div>
-    </div>
-  </footer>
+</div>
 
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-  <script src="../../js/firebase/config.js"></script>
-  <script src="../../js/firebase/auth.js"></script>
-  <script src="../../js/firebase/rentals.js"></script>
-  <script src="../../js/core/main.js"></script>
-  <script>
+<!-- TRUST -->
+<div class="trust-strip">
+  <div class="trust-strip-inner">
+    <div class="trust-item"><i data-lucide="shield-check"></i> Verified Owners</div>
+    <div class="trust-item"><i data-lucide="lock"></i> Secure Payments</div>
+    <div class="trust-item"><i data-lucide="eye"></i> Inspect Before You Pay</div>
+    <div class="trust-item"><i data-lucide="headphones"></i> 24/7 Support</div>
+    <div class="trust-item"><i data-lucide="badge-check"></i> No Hidden Fees</div>
+  </div>
+</div>
 
-    var DEMO_RENTALS = [];
+<!-- FOOTER -->
+<footer class="footer">
+  © 2025 Nexabay Ltd •
+  <a href="../privacy.html">Privacy</a> •
+  <a href="../terms.html">Terms</a> •
+  <a href="../help.html">Help</a> •
+  <a href="../../index.html">Home</a>
+</footer>
 
-    var ALL_RENTALS = [];
-    var currentRentals = [];
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="../../js/firebase/config.js"></script>
+<script src="../../js/firebase/auth.js"></script>
+<script src="../../js/core/main.js"></script>
+<script>
 
-    function loadAllRentals() {
-      nexaGetRentals('all')
-        .then(function(realRentals) {
-          var mapped = realRentals.map(function(r) {
-            var periodMap = { daily: 'day', weekly: 'week', monthly: 'month', yearly: 'year' };
-            return {
-              id: r.id,
-              name: r.title,
-              type: r.category,
-              price: r.price,
-              period: periodMap[r.rentalPeriod] || 'month',
-              beds: r.bedrooms || 0,
-              location: r.location,
-              area: r.location,
-              emoji: r.emoji || '🏠',
-              imageUrl: r.imageUrl || '',
-              verified: false,
-              features: r.amenities || [],
-              desc: r.description || '',
-            };
-          });
-          ALL_RENTALS = mapped.concat(DEMO_RENTALS);
-          currentRentals = ALL_RENTALS.slice();
-          renderRentals();
-        })
-        .catch(function(err) {
-          console.log('Error loading rentals:', err);
-          ALL_RENTALS = DEMO_RENTALS.slice();
-          currentRentals = ALL_RENTALS.slice();
-          renderRentals();
-        });
-    }
+  var allRentals=[], filtered=[], displayed=0, pageSize=12;
+  var currentType='all', currentPeriod='all', currentSort='newest', searchQuery='';
 
-    function renderRentals() {
-      var grid = document.getElementById('rentals-grid');
-      var empty = document.getElementById('rentals-empty');
-      var count = document.getElementById('rentals-count');
+  var urlParams=new URLSearchParams(window.location.search);
+  var urlQ=urlParams.get('q')||'';
+  if (urlQ){
+    searchQuery=urlQ;
+    document.getElementById('nav-search-input').value=urlQ;
+    document.getElementById('hero-search').value=urlQ;
+  }
 
-      if (currentRentals.length === 0) {
-        grid.innerHTML =
-          '<div style="text-align:center;padding:60px 20px;">' +
-            '<div style="font-size:4em;margin-bottom:16px;">🏠</div>' +
-            '<h3 style="font-size:1.3em;margin-bottom:8px;">No Rentals yet</h3>' +
-            '<p style="color:var(--text2);margin-bottom:20px;">Be the first to list a property!</p>' +
-            '<a href="../auth/register.html" style="background:var(--orange);color:white;padding:12px 24px;border-radius:8px;text-decoration:none;font-weight:700;">Start Selling →</a>' +
-          '</div>';
-        return;
-      }
+  function loadRentals() {
+    if (typeof db==='undefined') return;
+    db.collection('rentals')
+      .where('status','==','active')
+      .get()
+      .then(function(snap){
+        allRentals=[];
+        snap.forEach(function(doc){ allRentals.push(doc.data()); });
+        applyFilters();
+      })
+      .catch(function(){ renderEmpty(); });
+  }
 
-      empty.style.display = 'none';
-      if (count) count.textContent = 'Showing ' + currentRentals.length + ' listings';
-
-      grid.innerHTML = currentRentals.map(function(r) {
-        var imgContent = r.imageUrl
-          ? '<img src="' + r.imageUrl + '" style="width:100%;height:100%;object-fit:cover;border-radius:8px;"/>'
-          : r.emoji;
-        return '<div class="rental-card" onclick="viewRental(\'' + r.id + '\')">' +
-          '<div class="rc-img">' +
-            imgContent +
-            (r.verified ? '<span class="rc-verified">✅ Verified</span>' : '') +
-          '</div>' +
-          '<div class="rc-info">' +
-            '<div class="rc-type-row">' +
-              '<span class="rc-type">' + r.type + '</span>' +
-              '<span class="rc-location">📍 ' + r.area + ', ' + r.location + '</span>' +
-            '</div>' +
-            '<h3 class="rc-name">' + r.name + '</h3>' +
-            '<p class="rc-desc">' + r.desc + '</p>' +
-            '<div class="rc-features">' +
-              r.features.slice(0, 3).map(function(f) {
-                return '<span class="rc-feat">✓ ' + f + '</span>';
-              }).join('') +
-            '</div>' +
-            (r.beds > 0 ? '<div class="rc-beds">🛏️ ' + r.beds + ' Bedroom' + (r.beds > 1 ? 's' : '') + '</div>' : '') +
-            '<div class="rc-bottom">' +
-              '<div class="rc-price">' +
-                '<span class="rc-amount">₦' + r.price.toLocaleString() + '</span>' +
-                '<span class="rc-period">/' + r.period + '</span>' +
-              '</div>' +
-              '<button class="rc-btn" onclick="event.stopPropagation();contactLandlord(\'' + r.id + '\')">Contact</button>' +
-            '</div>' +
-          '</div>' +
-        '</div>';
-      }).join('');
-    }
-
-    function applyRentalFilters() {
-      var type   = document.querySelector('input[name="rtype"]:checked').value;
-      var minP   = parseFloat(document.getElementById('rent-min').value) || 0;
-      var maxP   = parseFloat(document.getElementById('rent-max').value) || Infinity;
-      var state  = document.getElementById('filter-state').value;
-      var beds   = parseInt(document.querySelector('input[name="beds"]:checked').value);
-      var sort   = document.getElementById('rentals-sort').value;
-      var search = (document.getElementById('search-input').value || '').toLowerCase().trim();
-
-      currentRentals = ALL_RENTALS.filter(function(r) {
-        if (type !== 'all' && r.type !== type) return false;
-        if (r.price < minP || r.price > maxP) return false;
-        if (state && r.location !== state) return false;
-        if (beds > 0 && beds < 3 && r.beds !== beds) return false;
-        if (beds >= 3 && r.beds < 3) return false;
-        if (search && !r.name.toLowerCase().includes(search) && !r.type.toLowerCase().includes(search)) return false;
-        return true;
+  function applyFilters() {
+    filtered=allRentals.slice();
+    if (searchQuery) {
+      var q=searchQuery.toLowerCase();
+      filtered=filtered.filter(function(r){
+        return (r.title||'').toLowerCase().includes(q)||
+               (r.state||'').toLowerCase().includes(q)||
+               (r.area||'').toLowerCase().includes(q)||
+               (r.type||'').toLowerCase().includes(q)||
+               (r.description||'').toLowerCase().includes(q);
       });
-
-      if (sort === 'price-low')  currentRentals.sort(function(a,b) { return a.price - b.price; });
-      if (sort === 'price-high') currentRentals.sort(function(a,b) { return b.price - a.price; });
-
-      renderRentals();
     }
-
-    function filterRentals(type, el) {
-      var cards = document.querySelectorAll('.rtype-card');
-      cards.forEach(function(c) { c.classList.remove('active'); });
-      if (el) el.classList.add('active');
-
-      var radio = document.querySelector('input[name="rtype"][value="' + type + '"]');
-      if (radio) radio.checked = true;
-      applyRentalFilters();
+    if (currentType!=='all') {
+      filtered=filtered.filter(function(r){ return r.type===currentType; });
     }
-
-    function clearRentalFilters() {
-      document.querySelector('input[name="rtype"][value="all"]').checked = true;
-      document.querySelector('input[name="beds"][value="0"]').checked = true;
-      document.getElementById('rent-min').value = '';
-      document.getElementById('rent-max').value = '';
-      document.getElementById('filter-state').value = '';
-      document.getElementById('rentals-sort').value = 'default';
-      document.getElementById('search-input').value = '';
-      currentRentals = ALL_RENTALS.slice();
-      renderRentals();
+    if (currentPeriod!=='all') {
+      filtered=filtered.filter(function(r){ return (r.period||'').toLowerCase().includes(currentPeriod.replace('per ','')); });
     }
-
-    function doRentalSearch() {
-      applyRentalFilters();
+    if (currentSort==='price-low') {
+      filtered.sort(function(a,b){ return (a.price||0)-(b.price||0); });
+    } else if (currentSort==='price-high') {
+      filtered.sort(function(a,b){ return (b.price||0)-(a.price||0); });
+    } else {
+      filtered.sort(function(a,b){
+        return (b.createdAt?b.createdAt.toMillis():0)-(a.createdAt?a.createdAt.toMillis():0);
+      });
     }
+    displayed=0;
+    renderRentals();
+  }
 
-    function toggleRentalSidebar() {
-      var sidebar = document.querySelector('.rentals-sidebar');
-      if (sidebar) sidebar.classList.toggle('open');
-    }
+  function renderRentals() {
+    var grid=document.getElementById('rentals-grid');
+    var countEl=document.getElementById('results-count');
+    var lmWrap=document.getElementById('load-more-wrap');
+    if (!grid) return;
+    if (filtered.length===0){ renderEmpty(); if(countEl) countEl.innerHTML='<strong>0</strong> listings found'; return; }
+    var chunk=filtered.slice(0,displayed+pageSize);
+    displayed=chunk.length;
+    if (countEl) countEl.innerHTML='<strong>'+filtered.length+'</strong> listing'+(filtered.length!==1?'s':'')+' found';
+    grid.innerHTML=chunk.map(function(r){ return buildCard(r); }).join('');
+    if (lmWrap) lmWrap.style.display=displayed<filtered.length?'block':'none';
+    lucide.createIcons();
+  }
 
-    function viewRental(id) {
-      window.location.href = 'rental.html?id=' + id;
-    }
+  function buildCard(r) {
+    var imgHtml=r.imageUrl
+      ?'<img src="'+escHtml(r.imageUrl)+'" alt="'+escHtml(r.title||'')+'" loading="lazy"/>'
+      :'<div class="rental-img-placeholder">'+(r.emoji||'🏠')+'</div>';
 
-    function contactLandlord(id) {
-      var user = localStorage.getItem('nexa_current_user');
-      if (!user) {
-        showToast('⚠️ Please login to contact', '#ff9500');
-        setTimeout(function() { window.location.href = '../auth/login.html'; }, 1500);
-        return;
-      }
-      showToast('✅ Message sent! Landlord will contact you soon.');
-    }
+    var typeLabel={
+      apartment:'Apartment',house:'House / Duplex',
+      'self-contain':'Self Contain',room:'Single Room',
+      office:'Office Space',shop:'Shop / Store',
+      land:'Land',car:'Car Rental',
+      'event-hall':'Event Hall',equipment:'Equipment',
+    }[r.type]||r.type||'Property';
 
-    document.addEventListener('DOMContentLoaded', function() {
-      updateCartCount();
-      checkAuthState();
-      loadAllRentals();
-      var input = document.getElementById('search-input');
-      if (input) {
-        input.addEventListener('keypress', function(e) {
-          if (e.key === 'Enter') doRentalSearch();
-        });
-      }
-    });
+    var amenities=(r.amenities||[]).slice(0,3);
+    var amenHTML=amenities.map(function(a){
+      return '<span class="rental-amenity">'+escHtml(a)+'</span>';
+    }).join('');
 
-  </script>
+    var featHTML='';
+    if (r.bedrooms&&r.bedrooms!=='0') featHTML+='<div class="rental-feat"><i data-lucide="bed-double"></i>'+escHtml(r.bedrooms)+' bed</div>';
+    if (r.bathrooms) featHTML+='<div class="rental-feat"><i data-lucide="bath"></i>'+escHtml(r.bathrooms)+' bath</div>';
+    if (r.area) featHTML+='<div class="rental-feat"><i data-lucide="map-pin"></i>'+escHtml(r.area)+'</div>';
 
+    var ownerLetter=(r.ownerName||'O')[0].toUpperCase();
+    var period=r.period||'per year';
+
+    return '<div class="rental-card" onclick="viewRental(\''+r.id+'\')">'+
+      '<div class="rental-img-wrap">'+
+        imgHtml+
+        '<div class="rental-tag">'+escHtml(typeLabel)+'</div>'+
+        '<button class="rental-save" onclick="event.stopPropagation();saveRental(this)" title="Save">'+
+          '<i data-lucide="heart"></i>'+
+        '</button>'+
+      '</div>'+
+      '<div class="rental-body">'+
+        '<div class="rental-type-row">'+
+          '<div class="rental-type">'+escHtml(typeLabel)+'</div>'+
+          '<div class="rental-period">'+escHtml(period)+'</div>'+
+        '</div>'+
+        '<div class="rental-title">'+escHtml(r.title||'Property')+'</div>'+
+        '<div class="rental-location">'+
+          '<i data-lucide="map-pin"></i>'+
+          escHtml((r.area?r.area+', ':'')+r.state||'Nigeria')+
+        '</div>'+
+        (featHTML?'<div class="rental-features">'+featHTML+'</div>':'')+
+        (amenHTML?'<div class="rental-amenities">'+amenHTML+'</div>':'')+
+        '<div class="rental-footer">'+
+          '<div>'+
+            '<div class="rental-price">₦'+parseInt(r.price||0).toLocaleString()+'<small>/'+period.replace('per ','')+'</small></div>'+
+          '</div>'+
+          '<div style="display:flex;align-items:center;gap:8px;">'+
+            '<div class="rental-owner">'+
+              '<div class="rental-owner-av">'+ownerLetter+'</div>'+
+              '<span class="rental-owner-name">'+escHtml(r.ownerName||'Owner')+'</span>'+
+            '</div>'+
+            '<button class="rental-contact-btn" onclick="event.stopPropagation();contactOwner(\''+r.id+'\')">'+
+              '<i data-lucide="phone"></i> Contact'+
+            '</button>'+
+          '</div>'+
+        '</div>'+
+      '</div>'+
+    '</div>';
+  }
+
+  function renderEmpty() {
+    var grid=document.getElementById('rentals-grid');
+    var lmWrap=document.getElementById('load-more-wrap');
+    if (lmWrap) lmWrap.style.display='none';
+    grid.innerHTML=
+      '<div class="empty-state" style="grid-column:1/-1;">'+
+        '<div class="empty-icon"><i data-lucide="home"></i></div>'+
+        '<h3>No listings found</h3>'+
+        '<p>No rentals match your search yet. Be the first to list your property on Nexabay!</p>'+
+        '<a href="../auth/become-provider.html?type=rental" class="empty-cta">List Your Property</a>'+
+      '</div>';
+    lucide.createIcons();
+  }
+
+  function loadMore() {
+    var grid=document.getElementById('rentals-grid');
+    var chunk=filtered.slice(displayed,displayed+pageSize);
+    displayed+=chunk.length;
+    chunk.forEach(function(r){ grid.insertAdjacentHTML('beforeend',buildCard(r)); });
+    var lmWrap=document.getElementById('load-more-wrap');
+    if (lmWrap) lmWrap.style.display=displayed<filtered.length?'block':'none';
+    lucide.createIcons();
+  }
+
+  function filterType(type,btn) {
+    currentType=type;
+    document.querySelectorAll('.cat-btn').forEach(function(b){ b.classList.remove('active'); });
+    btn.classList.add('active');
+    applyFilters();
+  }
+
+  function filterPeriod(period,btn) {
+    currentPeriod=period;
+    document.querySelectorAll('.qf-btn').forEach(function(b){ b.classList.remove('active'); });
+    btn.classList.add('active');
+    applyFilters();
+  }
+
+  function sortBy(sort,btn) {
+    currentSort=sort;
+    document.querySelectorAll('.filter-pill').forEach(function(b){ b.classList.remove('active'); });
+    btn.classList.add('active');
+    applyFilters();
+  }
+
+  function doSearch() {
+    searchQuery=document.getElementById('nav-search-input').value.trim();
+    document.getElementById('hero-search').value=searchQuery;
+    applyFilters();
+  }
+
+  function doHeroSearch() {
+    searchQuery=document.getElementById('hero-search').value.trim();
+    document.getElementById('nav-search-input').value=searchQuery;
+    applyFilters();
+  }
+
+  function viewRental(id) {
+    window.location.href='listing.html?id='+id;
+  }
+
+  function contactOwner(id) {
+    var user=JSON.parse(localStorage.getItem('nexa_current_user')||'null');
+    if (!user){ window.location.href='../auth/login.html?redirect='+encodeURIComponent(window.location.href); return; }
+    window.location.href='listing.html?id='+id+'&contact=1';
+  }
+
+  function saveRental(btn) {
+    var svg=btn.querySelector('svg');
+    if (svg) svg.style.fill=svg.style.fill==='red'?'none':'red';
+  }
+
+  function escHtml(str) {
+    return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  document.getElementById('nav-search-input').addEventListener('keypress',function(e){ if(e.key==='Enter') doSearch(); });
+  document.getElementById('hero-search').addEventListener('keypress',function(e){ if(e.key==='Enter') doHeroSearch(); });
+
+  document.addEventListener('DOMContentLoaded',function(){
+    lucide.createIcons();
+    loadRentals();
+  });
+
+</script>
 </body>
 </html>
