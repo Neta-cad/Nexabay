@@ -3,354 +3,520 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>NexaFood — Nexabay</title>
-  <link rel="stylesheet" href="../../css/main.css"/>
-  <link rel="stylesheet" href="../../css/food.css"/>
+  <title>NexaFood — Order Food Online | Nexabay</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <style>
+    :root{
+      --brand:#7c3aed;
+      --accent:#f97316;
+      --food:#dc2626;
+      --food-light:#fef2f2;
+      --food-border:#fecaca;
+      --dark:#09090b;
+      --muted:#71717a;
+      --border:#e4e4e7;
+      --bg:#f4f4f5;
+      --white:#ffffff;
+    }
+    *{box-sizing:border-box;margin:0;padding:0;}
+    html{scroll-behavior:smooth;}
+    body{background:var(--bg);font-family:'Inter',sans-serif;-webkit-font-smoothing:antialiased;}
+
+    /* NAV */
+    .nav{position:sticky;top:0;z-index:200;background:var(--dark);border-bottom:1px solid rgba(255,255,255,0.07);}
+    .nav-inner{max-width:1100px;margin:0 auto;padding:0 16px;height:56px;display:flex;align-items:center;gap:10px;}
+    .nav-logo{font-weight:900;font-size:1.15em;text-decoration:none;color:white;letter-spacing:-0.02em;flex-shrink:0;}
+    .nav-logo em{color:var(--accent);font-style:normal;}
+    .nav-search{flex:1;display:flex;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.1);border-radius:9px;overflow:hidden;min-width:0;}
+    .nav-search input{flex:1;background:transparent;border:none;outline:none;padding:9px 12px;color:white;font-size:0.84em;font-family:'Inter',sans-serif;min-width:0;}
+    .nav-search input::placeholder{color:rgba(255,255,255,0.3);}
+    .nav-search button{background:var(--accent);border:none;padding:9px 13px;cursor:pointer;flex-shrink:0;display:flex;align-items:center;}
+    .nav-search button svg{stroke:white;width:15px;height:15px;}
+    .nav-cart-btn{position:relative;background:var(--food);border:none;padding:8px 14px;border-radius:8px;cursor:pointer;color:white;display:flex;align-items:center;gap:5px;font-size:0.8em;font-weight:700;font-family:'Inter',sans-serif;flex-shrink:0;}
+    .nav-cart-btn svg{width:14px;height:14px;stroke:white;}
+    .nav-cart-count{background:white;color:var(--food);border-radius:100px;padding:1px 6px;font-size:0.75em;font-weight:800;}
+    .nav-back{display:flex;align-items:center;gap:5px;color:rgba(255,255,255,0.7);text-decoration:none;font-size:0.82em;font-weight:600;white-space:nowrap;flex-shrink:0;}
+    .nav-back svg{width:15px;height:15px;stroke:rgba(255,255,255,0.7);}
+
+    /* HERO */
+    .hero{background:linear-gradient(135deg,#450a0a,#991b1b,#450a0a);padding:28px 16px 24px;color:white;position:relative;overflow:hidden;}
+    .hero::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 60% at 80% 50%,rgba(220,38,38,0.2) 0%,transparent 70%);}
+    .hero-inner{max-width:600px;margin:0 auto;text-align:center;position:relative;z-index:1;}
+    .hero-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.15);padding:5px 12px;border-radius:100px;font-size:0.75em;font-weight:600;margin-bottom:12px;color:rgba(255,255,255,0.85);}
+    .hero-badge svg{width:13px;height:13px;stroke:currentColor;}
+    .hero h1{font-size:clamp(1.4em,5vw,2em);font-weight:900;line-height:1.15;letter-spacing:-0.02em;margin-bottom:8px;}
+    .hero h1 span{color:#fca5a5;}
+    .hero p{font-size:0.85em;color:rgba(255,255,255,0.6);line-height:1.6;margin-bottom:18px;}
+    .hero-search{display:flex;background:white;border-radius:12px;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,0.3);}
+    .hero-search input{flex:1;border:none;outline:none;padding:12px 14px;font-size:0.86em;font-family:'Inter',sans-serif;color:var(--dark);min-width:0;}
+    .hero-search input::placeholder{color:#a1a1aa;}
+    .hero-search button{background:var(--food);border:none;padding:12px 16px;cursor:pointer;display:flex;align-items:center;gap:5px;color:white;font-weight:700;font-size:0.82em;font-family:'Inter',sans-serif;white-space:nowrap;flex-shrink:0;}
+    .hero-search button svg{stroke:white;width:14px;height:14px;}
+    .hero-chips{display:flex;gap:6px;margin-top:12px;overflow-x:auto;scrollbar-width:none;justify-content:center;flex-wrap:wrap;}
+    .hero-chip{background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.15);color:white;padding:5px 12px;border-radius:100px;font-size:0.72em;font-weight:600;cursor:pointer;white-space:nowrap;transition:background 0.15s;}
+    .hero-chip:hover{background:rgba(255,255,255,0.22);}
+
+    /* PROMO BANNER */
+    .promo-banner{background:linear-gradient(135deg,#92400e,#b45309);border-radius:12px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:10px;margin:16px 16px 0;color:white;}
+    .promo-left{display:flex;align-items:center;gap:10px;}
+    .promo-icon{font-size:1.5em;}
+    .promo-text h4{font-size:0.85em;font-weight:800;margin-bottom:2px;}
+    .promo-text p{font-size:0.72em;color:rgba(255,255,255,0.75);}
+    .promo-code{background:rgba(255,255,255,0.2);border:1px dashed rgba(255,255,255,0.4);padding:5px 12px;border-radius:6px;font-size:0.78em;font-weight:800;letter-spacing:1px;cursor:pointer;}
+
+    /* CAT STRIP */
+    .cat-strip{background:white;border-bottom:1px solid var(--border);position:sticky;top:56px;z-index:100;overflow-x:auto;scrollbar-width:none;}
+    .cat-strip::-webkit-scrollbar{display:none;}
+    .cat-strip-inner{max-width:1100px;margin:0 auto;padding:0 16px;display:flex;}
+    .cat-btn{display:flex;align-items:center;gap:5px;padding:10px 13px;color:#52525b;font-size:0.77em;font-weight:600;white-space:nowrap;border:none;background:none;cursor:pointer;font-family:'Inter',sans-serif;border-bottom:2px solid transparent;transition:all 0.15s;flex-shrink:0;}
+    .cat-btn:hover{color:var(--food);}
+    .cat-btn.active{color:var(--food);border-bottom-color:var(--food);}
+    .cat-btn svg{width:13px;height:13px;stroke:currentColor;}
+
+    /* MAIN */
+    .main{max-width:1100px;margin:0 auto;padding:16px;}
+
+    /* SECTION TITLE */
+    .section-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+    .section-head h2{font-size:1em;font-weight:800;color:#18181b;}
+    .section-head a{font-size:0.78em;font-weight:700;color:var(--food);text-decoration:none;}
+
+    /* FILTER BAR */
+    .filter-bar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px;flex-wrap:wrap;}
+    .filter-left{display:flex;gap:6px;flex-wrap:wrap;}
+    .filter-pill{display:flex;align-items:center;gap:5px;padding:6px 11px;border-radius:100px;border:1.5px solid var(--border);background:white;color:#52525b;font-size:0.75em;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:all 0.15s;white-space:nowrap;}
+    .filter-pill:hover{border-color:var(--food);color:var(--food);}
+    .filter-pill.active{background:var(--food);border-color:var(--food);color:white;}
+    .filter-pill svg{width:12px;height:12px;stroke:currentColor;}
+    .results-count{font-size:0.78em;color:var(--muted);white-space:nowrap;}
+    .results-count strong{color:#18181b;}
+
+    /* FOOD CARDS */
+    .food-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;}
+    .food-card{background:white;border-radius:14px;border:1px solid var(--border);overflow:hidden;cursor:pointer;transition:all 0.2s;display:flex;flex-direction:column;}
+    .food-card:hover{border-color:var(--food-border);box-shadow:0 6px 20px rgba(220,38,38,0.1);transform:translateY(-2px);}
+    .food-img{width:100%;aspect-ratio:4/3;background:#f4f4f5;display:flex;align-items:center;justify-content:center;font-size:2.5em;position:relative;overflow:hidden;flex-shrink:0;}
+    .food-img img{width:100%;height:100%;object-fit:cover;transition:transform 0.3s;}
+    .food-card:hover .food-img img{transform:scale(1.05);}
+    .food-badge{position:absolute;top:7px;left:7px;padding:3px 8px;border-radius:100px;font-size:0.62em;font-weight:700;}
+    .badge-popular{background:rgba(220,38,38,0.9);color:white;}
+    .badge-new{background:rgba(249,115,22,0.9);color:white;}
+    .badge-halal{background:rgba(22,163,74,0.9);color:white;}
+    .badge-veg{background:rgba(22,163,74,0.9);color:white;}
+    .food-prep{position:absolute;bottom:7px;right:7px;background:rgba(0,0,0,0.65);color:white;padding:3px 8px;border-radius:100px;font-size:0.62em;font-weight:700;display:flex;align-items:center;gap:3px;}
+    .food-prep svg{width:10px;height:10px;stroke:white;}
+    .food-body{padding:10px 11px;flex:1;display:flex;flex-direction:column;gap:5px;}
+    .food-restaurant{font-size:0.68em;font-weight:700;color:var(--food);text-transform:uppercase;letter-spacing:0.4px;}
+    .food-name{font-size:0.84em;font-weight:800;color:#18181b;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;flex:1;}
+    .food-desc{font-size:0.72em;color:var(--muted);line-height:1.4;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden;}
+    .food-tags{display:flex;gap:4px;flex-wrap:wrap;}
+    .food-tag{background:var(--food-light);color:var(--food);border:1px solid var(--food-border);padding:2px 6px;border-radius:100px;font-size:0.6em;font-weight:700;}
+    .food-footer{display:flex;align-items:center;justify-content:space-between;padding-top:7px;border-top:1px solid #f4f4f5;margin-top:auto;}
+    .food-price{font-size:0.95em;font-weight:900;color:var(--food);}
+    .food-add-btn{background:var(--food);color:white;border:none;width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background 0.15s;flex-shrink:0;}
+    .food-add-btn:hover{background:#b91c1c;}
+    .food-add-btn svg{width:15px;height:15px;stroke:white;}
+
+    /* SKELETON */
+    .skel{background:linear-gradient(90deg,#f4f4f5 25%,#e4e4e7 50%,#f4f4f5 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;border-radius:6px;}
+    @keyframes shimmer{0%{background-position:200% 0;}100%{background-position:-200% 0;}}
+    .skel-card{background:white;border-radius:14px;border:1px solid var(--border);overflow:hidden;}
+    .skel-img{width:100%;aspect-ratio:4/3;}
+    .skel-body{padding:10px 11px;}
+    .skel-line{height:9px;border-radius:5px;margin-bottom:7px;}
+
+    /* EMPTY */
+    .empty-state{text-align:center;padding:40px 20px;background:white;border-radius:16px;border:1px solid var(--border);}
+    .empty-icon{width:52px;height:52px;background:#f4f4f5;border-radius:14px;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;}
+    .empty-icon svg{stroke:#a1a1aa;width:24px;height:24px;}
+    .empty-state h3{font-size:0.95em;font-weight:700;color:#18181b;margin-bottom:5px;}
+    .empty-state p{font-size:0.8em;color:var(--muted);margin-bottom:16px;line-height:1.6;}
+    .empty-cta{display:inline-block;background:var(--food);color:white;padding:9px 18px;border-radius:10px;font-weight:700;font-size:0.82em;text-decoration:none;}
+
+    /* CART TOAST */
+    .cart-toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#18181b;color:white;padding:10px 18px;border-radius:10px;font-size:0.82em;font-weight:600;z-index:9999;display:none;white-space:nowrap;box-shadow:0 4px 20px rgba(0,0,0,0.3);display:flex;align-items:center;gap:8px;opacity:0;transition:opacity 0.2s;}
+    .cart-toast.show{display:flex;opacity:1;}
+    .cart-toast svg{width:15px;height:15px;stroke:var(--accent);}
+    .view-cart-btn{background:var(--food);color:white;border:none;padding:5px 12px;border-radius:6px;font-size:0.8em;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;margin-left:4px;}
+
+    /* LOAD MORE */
+    .load-more-wrap{text-align:center;padding:20px 0 6px;}
+    .load-more-btn{background:white;border:1.5px solid var(--border);padding:10px 26px;border-radius:100px;font-size:0.82em;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;color:#52525b;transition:all 0.15s;}
+    .load-more-btn:hover{border-color:var(--food);color:var(--food);}
+
+    /* TRUST */
+    .trust-strip{background:white;border-top:1px solid var(--border);padding:12px 16px;margin-top:16px;}
+    .trust-strip-inner{max-width:1100px;margin:0 auto;display:flex;gap:16px;overflow-x:auto;scrollbar-width:none;justify-content:center;flex-wrap:wrap;}
+    .trust-item{display:flex;align-items:center;gap:6px;font-size:0.76em;color:#52525b;font-weight:600;white-space:nowrap;}
+    .trust-item svg{stroke:var(--food);width:14px;height:14px;}
+
+    /* FOOTER */
+    .footer{background:var(--dark);color:rgba(255,255,255,0.45);text-align:center;padding:18px 16px;font-size:0.76em;}
+    .footer a{color:var(--accent);text-decoration:none;}
+
+    @media(min-width:580px){.food-grid{grid-template-columns:repeat(3,1fr);}}
+    @media(min-width:900px){.food-grid{grid-template-columns:repeat(4,1fr);}}
+  </style>
 </head>
 <body>
 
-  <!-- NAVBAR -->
-  <nav class="navbar">
-    <div class="nav-inner">
-      <a href="../../index.html" class="logo">
-        <span class="logo-nexa">Nexa</span><span class="logo-bay">bay</span>
-      </a>
-      <div class="search-bar">
-        <input type="text" id="search-input" placeholder="Search restaurants or food..."/>
-        <button onclick="doFoodSearch()" class="search-btn">🔍</button>
-      </div>
-      <div class="nav-actions">
-        <a href="../auth/login.html" class="nav-link">Login</a>
-        <a href="../auth/register.html" class="nav-btn">Sign Up</a>
-        <a href="../shop/cart.html" class="cart-icon-desk">
-          🛒 <span class="cart-count" id="cart-count">0</span>
-        </a>
-      </div>
-      <button class="hamburger" id="hamburger-btn" onclick="toggleMobileMenu()">☰</button>
-    </div>
-    <div class="mobile-menu-overlay" id="mobile-overlay" onclick="closeMobileMenu()"></div>
-    <div class="mobile-menu" id="mobile-menu">
-      <div class="mobile-menu-header">
-        <div class="logo"><span class="logo-nexa">Nexa</span><span class="logo-bay">bay</span></div>
-        <div id="mobile-header-actions" style="display:none;">
-          <a href="../dashboard/buyer.html" class="mh-btn account">Account</a>
-          <a href="#" onclick="logoutUser()" class="mh-btn logout">Logout</a>
-        </div>
-        <button onclick="closeMobileMenu()" class="close-menu-btn">✕</button>
-      </div>
-      <div id="mobile-user-section"></div>
-      <div class="mobile-menu-links">
-        <a href="../../index.html">🏠 Home</a>
-        <a href="../shop/browse.html">🛍️ Shop</a>
-        <a href="../services/browse.html">🔧 Services</a>
-        <a href="../rentals/browse.html">🏠 Rentals</a>
-        <a href="../learn/browse.html">🎓 Learn</a>
-        <a href="../jobs/browse.html">💼 Jobs</a>
-        <a href="browse.html">🍔 Food</a>
-      </div>
-    </div>
-  </nav>
+<!-- CART TOAST -->
+<div class="cart-toast" id="cart-toast">
+  <i data-lucide="check-circle"></i>
+  <span id="cart-toast-text">Added to cart</span>
+  <button class="view-cart-btn" onclick="viewCart()">View Cart</button>
+</div>
 
-  <!-- FLOATING CART -->
-  <a href="../shop/cart.html" class="floating-cart" id="floating-cart">
-    🛒 <span class="floating-cart-count" id="floating-cart-count">0</span>
-  </a>
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="../../index.html" class="nav-logo">Nexa<em>bay</em></a>
+    <div class="nav-search">
+      <input type="text" id="nav-search-input" placeholder="Search dishes, restaurants..."/>
+      <button onclick="doSearch()"><i data-lucide="search"></i></button>
+    </div>
+    <button class="nav-cart-btn" onclick="viewCart()">
+      <i data-lucide="shopping-bag"></i>
+      <span class="nav-cart-count" id="cart-count">0</span>
+    </button>
+    <a href="../../index.html" class="nav-back"><i data-lucide="chevron-left"></i> Home</a>
+  </div>
+</nav>
 
-  <!-- HERO -->
-  <div class="food-hero">
-    <div class="container">
-      <h1>🍔 Order Food & Groceries</h1>
-      <p>From your favourite restaurants — delivered fast to your door</p>
-      <div class="food-search">
-        <div class="food-search-inner">
-          <span>📍</span>
-          <select id="food-location">
-            <option>Lagos — Lekki</option>
-            <option>Lagos — Ikeja</option>
-            <option>Lagos — Victoria Island</option>
-            <option>Abuja — Wuse</option>
-            <option>Abuja — Garki</option>
-            <option>Port Harcourt</option>
-          </select>
-          <div class="food-search-divider"></div>
-          <input type="text" id="food-search-input" placeholder="Search restaurants or dishes..."/>
-          <button onclick="doFoodSearch()">Search</button>
-        </div>
-      </div>
-      <div class="food-hero-badges">
-        <span>⚡ 30-45 min delivery</span>
-        <span>🆓 Free delivery on first order</span>
-        <span>🔒 Secure payment</span>
-        <span>⭐ 1,000+ restaurants</span>
-      </div>
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-badge"><i data-lucide="utensils"></i> Order food near you</div>
+    <h1>Hungry? Order from<br/><span>local restaurants</span></h1>
+    <p>Jollof rice, suya, pizza, shawarma and more — delivered from Nigerian restaurants near you.</p>
+    <div class="hero-search">
+      <input type="text" id="hero-search" placeholder="Search for food or restaurant..."/>
+      <button onclick="doHeroSearch()"><i data-lucide="search"></i> Find Food</button>
+    </div>
+    <div class="hero-chips">
+      <span class="hero-chip" onclick="quickSearch('Jollof Rice')">Jollof Rice</span>
+      <span class="hero-chip" onclick="quickSearch('Suya')">Suya</span>
+      <span class="hero-chip" onclick="quickSearch('Shawarma')">Shawarma</span>
+      <span class="hero-chip" onclick="quickSearch('Pizza')">Pizza</span>
+      <span class="hero-chip" onclick="quickSearch('Chicken')">Chicken</span>
+      <span class="hero-chip" onclick="quickSearch('Pepper Soup')">Pepper Soup</span>
     </div>
   </div>
+</div>
 
-  <!-- FOOD CATEGORIES -->
-  <div class="container">
-    <div class="food-cats-scroll">
-      <div class="food-cat active" onclick="filterFood('all', this)">
-        <div class="fc-icon">🍽️</div>
-        <div class="fc-name">All</div>
-      </div>
-      <div class="food-cat" onclick="filterFood('Nigerian', this)">
-        <div class="fc-icon">🍛</div>
-        <div class="fc-name">Nigerian</div>
-      </div>
-      <div class="food-cat" onclick="filterFood('Fast Food', this)">
-        <div class="fc-icon">🍔</div>
-        <div class="fc-name">Fast Food</div>
-      </div>
-      <div class="food-cat" onclick="filterFood('Pizza', this)">
-        <div class="fc-icon">🍕</div>
-        <div class="fc-name">Pizza</div>
-      </div>
-      <div class="food-cat" onclick="filterFood('Chinese', this)">
-        <div class="fc-icon">🥡</div>
-        <div class="fc-name">Chinese</div>
-      </div>
-      <div class="food-cat" onclick="filterFood('Shawarma', this)">
-        <div class="fc-icon">🌯</div>
-        <div class="fc-name">Shawarma</div>
-      </div>
-      <div class="food-cat" onclick="filterFood('Grills', this)">
-        <div class="fc-icon">🍖</div>
-        <div class="fc-name">Grills</div>
-      </div>
-      <div class="food-cat" onclick="filterFood('Seafood', this)">
-        <div class="fc-icon">🦞</div>
-        <div class="fc-name">Seafood</div>
-      </div>
-      <div class="food-cat" onclick="filterFood('Healthy', this)">
-        <div class="fc-icon">🥗</div>
-        <div class="fc-name">Healthy</div>
-      </div>
-      <div class="food-cat" onclick="filterFood('Drinks', this)">
-        <div class="fc-icon">🧃</div>
-        <div class="fc-name">Drinks</div>
-      </div>
-      <div class="food-cat" onclick="filterFood('Groceries', this)">
-        <div class="fc-icon">🛒</div>
-        <div class="fc-name">Groceries</div>
-      </div>
-      <div class="food-cat" onclick="filterFood('Desserts', this)">
-        <div class="fc-icon">🍰</div>
-        <div class="fc-name">Desserts</div>
+<!-- PROMO BANNER -->
+<div style="background:var(--bg);padding:0;">
+  <div class="promo-banner">
+    <div class="promo-left">
+      <div class="promo-icon"><i data-lucide="tag" style="stroke:#fbbf24;width:24px;height:24px;"></i></div>
+      <div class="promo-text">
+        <h4>First Order? Get 10% off!</h4>
+        <p>Use code at checkout — valid on all food orders above ₦2,000</p>
       </div>
     </div>
+    <div class="promo-code" onclick="copyCode()">NEXA10</div>
+  </div>
+</div>
+
+<!-- CAT STRIP -->
+<div class="cat-strip">
+  <div class="cat-strip-inner">
+    <button class="cat-btn active" onclick="filterCat('all',this)"><i data-lucide="layout-grid"></i> All</button>
+    <button class="cat-btn" onclick="filterCat('Main Course',this)"><i data-lucide="utensils"></i> Main</button>
+    <button class="cat-btn" onclick="filterCat('Soups & Stews',this)"><i data-lucide="soup"></i> Soups</button>
+    <button class="cat-btn" onclick="filterCat('Rice & Swallow',this)"><i data-lucide="circle-dot"></i> Rice</button>
+    <button class="cat-btn" onclick="filterCat('Grills & BBQ',this)"><i data-lucide="flame"></i> Grills</button>
+    <button class="cat-btn" onclick="filterCat('Snacks & Small Chops',this)"><i data-lucide="cookie"></i> Snacks</button>
+    <button class="cat-btn" onclick="filterCat('Breakfast',this)"><i data-lucide="sun"></i> Breakfast</button>
+    <button class="cat-btn" onclick="filterCat('Drinks & Beverages',this)"><i data-lucide="cup-soda"></i> Drinks</button>
+    <button class="cat-btn" onclick="filterCat('Desserts',this)"><i data-lucide="cake"></i> Desserts</button>
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- FILTER BAR -->
+  <div class="filter-bar">
+    <div class="filter-left">
+      <button class="filter-pill active" onclick="filterDiet('all',this)"><i data-lucide="layout-grid"></i> All</button>
+      <button class="filter-pill" onclick="filterDiet('Halal',this)"><i data-lucide="check-circle"></i> Halal</button>
+      <button class="filter-pill" onclick="filterDiet('Vegetarian',this)"><i data-lucide="leaf"></i> Vegetarian</button>
+      <button class="filter-pill" onclick="filterDiet('Spicy',this)"><i data-lucide="flame"></i> Spicy</button>
+      <button class="filter-pill" onclick="sortFood('price',this)"><i data-lucide="arrow-up-down"></i> Price</button>
+    </div>
+    <div class="results-count" id="results-count">Loading...</div>
   </div>
 
-  <!-- SORT BAR -->
-  <div class="container">
-    <div class="food-topbar">
-      <span id="food-count">Showing all restaurants</span>
-      <div class="food-sort-filters">
-        <select id="food-sort" onchange="applyFoodFilters()">
-          <option value="default">Sort: Featured</option>
-          <option value="rating">Highest Rated</option>
-          <option value="delivery-time">Fastest Delivery</option>
-          <option value="price-low">Min Order: Low</option>
-        </select>
-        <label class="food-toggle-filter">
-          <input type="checkbox" id="free-delivery-filter" onchange="applyFoodFilters()"/>
-          Free Delivery
-        </label>
-        <label class="food-toggle-filter">
-          <input type="checkbox" id="open-now-filter" onchange="applyFoodFilters()"/>
-          Open Now
-        </label>
-      </div>
-    </div>
-
-    <!-- RESTAURANTS GRID -->
-    <div class="restaurants-grid" id="restaurants-grid"></div>
-
-    <div id="food-empty" style="display:none;">
-      <div class="empty-state">
-        <div class="empty-icon">🍽️</div>
-        <h3>No restaurants found</h3>
-        <p>Try a different search or category</p>
-        <button onclick="filterFood('all', null)" class="btn-primary">Show All</button>
-      </div>
-    </div>
-
+  <!-- FOOD GRID -->
+  <div class="food-grid" id="food-grid">
+    <div class="skel-card"><div class="skel-img skel"></div><div class="skel-body"><div class="skel-line skel" style="width:50%;"></div><div class="skel-line skel" style="width:100%;"></div><div class="skel-line skel" style="width:60%;margin-top:8px;"></div></div></div>
+    <div class="skel-card"><div class="skel-img skel"></div><div class="skel-body"><div class="skel-line skel" style="width:50%;"></div><div class="skel-line skel" style="width:100%;"></div><div class="skel-line skel" style="width:60%;margin-top:8px;"></div></div></div>
+    <div class="skel-card"><div class="skel-img skel"></div><div class="skel-body"><div class="skel-line skel" style="width:50%;"></div><div class="skel-line skel" style="width:100%;"></div><div class="skel-line skel" style="width:60%;margin-top:8px;"></div></div></div>
+    <div class="skel-card"><div class="skel-img skel"></div><div class="skel-body"><div class="skel-line skel" style="width:50%;"></div><div class="skel-line skel" style="width:100%;"></div><div class="skel-line skel" style="width:60%;margin-top:8px;"></div></div></div>
   </div>
 
-  <div style="margin-bottom:60px;"></div>
+  <div class="load-more-wrap" id="load-more-wrap" style="display:none;">
+    <button class="load-more-btn" onclick="loadMore()">Load More Food</button>
+  </div>
 
-  <footer class="footer">
-    <div class="container">
-      <div class="footer-bottom">
-        <p>© 2025 Nexabay. All rights reserved.</p>
-        <a href="../../index.html" style="color:var(--orange)">← Back to Home</a>
-      </div>
-    </div>
-  </footer>
+</div>
 
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-  <script src="../../js/firebase/config.js"></script>
-  <script src="../../js/firebase/auth.js"></script>
-  <script src="../../js/firebase/food.js"></script>
-  <script src="../../js/core/main.js"></script>
-  <script>
+<!-- TRUST -->
+<div class="trust-strip">
+  <div class="trust-strip-inner">
+    <div class="trust-item"><i data-lucide="shield-check"></i> Verified Restaurants</div>
+    <div class="trust-item"><i data-lucide="clock"></i> Real Prep Times</div>
+    <div class="trust-item"><i data-lucide="lock"></i> Secure Payment</div>
+    <div class="trust-item"><i data-lucide="refresh-ccw"></i> Easy Refunds</div>
+    <div class="trust-item"><i data-lucide="star"></i> Rated & Reviewed</div>
+  </div>
+</div>
 
-    var DEMO_RESTAURANTS = [];
+<!-- FOOTER -->
+<footer class="footer">
+  © 2025 Nexabay Ltd •
+  <a href="../privacy.html">Privacy</a> •
+  <a href="../terms.html">Terms</a> •
+  <a href="../help.html">Help</a> •
+  <a href="../../index.html">Home</a>
+</footer>
 
-    var ALL_RESTAURANTS = [];
-    var currentRestaurants = [];
-    var currentCategory = 'all';
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="../../js/firebase/config.js"></script>
+<script src="../../js/firebase/auth.js"></script>
+<script src="../../js/core/main.js"></script>
+<script>
 
-    function loadAllRestaurants() {
-      nexaGetFoodItems('all')
-        .then(function(realItems) {
-          var grouped = {};
-          realItems.forEach(function(item) {
-            var rid = item.restaurantId;
-            if (!grouped[rid]) {
-              grouped[rid] = {
-                id: rid,
-                name: item.restaurantName || 'Nexabay Restaurant',
-                category: item.category || 'Restaurant',
-                rating: 0,
-                reviews: 0,
-                deliveryTime: 30,
-                deliveryFee: 500,
-                minOrder: 1000,
-                emoji: item.emoji || '🍽️',
-                imageUrl: item.imageUrl || '',
-                isOpen: item.available !== false,
-                isFree: false,
-                tags: [],
-                isReal: true,
-              };
-            }
-            if (item.name && grouped[rid].tags.length < 3) {
-              grouped[rid].tags.push(item.name);
-            }
-          });
+  var allFood=[], filtered=[], displayed=0, pageSize=12;
+  var currentCat='all', currentDiet='all', currentSort='', searchQuery='';
+  var foodCart=JSON.parse(localStorage.getItem('nexa_food_cart')||'[]');
 
-          var realRestaurants = Object.values(grouped);
-          ALL_RESTAURANTS = realRestaurants.concat(DEMO_RESTAURANTS);
-          currentRestaurants = ALL_RESTAURANTS.slice();
-          renderRestaurants();
-        })
-        .catch(function(err) {
-          console.log('Error loading food:', err);
-          ALL_RESTAURANTS = DEMO_RESTAURANTS.slice();
-          currentRestaurants = ALL_RESTAURANTS.slice();
-          renderRestaurants();
-        });
-    }
+  var urlParams=new URLSearchParams(window.location.search);
+  var urlQ=urlParams.get('q')||'';
+  if (urlQ){
+    searchQuery=urlQ;
+    document.getElementById('nav-search-input').value=urlQ;
+    document.getElementById('hero-search').value=urlQ;
+  }
 
-    function renderRestaurants() {
-      var grid = document.getElementById('restaurants-grid');
-      var empty = document.getElementById('food-empty');
-      var count = document.getElementById('food-count');
+  function loadFood() {
+    if (typeof db==='undefined') return;
+    db.collection('foodItems')
+      .where('status','==','active')
+      .get()
+      .then(function(snap){
+        allFood=[];
+        snap.forEach(function(doc){ allFood.push(doc.data()); });
+        applyFilters();
+      })
+      .catch(function(){ renderEmpty(); });
+  }
 
-      if (currentRestaurants.length === 0) {
-        grid.innerHTML =
-          '<div style="text-align:center;padding:60px 20px;">' +
-            '<div style="font-size:4em;margin-bottom:16px;">🍔</div>' +
-            '<h3 style="font-size:1.3em;margin-bottom:8px;">No Restaurants yet</h3>' +
-            '<p style="color:var(--text2);margin-bottom:20px;">Be the first restaurant partner!</p>' +
-            '<a href="../auth/register.html" style="background:var(--orange);color:white;padding:12px 24px;border-radius:8px;text-decoration:none;font-weight:700;">Start Selling →</a>' +
-          '</div>';
-        return;
-      }
-
-      empty.style.display = 'none';
-      if (count) count.textContent = 'Showing ' + currentRestaurants.length + ' restaurants';
-
-      grid.innerHTML = currentRestaurants.map(function(r) {
-        var imgContent = r.imageUrl
-          ? '<img src="' + r.imageUrl + '" style="width:100%;height:100%;object-fit:cover;"/>'
-          : r.emoji;
-        return '<div class="restaurant-card ' + (!r.isOpen ? 'closed' : '') + '" onclick="viewRestaurant(\'' + r.id + '\')">' +
-          '<div class="rc-cover">' +
-            '<div class="rc-emoji">' + imgContent + '</div>' +
-            (!r.isOpen ? '<div class="rc-closed-overlay">Closed</div>' : '') +
-            (r.isFree ? '<div class="rc-free-badge">Free Delivery</div>' : '') +
-          '</div>' +
-          '<div class="rc-body">' +
-            '<div class="rc-top-row">' +
-              '<h3 class="rc-name">' + r.name + '</h3>' +
-              '<div class="rc-rating">⭐ ' + r.rating + '</div>' +
-            '</div>' +
-            '<div class="rc-tags">' +
-              r.tags.slice(0, 2).map(function(t) {
-                return '<span>' + t + '</span>';
-              }).join('') +
-            '</div>' +
-            '<div class="rc-info-row">' +
-              '<span>🕒 ' + r.deliveryTime + ' min</span>' +
-              '<span>💰 Min ₦' + r.minOrder.toLocaleString() + '</span>' +
-              '<span>' + (r.isFree ? '🆓 Free delivery' : '🚚 ₦' + r.deliveryFee.toLocaleString()) + '</span>' +
-            '</div>' +
-            '<button class="rc-order-btn" onclick="event.stopPropagation();orderFromRestaurant(\'' + r.id + '\')">' +
-              (r.isOpen ? 'Order Now' : 'Pre-Order') +
-            '</button>' +
-          '</div>' +
-        '</div>';
-      }).join('');
-    }
-
-    function filterFood(cat, el) {
-      currentCategory = cat;
-      var cats = document.querySelectorAll('.food-cat');
-      cats.forEach(function(c) { c.classList.remove('active'); });
-      if (el) el.classList.add('active');
-      applyFoodFilters();
-    }
-
-    function applyFoodFilters() {
-      var sort = document.getElementById('food-sort').value;
-      var freeDelivery = document.getElementById('free-delivery-filter').checked;
-      var openNow = document.getElementById('open-now-filter').checked;
-      var search = (document.getElementById('search-input').value || '').toLowerCase().trim();
-
-      currentRestaurants = ALL_RESTAURANTS.filter(function(r) {
-        if (currentCategory !== 'all' && r.category !== currentCategory) return false;
-        if (freeDelivery && !r.isFree) return false;
-        if (openNow && !r.isOpen) return false;
-        if (search && !r.name.toLowerCase().includes(search) && !r.tags.some(function(t) { return t.toLowerCase().includes(search); })) return false;
-        return true;
+  function applyFilters() {
+    filtered=allFood.slice();
+    if (searchQuery) {
+      var q=searchQuery.toLowerCase();
+      filtered=filtered.filter(function(f){
+        return (f.name||'').toLowerCase().includes(q)||
+               (f.category||'').toLowerCase().includes(q)||
+               (f.restaurantName||'').toLowerCase().includes(q)||
+               (f.description||'').toLowerCase().includes(q);
       });
-
-      if (sort === 'rating')        currentRestaurants.sort(function(a,b) { return b.rating - a.rating; });
-      if (sort === 'delivery-time') currentRestaurants.sort(function(a,b) { return a.deliveryTime - b.deliveryTime; });
-      if (sort === 'price-low')     currentRestaurants.sort(function(a,b) { return a.minOrder - b.minOrder; });
-
-      renderRestaurants();
     }
-
-    function doFoodSearch() {
-      applyFoodFilters();
+    if (currentCat!=='all') {
+      filtered=filtered.filter(function(f){ return f.category===currentCat; });
     }
-
-    function viewRestaurant(id) {
-      window.location.href = 'restaurant.html?id=' + id;
+    if (currentDiet!=='all') {
+      filtered=filtered.filter(function(f){ return (f.dietary||[]).indexOf(currentDiet)>-1; });
     }
-
-    function orderFromRestaurant(id) {
-      window.location.href = 'restaurant.html?id=' + id;
+    if (currentSort==='price') {
+      filtered.sort(function(a,b){ return (a.price||0)-(b.price||0); });
     }
+    displayed=0;
+    renderFood();
+  }
 
-    document.addEventListener('DOMContentLoaded', function() {
-      updateCartCount();
-      checkAuthState();
-      loadAllRestaurants();
-      var input = document.getElementById('search-input');
-      if (input) {
-        input.addEventListener('keypress', function(e) {
-          if (e.key === 'Enter') doFoodSearch();
-        });
-      }
-    });
+  function renderFood() {
+    var grid=document.getElementById('food-grid');
+    var countEl=document.getElementById('results-count');
+    var lmWrap=document.getElementById('load-more-wrap');
+    if (!grid) return;
+    if (filtered.length===0){ renderEmpty(); if(countEl) countEl.innerHTML='<strong>0</strong> items found'; return; }
+    var chunk=filtered.slice(0,displayed+pageSize);
+    displayed=chunk.length;
+    if (countEl) countEl.innerHTML='<strong>'+filtered.length+'</strong> item'+(filtered.length!==1?'s':'')+' found';
+    grid.innerHTML=chunk.map(function(f){ return buildCard(f); }).join('');
+    if (lmWrap) lmWrap.style.display=displayed<filtered.length?'block':'none';
+    lucide.createIcons();
+    updateCartCount();
+  }
 
-  </script>
+  function buildCard(f) {
+    var imgHtml=f.imageUrl
+      ?'<img src="'+escHtml(f.imageUrl)+'" alt="'+escHtml(f.name||'')+'" loading="lazy"/>'
+      :'<div style="font-size:2.5em;">'+(f.emoji||'🍽️')+'</div>';
 
+    var dietary=f.dietary||[];
+    var isHalal=dietary.indexOf('Halal')>-1;
+    var isVeg=dietary.indexOf('Vegetarian')>-1||dietary.indexOf('Vegan')>-1;
+    var isSpicy=dietary.indexOf('Spicy')>-1;
+
+    var badgeHtml='';
+    if (isHalal) badgeHtml='<div class="food-badge badge-halal">Halal</div>';
+    else if (isVeg) badgeHtml='<div class="food-badge badge-veg">Veg</div>';
+
+    var avail=f.availability||'Available';
+    var unavailable=avail==='Unavailable';
+
+    var dietTags=dietary.slice(0,2).map(function(d){ return '<span class="food-tag">'+escHtml(d)+'</span>'; }).join('');
+
+    return '<div class="food-card'+(unavailable?' unavailable-card':'')+'" onclick="viewFood(\''+f.id+'\')">'+
+      '<div class="food-img">'+
+        imgHtml+
+        badgeHtml+
+        '<div class="food-prep"><i data-lucide="clock"></i>'+escHtml(f.prepTime||'20 mins')+'</div>'+
+      '</div>'+
+      '<div class="food-body">'+
+        '<div class="food-restaurant">'+escHtml(f.restaurantName||'Restaurant')+'</div>'+
+        '<div class="food-name">'+escHtml(f.name||'Dish')+'</div>'+
+        (f.description?'<div class="food-desc">'+escHtml(f.description)+'</div>':'')+
+        (dietTags?'<div class="food-tags">'+dietTags+'</div>':'')+
+        '<div class="food-footer">'+
+          '<div class="food-price">₦'+parseInt(f.price||0).toLocaleString()+'</div>'+
+          (unavailable
+            ?'<span style="font-size:0.7em;color:var(--muted);font-weight:600;">Unavailable</span>'
+            :'<button class="food-add-btn" onclick="event.stopPropagation();addToCart(\''+f.id+'\',\''+escHtml(f.name||'').replace(/'/g,'')+'\',' +f.price+',\''+escHtml(f.restaurantName||'').replace(/'/g,'')+'\')" title="Add to cart"><i data-lucide="plus"></i></button>')+
+        '</div>'+
+      '</div>'+
+    '</div>';
+  }
+
+  function renderEmpty() {
+    var grid=document.getElementById('food-grid');
+    var lmWrap=document.getElementById('load-more-wrap');
+    if (lmWrap) lmWrap.style.display='none';
+    grid.innerHTML=
+      '<div class="empty-state" style="grid-column:1/-1;">'+
+        '<div class="empty-icon"><i data-lucide="utensils"></i></div>'+
+        '<h3>No food found</h3>'+
+        '<p>No dishes match your search yet. Be the first restaurant to list on NexaFood!</p>'+
+        '<a href="../auth/become-provider.html?type=restaurant" class="empty-cta">List Your Restaurant</a>'+
+      '</div>';
+    lucide.createIcons();
+  }
+
+  function loadMore() {
+    var grid=document.getElementById('food-grid');
+    var chunk=filtered.slice(displayed,displayed+pageSize);
+    displayed+=chunk.length;
+    chunk.forEach(function(f){ grid.insertAdjacentHTML('beforeend',buildCard(f)); });
+    var lmWrap=document.getElementById('load-more-wrap');
+    if (lmWrap) lmWrap.style.display=displayed<filtered.length?'block':'none';
+    lucide.createIcons();
+  }
+
+  function addToCart(id,name,price,restaurant) {
+    var existing=foodCart.find(function(i){ return i.id===id; });
+    if (existing) {
+      existing.qty=(existing.qty||1)+1;
+    } else {
+      foodCart.push({id:id,name:name,price:price,restaurant:restaurant,qty:1});
+    }
+    localStorage.setItem('nexa_food_cart',JSON.stringify(foodCart));
+    updateCartCount();
+    showCartToast(name);
+  }
+
+  function updateCartCount() {
+    var total=foodCart.reduce(function(s,i){ return s+(i.qty||1); },0);
+    var el=document.getElementById('cart-count');
+    if (el) el.textContent=total;
+  }
+
+  function showCartToast(name) {
+    var toast=document.getElementById('cart-toast');
+    var text=document.getElementById('cart-toast-text');
+    if (!toast) return;
+    if (text) text.textContent=name+' added to cart';
+    toast.classList.add('show');
+    lucide.createIcons();
+    setTimeout(function(){ toast.classList.remove('show'); },3000);
+  }
+
+  function viewCart() {
+    window.location.href='../shop/cart.html';
+  }
+
+  function viewFood(id) {
+    window.location.href='item.html?id='+id;
+  }
+
+  function filterCat(cat,btn) {
+    currentCat=cat;
+    document.querySelectorAll('.cat-btn').forEach(function(b){ b.classList.remove('active'); });
+    btn.classList.add('active');
+    applyFilters();
+  }
+
+  function filterDiet(diet,btn) {
+    currentDiet=diet;
+    document.querySelectorAll('.filter-pill').forEach(function(b){ b.classList.remove('active'); });
+    btn.classList.add('active');
+    applyFilters();
+  }
+
+  function sortFood(by,btn) {
+    currentSort=currentSort===by?'':by;
+    document.querySelectorAll('.filter-pill').forEach(function(b){ b.classList.remove('active'); });
+    if (currentSort) btn.classList.add('active');
+    applyFilters();
+  }
+
+  function quickSearch(q) {
+    searchQuery=q;
+    document.getElementById('nav-search-input').value=q;
+    document.getElementById('hero-search').value=q;
+    applyFilters();
+    window.scrollTo({top:200,behavior:'smooth'});
+  }
+
+  function doSearch() {
+    searchQuery=document.getElementById('nav-search-input').value.trim();
+    document.getElementById('hero-search').value=searchQuery;
+    applyFilters();
+  }
+
+  function doHeroSearch() {
+    searchQuery=document.getElementById('hero-search').value.trim();
+    document.getElementById('nav-search-input').value=searchQuery;
+    applyFilters();
+    window.scrollTo({top:200,behavior:'smooth'});
+  }
+
+  function copyCode() {
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText('NEXA10').then(function(){
+        showCartToast('Promo code NEXA10 copied!');
+      });
+    }
+  }
+
+  function escHtml(str) {
+    return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  document.getElementById('nav-search-input').addEventListener('keypress',function(e){ if(e.key==='Enter') doSearch(); });
+  document.getElementById('hero-search').addEventListener('keypress',function(e){ if(e.key==='Enter') doHeroSearch(); });
+
+  document.addEventListener('DOMContentLoaded',function(){
+    lucide.createIcons();
+    loadFood();
+    updateCartCount();
+  });
+
+</script>
 </body>
 </html>
